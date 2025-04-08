@@ -8,6 +8,7 @@ include 'core'
 include 'server'
 include 'privacy'
 include 'integration-tests'
+include 'new-core'
 
 develocity {
     buildScan {
