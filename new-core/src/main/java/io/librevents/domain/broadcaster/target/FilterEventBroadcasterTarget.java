@@ -13,11 +13,11 @@ import java.util.UUID;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class FilterEventBroadcasterTarget extends BroadcasterTarget {
+public final class FilterEventBroadcasterTarget extends BroadcasterTarget {
 
     private final UUID filterId;
 
-    protected FilterEventBroadcasterTarget(Destination destination, UUID filterId) {
+    public FilterEventBroadcasterTarget(Destination destination, UUID filterId) {
         super(BroadcasterTargetType.FILTER, destination);
         Objects.requireNonNull(filterId, "filterId cannot be null");
         this.filterId = filterId;
