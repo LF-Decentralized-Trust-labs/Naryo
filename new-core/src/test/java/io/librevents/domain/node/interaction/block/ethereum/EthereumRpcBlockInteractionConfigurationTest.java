@@ -10,10 +10,10 @@ final class EthereumRpcBlockInteractionConfigurationTest {
 
     @Test
     void testConstructor() {
-        EthereumRpcBlockInteractionConfiguration config = new EthereumRpcBlockInteractionConfiguration();
+        EthereumRpcBlockInteractionConfiguration config =
+                new EthereumRpcBlockInteractionConfiguration();
         assertNotNull(config);
         assertEquals(InteractionMode.ETHEREUM_RPC, config.getMode());
         assertEquals(InteractionStrategy.BLOCK_BASED, config.getStrategy());
     }
-
 }

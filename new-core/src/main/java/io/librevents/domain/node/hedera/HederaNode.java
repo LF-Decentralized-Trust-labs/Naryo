@@ -24,5 +24,4 @@ public final class HederaNode extends Node {
                 interactionConfiguration,
                 connection);
     }
-
 }

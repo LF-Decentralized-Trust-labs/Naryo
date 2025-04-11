@@ -1,6 +1,5 @@
 package io.librevents.domain.node;
 
-import java.net.URISyntaxException;
 import java.time.Duration;
 import java.util.UUID;
 
@@ -115,7 +114,7 @@ public abstract class BaseNodeTest {
     }
 
     @Test
-    void testReconfigure()  {
+    void testReconfigure() {
         Node node =
                 createNode(
                         UUID.randomUUID(),
@@ -139,7 +138,7 @@ public abstract class BaseNodeTest {
     }
 
     @Test
-    void testReconfigureWithNodeNameNull()  {
+    void testReconfigureWithNodeNameNull() {
         Node node =
                 createNode(
                         UUID.randomUUID(),
@@ -159,7 +158,7 @@ public abstract class BaseNodeTest {
     }
 
     @Test
-    void testReconfigureWithSubscriptionConfigurationNull()  {
+    void testReconfigureWithSubscriptionConfigurationNull() {
         Node node =
                 createNode(
                         UUID.randomUUID(),
@@ -179,7 +178,7 @@ public abstract class BaseNodeTest {
     }
 
     @Test
-    void testReconfigureWithInteractionConfigurationNull()  {
+    void testReconfigureWithInteractionConfigurationNull() {
         Node node =
                 createNode(
                         UUID.randomUUID(),
@@ -199,7 +198,7 @@ public abstract class BaseNodeTest {
     }
 
     @Test
-    void testReconfigureWithConnectionNull()  {
+    void testReconfigureWithConnectionNull() {
         Node node =
                 createNode(
                         UUID.randomUUID(),
