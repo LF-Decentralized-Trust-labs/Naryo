@@ -11,7 +11,8 @@ import lombok.ToString;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public final class PollBlockSubscriptionMethodConfiguration extends BlockSubscriptionMethodConfiguration {
+public final class PollBlockSubscriptionMethodConfiguration
+        extends BlockSubscriptionMethodConfiguration {
 
     private final Interval interval;
 

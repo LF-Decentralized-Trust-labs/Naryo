@@ -2,6 +2,7 @@ package io.librevents.domain.node.subscription.block;
 
 import java.math.BigInteger;
 
+import io.librevents.domain.common.NonNegativeBlockNumber;
 import io.librevents.domain.node.subscription.block.method.BlockSubscriptionMethod;
 import io.librevents.domain.node.subscription.block.method.BlockSubscriptionMethodConfiguration;
 import org.junit.jupiter.api.Test;

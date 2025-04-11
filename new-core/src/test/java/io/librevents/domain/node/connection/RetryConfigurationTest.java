@@ -45,9 +45,7 @@ class RetryConfigurationTest {
     @Test
     void testNullBackoffDuration() {
         IllegalArgumentException exception =
-                assertThrows(
-                        IllegalArgumentException.class,
-                        () -> new RetryConfiguration(3, null));
+                assertThrows(IllegalArgumentException.class, () -> new RetryConfiguration(3, null));
         assertEquals("Backoff duration must be > 0", exception.getMessage());
     }
 }

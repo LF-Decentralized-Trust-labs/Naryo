@@ -1,8 +1,8 @@
 package io.librevents.domain.node.connection.http;
 
-import org.junit.jupiter.api.Test;
-
 import java.time.Duration;
+
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,20 +16,17 @@ class KeepAliveDurationTest {
 
     @Test
     void testNegativeKeepAliveDuration() {
-        IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class,
-            () -> new KeepAliveDuration(Duration.ofSeconds(-1))
-        );
+        IllegalArgumentException exception =
+                assertThrows(
+                        IllegalArgumentException.class,
+                        () -> new KeepAliveDuration(Duration.ofSeconds(-1)));
         assertEquals("Must be positive", exception.getMessage());
     }
 
     @Test
     void testNullKeepAliveDuration() {
-        IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class,
-            () -> new KeepAliveDuration(null)
-        );
+        IllegalArgumentException exception =
+                assertThrows(IllegalArgumentException.class, () -> new KeepAliveDuration(null));
         assertEquals("Must be positive", exception.getMessage());
     }
-
 }

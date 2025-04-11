@@ -12,5 +12,4 @@ public record RetryConfiguration(int times, Duration backoff) {
             throw new IllegalArgumentException("Backoff duration must be > 0");
         }
     }
-
 }

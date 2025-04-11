@@ -1,8 +1,5 @@
 package io.librevents.domain.node.connection.endpoint;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 import lombok.Getter;
 
 @Getter
