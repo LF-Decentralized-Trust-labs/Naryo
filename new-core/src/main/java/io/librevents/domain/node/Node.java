@@ -29,7 +29,7 @@ public abstract class Node {
             NodeConnection connection) {
         Objects.requireNonNull(name, "Name cannot be null");
         Objects.requireNonNull(
-            subscriptionConfiguration, "SubscriptionConfiguration cannot be null");
+                subscriptionConfiguration, "SubscriptionConfiguration cannot be null");
         Objects.requireNonNull(interactionConfiguration, "InteractionConfiguration cannot be null");
         Objects.requireNonNull(connection, "Connection cannot be null");
 
