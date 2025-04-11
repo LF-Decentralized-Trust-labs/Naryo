@@ -14,10 +14,8 @@ class MaxIdleConnectionsTest {
 
     @Test
     void testNegativeMaxIdleConnections() {
-        IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class,
-            () -> new MaxIdleConnections(-1)
-        );
+        IllegalArgumentException exception =
+                assertThrows(IllegalArgumentException.class, () -> new MaxIdleConnections(-1));
         assertEquals("Must be >= 0", exception.getMessage());
     }
 
@@ -26,5 +24,4 @@ class MaxIdleConnectionsTest {
         MaxIdleConnections maxIdleConnections = new MaxIdleConnections(0);
         assertEquals(0, maxIdleConnections.value());
     }
-
 }

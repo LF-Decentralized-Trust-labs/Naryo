@@ -2,6 +2,7 @@ package io.librevents.domain.node.subscription.block;
 
 import java.util.Objects;
 
+import io.librevents.domain.common.NonNegativeBlockNumber;
 import io.librevents.domain.node.subscription.SubscriptionConfiguration;
 import io.librevents.domain.node.subscription.SubscriptionStrategy;
 import io.librevents.domain.node.subscription.block.method.BlockSubscriptionMethodConfiguration;
