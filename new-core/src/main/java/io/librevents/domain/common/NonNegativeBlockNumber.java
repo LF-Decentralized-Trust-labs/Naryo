@@ -1,4 +1,4 @@
-package io.librevents.domain.node.subscription.block;
+package io.librevents.domain.common;
 
 import java.math.BigInteger;
 
