@@ -12,11 +12,11 @@ import lombok.ToString;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class ContractEventFilter extends EventFilter {
+public final class ContractEventFilter extends EventFilter {
 
     private final String contractAddress;
 
-    protected ContractEventFilter(
+    public ContractEventFilter(
             UUID id,
             FilterName name,
             UUID nodeId,

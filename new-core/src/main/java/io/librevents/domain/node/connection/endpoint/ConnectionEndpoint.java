@@ -11,7 +11,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class ConnectionEndpoint {
+public final class ConnectionEndpoint {
 
     private final Protocol protocol;
     private final String host;
