@@ -1,4 +1,4 @@
-package io.librevents.domain.filter.event;
+package io.librevents.domain.common;
 
 public enum ParameterType {
     ADDRESS,
