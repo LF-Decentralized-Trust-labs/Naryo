@@ -1,5 +1,6 @@
 package io.librevents.domain.filter.event;
 
+import io.librevents.domain.common.ParameterType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
