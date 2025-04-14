@@ -1,4 +1,4 @@
-package io.librevents.domain.filter.transaction;
+package io.librevents.domain.common;
 
 public enum TransactionStatus {
     FAILED,

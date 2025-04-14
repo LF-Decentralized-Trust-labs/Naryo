@@ -3,6 +3,7 @@ package io.librevents.domain.filter.transaction;
 import java.util.List;
 import java.util.UUID;
 
+import io.librevents.domain.common.TransactionStatus;
 import io.librevents.domain.filter.AbstractFilterTest;
 import io.librevents.domain.filter.Filter;
 import io.librevents.domain.filter.FilterName;
