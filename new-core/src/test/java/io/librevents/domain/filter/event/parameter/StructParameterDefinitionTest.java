@@ -1,9 +1,8 @@
 package io.librevents.domain.filter.event.parameter;
 
-import java.util.List;
 import java.util.Set;
 
-import io.librevents.domain.filter.event.ParameterType;
+import io.librevents.domain.common.ParameterType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

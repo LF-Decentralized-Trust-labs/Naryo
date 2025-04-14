@@ -3,7 +3,7 @@ package io.librevents.domain.filter.event.parameter;
 import java.util.Objects;
 
 import io.librevents.domain.filter.event.ParameterDefinition;
-import io.librevents.domain.filter.event.ParameterType;
+import io.librevents.domain.common.ParameterType;
 import lombok.Getter;
 
 @Getter
