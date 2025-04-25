@@ -8,10 +8,12 @@ ext {
     modelMapperVersion = '3.1.0'
     hashgraphVersion = '2.24.1'
     junitVersion = '5.7.1'
+    bcprovVersion = '1.70'
 }
 
 dependencies {
     implementation "org.web3j:core:$web3jVersion"
+    implementation "org.bouncycastle:bcprov-jdk15on:$bcprovVersion"
     implementation "org.modelmapper:modelmapper:$modelMapperVersion"
 
     compileOnly 'org.projectlombok:lombok'
