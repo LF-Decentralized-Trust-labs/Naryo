@@ -9,6 +9,7 @@ import io.librevents.domain.event.Event;
 import io.librevents.domain.event.EventType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 @Getter
@@ -23,7 +24,8 @@ public final class ContractEvent extends Event {
     private final String blockHash;
     private final String contractAddress;
     private final String sender;
-    private final ContractEventStatus status;
+    @Setter
+    private ContractEventStatus status;
     private final BigInteger timestamp;
 
     public ContractEvent(
