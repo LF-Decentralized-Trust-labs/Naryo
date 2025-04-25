@@ -68,7 +68,7 @@ class EventFilterSpecificationTest {
         EventFilterSpecification eventFilterSpecification =
                 new EventFilterSpecification(name, correlationId, Set.of(parameterDefinition));
 
-        String expectedSignature = "(bool)";
+        String expectedSignature = "Test(bool)";
         assertEquals(expectedSignature, eventFilterSpecification.getEventSignature());
     }
 
@@ -94,7 +94,7 @@ class EventFilterSpecificationTest {
                                 parameterDefinition6, parameterDefinition7, parameterDefinition8,
                                 parameterDefinition9));
 
-        String expectedSignature = "(bool,address,uint256,int256,bytes32,bool[5],(bool,address),string,bytes)";
+        String expectedSignature = "Test(bool,address,uint256,int256,bytes32,bool[5],(bool,address),string,bytes)";
         assertEquals(expectedSignature, eventFilterSpecification.getEventSignature());
     }
 }

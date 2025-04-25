@@ -13,7 +13,13 @@ public abstract class ParameterDefinition {
     private final int position;
     private final boolean indexed;
 
-    public ParameterDefinition(ParameterType type, int position, boolean indexed) {
+    protected ParameterDefinition(ParameterType type) {
+        this.type = type;
+        this.position = 0;
+        this.indexed = false;
+    }
+
+    protected ParameterDefinition(ParameterType type, int position, boolean indexed) {
         this.type = type;
         this.position = position;
         this.indexed = indexed;
