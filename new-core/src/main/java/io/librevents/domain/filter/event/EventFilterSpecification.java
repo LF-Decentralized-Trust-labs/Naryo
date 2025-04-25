@@ -20,10 +20,11 @@ public record EventFilterSpecification(
 
     public String getEventSignature() {
         // Sort parameters by position
-        return parameters.stream()
-                .sorted(Comparator.comparingInt(ParameterDefinition::getPosition))
-                .map(this::buildTypeString)
-                .collect(Collectors.joining(",", "(", ")"));
+        return eventName.value()
+                + parameters.stream()
+                        .sorted(Comparator.comparingInt(ParameterDefinition::getPosition))
+                        .map(this::buildTypeString)
+                        .collect(Collectors.joining(",", "(", ")"));
     }
 
     private String buildTypeString(ParameterDefinition param) {

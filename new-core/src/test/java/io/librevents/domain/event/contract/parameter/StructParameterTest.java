@@ -12,16 +12,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class StructParameterTest extends AbstractContractEventParameterTest {
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void createParameter(boolean indexed, int position, Object value) {
-        new StructParameter(
-                ParameterType.STRUCT, indexed, position, (List<ContractEventParameter<?>>) value);
+        new StructParameter(indexed, position, (List<ContractEventParameter<?>>) value);
     }
 
     @Test
     void testConstructor() {
         StructParameter parameter =
                 new StructParameter(
-                        ParameterType.STRUCT,
                         true,
                         1,
                         List.of(new AddressParameter(true, 1, "0x1234567890abcdef")));
@@ -38,7 +37,7 @@ class StructParameterTest extends AbstractContractEventParameterTest {
         List<ContractEventParameter<?>> values = List.of();
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            new StructParameter(ParameterType.STRUCT, true, 1, values);
+            new StructParameter(true, 1, values);
         });
 
         String expectedMessage = "StructParameter value cannot be empty";
