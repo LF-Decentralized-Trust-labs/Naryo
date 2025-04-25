@@ -1,6 +1,7 @@
 package io.librevents.domain.event.block;
 
 import java.math.BigInteger;
+import java.util.List;
 import java.util.UUID;
 
 import io.librevents.domain.common.NonNegativeBlockNumber;
@@ -22,7 +23,8 @@ class BlockEventTest {
                         BigInteger.valueOf(1000),
                         BigInteger.valueOf(50000),
                         BigInteger.valueOf(60000),
-                        BigInteger.valueOf(System.currentTimeMillis()));
+                        BigInteger.valueOf(System.currentTimeMillis()),
+                        List.of());
         assertNotNull(blockEvent);
         assertEquals(EventType.BLOCK, blockEvent.getEventType());
     }
@@ -40,7 +42,8 @@ class BlockEventTest {
                                 BigInteger.valueOf(1000),
                                 BigInteger.valueOf(50000),
                                 BigInteger.valueOf(60000),
-                                BigInteger.valueOf(System.currentTimeMillis())));
+                                BigInteger.valueOf(System.currentTimeMillis()),
+                                List.of()));
     }
 
     @Test
@@ -56,7 +59,8 @@ class BlockEventTest {
                                 BigInteger.valueOf(1000),
                                 BigInteger.valueOf(50000),
                                 BigInteger.valueOf(60000),
-                                BigInteger.valueOf(System.currentTimeMillis())));
+                                BigInteger.valueOf(System.currentTimeMillis()),
+                                List.of()));
     }
 
     @Test
@@ -72,7 +76,8 @@ class BlockEventTest {
                                 BigInteger.valueOf(1000),
                                 BigInteger.valueOf(50000),
                                 BigInteger.valueOf(60000),
-                                BigInteger.valueOf(System.currentTimeMillis())));
+                                BigInteger.valueOf(System.currentTimeMillis()),
+                                List.of()));
     }
 
     @Test
@@ -88,7 +93,8 @@ class BlockEventTest {
                                 BigInteger.valueOf(1000),
                                 BigInteger.valueOf(50000),
                                 BigInteger.valueOf(60000),
-                                BigInteger.valueOf(System.currentTimeMillis())));
+                                BigInteger.valueOf(System.currentTimeMillis()),
+                                List.of()));
     }
 
     @Test
@@ -104,7 +110,8 @@ class BlockEventTest {
                                 null,
                                 BigInteger.valueOf(50000),
                                 BigInteger.valueOf(60000),
-                                BigInteger.valueOf(System.currentTimeMillis())));
+                                BigInteger.valueOf(System.currentTimeMillis()),
+                                List.of()));
     }
 
     @Test
@@ -120,7 +127,8 @@ class BlockEventTest {
                                 BigInteger.valueOf(1000),
                                 null,
                                 BigInteger.valueOf(60000),
-                                BigInteger.valueOf(System.currentTimeMillis())));
+                                BigInteger.valueOf(System.currentTimeMillis()),
+                                List.of()));
     }
 
     @Test
@@ -136,7 +144,8 @@ class BlockEventTest {
                                 BigInteger.valueOf(1000),
                                 BigInteger.valueOf(50000),
                                 null,
-                                BigInteger.valueOf(System.currentTimeMillis())));
+                                BigInteger.valueOf(System.currentTimeMillis()),
+                                List.of()));
     }
 
     @Test
@@ -152,7 +161,8 @@ class BlockEventTest {
                                 BigInteger.valueOf(1000),
                                 BigInteger.valueOf(50000),
                                 BigInteger.valueOf(60000),
-                                null));
+                                null,
+                                List.of()));
     }
 
     @Test
@@ -168,7 +178,8 @@ class BlockEventTest {
                                 BigInteger.valueOf(1000),
                                 BigInteger.valueOf(50000),
                                 BigInteger.valueOf(60000),
-                                BigInteger.valueOf(System.currentTimeMillis())));
+                                BigInteger.valueOf(System.currentTimeMillis()),
+                                List.of()));
     }
 
     @Test
@@ -184,7 +195,8 @@ class BlockEventTest {
                                 BigInteger.valueOf(1000),
                                 BigInteger.valueOf(50000),
                                 BigInteger.valueOf(60000),
-                                BigInteger.valueOf(System.currentTimeMillis())));
+                                BigInteger.valueOf(System.currentTimeMillis()),
+                                List.of()));
     }
 
     @Test
@@ -200,7 +212,8 @@ class BlockEventTest {
                                 BigInteger.valueOf(-1000),
                                 BigInteger.valueOf(50000),
                                 BigInteger.valueOf(60000),
-                                BigInteger.valueOf(System.currentTimeMillis())));
+                                BigInteger.valueOf(System.currentTimeMillis()),
+                                List.of()));
     }
 
     @Test
@@ -216,7 +229,8 @@ class BlockEventTest {
                                 BigInteger.valueOf(1000),
                                 BigInteger.valueOf(-50000),
                                 BigInteger.valueOf(60000),
-                                BigInteger.valueOf(System.currentTimeMillis())));
+                                BigInteger.valueOf(System.currentTimeMillis()),
+                                List.of()));
     }
 
     @Test
@@ -232,7 +246,8 @@ class BlockEventTest {
                                 BigInteger.valueOf(1000),
                                 BigInteger.valueOf(50000),
                                 BigInteger.valueOf(-60000),
-                                BigInteger.valueOf(System.currentTimeMillis())));
+                                BigInteger.valueOf(System.currentTimeMillis()),
+                                List.of()));
     }
 
     @Test
@@ -248,6 +263,7 @@ class BlockEventTest {
                                 BigInteger.valueOf(1000),
                                 BigInteger.valueOf(50000),
                                 BigInteger.valueOf(60000),
-                                BigInteger.valueOf(-System.currentTimeMillis())));
+                                BigInteger.valueOf(-System.currentTimeMillis()),
+                                List.of()));
     }
 }
