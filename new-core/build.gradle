@@ -9,6 +9,8 @@ ext {
     hashgraphVersion = '2.24.1'
     junitVersion = '5.7.1'
     bcprovVersion = '1.70'
+    mockitoVersion = '5.17.0'
+    mockitoInlineVersion = '5.2.0'
 }
 
 dependencies {
@@ -19,13 +21,29 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
 
     testImplementation "org.junit.jupiter:junit-jupiter:$junitVersion"
+    testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
+    testImplementation "org.mockito:mockito-inline:$mockitoInlineVersion"
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test', Test) {
     useJUnitPlatform()
-
     maxHeapSize = '1G'
+
+    doFirst {
+        def bbAgent = configurations.testRuntimeClasspath
+                .find { it.name.startsWith('byte-buddy-agent') }
+        if (bbAgent) {
+            jvmArgs += [
+                "-javaagent:${bbAgent.absolutePath}"
+            ]
+            jvmArgs += [
+                "-XX:+EnableDynamicAgentLoading"
+            ]
+        } else {
+            logger.warn("⚠️  byte-buddy-agent JAR not found on testRuntimeClasspath; inline mock-maker may break on future JDKs.")
+        }
+    }
 
     testLogging {
         events "passed"

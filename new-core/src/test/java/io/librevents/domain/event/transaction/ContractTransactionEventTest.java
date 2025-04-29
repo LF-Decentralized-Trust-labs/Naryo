@@ -44,21 +44,22 @@ class ContractTransactionEventTest extends AbstractTransactionEventTest {
 
     @Test
     void testConstructor() {
-        ContractTransactionEvent event = new ContractTransactionEvent(
-                UUID.randomUUID(),
-                "0x1234567890abcdef",
-                TransactionStatus.CONFIRMED,
-                new NonNegativeBlockNumber(BigInteger.ONE),
-                "0xabcdef1234567890",
-                new NonNegativeBlockNumber(BigInteger.ONE),
-                BigInteger.valueOf(1234567890),
-                BigInteger.valueOf(1),
-                "0xabcdef1234567890",
-                "0xabcdef1234567890",
-                "1000000000000000000",
-                "0xabcdef1234567890",
-                "",
-                "0x1234567890abcdef");
+        ContractTransactionEvent event =
+                new ContractTransactionEvent(
+                        UUID.randomUUID(),
+                        "0x1234567890abcdef",
+                        TransactionStatus.CONFIRMED,
+                        new NonNegativeBlockNumber(BigInteger.ONE),
+                        "0xabcdef1234567890",
+                        new NonNegativeBlockNumber(BigInteger.ONE),
+                        BigInteger.valueOf(1234567890),
+                        BigInteger.valueOf(1),
+                        "0xabcdef1234567890",
+                        "0xabcdef1234567890",
+                        "1000000000000000000",
+                        "0xabcdef1234567890",
+                        "",
+                        "0x1234567890abcdef");
 
         assertNotNull(event);
         assertEquals("0x1234567890abcdef", event.getContractAddress());

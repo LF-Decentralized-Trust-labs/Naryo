@@ -1,218 +1,107 @@
 package io.librevents.application.node.subscription.block;
 
-import java.math.BigInteger;
-import java.time.Duration;
-import java.util.List;
-import java.util.UUID;
-
+import io.librevents.application.common.Mapper;
 import io.librevents.application.node.dispatch.Dispatcher;
 import io.librevents.application.node.interactor.block.BlockInteractor;
 import io.librevents.application.node.interactor.block.dto.Block;
-import io.librevents.application.node.interactor.block.dto.Log;
-import io.librevents.application.node.interactor.block.mapper.BlockToBlockEventMapper;
 import io.librevents.application.node.subscription.block.poll.PollBlockSubscriber;
 import io.librevents.application.node.subscription.block.pubsub.PubSubBlockSubscriber;
-import io.librevents.application.node.trigger.Trigger;
-import io.librevents.domain.event.Event;
+import io.librevents.domain.event.block.BlockEvent;
 import io.librevents.domain.node.Node;
-import io.librevents.domain.node.NodeName;
-import io.librevents.domain.node.NodeType;
-import io.librevents.domain.node.connection.RetryConfiguration;
-import io.librevents.domain.node.connection.endpoint.ConnectionEndpoint;
-import io.librevents.domain.node.connection.http.*;
-import io.librevents.domain.node.interaction.InteractionConfiguration;
-import io.librevents.domain.node.interaction.InteractionStrategy;
-import io.librevents.domain.node.subscription.SubscriptionConfiguration;
-import io.librevents.domain.node.subscription.SubscriptionStrategy;
 import io.librevents.domain.node.subscription.block.method.BlockSubscriptionMethod;
-import io.reactivex.Flowable;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(MockitoExtension.class)
 class BlockSubscriberFactoryTest {
 
-    private static class MockDispatcher implements Dispatcher {
+    @Mock private BlockInteractor interactor;
 
-        @Override
-        public void dispatch(Event event) {
-            // Mock implementation
-        }
+    @Mock private Dispatcher dispatcher;
 
-        @Override
-        public void addTrigger(Trigger<?> trigger) {
-            // Mock implementation
+    @Mock private Mapper<Block, BlockEvent> blockMapper;
 
-        }
+    @Mock private Node node;
 
-        @Override
-        public void removeTrigger(Trigger<?> trigger) {
-            // Mock implementation
-        }
-    }
-
-    private static class MockBlockInteractor implements BlockInteractor {
-
-        @Override
-        public Flowable<Block> replayPastBlocks(BigInteger startBlock) {
-            return null;
-        }
-
-        @Override
-        public Flowable<Block> replayPastAndFutureBlocks(BigInteger startBlock) {
-            return null;
-        }
-
-        @Override
-        public Flowable<Block> replyFutureBlocks() {
-            return null;
-        }
-
-        @Override
-        public Block getCurrentBlock() {
-            return null;
-        }
-
-        @Override
-        public BigInteger getCurrentBlockNumber() {
-            return null;
-        }
-
-        @Override
-        public Block getBlock(BigInteger number) {
-            return null;
-        }
-
-        @Override
-        public Block getBlock(String hash) {
-            return null;
-        }
-
-        @Override
-        public List<Log> getLogs(BigInteger startBlock, BigInteger endBlock) {
-            return List.of();
-        }
-
-        @Override
-        public List<Log> getLogs(
-                BigInteger startBlock, BigInteger endBlock, String contractAddress) {
-            return List.of();
-        }
-
-        @Override
-        public List<Log> getLogs(String blockHash) {
-            return List.of();
-        }
-
-        @Override
-        public List<Log> getLogs(String blockHash, String contractAddress) {
-            return List.of();
-        }
-    }
-
-    private static class MockSubscriptionConfiguration extends SubscriptionConfiguration {
-
-        protected MockSubscriptionConfiguration() {
-            super(SubscriptionStrategy.BLOCK_BASED);
-        }
-    }
-
-    private static class MockInteractionConfiguration extends InteractionConfiguration {
-
-        protected MockInteractionConfiguration() {
-            super(InteractionStrategy.BLOCK_BASED);
-        }
-    }
-
-    private static class MockNode extends Node {
-
-        protected MockNode() {
-            super(
-                    UUID.randomUUID(),
-                    new NodeName("MockNode"),
-                    NodeType.ETHEREUM,
-                    new MockSubscriptionConfiguration(),
-                    new MockInteractionConfiguration(),
-                    new HttpNodeConnection(
-                            new ConnectionEndpoint("http://localhost:8545"),
-                            new RetryConfiguration(1, Duration.ofSeconds(1)),
-                            new MaxIdleConnections(1),
-                            new KeepAliveDuration(Duration.ofSeconds(1)),
-                            new ConnectionTimeout(Duration.ofSeconds(1)),
-                            new ReadTimeout(Duration.ofSeconds(1))));
-        }
+    @Test
+    void constructor_nullInteractor_throwsNPE() {
+        NullPointerException ex =
+                assertThrows(
+                        NullPointerException.class,
+                        () -> new BlockSubscriberFactory(null, dispatcher, blockMapper));
+        assertEquals("interactor must not be null", ex.getMessage());
     }
 
     @Test
-    void testConstructorWithNullInteractor() {
-        assertThrows(
-                NullPointerException.class,
-                () ->
-                        new BlockSubscriberFactory(
-                                null, new MockDispatcher(), new BlockToBlockEventMapper()));
+    void constructor_nullDispatcher_throwsNPE() {
+        NullPointerException ex =
+                assertThrows(
+                        NullPointerException.class,
+                        () -> new BlockSubscriberFactory(interactor, null, blockMapper));
+        assertEquals("dispatcher must not be null", ex.getMessage());
     }
 
     @Test
-    void testConstructorWithNullDispatcher() {
-        assertThrows(
-                NullPointerException.class,
-                () ->
-                        new BlockSubscriberFactory(
-                                new MockBlockInteractor(), null, new BlockToBlockEventMapper()));
+    void constructor_nullBlockMapper_throwsNPE() {
+        NullPointerException ex =
+                assertThrows(
+                        NullPointerException.class,
+                        () -> new BlockSubscriberFactory(interactor, dispatcher, null));
+        assertEquals("blockMapper must not be null", ex.getMessage());
     }
 
     @Test
-    void testConstructorWithNullBlockMapper() {
-        assertThrows(
-                NullPointerException.class,
-                () ->
-                        new BlockSubscriberFactory(
-                                new MockBlockInteractor(), new MockDispatcher(), null));
-    }
-
-    @Test
-    void testCreateWithNullMethod() {
-        assertThrows(
-                NullPointerException.class,
-                () ->
-                        new BlockSubscriberFactory(
-                                        new MockBlockInteractor(),
-                                        new MockDispatcher(),
-                                        new BlockToBlockEventMapper())
-                                .create(null, new MockNode()));
-    }
-
-    @Test
-    void testCreateWithNullNode() {
-        assertThrows(
-                NullPointerException.class,
-                () ->
-                        new BlockSubscriberFactory(
-                                        new MockBlockInteractor(),
-                                        new MockDispatcher(),
-                                        new BlockToBlockEventMapper())
-                                .create(BlockSubscriptionMethod.POLL, null));
-    }
-
-    @Test
-    void testCreateWithPollMethod() {
+    void create_nullMethod_throwsNPE() {
         BlockSubscriberFactory factory =
-                new BlockSubscriberFactory(
-                        new MockBlockInteractor(),
-                        new MockDispatcher(),
-                        new BlockToBlockEventMapper());
-        BlockSubscriber subscriber = factory.create(BlockSubscriptionMethod.POLL, new MockNode());
-        assertTrue(subscriber instanceof PollBlockSubscriber);
+                new BlockSubscriberFactory(interactor, dispatcher, blockMapper);
+        NullPointerException ex =
+                assertThrows(NullPointerException.class, () -> factory.create(null, node));
+        assertEquals("method must not be null", ex.getMessage());
     }
 
     @Test
-    void testCreateWithPubSubMethod() {
+    void create_nullNode_throwsNPE() {
         BlockSubscriberFactory factory =
-                new BlockSubscriberFactory(
-                        new MockBlockInteractor(),
-                        new MockDispatcher(),
-                        new BlockToBlockEventMapper());
-        BlockSubscriber subscriber = factory.create(BlockSubscriptionMethod.PUBSUB, new MockNode());
-        assertTrue(subscriber instanceof PubSubBlockSubscriber);
+                new BlockSubscriberFactory(interactor, dispatcher, blockMapper);
+        NullPointerException ex =
+                assertThrows(
+                        NullPointerException.class,
+                        () -> factory.create(BlockSubscriptionMethod.POLL, null));
+        assertEquals("node must not be null", ex.getMessage());
+    }
+
+    @Test
+    void create_poll_returnsPollBlockSubscriber() {
+        BlockSubscriberFactory factory =
+                new BlockSubscriberFactory(interactor, dispatcher, blockMapper);
+        BlockSubscriber subscriber = factory.create(BlockSubscriptionMethod.POLL, node);
+        assertNotNull(subscriber);
+        assertTrue(
+                subscriber instanceof PollBlockSubscriber,
+                "Expected instance of PollBlockSubscriber");
+    }
+
+    @Test
+    void create_pubsub_returnsPubSubBlockSubscriber() {
+        BlockSubscriberFactory factory =
+                new BlockSubscriberFactory(interactor, dispatcher, blockMapper);
+        BlockSubscriber subscriber = factory.create(BlockSubscriptionMethod.PUBSUB, node);
+        assertNotNull(subscriber);
+        assertTrue(
+                subscriber instanceof PubSubBlockSubscriber,
+                "Expected instance of PubSubBlockSubscriber");
+    }
+
+    @Test
+    void create_differentCallsProduceDistinctInstances() {
+        BlockSubscriberFactory factory =
+                new BlockSubscriberFactory(interactor, dispatcher, blockMapper);
+        BlockSubscriber first = factory.create(BlockSubscriptionMethod.POLL, node);
+        BlockSubscriber second = factory.create(BlockSubscriptionMethod.POLL, node);
+        assertNotSame(first, second, "Factory should create new instances on each call");
     }
 }

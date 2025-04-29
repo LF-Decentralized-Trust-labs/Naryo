@@ -10,5 +10,4 @@ class BlockBroadcasterTargetTest extends AbstractBroadcasterTargetTest {
     protected BroadcasterTarget createBroadcasterTarget(Destination destination) {
         return new BlockBroadcasterTarget(destination);
     }
-
 }

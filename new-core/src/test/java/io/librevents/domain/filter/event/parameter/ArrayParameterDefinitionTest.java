@@ -12,7 +12,7 @@ class ArrayParameterDefinitionTest {
     void testArrayParameterDefinition() {
         ParameterDefinition elementType = new StringParameterDefinition();
         ArrayParameterDefinition arrayParameterDefinition =
-                new ArrayParameterDefinition(0,elementType, 5);
+                new ArrayParameterDefinition(0, elementType, 5);
         assertEquals(ParameterType.ARRAY, arrayParameterDefinition.getType());
         assertEquals(0, arrayParameterDefinition.getPosition());
         assertEquals(5, arrayParameterDefinition.getFixedLength());
