@@ -10,5 +10,4 @@ public interface Dispatcher {
     void addTrigger(Trigger<?> trigger);
 
     void removeTrigger(Trigger<?> trigger);
-
 }

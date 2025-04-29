@@ -17,7 +17,8 @@ public final class BytesFixedParameter extends ContractEventParameter<byte[]> {
         if (byteLength < 1 || byteLength > 32)
             throw new IllegalArgumentException("Invalid bytes length: " + byteLength);
         if (value.length != byteLength)
-            throw new IllegalArgumentException("Invalid bytes value length: " + value.length + ", expected: " + byteLength);
+            throw new IllegalArgumentException(
+                    "Invalid bytes value length: " + value.length + ", expected: " + byteLength);
         this.byteLength = byteLength;
     }
 }

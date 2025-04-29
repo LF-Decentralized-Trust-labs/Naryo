@@ -21,9 +21,7 @@ class StructParameterTest extends AbstractContractEventParameterTest {
     void testConstructor() {
         StructParameter parameter =
                 new StructParameter(
-                        true,
-                        1,
-                        List.of(new AddressParameter(true, 1, "0x1234567890abcdef")));
+                        true, 1, List.of(new AddressParameter(true, 1, "0x1234567890abcdef")));
 
         assertTrue(parameter.isIndexed());
         assertEquals(1, parameter.getPosition());
@@ -36,9 +34,12 @@ class StructParameterTest extends AbstractContractEventParameterTest {
     void testConstructorWithEmptyValues() {
         List<ContractEventParameter<?>> values = List.of();
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            new StructParameter(true, 1, values);
-        });
+        Exception exception =
+                assertThrows(
+                        IllegalArgumentException.class,
+                        () -> {
+                            new StructParameter(true, 1, values);
+                        });
 
         String expectedMessage = "StructParameter value cannot be empty";
         String actualMessage = exception.getMessage();

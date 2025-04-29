@@ -15,7 +15,7 @@ class BytesParameterTest extends AbstractContractEventParameterTest {
 
     @Test
     void testConstructor() {
-        byte[] value = new byte[]{0x01, 0x02, 0x03};
+        byte[] value = new byte[] {0x01, 0x02, 0x03};
         BytesParameter parameter = new BytesParameter(true, 1, value);
 
         assertArrayEquals(value, parameter.getValue());
@@ -23,5 +23,4 @@ class BytesParameterTest extends AbstractContractEventParameterTest {
         assertEquals(1, parameter.getPosition());
         assertEquals(ParameterType.BYTES, parameter.getType());
     }
-
 }

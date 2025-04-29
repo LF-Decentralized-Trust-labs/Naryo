@@ -1,11 +1,8 @@
 package io.librevents.application.common.util;
 
-import org.bouncycastle.crypto.digests.KeccakDigest;
-import org.web3j.crypto.Hash;
-
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+
+import org.bouncycastle.crypto.digests.KeccakDigest;
 
 public final class EncryptionUtil {
 

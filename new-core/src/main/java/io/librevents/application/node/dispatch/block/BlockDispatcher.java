@@ -24,28 +24,36 @@ public final class BlockDispatcher implements Dispatcher {
     @SuppressWarnings("unchecked")
     public void dispatch(Event event) {
         for (Trigger<?> trigger : new HashSet<>(triggers)) {
-            if (trigger.supports(event)) {
-                if (trigger instanceof DisposableTrigger) {
-                    ((DisposableTrigger<?>) trigger)
-                            .onDispose(
-                                    ignored -> {
-                                        log.debug(
-                                                "Trigger {} disposed",
-                                                trigger.getClass().getSimpleName());
-                                        triggers.remove(trigger);
-                                    });
-                } else {
-                    ((PermanentTrigger<?>) trigger)
-                            .onExecute(
-                                    ignore -> {
-                                        log.debug(
-                                                "Trigger {} executed",
-                                                trigger.getClass().getSimpleName());
-                                    });
-                }
+            try {
+                if (trigger.supports(event)) {
+                    if (trigger instanceof DisposableTrigger) {
+                        ((DisposableTrigger<?>) trigger)
+                                .onDispose(
+                                        ignored -> {
+                                            log.debug(
+                                                    "Trigger {} disposed",
+                                                    trigger.getClass().getSimpleName());
+                                            triggers.remove(trigger);
+                                        });
+                    } else {
+                        ((PermanentTrigger<?>) trigger)
+                                .onExecute(
+                                        ignore -> {
+                                            log.debug(
+                                                    "Trigger {} executed",
+                                                    trigger.getClass().getSimpleName());
+                                        });
+                    }
 
-                Trigger<Event> typedTrigger = (Trigger<Event>) trigger;
-                typedTrigger.trigger(event);
+                    Trigger<Event> typedTrigger = (Trigger<Event>) trigger;
+                    typedTrigger.trigger(event);
+                }
+            } catch (Exception e) {
+                log.error(
+                        "Error while dispatching event to trigger {}: {}",
+                        trigger.getClass().getSimpleName(),
+                        e.getMessage(),
+                        e);
             }
         }
     }

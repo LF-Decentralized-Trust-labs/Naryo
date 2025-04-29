@@ -5,5 +5,4 @@ import io.reactivex.disposables.Disposable;
 public interface Subscriber {
 
     Disposable subscribe();
-
 }

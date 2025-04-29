@@ -21,5 +21,4 @@ class BoolParameterTest extends AbstractContractEventParameterTest {
         assertTrue(parameter.getValue());
         assertEquals(ParameterType.BOOL, parameter.getType());
     }
-
 }

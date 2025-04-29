@@ -28,14 +28,15 @@ public final class BlockEvent extends Event {
     private final List<Transaction> transactions;
 
     public BlockEvent(
-        UUID nodeId,
-        NonNegativeBlockNumber number,
-        String hash,
-        String logsBloom,
-        BigInteger size,
-        BigInteger gasUsed,
-        BigInteger gasLimit,
-        BigInteger timestamp, List<Transaction> transactions) {
+            UUID nodeId,
+            NonNegativeBlockNumber number,
+            String hash,
+            String logsBloom,
+            BigInteger size,
+            BigInteger gasUsed,
+            BigInteger gasLimit,
+            BigInteger timestamp,
+            List<Transaction> transactions) {
         super(EventType.BLOCK, nodeId);
         this.number = number;
         this.hash = hash;

@@ -35,9 +35,12 @@ class ArrayParameterTest extends AbstractContractEventParameterTest {
     void testConstructorWithEmptyValues() {
         List<AddressParameter> addresses = List.of();
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            new ArrayParameter<>(true, 1, addresses);
-        });
+        Exception exception =
+                assertThrows(
+                        IllegalArgumentException.class,
+                        () -> {
+                            new ArrayParameter<>(true, 1, addresses);
+                        });
 
         String expectedMessage = "ArrayParameter value cannot be empty";
         String actualMessage = exception.getMessage();

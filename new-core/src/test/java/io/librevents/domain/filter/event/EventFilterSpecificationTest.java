@@ -2,6 +2,7 @@ package io.librevents.domain.filter.event;
 
 import java.util.Set;
 
+import io.librevents.domain.common.EventName;
 import io.librevents.domain.filter.event.parameter.*;
 import org.junit.jupiter.api.Test;
 
@@ -80,8 +81,11 @@ class EventFilterSpecificationTest {
         ParameterDefinition parameterDefinition3 = new UintParameterDefinition(256, 2, false);
         ParameterDefinition parameterDefinition4 = new IntParameterDefinition(256, 3, false);
         ParameterDefinition parameterDefinition5 = new BytesFixedParameterDefinition(32, 4, false);
-        ParameterDefinition parameterDefinition6 = new ArrayParameterDefinition(5, parameterDefinition1, 5);
-        ParameterDefinition parameterDefinition7 = new StructParameterDefinition(6, Set.of(parameterDefinition1, parameterDefinition2));
+        ParameterDefinition parameterDefinition6 =
+                new ArrayParameterDefinition(5, parameterDefinition1, 5);
+        ParameterDefinition parameterDefinition7 =
+                new StructParameterDefinition(
+                        6, Set.of(parameterDefinition1, parameterDefinition2));
         ParameterDefinition parameterDefinition8 = new StringParameterDefinition(7);
         ParameterDefinition parameterDefinition9 = new BytesParameterDefinition(8);
 
@@ -89,12 +93,21 @@ class EventFilterSpecificationTest {
 
         EventFilterSpecification eventFilterSpecification =
                 new EventFilterSpecification(
-                        name, correlationId, Set.of(parameterDefinition1, parameterDefinition2,
-                                parameterDefinition3, parameterDefinition4, parameterDefinition5,
-                                parameterDefinition6, parameterDefinition7, parameterDefinition8,
+                        name,
+                        correlationId,
+                        Set.of(
+                                parameterDefinition1,
+                                parameterDefinition2,
+                                parameterDefinition3,
+                                parameterDefinition4,
+                                parameterDefinition5,
+                                parameterDefinition6,
+                                parameterDefinition7,
+                                parameterDefinition8,
                                 parameterDefinition9));
 
-        String expectedSignature = "Test(bool,address,uint256,int256,bytes32,bool[5],(bool,address),string,bytes)";
+        String expectedSignature =
+                "Test(bool,address,uint256,int256,bytes32,bool[5],(bool,address),string,bytes)";
         assertEquals(expectedSignature, eventFilterSpecification.getEventSignature());
     }
 }

@@ -10,8 +10,6 @@ import static io.librevents.application.common.util.EncryptionUtil.*;
 
 public final class BloomFilterUtil {
 
-    private BloomFilterUtil() {}
-
     public static List<Integer> getBloomBitsForFilter(
             String contractAddressHex, String eventSignature) {
         byte[] contractAddressHash = keccak256(hexStringToByteArray(contractAddressHex));
