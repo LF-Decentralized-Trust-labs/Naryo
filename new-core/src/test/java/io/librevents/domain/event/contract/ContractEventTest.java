@@ -1,9 +1,11 @@
 package io.librevents.domain.event.contract;
 
 import java.math.BigInteger;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
+import io.librevents.domain.common.ContractEventStatus;
+import io.librevents.domain.common.EventName;
 import io.librevents.domain.event.contract.parameter.AddressParameter;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +18,8 @@ class ContractEventTest {
         ContractEvent event =
                 new ContractEvent(
                         UUID.randomUUID(),
-                        List.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
+                        new EventName("Test"),
+                        Set.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
                         "0xabcdef1234567890",
                         BigInteger.valueOf(1),
                         BigInteger.valueOf(1),
@@ -44,7 +47,8 @@ class ContractEventTest {
                 () -> {
                     new ContractEvent(
                             null,
-                            List.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
+                            new EventName("Test"),
+                            Set.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
                             "0xabcdef1234567890",
                             BigInteger.valueOf(1),
                             BigInteger.valueOf(1),
@@ -63,6 +67,7 @@ class ContractEventTest {
                 () -> {
                     new ContractEvent(
                             UUID.randomUUID(),
+                            new EventName("Test"),
                             null,
                             "0xabcdef1234567890",
                             BigInteger.valueOf(1),
@@ -82,7 +87,8 @@ class ContractEventTest {
                 () -> {
                     new ContractEvent(
                             UUID.randomUUID(),
-                            List.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
+                            new EventName("Test"),
+                            Set.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
                             null,
                             BigInteger.valueOf(1),
                             BigInteger.valueOf(1),
@@ -101,7 +107,8 @@ class ContractEventTest {
                 () -> {
                     new ContractEvent(
                             UUID.randomUUID(),
-                            List.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
+                            new EventName("Test"),
+                            Set.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
                             "",
                             BigInteger.valueOf(1),
                             BigInteger.valueOf(1),
@@ -120,7 +127,8 @@ class ContractEventTest {
                 () -> {
                     new ContractEvent(
                             UUID.randomUUID(),
-                            List.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
+                            new EventName("Test"),
+                            Set.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
                             "0xabcdef1234567890",
                             null,
                             BigInteger.valueOf(1),
@@ -139,7 +147,8 @@ class ContractEventTest {
                 () -> {
                     new ContractEvent(
                             UUID.randomUUID(),
-                            List.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
+                            new EventName("Test"),
+                            Set.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
                             "0xabcdef1234567890",
                             BigInteger.valueOf(-1),
                             BigInteger.valueOf(1),
@@ -158,7 +167,8 @@ class ContractEventTest {
                 () -> {
                     new ContractEvent(
                             UUID.randomUUID(),
-                            List.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
+                            new EventName("Test"),
+                            Set.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
                             "0xabcdef1234567890",
                             BigInteger.valueOf(1),
                             null,
@@ -173,21 +183,21 @@ class ContractEventTest {
     @Test
     void testConstructorWithNegativeBlockNumber() {
         assertThrows(
-            IllegalArgumentException.class,
-            () -> {
-                new ContractEvent(
-                        UUID.randomUUID(),
-                        List.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
-                        "0xabcdef1234567890",
-                        BigInteger.valueOf(1),
-                        BigInteger.valueOf(-1),
-                        "0xabcdef1234567890",
-                        "0xabcdef1234567890",
-                        "0xabcdef1234567890",
-                        ContractEventStatus.CONFIRMED,
-                        BigInteger.valueOf(1));
-            }
-        );
+                IllegalArgumentException.class,
+                () -> {
+                    new ContractEvent(
+                            UUID.randomUUID(),
+                            new EventName("Test"),
+                            Set.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
+                            "0xabcdef1234567890",
+                            BigInteger.valueOf(1),
+                            BigInteger.valueOf(-1),
+                            "0xabcdef1234567890",
+                            "0xabcdef1234567890",
+                            "0xabcdef1234567890",
+                            ContractEventStatus.CONFIRMED,
+                            BigInteger.valueOf(1));
+                });
     }
 
     @Test
@@ -197,7 +207,8 @@ class ContractEventTest {
                 () -> {
                     new ContractEvent(
                             UUID.randomUUID(),
-                            List.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
+                            new EventName("Test"),
+                            Set.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
                             "0xabcdef1234567890",
                             BigInteger.valueOf(1),
                             BigInteger.valueOf(1),
@@ -216,7 +227,8 @@ class ContractEventTest {
                 () -> {
                     new ContractEvent(
                             UUID.randomUUID(),
-                            List.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
+                            new EventName("Test"),
+                            Set.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
                             "0xabcdef1234567890",
                             BigInteger.valueOf(1),
                             BigInteger.valueOf(1),
@@ -235,7 +247,8 @@ class ContractEventTest {
                 () -> {
                     new ContractEvent(
                             UUID.randomUUID(),
-                            List.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
+                            new EventName("Test"),
+                            Set.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
                             "0xabcdef1234567890",
                             BigInteger.valueOf(1),
                             BigInteger.valueOf(1),
@@ -254,7 +267,8 @@ class ContractEventTest {
                 () -> {
                     new ContractEvent(
                             UUID.randomUUID(),
-                            List.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
+                            new EventName("Test"),
+                            Set.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
                             "0xabcdef1234567890",
                             BigInteger.valueOf(1),
                             BigInteger.valueOf(1),
@@ -273,7 +287,8 @@ class ContractEventTest {
                 () -> {
                     new ContractEvent(
                             UUID.randomUUID(),
-                            List.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
+                            new EventName("Test"),
+                            Set.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
                             "0xabcdef1234567890",
                             BigInteger.valueOf(1),
                             BigInteger.valueOf(1),
@@ -292,7 +307,8 @@ class ContractEventTest {
                 () -> {
                     new ContractEvent(
                             UUID.randomUUID(),
-                            List.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
+                            new EventName("Test"),
+                            Set.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
                             "0xabcdef1234567890",
                             BigInteger.valueOf(1),
                             BigInteger.valueOf(1),
@@ -311,7 +327,8 @@ class ContractEventTest {
                 () -> {
                     new ContractEvent(
                             UUID.randomUUID(),
-                            List.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
+                            new EventName("Test"),
+                            Set.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
                             "0xabcdef1234567890",
                             BigInteger.valueOf(1),
                             BigInteger.valueOf(1),
@@ -330,7 +347,8 @@ class ContractEventTest {
                 () -> {
                     new ContractEvent(
                             UUID.randomUUID(),
-                            List.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
+                            new EventName("Test"),
+                            Set.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
                             "0xabcdef1234567890",
                             BigInteger.valueOf(1),
                             BigInteger.valueOf(1),
@@ -349,7 +367,8 @@ class ContractEventTest {
                 () -> {
                     new ContractEvent(
                             UUID.randomUUID(),
-                            List.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
+                            new EventName("Test"),
+                            Set.of(new AddressParameter(true, 1, "0x1234567890abcdef")),
                             "0xabcdef1234567890",
                             BigInteger.valueOf(1),
                             BigInteger.valueOf(1),

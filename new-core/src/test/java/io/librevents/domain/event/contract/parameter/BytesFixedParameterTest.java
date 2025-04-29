@@ -26,19 +26,21 @@ class BytesFixedParameterTest extends AbstractContractEventParameterTest {
     @Test
     void testConstructorWithInvalidLength() {
         byte[] value = new byte[31];
-        assertThrows(IllegalArgumentException.class, () -> new BytesFixedParameter(true, 1, value, 32));
+        assertThrows(
+                IllegalArgumentException.class, () -> new BytesFixedParameter(true, 1, value, 32));
     }
 
     @Test
     void testConstructorWithInvalidLength2() {
         byte[] value = new byte[33];
-        assertThrows(IllegalArgumentException.class, () -> new BytesFixedParameter(true, 1, value, 33));
+        assertThrows(
+                IllegalArgumentException.class, () -> new BytesFixedParameter(true, 1, value, 33));
     }
 
     @Test
     void testConstructorWithInvalidLength3() {
         byte[] value = new byte[0];
-        assertThrows(IllegalArgumentException.class, () -> new BytesFixedParameter(true, 1, value, 0));
+        assertThrows(
+                IllegalArgumentException.class, () -> new BytesFixedParameter(true, 1, value, 0));
     }
-
 }

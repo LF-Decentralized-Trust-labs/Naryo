@@ -14,7 +14,8 @@ class DatabaseEventStoreConfigurationTest {
         }
     }
 
-    private static class MockDatabaseEventStoreConfiguration extends DatabaseEventStoreConfiguration {
+    private static class MockDatabaseEventStoreConfiguration
+            extends DatabaseEventStoreConfiguration {
         protected MockDatabaseEventStoreConfiguration(DatabaseEngine databaseEngine) {
             super(databaseEngine);
         }
@@ -22,9 +23,9 @@ class DatabaseEventStoreConfigurationTest {
 
     @Test
     void testConstructor() {
-        DatabaseEventStoreConfiguration config = new MockDatabaseEventStoreConfiguration(new MockDatabaseEngine());
+        DatabaseEventStoreConfiguration config =
+                new MockDatabaseEventStoreConfiguration(new MockDatabaseEngine());
         assertEquals(EventStoreType.DATABASE, config.getEventStoreType());
         assertEquals("MockDatabase", config.getEngine().getName());
     }
-
 }

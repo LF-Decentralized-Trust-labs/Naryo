@@ -1,7 +1,5 @@
 package io.librevents.application.node.subscription.block.poll;
 
-import java.util.Map;
-
 import io.librevents.application.common.Mapper;
 import io.librevents.application.node.dispatch.Dispatcher;
 import io.librevents.application.node.interactor.block.BlockInteractor;
@@ -11,6 +9,8 @@ import io.librevents.domain.event.block.BlockEvent;
 import io.librevents.domain.node.Node;
 import io.reactivex.disposables.Disposable;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Map;
 
 @Slf4j
 public final class PollBlockSubscriber extends BlockSubscriber {
@@ -34,6 +34,7 @@ public final class PollBlockSubscriber extends BlockSubscriber {
                                     blockMapper.map(block, Map.of("nodeId", node.getId())));
                         },
                         throwable -> {
+                            log.error("Error processing block", throwable);
                             // TODO: Handle error
                         });
     }

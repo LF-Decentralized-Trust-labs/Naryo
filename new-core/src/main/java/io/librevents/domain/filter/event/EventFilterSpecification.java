@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import io.librevents.domain.common.EventName;
 import io.librevents.domain.filter.event.parameter.*;
 
 public record EventFilterSpecification(

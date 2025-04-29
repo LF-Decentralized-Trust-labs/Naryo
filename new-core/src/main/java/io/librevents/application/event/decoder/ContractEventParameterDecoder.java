@@ -1,12 +1,11 @@
 package io.librevents.application.event.decoder;
 
+import java.util.Set;
+
 import io.librevents.domain.event.contract.ContractEventParameter;
 import io.librevents.domain.filter.event.EventFilterSpecification;
 
-import java.util.List;
-
 public interface ContractEventParameterDecoder {
 
-    List<ContractEventParameter<?>> decode(EventFilterSpecification specification, String logData);
-
+    Set<ContractEventParameter<?>> decode(EventFilterSpecification specification, String logData);
 }

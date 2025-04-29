@@ -20,14 +20,15 @@ class DestinationTest {
 
     @Test
     void testBlankDestination() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> new Destination("  "));
+        IllegalArgumentException exception =
+                assertThrows(IllegalArgumentException.class, () -> new Destination("  "));
         assertEquals("value cannot be blank", exception.getMessage());
     }
 
     @Test
     void testEmptyDestination() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> new Destination(""));
+        IllegalArgumentException exception =
+                assertThrows(IllegalArgumentException.class, () -> new Destination(""));
         assertEquals("value cannot be blank", exception.getMessage());
     }
-
 }

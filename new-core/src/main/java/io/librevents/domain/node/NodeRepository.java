@@ -6,5 +6,4 @@ import java.util.UUID;
 public interface NodeRepository {
 
     Optional<Node> findById(UUID id);
-
 }

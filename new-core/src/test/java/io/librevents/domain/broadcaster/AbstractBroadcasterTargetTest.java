@@ -20,5 +20,4 @@ public abstract class AbstractBroadcasterTargetTest {
         assertNotNull(target);
         assertEquals(destination, target.getDestination());
     }
-
 }

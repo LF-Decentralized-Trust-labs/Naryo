@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import io.librevents.domain.common.ContractEventStatus;
 import io.librevents.domain.filter.FilterName;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -21,7 +22,7 @@ public final class ContractEventFilter extends EventFilter {
             FilterName name,
             UUID nodeId,
             EventFilterSpecification specification,
-            List<EventStatus> statuses,
+            List<ContractEventStatus> statuses,
             SyncState syncState,
             String contractAddress) {
         super(id, name, nodeId, EventFilterScope.CONTRACT, specification, statuses, syncState);
