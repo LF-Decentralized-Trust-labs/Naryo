@@ -1,5 +1,8 @@
 package io.librevents.application.node.subscription.block.pubsub;
 
+import java.math.BigInteger;
+import java.util.List;
+
 import io.librevents.application.node.dispatch.Dispatcher;
 import io.librevents.application.node.interactor.block.BlockInteractor;
 import io.librevents.application.node.interactor.block.dto.Block;
@@ -10,9 +13,6 @@ import io.librevents.domain.node.Node;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
 import org.junit.jupiter.api.Test;
-
-import java.math.BigInteger;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

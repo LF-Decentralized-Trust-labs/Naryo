@@ -10,6 +10,7 @@ import io.librevents.domain.event.Event;
 import io.librevents.domain.event.EventType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 @Getter
@@ -19,7 +20,7 @@ public abstract class TransactionEvent extends Event {
 
     private final String hash;
     private final TransactionType type;
-    private final TransactionStatus status;
+    @Setter private TransactionStatus status;
     private final NonNegativeBlockNumber nonce;
     private final String blockHash;
     private final NonNegativeBlockNumber blockNumber;
