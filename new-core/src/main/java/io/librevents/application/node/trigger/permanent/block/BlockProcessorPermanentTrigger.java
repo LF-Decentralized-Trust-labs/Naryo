@@ -16,14 +16,13 @@ import io.librevents.application.node.interactor.block.dto.Transaction;
 import io.librevents.application.node.trigger.disposable.DisposableTrigger;
 import io.librevents.application.node.trigger.disposable.block.ContractEventConfirmationDisposableTrigger;
 import io.librevents.application.node.trigger.permanent.PermanentTrigger;
+import io.librevents.domain.common.ContractEventStatus;
 import io.librevents.domain.common.NonNegativeBlockNumber;
 import io.librevents.domain.event.Event;
 import io.librevents.domain.event.block.BlockEvent;
 import io.librevents.domain.event.contract.ContractEvent;
-import io.librevents.domain.event.contract.ContractEventStatus;
 import io.librevents.domain.filter.event.ContractEventFilter;
 import io.librevents.domain.filter.event.EventFilter;
-import io.librevents.domain.filter.event.EventStatus;
 import io.librevents.domain.filter.event.GlobalEventFilter;
 import io.librevents.domain.node.Node;
 import io.librevents.domain.node.NodeRepository;
@@ -115,6 +114,7 @@ public final class BlockProcessorPermanentTrigger implements PermanentTrigger<Bl
                                 ContractEvent contractEvent =
                                         new ContractEvent(
                                                 event.getNodeId(),
+                                                filter.getSpecification().eventName(),
                                                 decoder.decode(
                                                         filter.getSpecification(), value.data()),
                                                 value.transactionHash(),
@@ -130,7 +130,8 @@ public final class BlockProcessorPermanentTrigger implements PermanentTrigger<Bl
                                                 .getConfirmationBlocks()
                                                 .isGreaterThan(
                                                         new NonNegativeBlockNumber(BigInteger.ZERO))
-                                        && filter.getStatuses().contains(EventStatus.CONFIRMED)) {
+                                        && filter.getStatuses()
+                                                .contains(ContractEventStatus.CONFIRMED)) {
                                     contractEvent.setStatus(ContractEventStatus.UNCONFIRMED);
 
                                     log.debug("Adding confirmation trigger for {}", contractEvent);
@@ -142,7 +143,8 @@ public final class BlockProcessorPermanentTrigger implements PermanentTrigger<Bl
                                     dispatcher.addTrigger(trigger);
                                 }
 
-                                if (filter.getStatuses().contains(EventStatus.UNCONFIRMED)) {
+                                if (filter.getStatuses()
+                                        .contains(ContractEventStatus.UNCONFIRMED)) {
                                     dispatcher.dispatch(contractEvent);
                                 }
                             });

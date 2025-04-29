@@ -15,21 +15,23 @@ class BlockToBlockEventMapperTest {
 
     @Test
     void testMap() {
-        assertThrows(UnsupportedOperationException.class, () -> {
-            Block block =
-                    new Block(
-                            BigInteger.ONE,
-                            "0x123",
-                            BigInteger.ONE,
-                            "1000",
-                            BigInteger.ZERO,
-                            BigInteger.TEN,
-                            BigInteger.TEN,
-                            BigInteger.ZERO,
-                            List.of());
-            BlockToBlockEventMapper mapper = new BlockToBlockEventMapper();
-            mapper.map(block);
-        });
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> {
+                    Block block =
+                            new Block(
+                                    BigInteger.ONE,
+                                    "0x123",
+                                    BigInteger.ONE,
+                                    "1000",
+                                    BigInteger.ZERO,
+                                    BigInteger.TEN,
+                                    BigInteger.TEN,
+                                    BigInteger.ZERO,
+                                    List.of());
+                    BlockToBlockEventMapper mapper = new BlockToBlockEventMapper();
+                    mapper.map(block);
+                });
     }
 
     @Test

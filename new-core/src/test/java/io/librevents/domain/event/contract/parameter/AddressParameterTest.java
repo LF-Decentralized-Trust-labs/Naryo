@@ -10,8 +10,7 @@ class AddressParameterTest extends AbstractContractEventParameterTest {
 
     @Test
     void testConstructor() {
-        AddressParameter parameter =
-                new AddressParameter(true, 1, "0x1234567890abcdef");
+        AddressParameter parameter = new AddressParameter(true, 1, "0x1234567890abcdef");
 
         assertEquals("0x1234567890abcdef", parameter.getValue());
         assertTrue(parameter.isIndexed());

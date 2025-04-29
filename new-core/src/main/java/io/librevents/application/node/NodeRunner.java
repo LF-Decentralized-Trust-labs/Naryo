@@ -5,5 +5,4 @@ import io.reactivex.disposables.CompositeDisposable;
 public interface NodeRunner {
 
     CompositeDisposable run();
-
 }

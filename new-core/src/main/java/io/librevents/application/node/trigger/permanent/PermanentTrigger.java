@@ -7,5 +7,4 @@ import io.reactivex.functions.Consumer;
 public interface PermanentTrigger<E extends Event> extends Trigger<E> {
 
     void onExecute(Consumer<E> consumer);
-
 }

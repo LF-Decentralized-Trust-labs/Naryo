@@ -1,11 +1,11 @@
 package io.librevents.domain.event.contract;
 
+import java.util.Objects;
+
 import io.librevents.domain.common.ParameterType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-
-import java.util.Objects;
 
 @Getter
 @ToString

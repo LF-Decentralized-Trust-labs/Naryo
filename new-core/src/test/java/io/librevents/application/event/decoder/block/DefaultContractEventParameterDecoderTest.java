@@ -1,14 +1,15 @@
 package io.librevents.application.event.decoder.block;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import io.librevents.application.event.decoder.ContractEventParameterDecoder;
+import io.librevents.domain.common.EventName;
 import io.librevents.domain.event.contract.ContractEventParameter;
 import io.librevents.domain.event.contract.parameter.*;
 import io.librevents.domain.filter.event.CorrelationId;
 import io.librevents.domain.filter.event.EventFilterSpecification;
-import io.librevents.domain.filter.event.EventName;
 import io.librevents.domain.filter.event.parameter.*;
 import org.junit.jupiter.api.Test;
 
@@ -68,18 +69,25 @@ class DefaultContractEventParameterDecoderTest {
                 ;
         // @formatter:on
 
-        List<ContractEventParameter<?>> parameters = DECODER.decode(spec, logData);
+        Set<ContractEventParameter<?>> parameters = DECODER.decode(spec, logData);
         assert parameters.size() == 8;
-        assert parameters.getFirst() instanceof AddressParameter;
-        assert parameters.get(1) instanceof ArrayParameter;
-        assert parameters.get(1).getValue() instanceof List<?>;
-        assert ((List<?>) parameters.get(1).getValue()).size() == 2;
-        assert ((List<?>) parameters.get(1).getValue()).getFirst() instanceof AddressParameter;
-        assert parameters.get(2) instanceof BoolParameter;
-        assert parameters.get(3) instanceof BytesFixedParameter;
-        assert parameters.get(4) instanceof BytesParameter;
-        assert parameters.get(5) instanceof IntParameter;
-        assert parameters.get(6) instanceof StringParameter;
-        assert parameters.get(7) instanceof UintParameter;
+
+        List<ContractEventParameter<?>> list = new ArrayList<>(parameters);
+
+        assert list.get(0) instanceof AddressParameter;
+        assert list.get(1) instanceof ArrayParameter;
+
+        Object val1 = list.get(1).getValue();
+        assert val1 instanceof List<?>;
+        List<?> nested = (List<?>) val1;
+        assert nested.size() == 2;
+        assert nested.getFirst() instanceof AddressParameter;
+
+        assert list.get(2) instanceof BoolParameter;
+        assert list.get(3) instanceof BytesFixedParameter;
+        assert list.get(4) instanceof BytesParameter;
+        assert list.get(5) instanceof IntParameter;
+        assert list.get(6) instanceof StringParameter;
+        assert list.get(7) instanceof UintParameter;
     }
 }

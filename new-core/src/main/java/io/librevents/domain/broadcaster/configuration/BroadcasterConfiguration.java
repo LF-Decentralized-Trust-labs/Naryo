@@ -1,11 +1,11 @@
 package io.librevents.domain.broadcaster.configuration;
 
+import java.util.Objects;
+
 import io.librevents.domain.broadcaster.BroadcasterType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-
-import java.util.Objects;
 
 @Getter
 @ToString

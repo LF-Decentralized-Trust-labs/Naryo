@@ -10,5 +10,4 @@ class ContractEventBroadcasterTargetTest extends AbstractBroadcasterTargetTest {
     protected BroadcasterTarget createBroadcasterTarget(Destination destination) {
         return new ContractEventBroadcasterTarget(destination);
     }
-
 }

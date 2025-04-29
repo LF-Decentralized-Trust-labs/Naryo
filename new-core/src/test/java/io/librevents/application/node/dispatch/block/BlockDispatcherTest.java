@@ -1,166 +1,137 @@
 package io.librevents.application.node.dispatch.block;
 
-import java.math.BigInteger;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
-import io.librevents.application.node.trigger.Trigger;
 import io.librevents.application.node.trigger.disposable.DisposableTrigger;
 import io.librevents.application.node.trigger.permanent.PermanentTrigger;
-import io.librevents.domain.common.NonNegativeBlockNumber;
-import io.librevents.domain.common.TransactionStatus;
 import io.librevents.domain.event.Event;
-import io.librevents.domain.event.block.BlockEvent;
-import io.librevents.domain.event.transaction.TransferTransactionEvent;
 import io.reactivex.functions.Consumer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class BlockDispatcherTest {
 
-    private static class MockDisposableTrigger
-            implements DisposableTrigger<TransferTransactionEvent> {
+    @Mock private DisposableTrigger<Event> disposableTrigger;
 
-        private Consumer<TransferTransactionEvent> consumer;
+    @Mock private PermanentTrigger<Event> permanentTrigger;
 
-        @Override
-        public void trigger(TransferTransactionEvent event) {
-            // Mock trigger logic
-            System.out.println("Triggering event: " + event);
+    @Mock private Event event;
 
-            if (consumer != null) {
-                try {
-                    consumer.accept(event);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
+    private BlockDispatcher dispatcher;
 
-        @Override
-        public boolean supports(Event event) {
-            return event instanceof TransferTransactionEvent;
-        }
+    @Test
+    void dispatchDisposable_invokesOnDisposeAndTrigger_andRemovesTrigger() throws Exception {
+        when(disposableTrigger.supports(event)).thenReturn(true);
 
-        @Override
-        public void onDispose(Consumer<TransferTransactionEvent> consumer) {
-            this.consumer = consumer;
-        }
-    }
+        ArgumentCaptor<Consumer<Event>> onDisposeCaptor = ArgumentCaptor.forClass(Consumer.class);
+        doNothing().when(disposableTrigger).onDispose(onDisposeCaptor.capture());
+        doNothing().when(disposableTrigger).trigger(event);
 
-    private static class MockPermanentTrigger
-            implements PermanentTrigger<TransferTransactionEvent> {
+        dispatcher = new BlockDispatcher(Set.of(disposableTrigger));
+        dispatcher.dispatch(event);
 
-        private Consumer<TransferTransactionEvent> consumer;
+        // Verify onDispose registration and trigger() call
+        verify(disposableTrigger).onDispose(any());
+        verify(disposableTrigger).trigger(event);
 
-        @Override
-        public void trigger(TransferTransactionEvent event) {
-            // Mock trigger logic
-            System.out.println("Triggering event: " + event);
-
-            if (consumer != null) {
-                try {
-                    consumer.accept(event);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-
-        @Override
-        public boolean supports(Event event) {
-            return event instanceof TransferTransactionEvent;
-        }
-
-        @Override
-        public void onExecute(Consumer<TransferTransactionEvent> consumer) {
-            this.consumer = consumer;
-        }
-    }
-
-    private static class InvalidMockTrigger implements DisposableTrigger<BlockEvent> {
-
-        @Override
-        public void trigger(BlockEvent event) {
-            // Mock trigger logic
-            System.out.println("Triggering event: " + event);
-        }
-
-        @Override
-        public boolean supports(Event event) {
-            return false;
-        }
-
-        @Override
-        public void onDispose(Consumer<BlockEvent> consumer) {
-            // No-op
-        }
+        // Simulate disposal callback and check removal
+        Consumer<Event> disposeCallback = onDisposeCaptor.getValue();
+        assertNotNull(disposeCallback);
+        disposeCallback.accept(event);
+        assertFalse(dispatcher.getTriggers().contains(disposableTrigger));
     }
 
     @Test
-    void dispatchWithoutTriggers() {
-        BlockDispatcher blockDispatcher = new BlockDispatcher(Set.of());
-        assertDoesNotThrow(
-                () ->
-                        blockDispatcher.dispatch(
-                                new TransferTransactionEvent(
-                                        UUID.randomUUID(),
-                                        "0x1234567890abcdef",
-                                        TransactionStatus.FAILED,
-                                        new NonNegativeBlockNumber(BigInteger.ZERO),
-                                        "0xabcdef1234567890",
-                                        new NonNegativeBlockNumber(BigInteger.ONE),
-                                        BigInteger.TEN,
-                                        BigInteger.ZERO,
-                                        "0xabcdef1234567890",
-                                        "0x1234567890abcdef",
-                                        "0xabcdef1234567890",
-                                        "0x1234567890abcdef",
-                                        "0xabcdef1234567890")));
+    void dispatchPermanent_invokesOnExecuteAndTrigger_andKeepsTrigger() throws Exception {
+        when(permanentTrigger.supports(event)).thenReturn(true);
+
+        ArgumentCaptor<Consumer<Event>> onExecuteCaptor = ArgumentCaptor.forClass(Consumer.class);
+        doNothing().when(permanentTrigger).onExecute(onExecuteCaptor.capture());
+        doNothing().when(permanentTrigger).trigger(event);
+
+        dispatcher = new BlockDispatcher(Set.of(permanentTrigger));
+        dispatcher.dispatch(event);
+
+        verify(permanentTrigger).onExecute(any());
+        verify(permanentTrigger).trigger(event);
+        assertTrue(dispatcher.getTriggers().contains(permanentTrigger));
+
+        // invoke onExecute callback to ensure it doesn't remove
+        Consumer<Event> execCallback = onExecuteCaptor.getValue();
+        assertNotNull(execCallback);
+        execCallback.accept(event);
+        assertTrue(dispatcher.getTriggers().contains(permanentTrigger));
     }
 
     @Test
-    void dispatchWithTriggers() {
-        BlockDispatcher blockDispatcher = new BlockDispatcher(Set.of(
-                    new MockDisposableTrigger(),
-                    new MockPermanentTrigger(),
-                    new InvalidMockTrigger()));
-        assertDoesNotThrow(
-                () ->
-                        blockDispatcher.dispatch(
-                                new TransferTransactionEvent(
-                                        UUID.randomUUID(),
-                                        "0x1234567890abcdef",
-                                        TransactionStatus.FAILED,
-                                        new NonNegativeBlockNumber(BigInteger.ZERO),
-                                        "0xabcdef1234567890",
-                                        new NonNegativeBlockNumber(BigInteger.ONE),
-                                        BigInteger.TEN,
-                                        BigInteger.ZERO,
-                                        "0xabcdef1234567890",
-                                        "0x1234567890abcdef",
-                                        "0xabcdef1234567890",
-                                        "0x1234567890abcdef",
-                                        "0xabcdef1234567890")));
+    void unsupportedTriggers_areNotCalled() {
+        when(disposableTrigger.supports(event)).thenReturn(false);
+        when(permanentTrigger.supports(event)).thenReturn(false);
+
+        dispatcher = new BlockDispatcher(Set.of(disposableTrigger, permanentTrigger));
+        dispatcher.dispatch(event);
+
+        verify(disposableTrigger, never()).onDispose(any());
+        verify(disposableTrigger, never()).trigger(any());
+        verify(permanentTrigger, never()).onExecute(any());
+        verify(permanentTrigger, never()).trigger(any());
     }
 
     @Test
-    void addTrigger() {
-        BlockDispatcher blockDispatcher = new BlockDispatcher(Set.of());
-        MockDisposableTrigger trigger = new MockDisposableTrigger();
-        blockDispatcher.addTrigger(trigger);
-        assertTrue(blockDispatcher.getTriggers().contains(trigger));
+    void continuesWhenOnDisposeThrows_andStillTriggers() {
+        when(disposableTrigger.supports(event)).thenReturn(true);
+        doThrow(new RuntimeException("onDisposeFail")).when(disposableTrigger).onDispose(any());
+
+        dispatcher = new BlockDispatcher(Set.of(disposableTrigger));
+        assertDoesNotThrow(() -> dispatcher.dispatch(event));
+
+        verify(disposableTrigger).onDispose(any());
+        verify(disposableTrigger, never()).trigger(event);
     }
 
     @Test
-    void removeTrigger() {
-        BlockDispatcher blockDispatcher = new BlockDispatcher(Set.of());
-        MockDisposableTrigger trigger = new MockDisposableTrigger();
-        blockDispatcher.addTrigger(trigger);
-        blockDispatcher.removeTrigger(trigger);
-        assertFalse(blockDispatcher.getTriggers().contains(trigger));
+    void continuesWhenOnExecuteThrows_andStillTriggers() {
+        when(permanentTrigger.supports(event)).thenReturn(true);
+        doThrow(new RuntimeException("onExecuteFail")).when(permanentTrigger).onExecute(any());
+
+        dispatcher = new BlockDispatcher(Set.of(permanentTrigger));
+        assertDoesNotThrow(() -> dispatcher.dispatch(event));
+
+        verify(permanentTrigger).onExecute(any());
+        verify(permanentTrigger, never()).trigger(event);
+    }
+
+    @Test
+    void continuesWhenTriggerThrows_andProcessesOtherTriggers() {
+        when(disposableTrigger.supports(event)).thenReturn(true);
+        when(permanentTrigger.supports(event)).thenReturn(true);
+
+        doThrow(new RuntimeException("triggerFail")).when(disposableTrigger).trigger(event);
+        doNothing().when(permanentTrigger).trigger(event);
+
+        dispatcher = new BlockDispatcher(Set.of(disposableTrigger, permanentTrigger));
+        assertDoesNotThrow(() -> dispatcher.dispatch(event));
+
+        verify(disposableTrigger).trigger(event);
+        verify(permanentTrigger).trigger(event);
+    }
+
+    @Test
+    void addRemoveGetTriggers_workAsExpected() {
+        dispatcher = new BlockDispatcher(Set.of());
+        assertTrue(dispatcher.getTriggers().isEmpty());
+
+        dispatcher.addTrigger(disposableTrigger);
+        assertTrue(dispatcher.getTriggers().contains(disposableTrigger));
+
+        dispatcher.removeTrigger(disposableTrigger);
+        assertFalse(dispatcher.getTriggers().contains(disposableTrigger));
     }
 }
