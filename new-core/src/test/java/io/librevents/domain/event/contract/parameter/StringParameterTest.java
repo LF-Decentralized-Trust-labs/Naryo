@@ -2,7 +2,6 @@ package io.librevents.domain.event.contract.parameter;
 
 import io.librevents.domain.common.ParameterType;
 import io.librevents.domain.event.contract.AbstractContractEventParameterTest;
-import io.librevents.domain.event.contract.ContractEventParameter;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

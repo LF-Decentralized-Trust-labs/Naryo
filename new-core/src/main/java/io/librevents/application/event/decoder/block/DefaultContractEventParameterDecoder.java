@@ -3,10 +3,8 @@ package io.librevents.application.event.decoder.block;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import io.librevents.application.event.decoder.ContractEventParameterDecoder;
 import io.librevents.domain.event.contract.ContractEventParameter;
@@ -22,18 +20,19 @@ import static io.librevents.application.common.util.EncryptionUtil.hexStringToBy
 
 public final class DefaultContractEventParameterDecoder implements ContractEventParameterDecoder {
 
-    @Override
-    public List<ContractEventParameter<?>> decode(
+    public Set<ContractEventParameter<?>> decode(
             EventFilterSpecification specification, String logData) {
+
         byte[] data = hexStringToByteArray(logData);
         int offset = 0;
 
-        List<ParameterDefinition> ordered =
+        Set<ParameterDefinition> ordered =
                 specification.parameters().stream()
                         .sorted(Comparator.comparingInt(ParameterDefinition::getPosition))
-                        .toList();
+                        .collect(Collectors.toCollection(LinkedHashSet::new));
 
-        List<ContractEventParameter<?>> result = new ArrayList<>();
+        Set<ContractEventParameter<?>> result = new LinkedHashSet<>();
+
         for (ParameterDefinition def : ordered) {
             DecodeResult decoded = decodeParameter(def, data, offset);
             result.add(decoded.parameter());

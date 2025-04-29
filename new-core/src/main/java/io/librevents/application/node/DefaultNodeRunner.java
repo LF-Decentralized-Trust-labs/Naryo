@@ -25,5 +25,4 @@ public final class DefaultNodeRunner implements NodeRunner {
         disposable.add(synchronizer.synchronize());
         return disposable;
     }
-
 }

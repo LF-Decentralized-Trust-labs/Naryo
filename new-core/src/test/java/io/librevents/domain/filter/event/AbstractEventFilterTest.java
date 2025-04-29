@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import io.librevents.domain.common.ContractEventStatus;
+import io.librevents.domain.common.EventName;
 import io.librevents.domain.filter.FilterName;
 import io.librevents.domain.filter.event.parameter.BoolParameterDefinition;
 import io.librevents.domain.filter.event.sync.NoSyncState;
@@ -19,7 +21,7 @@ abstract class AbstractEventFilterTest {
             FilterName name,
             UUID nodeId,
             EventFilterSpecification specification,
-            List<EventStatus> statuses,
+            List<ContractEventStatus> statuses,
             SyncState syncState);
 
     @Test
@@ -31,7 +33,7 @@ abstract class AbstractEventFilterTest {
         EventFilterSpecification specification =
                 new EventFilterSpecification(
                         new EventName("Test"), new CorrelationId(0), parameters);
-        List<EventStatus> statuses = List.of(EventStatus.CONFIRMED);
+        List<ContractEventStatus> statuses = List.of(ContractEventStatus.CONFIRMED);
         SyncState syncState = new NoSyncState();
 
         EventFilter eventFilter =
@@ -50,7 +52,7 @@ abstract class AbstractEventFilterTest {
         UUID id = UUID.randomUUID();
         FilterName name = new FilterName("Test Filter");
         UUID nodeId = UUID.randomUUID();
-        List<EventStatus> statuses = List.of(EventStatus.CONFIRMED);
+        List<ContractEventStatus> statuses = List.of(ContractEventStatus.CONFIRMED);
         SyncState syncState = new NoSyncState();
 
         assertThrows(
@@ -69,7 +71,7 @@ abstract class AbstractEventFilterTest {
         EventFilterSpecification specification =
                 new EventFilterSpecification(
                         new EventName("Test"), new CorrelationId(0), parameters);
-        List<EventStatus> statuses = new ArrayList<>();
+        List<ContractEventStatus> statuses = new ArrayList<>();
         SyncState syncState = new NoSyncState();
 
         assertThrows(
@@ -104,8 +106,9 @@ abstract class AbstractEventFilterTest {
         UUID nodeId = UUID.randomUUID();
         Set<ParameterDefinition> parameters = Set.of(new BoolParameterDefinition(0, false));
         EventFilterSpecification specification =
-                new EventFilterSpecification(new EventName("Test"), new CorrelationId(0), parameters);
-        List<EventStatus> statuses = List.of(EventStatus.CONFIRMED);
+                new EventFilterSpecification(
+                        new EventName("Test"), new CorrelationId(0), parameters);
+        List<ContractEventStatus> statuses = List.of(ContractEventStatus.CONFIRMED);
 
         assertThrows(
                 NullPointerException.class,

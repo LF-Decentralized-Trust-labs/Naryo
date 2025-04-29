@@ -1,5 +1,3 @@
 package io.librevents.application.node.interactor;
 
-public interface Interactor {
-
-}
+public interface Interactor {}

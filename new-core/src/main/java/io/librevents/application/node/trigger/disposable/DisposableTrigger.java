@@ -7,5 +7,4 @@ import io.reactivex.functions.Consumer;
 public interface DisposableTrigger<E extends Event> extends Trigger<E> {
 
     void onDispose(Consumer<E> consumer);
-
 }

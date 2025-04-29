@@ -1,12 +1,13 @@
 package io.librevents.domain.event.contract;
 
 import java.math.BigInteger;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
+import io.librevents.domain.common.ContractEventStatus;
+import io.librevents.domain.common.EventName;
 import io.librevents.domain.event.Event;
 import io.librevents.domain.event.EventType;
+import io.librevents.domain.filter.event.parameter.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,28 +18,31 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 public final class ContractEvent extends Event {
 
-    private final List<ContractEventParameter<?>> parameters;
+    private final EventName name;
+    private final Set<ContractEventParameter<?>> parameters;
     private final String transactionHash;
     private final BigInteger logIndex;
     private final BigInteger blockNumber;
     private final String blockHash;
     private final String contractAddress;
     private final String sender;
-    @Setter
-    private ContractEventStatus status;
+    @Setter private ContractEventStatus status;
     private final BigInteger timestamp;
 
     public ContractEvent(
-        UUID nodeId, List<ContractEventParameter<?>> parameters,
-        String transactionHash,
-        BigInteger logIndex,
-        BigInteger blockNumber,
-        String blockHash,
-        String contractAddress,
-        String sender,
-        ContractEventStatus status,
-        BigInteger timestamp) {
+            UUID nodeId,
+            EventName name,
+            Set<ContractEventParameter<?>> parameters,
+            String transactionHash,
+            BigInteger logIndex,
+            BigInteger blockNumber,
+            String blockHash,
+            String contractAddress,
+            String sender,
+            ContractEventStatus status,
+            BigInteger timestamp) {
         super(EventType.CONTRACT, nodeId);
+        this.name = name;
         this.parameters = parameters;
         this.transactionHash = transactionHash;
         this.logIndex = logIndex;
@@ -49,6 +53,7 @@ public final class ContractEvent extends Event {
         this.status = status;
         this.timestamp = timestamp;
 
+        Objects.requireNonNull(name, "name cannot be null");
         Objects.requireNonNull(parameters, "parameters cannot be null");
         Objects.requireNonNull(transactionHash, "transactionHash cannot be null");
         Objects.requireNonNull(logIndex, "logIndex cannot be null");

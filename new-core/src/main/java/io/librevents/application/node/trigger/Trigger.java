@@ -7,5 +7,4 @@ public interface Trigger<E extends Event> {
     void trigger(E event);
 
     boolean supports(Event event);
-
 }

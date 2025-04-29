@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import io.librevents.domain.common.ContractEventStatus;
 import io.librevents.domain.filter.Filter;
 import io.librevents.domain.filter.FilterName;
 import io.librevents.domain.filter.FilterType;
@@ -18,7 +19,7 @@ public abstract class EventFilter extends Filter {
 
     private final EventFilterScope scope;
     private final EventFilterSpecification specification;
-    private final List<EventStatus> statuses;
+    private final List<ContractEventStatus> statuses;
     private final SyncState syncState;
 
     protected EventFilter(
@@ -27,7 +28,7 @@ public abstract class EventFilter extends Filter {
             UUID nodeId,
             EventFilterScope scope,
             EventFilterSpecification specification,
-            List<EventStatus> statuses,
+            List<ContractEventStatus> statuses,
             SyncState syncState) {
         super(id, name, FilterType.EVENT, nodeId);
         Objects.requireNonNull(specification, "Specification cannot be null");
