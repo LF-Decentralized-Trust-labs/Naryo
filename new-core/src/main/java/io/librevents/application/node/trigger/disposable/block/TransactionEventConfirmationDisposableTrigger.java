@@ -1,5 +1,7 @@
 package io.librevents.application.node.trigger.disposable.block;
 
+import java.math.BigInteger;
+
 import io.librevents.application.node.dispatch.Dispatcher;
 import io.librevents.application.node.trigger.disposable.DisposableTrigger;
 import io.librevents.domain.common.TransactionStatus;
@@ -8,8 +10,6 @@ import io.librevents.domain.event.block.BlockEvent;
 import io.librevents.domain.event.transaction.TransactionEvent;
 import io.reactivex.functions.Consumer;
 import lombok.extern.slf4j.Slf4j;
-
-import java.math.BigInteger;
 
 @Slf4j
 public final class TransactionEventConfirmationDisposableTrigger

@@ -3,6 +3,7 @@ package io.librevents.application.node.subscription.block.pubsub;
 import java.util.Map;
 
 import io.librevents.application.common.Mapper;
+import io.librevents.application.node.calculator.StartBlockCalculator;
 import io.librevents.application.node.dispatch.Dispatcher;
 import io.librevents.application.node.interactor.block.BlockInteractor;
 import io.librevents.application.node.interactor.block.dto.Block;
@@ -33,8 +34,9 @@ public final class PubSubBlockSubscriber extends BlockSubscriber {
             BlockInteractor interactor,
             Dispatcher dispatcher,
             Node node,
-            Mapper<Block, BlockEvent> blockMapper) {
-        super(interactor, dispatcher, node, blockMapper);
+            Mapper<Block, BlockEvent> blockMapper,
+            StartBlockCalculator calculator) {
+        super(interactor, dispatcher, node, blockMapper, calculator);
     }
 
     @Override
@@ -42,7 +44,7 @@ public final class PubSubBlockSubscriber extends BlockSubscriber {
         CompositeDisposable compositeDisposable = new CompositeDisposable();
         compositeDisposable.add(
                 interactor
-                        .replayPastBlocks(getStartBlock())
+                        .replayPastBlocks(calculator.getStartBlock())
                         .doOnComplete(() -> compositeDisposable.add(subscribeNewBlocks()))
                         .subscribe(onNext, onError));
         return compositeDisposable;

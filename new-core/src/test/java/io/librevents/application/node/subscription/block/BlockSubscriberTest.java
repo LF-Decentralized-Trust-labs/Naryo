@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.time.Duration;
 import java.util.UUID;
 
+import io.librevents.application.node.calculator.StartBlockCalculator;
 import io.librevents.application.node.dispatch.Dispatcher;
 import io.librevents.application.node.interactor.block.BlockInteractor;
 import io.librevents.application.node.interactor.block.mapper.BlockToBlockEventMapper;
@@ -24,7 +25,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public abstract class BlockSubscriberTest {
@@ -35,11 +35,14 @@ public abstract class BlockSubscriberTest {
 
     @Mock protected BlockToBlockEventMapper blockMapper;
 
+    @Mock protected StartBlockCalculator calculator;
+
     protected abstract BlockSubscriber createBlockSubscriber(
             BlockInteractor interactor,
             Dispatcher dispatcher,
             Node node,
-            BlockToBlockEventMapper blockMapper);
+            BlockToBlockEventMapper blockMapper,
+            StartBlockCalculator calculator);
 
     @Test
     void testConstructorWithNullInteractor() {
@@ -48,7 +51,11 @@ public abstract class BlockSubscriberTest {
                         NullPointerException.class,
                         () ->
                                 createBlockSubscriber(
-                                        null, dispatcher, newNode(0, 0, 0, 0), blockMapper));
+                                        null,
+                                        dispatcher,
+                                        newNode(0, 0, 0),
+                                        blockMapper,
+                                        calculator));
         assertEquals("interactor cannot be null", ex.getMessage());
     }
 
@@ -59,7 +66,11 @@ public abstract class BlockSubscriberTest {
                         NullPointerException.class,
                         () ->
                                 createBlockSubscriber(
-                                        interactor, null, newNode(0, 0, 0, 0), blockMapper));
+                                        interactor,
+                                        null,
+                                        newNode(0, 0, 0),
+                                        blockMapper,
+                                        calculator));
         assertEquals("dispatcher cannot be null", ex.getMessage());
     }
 
@@ -70,69 +81,22 @@ public abstract class BlockSubscriberTest {
                         NullPointerException.class,
                         () ->
                                 createBlockSubscriber(
-                                        interactor, dispatcher, newNode(0, 0, 0, 0), null));
+                                        interactor,
+                                        dispatcher,
+                                        newNode(0, 0, 0),
+                                        null,
+                                        calculator));
         assertEquals("blockMapper cannot be null", ex.getMessage());
     }
 
-    @Test
-    void testGetStartBlockWithZeroLatestBlock() {
-        BlockSubscriber subscriber =
-                createBlockSubscriber(interactor, dispatcher, newNode(10, 0, 0, 0), blockMapper);
-        BigInteger startBlock = subscriber.getStartBlock();
-        assertEquals(BigInteger.TEN, startBlock);
-    }
-
-    @Test
-    void testGetStartBlockWithNonZeroLatestBlock() {
-        BlockSubscriber subscriber =
-                createBlockSubscriber(interactor, dispatcher, newNode(10, 1, 0, 0), blockMapper);
-        BigInteger startBlock = subscriber.getStartBlock();
-        assertEquals(BigInteger.ONE, startBlock);
-    }
-
-    @Test
-    void testGetStartBlockWithSyncBlockLimit() {
-        when(interactor.getCurrentBlockNumber()).thenReturn(BigInteger.valueOf(1000));
-        BlockSubscriber subscriber =
-                createBlockSubscriber(interactor, dispatcher, newNode(0, 100, 10, 0), blockMapper);
-        BigInteger startBlock = subscriber.getStartBlock();
-        assertEquals(BigInteger.valueOf(990), startBlock);
-    }
-
-    @Test
-    void testGetStartBlockWithSyncLimitExceedCurrentBlock() {
-        when(interactor.getCurrentBlockNumber()).thenReturn(BigInteger.valueOf(101));
-        BlockSubscriber subscriber =
-                createBlockSubscriber(interactor, dispatcher, newNode(0, 100, 10, 0), blockMapper);
-        BigInteger startBlock = subscriber.getStartBlock();
-        assertEquals(BigInteger.valueOf(100), startBlock);
-    }
-
-    @Test
-    void testGetStartBlockWithReplayOffsetExceeding() {
-        BlockSubscriber subscriber =
-                createBlockSubscriber(
-                        interactor, dispatcher, newNode(0, 100, 0, 1000), blockMapper);
-        BigInteger startBlock = subscriber.getStartBlock();
-        assertEquals(BigInteger.ZERO, startBlock);
-    }
-
-    @Test
-    void testGetStartBlockWithCurrentBlock() {
-        BlockSubscriber subscriber =
-                createBlockSubscriber(interactor, dispatcher, newNode(0, 100, 0, 0), blockMapper);
-        BigInteger startBlock = subscriber.getStartBlock();
-        assertEquals(BigInteger.valueOf(100), startBlock);
-    }
-
-    protected Node newNode(long start, long latest, long syncLimit, long replayOffset) {
+    protected Node newNode(long start, long syncLimit, long replayOffset) {
         return new PublicEthereumNode(
                 UUID.randomUUID(),
                 new NodeName("MockNode"),
                 new BlockSubscriptionConfiguration(
                         new PubSubBlockSubscriptionMethodConfiguration(),
                         new NonNegativeBlockNumber(BigInteger.valueOf(start)),
-                        new NonNegativeBlockNumber(BigInteger.valueOf(latest)),
+                        new NonNegativeBlockNumber(BigInteger.ZERO),
                         new NonNegativeBlockNumber(BigInteger.ZERO),
                         new NonNegativeBlockNumber(BigInteger.ZERO),
                         new NonNegativeBlockNumber(BigInteger.ZERO),
