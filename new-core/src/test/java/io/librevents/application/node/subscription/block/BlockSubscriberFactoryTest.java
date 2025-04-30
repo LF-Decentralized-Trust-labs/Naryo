@@ -1,6 +1,7 @@
 package io.librevents.application.node.subscription.block;
 
 import io.librevents.application.common.Mapper;
+import io.librevents.application.node.calculator.StartBlockCalculator;
 import io.librevents.application.node.dispatch.Dispatcher;
 import io.librevents.application.node.interactor.block.BlockInteractor;
 import io.librevents.application.node.interactor.block.dto.Block;
@@ -27,12 +28,16 @@ class BlockSubscriberFactoryTest {
 
     @Mock private Node node;
 
+    @Mock private StartBlockCalculator calculator;
+
     @Test
     void constructor_nullInteractor_throwsNPE() {
         NullPointerException ex =
                 assertThrows(
                         NullPointerException.class,
-                        () -> new BlockSubscriberFactory(null, dispatcher, blockMapper));
+                        () ->
+                                new BlockSubscriberFactory(
+                                        null, dispatcher, blockMapper, calculator));
         assertEquals("interactor must not be null", ex.getMessage());
     }
 
@@ -41,7 +46,9 @@ class BlockSubscriberFactoryTest {
         NullPointerException ex =
                 assertThrows(
                         NullPointerException.class,
-                        () -> new BlockSubscriberFactory(interactor, null, blockMapper));
+                        () ->
+                                new BlockSubscriberFactory(
+                                        interactor, null, blockMapper, calculator));
         assertEquals("dispatcher must not be null", ex.getMessage());
     }
 
@@ -50,14 +57,14 @@ class BlockSubscriberFactoryTest {
         NullPointerException ex =
                 assertThrows(
                         NullPointerException.class,
-                        () -> new BlockSubscriberFactory(interactor, dispatcher, null));
+                        () -> new BlockSubscriberFactory(interactor, dispatcher, null, calculator));
         assertEquals("blockMapper must not be null", ex.getMessage());
     }
 
     @Test
     void create_nullMethod_throwsNPE() {
         BlockSubscriberFactory factory =
-                new BlockSubscriberFactory(interactor, dispatcher, blockMapper);
+                new BlockSubscriberFactory(interactor, dispatcher, blockMapper, calculator);
         NullPointerException ex =
                 assertThrows(NullPointerException.class, () -> factory.create(null, node));
         assertEquals("method must not be null", ex.getMessage());
@@ -66,7 +73,7 @@ class BlockSubscriberFactoryTest {
     @Test
     void create_nullNode_throwsNPE() {
         BlockSubscriberFactory factory =
-                new BlockSubscriberFactory(interactor, dispatcher, blockMapper);
+                new BlockSubscriberFactory(interactor, dispatcher, blockMapper, calculator);
         NullPointerException ex =
                 assertThrows(
                         NullPointerException.class,
@@ -77,7 +84,7 @@ class BlockSubscriberFactoryTest {
     @Test
     void create_poll_returnsPollBlockSubscriber() {
         BlockSubscriberFactory factory =
-                new BlockSubscriberFactory(interactor, dispatcher, blockMapper);
+                new BlockSubscriberFactory(interactor, dispatcher, blockMapper, calculator);
         BlockSubscriber subscriber = factory.create(BlockSubscriptionMethod.POLL, node);
         assertNotNull(subscriber);
         assertTrue(
@@ -88,7 +95,7 @@ class BlockSubscriberFactoryTest {
     @Test
     void create_pubsub_returnsPubSubBlockSubscriber() {
         BlockSubscriberFactory factory =
-                new BlockSubscriberFactory(interactor, dispatcher, blockMapper);
+                new BlockSubscriberFactory(interactor, dispatcher, blockMapper, calculator);
         BlockSubscriber subscriber = factory.create(BlockSubscriptionMethod.PUBSUB, node);
         assertNotNull(subscriber);
         assertTrue(
@@ -99,7 +106,7 @@ class BlockSubscriberFactoryTest {
     @Test
     void create_differentCallsProduceDistinctInstances() {
         BlockSubscriberFactory factory =
-                new BlockSubscriberFactory(interactor, dispatcher, blockMapper);
+                new BlockSubscriberFactory(interactor, dispatcher, blockMapper, calculator);
         BlockSubscriber first = factory.create(BlockSubscriptionMethod.POLL, node);
         BlockSubscriber second = factory.create(BlockSubscriptionMethod.POLL, node);
         assertNotSame(first, second, "Factory should create new instances on each call");
