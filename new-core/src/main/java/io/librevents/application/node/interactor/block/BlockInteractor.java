@@ -6,6 +6,7 @@ import java.util.List;
 import io.librevents.application.node.interactor.Interactor;
 import io.librevents.application.node.interactor.block.dto.Block;
 import io.librevents.application.node.interactor.block.dto.Log;
+import io.librevents.application.node.interactor.block.dto.Transaction;
 import io.reactivex.Flowable;
 
 public interface BlockInteractor extends Interactor {
@@ -26,9 +27,19 @@ public interface BlockInteractor extends Interactor {
 
     List<Log> getLogs(BigInteger startBlock, BigInteger endBlock);
 
+    List<Log> getLogs(BigInteger startBlock, BigInteger endBlock, List<String> topics);
+
     List<Log> getLogs(BigInteger startBlock, BigInteger endBlock, String contractAddress);
+
+    List<Log> getLogs(
+            BigInteger startBlock,
+            BigInteger endBlock,
+            String contractAddress,
+            List<String> topics);
 
     List<Log> getLogs(String blockHash);
 
     List<Log> getLogs(String blockHash, String contractAddress);
+
+    Transaction getTransactionReceipt(String transactionHash);
 }

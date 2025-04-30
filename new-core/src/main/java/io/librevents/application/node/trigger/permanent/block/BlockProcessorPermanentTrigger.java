@@ -1,6 +1,5 @@
 package io.librevents.application.node.trigger.permanent.block;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -9,15 +8,12 @@ import java.util.function.Predicate;
 import io.librevents.application.common.util.EncryptionUtil;
 import io.librevents.application.event.decoder.ContractEventParameterDecoder;
 import io.librevents.application.filter.util.BloomFilterUtil;
-import io.librevents.application.node.dispatch.Dispatcher;
+import io.librevents.application.node.helper.ContractEventDispatcherHelper;
 import io.librevents.application.node.interactor.block.BlockInteractor;
 import io.librevents.application.node.interactor.block.dto.Log;
 import io.librevents.application.node.interactor.block.dto.Transaction;
-import io.librevents.application.node.trigger.disposable.DisposableTrigger;
-import io.librevents.application.node.trigger.disposable.block.ContractEventConfirmationDisposableTrigger;
 import io.librevents.application.node.trigger.permanent.PermanentTrigger;
 import io.librevents.domain.common.ContractEventStatus;
-import io.librevents.domain.common.NonNegativeBlockNumber;
 import io.librevents.domain.event.Event;
 import io.librevents.domain.event.block.BlockEvent;
 import io.librevents.domain.event.contract.ContractEvent;
@@ -26,7 +22,6 @@ import io.librevents.domain.filter.event.EventFilter;
 import io.librevents.domain.filter.event.GlobalEventFilter;
 import io.librevents.domain.node.Node;
 import io.librevents.domain.node.NodeRepository;
-import io.librevents.domain.node.subscription.block.BlockSubscriptionConfiguration;
 import io.reactivex.functions.Consumer;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,27 +30,27 @@ public final class BlockProcessorPermanentTrigger implements PermanentTrigger<Bl
 
     private final List<EventFilter> filters;
     private final BlockInteractor interactor;
-    private final Dispatcher dispatcher;
     private final ContractEventParameterDecoder decoder;
     private final NodeRepository nodeRepository;
+    private final ContractEventDispatcherHelper helper;
     private Consumer<BlockEvent> consumer;
 
     public BlockProcessorPermanentTrigger(
             List<EventFilter> filters,
             BlockInteractor interactor,
-            Dispatcher dispatcher,
             ContractEventParameterDecoder decoder,
-            NodeRepository nodeRepository) {
+            NodeRepository nodeRepository,
+            ContractEventDispatcherHelper helper) {
         Objects.requireNonNull(filters, "filters cannot be null");
         Objects.requireNonNull(interactor, "interactor cannot be null");
-        Objects.requireNonNull(dispatcher, "dispatcher cannot be null");
         Objects.requireNonNull(decoder, "decoder cannot be null");
         Objects.requireNonNull(nodeRepository, "nodeRepository cannot be null");
+        Objects.requireNonNull(helper, "helper cannot be null");
         this.filters = filters;
         this.interactor = interactor;
-        this.dispatcher = dispatcher;
         this.decoder = decoder;
         this.nodeRepository = nodeRepository;
+        this.helper = helper;
     }
 
     @Override
@@ -92,8 +87,7 @@ public final class BlockProcessorPermanentTrigger implements PermanentTrigger<Bl
             return;
         }
         log.debug("Found {} logs for block event {}", logs.size(), event);
-        BlockSubscriptionConfiguration configuration =
-                (BlockSubscriptionConfiguration) nodeOptional.get().getSubscriptionConfiguration();
+
         for (EventFilter filter : foundFilters) {
             Predicate<Log> predicate = getLogPredicate(filter);
             logs.stream()
@@ -125,28 +119,7 @@ public final class BlockProcessorPermanentTrigger implements PermanentTrigger<Bl
                                                 transaction != null ? transaction.from() : null,
                                                 ContractEventStatus.CONFIRMED,
                                                 event.getTimestamp());
-
-                                if (configuration
-                                                .getConfirmationBlocks()
-                                                .isGreaterThan(
-                                                        new NonNegativeBlockNumber(BigInteger.ZERO))
-                                        && filter.getStatuses()
-                                                .contains(ContractEventStatus.CONFIRMED)) {
-                                    contractEvent.setStatus(ContractEventStatus.UNCONFIRMED);
-
-                                    log.debug("Adding confirmation trigger for {}", contractEvent);
-                                    DisposableTrigger<?> trigger =
-                                            new ContractEventConfirmationDisposableTrigger(
-                                                    contractEvent,
-                                                    configuration.getConfirmationBlocks().value(),
-                                                    dispatcher);
-                                    dispatcher.addTrigger(trigger);
-                                }
-
-                                if (filter.getStatuses()
-                                        .contains(ContractEventStatus.UNCONFIRMED)) {
-                                    dispatcher.dispatch(contractEvent);
-                                }
+                                helper.execute(nodeOptional.get(), filter, contractEvent);
                             });
         }
     }

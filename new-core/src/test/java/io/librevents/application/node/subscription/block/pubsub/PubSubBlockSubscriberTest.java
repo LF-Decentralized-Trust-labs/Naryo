@@ -3,6 +3,7 @@ package io.librevents.application.node.subscription.block.pubsub;
 import java.math.BigInteger;
 import java.util.List;
 
+import io.librevents.application.node.calculator.StartBlockCalculator;
 import io.librevents.application.node.dispatch.Dispatcher;
 import io.librevents.application.node.interactor.block.BlockInteractor;
 import io.librevents.application.node.interactor.block.dto.Block;
@@ -14,8 +15,7 @@ import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -26,8 +26,9 @@ class PubSubBlockSubscriberTest extends BlockSubscriberTest {
             BlockInteractor interactor,
             Dispatcher dispatcher,
             Node node,
-            BlockToBlockEventMapper blockMapper) {
-        return new PubSubBlockSubscriber(interactor, dispatcher, node, blockMapper);
+            BlockToBlockEventMapper blockMapper,
+            StartBlockCalculator calculator) {
+        return new PubSubBlockSubscriber(interactor, dispatcher, node, blockMapper, calculator);
     }
 
     @Test
@@ -51,11 +52,13 @@ class PubSubBlockSubscriberTest extends BlockSubscriberTest {
                             createBlockSubscriber(
                                     interactor,
                                     dispatcher,
-                                    newNode(10, 0, 1, 1),
-                                    new BlockToBlockEventMapper());
+                                    newNode(10, 1, 1),
+                                    new BlockToBlockEventMapper(),
+                                    calculator);
 
                     Disposable disposable = subscriber.subscribe();
                     assertNotNull(disposable);
+                    assertFalse(disposable.isDisposed());
                 });
     }
 }

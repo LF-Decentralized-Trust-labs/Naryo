@@ -9,4 +9,6 @@ public interface FilterRepository {
     Optional<Filter> findById(UUID id);
 
     List<Filter> findAllById(List<UUID> ids);
+
+    List<Filter> findByNodeId(UUID nodeId);
 }
