@@ -1,5 +1,6 @@
 package io.librevents.application.node.subscription.block.pubsub;
 
+import java.io.IOException;
 import java.util.Map;
 
 import io.librevents.application.common.Mapper;
@@ -40,7 +41,7 @@ public final class PubSubBlockSubscriber extends BlockSubscriber {
     }
 
     @Override
-    public Disposable subscribe() {
+    public Disposable subscribe() throws IOException {
         CompositeDisposable compositeDisposable = new CompositeDisposable();
         compositeDisposable.add(
                 interactor

@@ -1,5 +1,6 @@
 package io.librevents.application.node.calculator;
 
+import java.io.IOException;
 import java.math.BigInteger;
 
 import io.librevents.application.node.interactor.block.BlockInteractor;
@@ -40,7 +41,7 @@ class StartBlockCalculatorTest {
     }
 
     @Test
-    void testGetStartBlockWithZeroLatestBlock() {
+    void testGetStartBlockWithZeroLatestBlock() throws IOException {
         when(node.getSubscriptionConfiguration()).thenReturn(configuration);
         when(configuration.getLatestBlock())
                 .thenReturn(new NonNegativeBlockNumber(BigInteger.ZERO));
@@ -52,7 +53,7 @@ class StartBlockCalculatorTest {
     }
 
     @Test
-    void testGetStartBlockWithCurrentBlock() {
+    void testGetStartBlockWithCurrentBlock() throws IOException {
         when(node.getSubscriptionConfiguration()).thenReturn(configuration);
         when(configuration.getLatestBlock())
                 .thenReturn(new NonNegativeBlockNumber(BigInteger.ZERO));
@@ -65,7 +66,7 @@ class StartBlockCalculatorTest {
     }
 
     @Test
-    void testGetStartBlockWithNonZeroLatestBlock() {
+    void testGetStartBlockWithNonZeroLatestBlock() throws IOException {
         when(node.getSubscriptionConfiguration()).thenReturn(configuration);
         when(configuration.getLatestBlock()).thenReturn(new NonNegativeBlockNumber(BigInteger.TEN));
         when(configuration.getReplayBlockOffset())
@@ -78,7 +79,7 @@ class StartBlockCalculatorTest {
     }
 
     @Test
-    void testGetStartBlockWithSyncBlockLimit() {
+    void testGetStartBlockWithSyncBlockLimit() throws IOException {
         when(node.getSubscriptionConfiguration()).thenReturn(configuration);
         when(configuration.getLatestBlock()).thenReturn(new NonNegativeBlockNumber(BigInteger.TEN));
         when(configuration.getReplayBlockOffset())
@@ -92,7 +93,7 @@ class StartBlockCalculatorTest {
     }
 
     @Test
-    void testGetStartBlockWithSyncLimitExceedCurrentBlock() {
+    void testGetStartBlockWithSyncLimitExceedCurrentBlock() throws IOException {
         when(node.getSubscriptionConfiguration()).thenReturn(configuration);
         when(interactor.getCurrentBlockNumber()).thenReturn(BigInteger.valueOf(101));
         when(configuration.getLatestBlock())
@@ -107,7 +108,7 @@ class StartBlockCalculatorTest {
     }
 
     @Test
-    void testGetStartBlockWithReplayOffsetExceeding() {
+    void testGetStartBlockWithReplayOffsetExceeding() throws IOException {
         when(node.getSubscriptionConfiguration()).thenReturn(configuration);
         when(configuration.getLatestBlock())
                 .thenReturn(new NonNegativeBlockNumber(BigInteger.valueOf(100)));
