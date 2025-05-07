@@ -1,5 +1,6 @@
 package io.librevents.application.node.calculator;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Objects;
 
@@ -19,7 +20,7 @@ public final class StartBlockCalculator {
         this.interactor = interactor;
     }
 
-    public BigInteger getStartBlock() {
+    public BigInteger getStartBlock() throws IOException {
         BlockSubscriptionConfiguration configuration =
                 (BlockSubscriptionConfiguration) node.getSubscriptionConfiguration();
         if (configuration.getLatestBlock().value().equals(BigInteger.ZERO)) {
@@ -32,7 +33,8 @@ public final class StartBlockCalculator {
         return startBlock.signum() > 0 ? startBlock : BigInteger.ZERO;
     }
 
-    private BigInteger calculateStartBlock(BlockSubscriptionConfiguration configuration) {
+    private BigInteger calculateStartBlock(BlockSubscriptionConfiguration configuration)
+            throws IOException {
         BigInteger startBlock =
                 BigInteger.valueOf(configuration.getLatestBlock().value().intValue())
                         .subtract(configuration.getReplayBlockOffset().value());

@@ -1,13 +1,14 @@
 package io.librevents.application.node.interactor.block;
 
-import java.math.BigInteger;
-import java.util.List;
-
 import io.librevents.application.node.interactor.Interactor;
 import io.librevents.application.node.interactor.block.dto.Block;
 import io.librevents.application.node.interactor.block.dto.Log;
 import io.librevents.application.node.interactor.block.dto.Transaction;
 import io.reactivex.Flowable;
+
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.List;
 
 public interface BlockInteractor extends Interactor {
 
@@ -17,29 +18,29 @@ public interface BlockInteractor extends Interactor {
 
     Flowable<Block> replyFutureBlocks();
 
-    Block getCurrentBlock();
+    Block getCurrentBlock() throws IOException;
 
-    BigInteger getCurrentBlockNumber();
+    BigInteger getCurrentBlockNumber() throws IOException;
 
-    Block getBlock(BigInteger number);
+    Block getBlock(BigInteger number) throws IOException;
 
-    Block getBlock(String hash);
+    Block getBlock(String hash) throws IOException;
 
-    List<Log> getLogs(BigInteger startBlock, BigInteger endBlock);
+    List<Log> getLogs(BigInteger startBlock, BigInteger endBlock) throws IOException;
 
-    List<Log> getLogs(BigInteger startBlock, BigInteger endBlock, List<String> topics);
+    List<Log> getLogs(BigInteger startBlock, BigInteger endBlock, List<String> topics)
+            throws IOException;
 
-    List<Log> getLogs(BigInteger startBlock, BigInteger endBlock, String contractAddress);
+    List<Log> getLogs(BigInteger startBlock, BigInteger endBlock, String contractAddress)
+            throws IOException;
 
     List<Log> getLogs(
-            BigInteger startBlock,
-            BigInteger endBlock,
-            String contractAddress,
-            List<String> topics);
+            BigInteger startBlock, BigInteger endBlock, String contractAddress, List<String> topics)
+            throws IOException;
 
-    List<Log> getLogs(String blockHash);
+    List<Log> getLogs(String blockHash) throws IOException;
 
-    List<Log> getLogs(String blockHash, String contractAddress);
+    List<Log> getLogs(String blockHash, String contractAddress) throws IOException;
 
-    Transaction getTransactionReceipt(String transactionHash);
+    Transaction getTransactionReceipt(String transactionHash) throws IOException;
 }

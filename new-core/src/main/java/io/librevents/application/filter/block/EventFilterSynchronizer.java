@@ -1,10 +1,5 @@
 package io.librevents.application.filter.block;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 import io.librevents.application.common.util.EncryptionUtil;
 import io.librevents.application.event.decoder.ContractEventParameterDecoder;
 import io.librevents.application.filter.Synchronizer;
@@ -24,6 +19,12 @@ import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 public final class EventFilterSynchronizer implements Synchronizer {
@@ -59,7 +60,7 @@ public final class EventFilterSynchronizer implements Synchronizer {
     }
 
     @Override
-    public Disposable synchronize() {
+    public Disposable synchronize() throws IOException {
         String topic = EncryptionUtil.keccak256Hex(filter.getSpecification().getEventSignature());
 
         return Flowable.fromIterable(extractLogsFromFilter(topic))
@@ -86,7 +87,7 @@ public final class EventFilterSynchronizer implements Synchronizer {
                         });
     }
 
-    private List<Log> extractLogsFromFilter(String topicHex) {
+    private List<Log> extractLogsFromFilter(String topicHex) throws IOException {
         List<Log> logs;
         BigInteger startBlock =
                 ((BlockActiveSyncState) filter.getSyncState()).getInitialBlock().value();
@@ -101,7 +102,7 @@ public final class EventFilterSynchronizer implements Synchronizer {
         return logs;
     }
 
-    private Block getBlock(BigInteger blockNumber) {
+    private Block getBlock(BigInteger blockNumber) throws IOException {
         for (Block block : cachedBlocks) {
             if (block.number().equals(blockNumber)) {
                 return block;
@@ -112,7 +113,7 @@ public final class EventFilterSynchronizer implements Synchronizer {
         return block;
     }
 
-    private Transaction getTransaction(String transactionHash) {
+    private Transaction getTransaction(String transactionHash) throws IOException {
         for (Transaction transaction : cachedTransactions) {
             if (transaction.hash().equals(transactionHash)) {
                 return transaction;
