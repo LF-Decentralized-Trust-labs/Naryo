@@ -1,5 +1,6 @@
 package io.librevents.application.filter.block;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Set;
@@ -116,7 +117,7 @@ class EventFilterSynchronizerTest {
     }
 
     @Test
-    void testSynchronize() {
+    void testSynchronize() throws IOException {
         when(eventFilter.getNodeId()).thenReturn(UUID.randomUUID());
         when(eventFilter.getSpecification())
                 .thenReturn(
