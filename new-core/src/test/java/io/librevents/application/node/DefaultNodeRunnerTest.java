@@ -1,5 +1,6 @@
 package io.librevents.application.node;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.UUID;
 
@@ -20,7 +21,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DefaultNodeRunnerTest {
 
@@ -60,7 +61,7 @@ class DefaultNodeRunnerTest {
     }
 
     @Test
-    void testRun() {
+    void testRun() throws IOException {
         Node node =
                 new HederaNode(
                         UUID.randomUUID(),
