@@ -1,5 +1,6 @@
 package io.librevents.application.node.subscription.block.poll;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -32,7 +33,7 @@ class PollBlockSubscriberTest extends BlockSubscriberTest {
     }
 
     @Test
-    void testSubscribe() {
+    void testSubscribe() throws IOException {
         when(calculator.getStartBlock()).thenReturn(BigInteger.TEN);
         when(interactor.replayPastAndFutureBlocks(any()))
                 .thenReturn(

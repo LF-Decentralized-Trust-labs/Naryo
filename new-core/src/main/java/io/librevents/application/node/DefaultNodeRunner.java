@@ -1,5 +1,7 @@
 package io.librevents.application.node;
 
+import java.io.IOException;
+
 import io.librevents.application.filter.Synchronizer;
 import io.librevents.application.node.subscription.Subscriber;
 import io.librevents.domain.node.Node;
@@ -19,7 +21,7 @@ public final class DefaultNodeRunner implements NodeRunner {
     }
 
     @Override
-    public CompositeDisposable run() {
+    public CompositeDisposable run() throws IOException {
         CompositeDisposable disposable = new CompositeDisposable();
         disposable.add(subscriber.subscribe());
         disposable.add(synchronizer.synchronize());

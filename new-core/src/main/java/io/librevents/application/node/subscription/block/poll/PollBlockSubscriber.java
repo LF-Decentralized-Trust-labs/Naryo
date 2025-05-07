@@ -1,5 +1,6 @@
 package io.librevents.application.node.subscription.block.poll;
 
+import java.io.IOException;
 import java.util.Map;
 
 import io.librevents.application.common.Mapper;
@@ -26,7 +27,7 @@ public final class PollBlockSubscriber extends BlockSubscriber {
     }
 
     @Override
-    public Disposable subscribe() {
+    public Disposable subscribe() throws IOException {
         return interactor
                 .replayPastAndFutureBlocks(calculator.getStartBlock())
                 .subscribe(

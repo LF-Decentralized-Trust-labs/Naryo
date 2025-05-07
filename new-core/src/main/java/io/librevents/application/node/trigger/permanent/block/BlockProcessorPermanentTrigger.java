@@ -1,10 +1,5 @@
 package io.librevents.application.node.trigger.permanent.block;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Predicate;
-
 import io.librevents.application.common.util.EncryptionUtil;
 import io.librevents.application.event.decoder.ContractEventParameterDecoder;
 import io.librevents.application.filter.util.BloomFilterUtil;
@@ -24,6 +19,12 @@ import io.librevents.domain.node.Node;
 import io.librevents.domain.node.NodeRepository;
 import io.reactivex.functions.Consumer;
 import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 @Slf4j
 public final class BlockProcessorPermanentTrigger implements PermanentTrigger<BlockEvent> {
@@ -65,11 +66,16 @@ public final class BlockProcessorPermanentTrigger implements PermanentTrigger<Bl
 
     @Override
     public void trigger(BlockEvent event) {
-        processBlock(event);
+        try {
+            processBlock(event);
+        } catch (Exception e) {
+            log.error("Error processing block", e);
+            // TODO: Improve error handling and block recovery
+        }
         callback(event);
     }
 
-    private void processBlock(BlockEvent event) {
+    private void processBlock(BlockEvent event) throws IOException {
         Optional<Node> nodeOptional = nodeRepository.findById(event.getNodeId());
         if (nodeOptional.isEmpty()) {
             log.debug("Node not found for block event {}", event);
