@@ -219,7 +219,6 @@ class BlockProcessorPermanentTriggerTest {
                 BigInteger.ZERO,
                 BigInteger.ZERO,
                 BigInteger.ZERO,
-                BigInteger.ZERO,
                 List.of(
                         new Transaction(
                                 "0x0", BigInteger.ONE, BigInteger.ZERO, "0x0", "0x0", "0x0")));

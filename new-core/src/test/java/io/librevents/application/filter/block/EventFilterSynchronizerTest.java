@@ -158,12 +158,10 @@ class EventFilterSynchronizerTest {
                         new Block(
                                 BigInteger.ONE,
                                 "0x123",
-                                BigInteger.ONE,
                                 "1000",
                                 BigInteger.ZERO,
                                 BigInteger.TEN,
                                 BigInteger.TEN,
-                                BigInteger.ZERO,
                                 List.of()));
 
         EventFilterSynchronizer synchronizer =

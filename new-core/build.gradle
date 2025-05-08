@@ -10,10 +10,11 @@ ext {
     junitVersion = '5.7.1'
     bcprovVersion = '1.70'
     mockitoVersion = '5.17.0'
-    mockitoInlineVersion = '5.2.0'
+    okHttpVersion = '4.12.0'
 }
 
 dependencies {
+    implementation "com.squareup.okhttp3:okhttp:$okHttpVersion"
     implementation "org.web3j:core:$web3jVersion"
     implementation "org.bouncycastle:bcprov-jdk15on:$bcprovVersion"
     implementation "org.modelmapper:modelmapper:$modelMapperVersion"
@@ -21,8 +22,8 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
 
     testImplementation "org.junit.jupiter:junit-jupiter:$junitVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
     testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
-    testImplementation "org.mockito:mockito-inline:$mockitoInlineVersion"
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

@@ -1,5 +1,6 @@
 package io.librevents.application.node.subscription.block.pubsub;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -32,19 +33,17 @@ class PubSubBlockSubscriberTest extends BlockSubscriberTest {
     }
 
     @Test
-    void testSubscribe() {
+    void testSubscribe() throws IOException {
         when(interactor.replayPastBlocks(any()))
                 .thenReturn(
                         Flowable.just(
                                 new Block(
                                         BigInteger.ONE,
                                         "0x123",
-                                        BigInteger.ONE,
                                         "1000",
                                         BigInteger.ZERO,
                                         BigInteger.TEN,
                                         BigInteger.TEN,
-                                        BigInteger.ZERO,
                                         List.of())));
         assertDoesNotThrow(
                 () -> {
