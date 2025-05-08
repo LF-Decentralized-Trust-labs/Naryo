@@ -1,5 +1,11 @@
 package io.librevents.infrastructure.node.interactor.eth.rpc;
 
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+
 import io.librevents.application.node.interactor.block.dto.Block;
 import io.librevents.application.node.interactor.block.dto.Log;
 import io.reactivex.Flowable;
@@ -14,12 +20,6 @@ import org.web3j.protocol.core.methods.response.*;
 import org.web3j.protocol.websocket.events.NewHead;
 import org.web3j.protocol.websocket.events.NewHeadsNotification;
 import org.web3j.protocol.websocket.events.NotificationParams;
-
-import java.io.IOException;
-import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -123,7 +123,8 @@ class EthereumRpcBlockInteractorTest {
     @Test
     void testReplayPastAndFutureBlocks() {
         EthBlock block = createFakeBlock(BigInteger.ZERO, "0x0");
-        when(web3j.replayPastAndFutureBlocksFlowable(any(), anyBoolean())).thenReturn(Flowable.just(block));
+        when(web3j.replayPastAndFutureBlocksFlowable(any(), anyBoolean()))
+                .thenReturn(Flowable.just(block));
         Flowable<EthBlock> flowable = Flowable.just(block);
         when(web3j.replayPastAndFutureBlocksFlowable(any(), anyBoolean())).thenReturn(flowable);
 
@@ -150,10 +151,11 @@ class EthereumRpcBlockInteractorTest {
         EthereumRpcBlockInteractor interactor = new EthereumRpcBlockInteractor(web3j);
         Flowable<Block> flowable = interactor.replyFutureBlocks();
         assertNotNull(flowable);
-        flowable.subscribe(actualBlock -> {
-            assertNotNull(actualBlock);
-            assertEquals("0x0", actualBlock.hash());
-        });
+        flowable.subscribe(
+                actualBlock -> {
+                    assertNotNull(actualBlock);
+                    assertEquals("0x0", actualBlock.hash());
+                });
     }
 
     @Test
@@ -205,7 +207,8 @@ class EthereumRpcBlockInteractorTest {
 
         EthereumRpcBlockInteractor interactor = new EthereumRpcBlockInteractor(web3j);
         AtomicReference<List<Log>> logs = new AtomicReference<>();
-        assertDoesNotThrow(() -> logs.set(interactor.getLogs(startBlock, endBlock, contractAddress)));
+        assertDoesNotThrow(
+                () -> logs.set(interactor.getLogs(startBlock, endBlock, contractAddress)));
         assertNotNull(logs.get());
     }
 
@@ -224,7 +227,8 @@ class EthereumRpcBlockInteractorTest {
 
         EthereumRpcBlockInteractor interactor = new EthereumRpcBlockInteractor(web3j);
         AtomicReference<List<Log>> logs = new AtomicReference<>();
-        assertDoesNotThrow(() -> logs.set(interactor.getLogs(startBlock, endBlock, contractAddress, topics)));
+        assertDoesNotThrow(
+                () -> logs.set(interactor.getLogs(startBlock, endBlock, contractAddress, topics)));
         assertNotNull(logs.get());
     }
 
@@ -266,24 +270,10 @@ class EthereumRpcBlockInteractorTest {
     void testGetTransactionReceipt() throws IOException {
         String transactionHash = "0x1234567890abcdef";
         EthGetTransactionReceipt transactionReceipt = new EthGetTransactionReceipt();
-        transactionReceipt.setResult(new TransactionReceipt(
-            "0x0",
-            "0x0",
-            "0x0",
-            "0x0",
-            "0x0",
-            "0x0",
-            "0x0",
-            "0x0",
-            "0x0",
-            "0x0",
-            "0x0",
-            List.of(),
-            "0x0",
-            "0x0",
-            "0x0",
-            "0x0"
-        ));
+        transactionReceipt.setResult(
+                new TransactionReceipt(
+                        "0x0", "0x0", "0x0", "0x0", "0x0", "0x0", "0x0", "0x0", "0x0", "0x0", "0x0",
+                        List.of(), "0x0", "0x0", "0x0", "0x0"));
 
         Request<?, EthGetTransactionReceipt> request = Mockito.mock(Request.class);
         when(web3j.ethGetTransactionReceipt(transactionHash)).thenAnswer(invocation -> request);
@@ -296,80 +286,51 @@ class EthereumRpcBlockInteractorTest {
 
     private EthBlock createFakeBlock(BigInteger number, String hash) {
         EthBlock response2 = new EthBlock();
-        EthBlock.Block result = new EthBlock.Block(
-            number.toString(),
-            hash,
-            "0x0",
-            "0x0",
-            "0x0",
-            "0x0",
-            "0x0",
-            "0x0",
-            "0x0",
-            "0x0",
-            "0x0",
-            "0x0",
-            "0x0",
-            "0x0",
-            "0x0",
-            "0x0",
-            "0x0",
-            "0x0",
-            "0x0",
-            "0x0",
-            List.of(new EthBlock.TransactionObject(
-                "0x0",
-                "0x0",
-                "0x0",
-                "0x0",
-                "0x0",
-                "0x0",
-                "0x0",
-                "0x0",
-                "0x0",
-                "0x0",
-                "0x0",
-                "0x0",
-                "0x0",
-                "0x0",
-                "0x0",
-                "0x0",
-                "0x0",
-                1,
-                "0x0",
-                "0x0",
-                "0x0",
-                "0x0",
-                List.of()
-            )),
-            List.of(),
-            List.of(),
-            "0x0",
-            "0x0",
-            List.of(),
-            "0x0",
-            "0x0"
-        );
+        EthBlock.Block result =
+                new EthBlock.Block(
+                        number.toString(),
+                        hash,
+                        "0x0",
+                        "0x0",
+                        "0x0",
+                        "0x0",
+                        "0x0",
+                        "0x0",
+                        "0x0",
+                        "0x0",
+                        "0x0",
+                        "0x0",
+                        "0x0",
+                        "0x0",
+                        "0x0",
+                        "0x0",
+                        "0x0",
+                        "0x0",
+                        "0x0",
+                        "0x0",
+                        List.of(
+                                new EthBlock.TransactionObject(
+                                        "0x0", "0x0", "0x0", "0x0", "0x0", "0x0", "0x0", "0x0",
+                                        "0x0", "0x0", "0x0", "0x0", "0x0", "0x0", "0x0", "0x0",
+                                        "0x0", 1, "0x0", "0x0", "0x0", "0x0", List.of())),
+                        List.of(),
+                        List.of(),
+                        "0x0",
+                        "0x0",
+                        List.of(),
+                        "0x0",
+                        "0x0");
         response2.setResult(result);
         return response2;
     }
 
     private EthLog createFakeLog() {
         EthLog response = new EthLog();
-        response.setResult(List.of(
-            new EthLog.LogObject(
-                false,
-                "0x0",
-                "0x0",
-                "0x0",
-                "0x0",
-                "0x0",
-                "0x0",
-                "0x0",
-                "0x0",
-                List.of()
-            )
-        ));
+        response.setResult(
+                List.of(
+                        new EthLog.LogObject(
+                                false, "0x0", "0x0", "0x0", "0x0", "0x0", "0x0", "0x0", "0x0",
+                                List.of())));
         return response;
     }
 }

@@ -23,7 +23,6 @@ public final class BlockEvent extends Event {
     private final String logsBloom;
     private final BigInteger size;
     private final BigInteger gasUsed;
-    private final BigInteger gasLimit;
     private final BigInteger timestamp;
     private final List<Transaction> transactions;
 
@@ -34,7 +33,6 @@ public final class BlockEvent extends Event {
             String logsBloom,
             BigInteger size,
             BigInteger gasUsed,
-            BigInteger gasLimit,
             BigInteger timestamp,
             List<Transaction> transactions) {
         super(EventType.BLOCK, nodeId);
@@ -43,7 +41,6 @@ public final class BlockEvent extends Event {
         this.logsBloom = logsBloom;
         this.size = size;
         this.gasUsed = gasUsed;
-        this.gasLimit = gasLimit;
         this.timestamp = timestamp;
         this.transactions = transactions;
 
@@ -52,7 +49,6 @@ public final class BlockEvent extends Event {
         Objects.requireNonNull(logsBloom, "logsBloom cannot be null");
         Objects.requireNonNull(size, "size cannot be null");
         Objects.requireNonNull(gasUsed, "gasUsed cannot be null");
-        Objects.requireNonNull(gasLimit, "gasLimit cannot be null");
         Objects.requireNonNull(timestamp, "timestamp cannot be null");
         Objects.requireNonNull(transactions, "transactions cannot be null");
         if (hash.isEmpty()) {
@@ -66,9 +62,6 @@ public final class BlockEvent extends Event {
         }
         if (gasUsed.compareTo(BigInteger.ZERO) < 0) {
             throw new IllegalArgumentException("gasUsed cannot be negative");
-        }
-        if (gasLimit.compareTo(BigInteger.ZERO) < 0) {
-            throw new IllegalArgumentException("gasLimit cannot be negative");
         }
         if (timestamp.compareTo(BigInteger.ZERO) < 0) {
             throw new IllegalArgumentException("timestamp cannot be negative");

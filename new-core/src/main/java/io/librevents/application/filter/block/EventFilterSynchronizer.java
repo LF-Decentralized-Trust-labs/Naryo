@@ -1,5 +1,11 @@
 package io.librevents.application.filter.block;
 
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import io.librevents.application.common.util.EncryptionUtil;
 import io.librevents.application.event.decoder.ContractEventParameterDecoder;
 import io.librevents.application.filter.Synchronizer;
@@ -19,12 +25,6 @@ import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-
-import java.io.IOException;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 public final class EventFilterSynchronizer implements Synchronizer {
