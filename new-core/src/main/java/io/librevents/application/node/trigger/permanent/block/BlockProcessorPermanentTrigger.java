@@ -1,5 +1,11 @@
 package io.librevents.application.node.trigger.permanent.block;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Predicate;
+
 import io.librevents.application.common.util.EncryptionUtil;
 import io.librevents.application.event.decoder.ContractEventParameterDecoder;
 import io.librevents.application.filter.util.BloomFilterUtil;
@@ -19,12 +25,6 @@ import io.librevents.domain.node.Node;
 import io.librevents.domain.node.NodeRepository;
 import io.reactivex.functions.Consumer;
 import lombok.extern.slf4j.Slf4j;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Predicate;
 
 @Slf4j
 public final class BlockProcessorPermanentTrigger implements PermanentTrigger<BlockEvent> {

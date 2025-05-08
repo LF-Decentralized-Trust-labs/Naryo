@@ -1,5 +1,10 @@
 package io.librevents.infrastructure.node.interactor.eth.rpc;
 
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.List;
+import java.util.Objects;
+
 import io.librevents.application.node.interactor.block.BlockInteractor;
 import io.librevents.application.node.interactor.block.dto.Block;
 import io.librevents.application.node.interactor.block.dto.Log;
@@ -11,11 +16,6 @@ import org.web3j.protocol.core.methods.request.EthFilter;
 import org.web3j.protocol.core.methods.response.EthBlock;
 import org.web3j.protocol.core.methods.response.EthLog;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
-
-import java.io.IOException;
-import java.math.BigInteger;
-import java.util.List;
-import java.util.Objects;
 
 public final class EthereumRpcBlockInteractor implements BlockInteractor {
 
@@ -131,11 +131,9 @@ public final class EthereumRpcBlockInteractor implements BlockInteractor {
         return new Block(
                 block.getBlock().getNumber(),
                 block.getBlock().getHash(),
-                block.getBlock().getNonce(),
                 block.getBlock().getLogsBloom(),
                 block.getBlock().getSize(),
                 block.getBlock().getGasUsed(),
-                block.getBlock().getGasLimit(),
                 block.getBlock().getTimestamp(),
                 block.getBlock().getTransactions().stream()
                         .map(

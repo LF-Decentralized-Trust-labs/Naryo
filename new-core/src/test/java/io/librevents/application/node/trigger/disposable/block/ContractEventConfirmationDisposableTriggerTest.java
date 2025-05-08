@@ -64,7 +64,6 @@ class ContractEventConfirmationDisposableTriggerTest {
                         BigInteger.ZERO,
                         BigInteger.ZERO,
                         BigInteger.ZERO,
-                        BigInteger.ZERO,
                         java.util.Collections.emptyList());
 
         trigger.trigger(blockEvent);
@@ -86,7 +85,6 @@ class ContractEventConfirmationDisposableTriggerTest {
                         new NonNegativeBlockNumber(requiredConfirmations.subtract(BigInteger.ONE)),
                         "0xblockHash",
                         "0xparentHash",
-                        BigInteger.ZERO,
                         BigInteger.ZERO,
                         BigInteger.ZERO,
                         BigInteger.ZERO,
@@ -116,7 +114,6 @@ class ContractEventConfirmationDisposableTriggerTest {
                         new NonNegativeBlockNumber(requiredConfirmations),
                         "h",
                         "p",
-                        BigInteger.ZERO,
                         BigInteger.ZERO,
                         BigInteger.ZERO,
                         BigInteger.ZERO,

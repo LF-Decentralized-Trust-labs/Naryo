@@ -27,6 +27,7 @@ class BlockDispatcherTest {
     private BlockDispatcher dispatcher;
 
     @Test
+    @SuppressWarnings("unchecked")
     void dispatchDisposable_invokesOnDisposeAndTrigger_andRemovesTrigger() throws Exception {
         when(disposableTrigger.supports(event)).thenReturn(true);
 
@@ -49,6 +50,7 @@ class BlockDispatcherTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     void dispatchPermanent_invokesOnExecuteAndTrigger_andKeepsTrigger() throws Exception {
         when(permanentTrigger.supports(event)).thenReturn(true);
 
