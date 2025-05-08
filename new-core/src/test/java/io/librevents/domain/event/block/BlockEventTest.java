@@ -22,7 +22,6 @@ class BlockEventTest {
                         "0xabcdef1234567890",
                         BigInteger.valueOf(1000),
                         BigInteger.valueOf(50000),
-                        BigInteger.valueOf(60000),
                         BigInteger.valueOf(System.currentTimeMillis()),
                         List.of());
         assertNotNull(blockEvent);
@@ -41,7 +40,6 @@ class BlockEventTest {
                                 "0xabcdef1234567890",
                                 BigInteger.valueOf(1000),
                                 BigInteger.valueOf(50000),
-                                BigInteger.valueOf(60000),
                                 BigInteger.valueOf(System.currentTimeMillis()),
                                 List.of()));
     }
@@ -58,7 +56,6 @@ class BlockEventTest {
                                 "0xabcdef1234567890",
                                 BigInteger.valueOf(1000),
                                 BigInteger.valueOf(50000),
-                                BigInteger.valueOf(60000),
                                 BigInteger.valueOf(System.currentTimeMillis()),
                                 List.of()));
     }
@@ -75,7 +72,6 @@ class BlockEventTest {
                                 "0xabcdef1234567890",
                                 BigInteger.valueOf(1000),
                                 BigInteger.valueOf(50000),
-                                BigInteger.valueOf(60000),
                                 BigInteger.valueOf(System.currentTimeMillis()),
                                 List.of()));
     }
@@ -92,7 +88,6 @@ class BlockEventTest {
                                 null,
                                 BigInteger.valueOf(1000),
                                 BigInteger.valueOf(50000),
-                                BigInteger.valueOf(60000),
                                 BigInteger.valueOf(System.currentTimeMillis()),
                                 List.of()));
     }
@@ -109,7 +104,6 @@ class BlockEventTest {
                                 "0xabcdef1234567890",
                                 null,
                                 BigInteger.valueOf(50000),
-                                BigInteger.valueOf(60000),
                                 BigInteger.valueOf(System.currentTimeMillis()),
                                 List.of()));
     }
@@ -125,24 +119,6 @@ class BlockEventTest {
                                 "0x1234567890abcdef",
                                 "0xabcdef1234567890",
                                 BigInteger.valueOf(1000),
-                                null,
-                                BigInteger.valueOf(60000),
-                                BigInteger.valueOf(System.currentTimeMillis()),
-                                List.of()));
-    }
-
-    @Test
-    void testBlockEventCreationWithNullGasLimit() {
-        assertThrows(
-                NullPointerException.class,
-                () ->
-                        new BlockEvent(
-                                UUID.randomUUID(),
-                                new NonNegativeBlockNumber(BigInteger.ONE),
-                                "0x1234567890abcdef",
-                                "0xabcdef1234567890",
-                                BigInteger.valueOf(1000),
-                                BigInteger.valueOf(50000),
                                 null,
                                 BigInteger.valueOf(System.currentTimeMillis()),
                                 List.of()));
@@ -160,7 +136,6 @@ class BlockEventTest {
                                 "0xabcdef1234567890",
                                 BigInteger.valueOf(1000),
                                 BigInteger.valueOf(50000),
-                                BigInteger.valueOf(60000),
                                 null,
                                 List.of()));
     }
@@ -177,7 +152,6 @@ class BlockEventTest {
                                 "0xabcdef1234567890",
                                 BigInteger.valueOf(1000),
                                 BigInteger.valueOf(50000),
-                                BigInteger.valueOf(60000),
                                 BigInteger.valueOf(System.currentTimeMillis()),
                                 List.of()));
     }
@@ -194,7 +168,6 @@ class BlockEventTest {
                                 "",
                                 BigInteger.valueOf(1000),
                                 BigInteger.valueOf(50000),
-                                BigInteger.valueOf(60000),
                                 BigInteger.valueOf(System.currentTimeMillis()),
                                 List.of()));
     }
@@ -211,7 +184,6 @@ class BlockEventTest {
                                 "0xabcdef1234567890",
                                 BigInteger.valueOf(-1000),
                                 BigInteger.valueOf(50000),
-                                BigInteger.valueOf(60000),
                                 BigInteger.valueOf(System.currentTimeMillis()),
                                 List.of()));
     }
@@ -228,24 +200,6 @@ class BlockEventTest {
                                 "0xabcdef1234567890",
                                 BigInteger.valueOf(1000),
                                 BigInteger.valueOf(-50000),
-                                BigInteger.valueOf(60000),
-                                BigInteger.valueOf(System.currentTimeMillis()),
-                                List.of()));
-    }
-
-    @Test
-    void testBlockEventCreationWithNegativeGasLimit() {
-        assertThrows(
-                IllegalArgumentException.class,
-                () ->
-                        new BlockEvent(
-                                UUID.randomUUID(),
-                                new NonNegativeBlockNumber(BigInteger.ONE),
-                                "0x1234567890abcdef",
-                                "0xabcdef1234567890",
-                                BigInteger.valueOf(1000),
-                                BigInteger.valueOf(50000),
-                                BigInteger.valueOf(-60000),
                                 BigInteger.valueOf(System.currentTimeMillis()),
                                 List.of()));
     }
@@ -262,7 +216,6 @@ class BlockEventTest {
                                 "0xabcdef1234567890",
                                 BigInteger.valueOf(1000),
                                 BigInteger.valueOf(50000),
-                                BigInteger.valueOf(60000),
                                 BigInteger.valueOf(-System.currentTimeMillis()),
                                 List.of()));
     }

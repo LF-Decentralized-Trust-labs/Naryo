@@ -51,7 +51,7 @@ public final class PubSubBlockSubscriber extends BlockSubscriber {
         return compositeDisposable;
     }
 
-    private Disposable subscribeNewBlocks() {
+    private Disposable subscribeNewBlocks() throws IOException {
         return interactor.replyFutureBlocks().subscribe(onNext, onError);
     }
 }

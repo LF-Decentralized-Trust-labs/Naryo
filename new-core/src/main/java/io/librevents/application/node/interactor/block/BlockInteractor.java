@@ -1,22 +1,22 @@
 package io.librevents.application.node.interactor.block;
 
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.List;
+
 import io.librevents.application.node.interactor.Interactor;
 import io.librevents.application.node.interactor.block.dto.Block;
 import io.librevents.application.node.interactor.block.dto.Log;
 import io.librevents.application.node.interactor.block.dto.Transaction;
 import io.reactivex.Flowable;
 
-import java.io.IOException;
-import java.math.BigInteger;
-import java.util.List;
-
 public interface BlockInteractor extends Interactor {
 
-    Flowable<Block> replayPastBlocks(BigInteger startBlock);
+    Flowable<Block> replayPastBlocks(BigInteger startBlock) throws IOException;
 
     Flowable<Block> replayPastAndFutureBlocks(BigInteger startBlock);
 
-    Flowable<Block> replyFutureBlocks();
+    Flowable<Block> replyFutureBlocks() throws IOException;
 
     Block getCurrentBlock() throws IOException;
 

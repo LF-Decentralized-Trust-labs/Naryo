@@ -28,7 +28,6 @@ public final class BlockToBlockEventMapper implements Mapper<Block, BlockEvent> 
                 block.logsBloom(),
                 block.size(),
                 block.gasUsed(),
-                block.gasLimit(),
                 block.timestamp(),
                 block.transactions());
     }
