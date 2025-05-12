@@ -2,8 +2,8 @@ package io.librevents.domain.node.connection.http;
 
 import java.time.Duration;
 
+import io.librevents.domain.common.connection.endpoint.ConnectionEndpoint;
 import io.librevents.domain.node.connection.RetryConfiguration;
-import io.librevents.domain.node.connection.endpoint.ConnectionEndpoint;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

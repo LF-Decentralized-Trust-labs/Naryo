@@ -1,4 +1,4 @@
-package io.librevents.domain.node.connection.endpoint;
+package io.librevents.domain.common.connection.endpoint;
 
 import lombok.Getter;
 
