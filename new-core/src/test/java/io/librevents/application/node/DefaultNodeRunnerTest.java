@@ -6,12 +6,12 @@ import java.util.UUID;
 
 import io.librevents.application.filter.Synchronizer;
 import io.librevents.application.node.subscription.Subscriber;
+import io.librevents.domain.common.connection.endpoint.ConnectionEndpoint;
 import io.librevents.domain.node.Node;
 import io.librevents.domain.node.NodeName;
 import io.librevents.domain.node.connection.NodeConnection;
 import io.librevents.domain.node.connection.NodeConnectionType;
 import io.librevents.domain.node.connection.RetryConfiguration;
-import io.librevents.domain.node.connection.endpoint.ConnectionEndpoint;
 import io.librevents.domain.node.hedera.HederaNode;
 import io.librevents.domain.node.interaction.InteractionConfiguration;
 import io.librevents.domain.node.interaction.InteractionStrategy;

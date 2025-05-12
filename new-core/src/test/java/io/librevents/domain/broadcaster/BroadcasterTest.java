@@ -7,13 +7,13 @@ import io.librevents.domain.broadcaster.configuration.BroadcasterConfiguration;
 import io.librevents.domain.broadcaster.target.AllBroadcasterTarget;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BroadcasterTest {
 
     private static class MockBroadcasterType implements BroadcasterType {
         @Override
-        public String name() {
+        public String getName() {
             return "test";
         }
     }
@@ -32,7 +32,7 @@ class BroadcasterTest {
 
         assertEquals(target, broadcaster.target());
         assertEquals(configuration, broadcaster.configuration());
-        assertEquals("test", broadcaster.configuration().getType().name());
+        assertEquals("test", broadcaster.configuration().getType().getName());
         assertEquals(
                 Duration.ofSeconds(1), broadcaster.configuration().getCache().expirationTime());
     }

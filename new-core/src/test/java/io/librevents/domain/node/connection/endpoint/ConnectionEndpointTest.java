@@ -2,6 +2,7 @@ package io.librevents.domain.node.connection.endpoint;
 
 import java.util.Map;
 
+import io.librevents.domain.common.connection.endpoint.ConnectionEndpoint;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

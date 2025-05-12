@@ -4,8 +4,8 @@ import java.math.BigInteger;
 import java.util.Set;
 import java.util.UUID;
 
-import io.librevents.domain.common.ContractEventStatus;
-import io.librevents.domain.common.EventName;
+import io.librevents.domain.common.event.ContractEventStatus;
+import io.librevents.domain.common.event.EventName;
 import io.librevents.domain.event.contract.parameter.AddressParameter;
 import org.junit.jupiter.api.Test;
 

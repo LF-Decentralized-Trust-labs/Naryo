@@ -3,11 +3,10 @@ package io.librevents.domain.event.contract;
 import java.math.BigInteger;
 import java.util.*;
 
-import io.librevents.domain.common.ContractEventStatus;
-import io.librevents.domain.common.EventName;
+import io.librevents.domain.common.event.ContractEventStatus;
+import io.librevents.domain.common.event.EventName;
 import io.librevents.domain.event.Event;
 import io.librevents.domain.event.EventType;
-import io.librevents.domain.filter.event.parameter.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

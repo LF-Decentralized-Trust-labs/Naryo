@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import io.librevents.domain.common.ContractEventStatus;
+import io.librevents.domain.common.event.ContractEventStatus;
 import io.librevents.domain.filter.Filter;
 import io.librevents.domain.filter.FilterName;
 import io.librevents.domain.filter.FilterType;

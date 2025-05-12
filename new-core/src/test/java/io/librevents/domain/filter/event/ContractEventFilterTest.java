@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import io.librevents.domain.common.ContractEventStatus;
-import io.librevents.domain.common.EventName;
+import io.librevents.domain.common.event.ContractEventStatus;
+import io.librevents.domain.common.event.EventName;
 import io.librevents.domain.filter.FilterName;
 import io.librevents.domain.filter.event.parameter.BoolParameterDefinition;
 import io.librevents.domain.filter.event.sync.NoSyncState;

@@ -1,6 +1,5 @@
 package io.librevents.domain.broadcaster;
 
-public interface BroadcasterType {
+import io.librevents.domain.common.configuration.ConfigurationType;
 
-    String name();
-}
+public interface BroadcasterType extends ConfigurationType {}
