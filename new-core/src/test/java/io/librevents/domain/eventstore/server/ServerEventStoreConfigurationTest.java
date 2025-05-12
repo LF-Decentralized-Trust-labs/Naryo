@@ -24,7 +24,7 @@ class ServerEventStoreConfigurationTest {
     void testConstructor() {
         ServerEventStoreConfiguration config =
                 new MockServerEventStoreConfiguration(new MockServerType());
-        assertEquals(EventStoreType.SERVER, config.getEventStoreType());
+        assertEquals(EventStoreType.SERVER, config.getType());
         assertEquals("MockServer", config.getServerType().getName());
     }
 }

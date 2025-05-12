@@ -1,6 +1,13 @@
 package io.librevents.domain.eventstore;
 
-public enum EventStoreType {
+import io.librevents.domain.common.configuration.ConfigurationType;
+
+public enum EventStoreType implements ConfigurationType {
     DATABASE,
-    SERVER
+    SERVER;
+
+    @Override
+    public String getName() {
+        return this.name();
+    }
 }

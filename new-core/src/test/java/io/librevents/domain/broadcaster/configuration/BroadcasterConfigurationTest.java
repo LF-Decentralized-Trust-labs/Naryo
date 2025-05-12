@@ -5,13 +5,14 @@ import java.time.Duration;
 import io.librevents.domain.broadcaster.BroadcasterType;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BroadcasterConfigurationTest {
 
     private static class MockBroadcasterType implements BroadcasterType {
         @Override
-        public String name() {
+        public String getName() {
             return "mock";
         }
     }
@@ -27,7 +28,7 @@ class BroadcasterConfigurationTest {
         MockBroadcasterConfiguration config =
                 new MockBroadcasterConfiguration(
                         new MockBroadcasterType(), new BroadcasterCache(Duration.ofSeconds(1)));
-        assertEquals("mock", config.getType().name());
+        assertEquals("mock", config.getType().getName());
         assertEquals(Duration.ofSeconds(1), config.getCache().expirationTime());
     }
 

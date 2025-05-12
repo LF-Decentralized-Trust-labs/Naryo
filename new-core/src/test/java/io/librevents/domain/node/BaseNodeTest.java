@@ -3,10 +3,10 @@ package io.librevents.domain.node;
 import java.time.Duration;
 import java.util.UUID;
 
+import io.librevents.domain.common.connection.endpoint.ConnectionEndpoint;
 import io.librevents.domain.node.connection.NodeConnection;
 import io.librevents.domain.node.connection.NodeConnectionType;
 import io.librevents.domain.node.connection.RetryConfiguration;
-import io.librevents.domain.node.connection.endpoint.ConnectionEndpoint;
 import io.librevents.domain.node.interaction.InteractionConfiguration;
 import io.librevents.domain.node.interaction.InteractionStrategy;
 import io.librevents.domain.node.subscription.SubscriptionConfiguration;

@@ -6,6 +6,7 @@ import io.librevents.application.broadcaster.BroadcasterProducer;
 import io.librevents.application.broadcaster.BroadcasterWrapper;
 import io.librevents.application.node.routing.EventRoutingService;
 import io.librevents.application.node.trigger.permanent.EventBroadcasterPermanentTrigger;
+import io.librevents.domain.broadcaster.Broadcaster;
 import io.librevents.domain.event.Event;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,9 @@ class EventBroadcasterPermanentTriggerTest {
 
     @Mock private BroadcasterProducer producer1;
     @Mock private BroadcasterProducer producer2;
+
+    @Mock private Broadcaster broadcaster1;
+    @Mock private Broadcaster broadcaster2;
 
     @Mock private Event event;
 
@@ -64,32 +68,35 @@ class EventBroadcasterPermanentTriggerTest {
     }
 
     @Test
-    void trigger_delegatesToRoutingService_and_usesProducer() throws Exception {
+    void trigger_delegatesToRoutingService_and_usesProducer() {
         // only wrapper2 should be invoked
         when(routingService.matchingWrappers(event, wrappers)).thenReturn(List.of(wrapper2));
         when(wrapper2.producer()).thenReturn(producer2);
+        when(wrapper2.broadcaster()).thenReturn(broadcaster2);
 
         trigger.trigger(event);
 
-        verify(producer2).produce(event);
+        verify(producer2).produce(broadcaster2, event);
         verifyNoInteractions(producer1);
     }
 
     @Test
-    void trigger_continuesWhenProducerThrowsAndInvokesAll() throws Exception {
+    void trigger_continuesWhenProducerThrowsAndInvokesAll() {
         // both wrappers match
         when(routingService.matchingWrappers(event, wrappers))
                 .thenReturn(List.of(wrapper1, wrapper2));
         when(wrapper1.producer()).thenReturn(producer1);
+        when(wrapper1.broadcaster()).thenReturn(broadcaster1);
         when(wrapper2.producer()).thenReturn(producer2);
+        when(wrapper2.broadcaster()).thenReturn(broadcaster2);
 
-        doThrow(new RuntimeException("fail1")).when(producer1).produce(event);
+        doThrow(new RuntimeException("fail1")).when(producer1).produce(broadcaster1, event);
         // producer2 will succeed
 
         trigger.trigger(event);
 
-        verify(producer1).produce(event);
-        verify(producer2).produce(event);
+        verify(producer1).produce(broadcaster1, event);
+        verify(producer2).produce(broadcaster2, event);
     }
 
     @Test
@@ -97,7 +104,8 @@ class EventBroadcasterPermanentTriggerTest {
         // both wrappers match
         when(routingService.matchingWrappers(event, wrappers)).thenReturn(List.of(wrapper1));
         when(wrapper1.producer()).thenReturn(producer1);
-        doThrow(new RuntimeException("boom")).when(producer1).produce(event);
+        when(wrapper1.broadcaster()).thenReturn(broadcaster1);
+        doThrow(new RuntimeException("boom")).when(producer1).produce(broadcaster1, event);
 
         @SuppressWarnings("unchecked")
         io.reactivex.functions.Consumer<Event> consumer =
