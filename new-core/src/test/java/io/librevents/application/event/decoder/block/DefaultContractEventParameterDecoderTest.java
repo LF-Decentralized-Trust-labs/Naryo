@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import io.librevents.application.event.decoder.ContractEventParameterDecoder;
-import io.librevents.domain.common.EventName;
+import io.librevents.domain.common.event.EventName;
 import io.librevents.domain.event.contract.ContractEventParameter;
 import io.librevents.domain.event.contract.parameter.*;
 import io.librevents.domain.filter.event.CorrelationId;

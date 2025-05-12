@@ -25,7 +25,7 @@ class DatabaseEventStoreConfigurationTest {
     void testConstructor() {
         DatabaseEventStoreConfiguration config =
                 new MockDatabaseEventStoreConfiguration(new MockDatabaseEngine());
-        assertEquals(EventStoreType.DATABASE, config.getEventStoreType());
+        assertEquals(EventStoreType.DATABASE, config.getType());
         assertEquals("MockDatabase", config.getEngine().getName());
     }
 }

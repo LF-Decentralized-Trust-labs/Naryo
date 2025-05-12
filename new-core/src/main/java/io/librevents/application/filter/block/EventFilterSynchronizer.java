@@ -15,7 +15,7 @@ import io.librevents.application.node.interactor.block.BlockInteractor;
 import io.librevents.application.node.interactor.block.dto.Block;
 import io.librevents.application.node.interactor.block.dto.Log;
 import io.librevents.application.node.interactor.block.dto.Transaction;
-import io.librevents.domain.common.ContractEventStatus;
+import io.librevents.domain.common.event.ContractEventStatus;
 import io.librevents.domain.event.contract.ContractEvent;
 import io.librevents.domain.filter.event.ContractEventFilter;
 import io.librevents.domain.filter.event.EventFilter;

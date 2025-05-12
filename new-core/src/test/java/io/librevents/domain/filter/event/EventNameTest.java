@@ -1,6 +1,6 @@
 package io.librevents.domain.filter.event;
 
-import io.librevents.domain.common.EventName;
+import io.librevents.domain.common.event.EventName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

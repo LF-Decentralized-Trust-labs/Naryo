@@ -4,7 +4,7 @@ import java.math.BigInteger;
 
 import io.librevents.application.node.dispatch.Dispatcher;
 import io.librevents.application.node.trigger.disposable.DisposableTrigger;
-import io.librevents.domain.common.ContractEventStatus;
+import io.librevents.domain.common.event.ContractEventStatus;
 import io.librevents.domain.event.Event;
 import io.librevents.domain.event.block.BlockEvent;
 import io.librevents.domain.event.contract.ContractEvent;

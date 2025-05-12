@@ -2,7 +2,7 @@ package io.librevents.domain.node.connection;
 
 import java.util.Objects;
 
-import io.librevents.domain.node.connection.endpoint.ConnectionEndpoint;
+import io.librevents.domain.common.connection.endpoint.ConnectionEndpoint;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;

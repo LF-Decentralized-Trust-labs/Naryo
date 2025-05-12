@@ -1,4 +1,4 @@
-package io.librevents.domain.node.connection.endpoint;
+package io.librevents.domain.common.connection.endpoint;
 
 import java.net.URI;
 import java.util.Map;
