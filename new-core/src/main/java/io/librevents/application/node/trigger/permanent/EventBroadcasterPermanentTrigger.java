@@ -36,7 +36,7 @@ public final class EventBroadcasterPermanentTrigger implements PermanentTrigger<
 
         for (BroadcasterWrapper wrapper : wrappers) {
             try {
-                wrapper.producer().produce(event);
+                wrapper.producer().produce(wrapper.broadcaster(), event);
             } catch (Exception e) {
                 log.error("Error produce block event", e);
             }

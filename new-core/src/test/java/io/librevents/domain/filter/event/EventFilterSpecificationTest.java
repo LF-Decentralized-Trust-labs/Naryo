@@ -2,7 +2,7 @@ package io.librevents.domain.filter.event;
 
 import java.util.Set;
 
-import io.librevents.domain.common.EventName;
+import io.librevents.domain.common.event.EventName;
 import io.librevents.domain.filter.event.parameter.*;
 import org.junit.jupiter.api.Test;
 

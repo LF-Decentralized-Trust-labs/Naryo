@@ -2,11 +2,11 @@ package io.librevents.domain.node.connection.http;
 
 import java.util.Objects;
 
+import io.librevents.domain.common.connection.endpoint.ConnectionEndpoint;
+import io.librevents.domain.common.connection.endpoint.Protocol;
 import io.librevents.domain.node.connection.NodeConnection;
 import io.librevents.domain.node.connection.NodeConnectionType;
 import io.librevents.domain.node.connection.RetryConfiguration;
-import io.librevents.domain.node.connection.endpoint.ConnectionEndpoint;
-import io.librevents.domain.node.connection.endpoint.Protocol;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;

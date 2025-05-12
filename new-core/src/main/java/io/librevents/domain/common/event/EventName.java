@@ -1,4 +1,4 @@
-package io.librevents.domain.common;
+package io.librevents.domain.common.event;
 
 public record EventName(String value) {
     public EventName {
