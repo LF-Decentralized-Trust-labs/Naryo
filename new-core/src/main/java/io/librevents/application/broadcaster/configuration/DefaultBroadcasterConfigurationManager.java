@@ -12,13 +12,13 @@ import io.librevents.domain.broadcaster.configuration.BroadcasterConfiguration;
 public final class DefaultBroadcasterConfigurationManager
         implements BroadcasterConfigurationManager {
 
-    private final Set<BroadcasterConfigurationProvider> configurationProviders;
+    private final Set<BroadcasterConfigurationProvider<?>> configurationProviders;
     private final Set<BroadcasterProducer> producers;
     private final Map<String, BroadcasterConfiguration> configurations = new HashMap<>();
     private final Set<BroadcasterWrapper> wrappers = new HashSet<>();
 
     public DefaultBroadcasterConfigurationManager(
-            Set<BroadcasterConfigurationProvider> configurationProviders,
+            Set<BroadcasterConfigurationProvider<?>> configurationProviders,
             Set<BroadcasterProducer> producers) {
         Objects.requireNonNull(configurationProviders, "configurationProviders must not be null");
         Objects.requireNonNull(producers, "producers must not be null");
