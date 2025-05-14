@@ -1,14 +1,18 @@
 package io.librevents.infrastructure.broadcaster.http.configuration;
 
-import io.librevents.application.configuration.ConfigurationProvider;
+import java.util.Map;
+
+import io.librevents.application.broadcaster.configuration.BroadcasterConfigurationProvider;
 import io.librevents.domain.broadcaster.BroadcasterType;
 import io.librevents.domain.broadcaster.configuration.BroadcasterCache;
 import io.librevents.domain.common.connection.endpoint.ConnectionEndpoint;
 
-import java.util.Map;
-
 public final class HttpBroadcasterConfigurationProvider
-        implements ConfigurationProvider<HttpBroadcasterConfiguration> {
+        extends BroadcasterConfigurationProvider<HttpBroadcasterConfiguration> {
+
+    public HttpBroadcasterConfigurationProvider() {
+        super(() -> "http");
+    }
 
     @Override
     public HttpBroadcasterConfiguration create(Map<String, Object> config) {
