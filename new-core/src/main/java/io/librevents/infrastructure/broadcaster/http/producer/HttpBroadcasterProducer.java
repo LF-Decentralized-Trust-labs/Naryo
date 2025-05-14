@@ -1,5 +1,8 @@
 package io.librevents.infrastructure.broadcaster.http.producer;
 
+import java.io.IOException;
+import java.util.Objects;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.librevents.application.broadcaster.BroadcasterProducer;
 import io.librevents.domain.broadcaster.Broadcaster;
@@ -8,9 +11,6 @@ import io.librevents.domain.event.Event;
 import io.librevents.infrastructure.broadcaster.http.configuration.HttpBroadcasterConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
-
-import java.io.IOException;
-import java.util.Objects;
 
 @Slf4j
 public final class HttpBroadcasterProducer implements BroadcasterProducer {
