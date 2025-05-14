@@ -6,7 +6,7 @@ import io.librevents.domain.broadcaster.Destination;
 
 public final class ContractEventBroadcasterTarget extends BroadcasterTarget {
 
-    protected ContractEventBroadcasterTarget(Destination destination) {
+    ContractEventBroadcasterTarget(Destination destination) {
         super(BroadcasterTargetType.CONTRACT_EVENT, destination);
     }
 }

@@ -1,13 +1,13 @@
 package io.librevents.infrastructure.broadcaster.http.configuration;
 
+import java.util.Map;
+
 import io.librevents.domain.broadcaster.configuration.BroadcasterCache;
 import io.librevents.domain.common.connection.endpoint.ConnectionEndpoint;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
