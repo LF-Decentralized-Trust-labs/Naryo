@@ -1,12 +1,14 @@
 package io.librevents.application.node.trigger.permanent.block;
 
 import java.util.List;
+import java.util.UUID;
 
 import io.librevents.application.broadcaster.BroadcasterProducer;
-import io.librevents.application.broadcaster.BroadcasterWrapper;
 import io.librevents.application.node.routing.EventRoutingService;
 import io.librevents.application.node.trigger.permanent.EventBroadcasterPermanentTrigger;
 import io.librevents.domain.broadcaster.Broadcaster;
+import io.librevents.domain.broadcaster.BroadcasterType;
+import io.librevents.domain.configuration.broadcaster.BroadcasterConfiguration;
 import io.librevents.domain.event.Event;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,40 +24,60 @@ class EventBroadcasterPermanentTriggerTest {
 
     @Mock private EventRoutingService routingService;
 
-    @Mock private BroadcasterWrapper wrapper1;
-    @Mock private BroadcasterWrapper wrapper2;
-
     @Mock private BroadcasterProducer producer1;
     @Mock private BroadcasterProducer producer2;
 
     @Mock private Broadcaster broadcaster1;
     @Mock private Broadcaster broadcaster2;
 
+    @Mock private BroadcasterConfiguration configuration1;
+    @Mock private BroadcasterConfiguration configuration2;
+
     @Mock private Event event;
 
-    private List<BroadcasterWrapper> wrappers;
+    private List<Broadcaster> broadcasters;
+    private List<BroadcasterProducer> producers;
+    private List<BroadcasterConfiguration> configurations;
     private EventBroadcasterPermanentTrigger trigger;
 
     @BeforeEach
     void setUp() {
-        wrappers = List.of(wrapper1, wrapper2);
-        trigger = new EventBroadcasterPermanentTrigger(wrappers, routingService);
+        broadcasters = List.of(broadcaster1, broadcaster2);
+        producers = List.of(producer1, producer2);
+        configurations = List.of(configuration1, configuration2);
+        trigger =
+                new EventBroadcasterPermanentTrigger(
+                        broadcasters, routingService, producers, configurations);
     }
 
     @Test
     void constructor_nullGuards() {
         assertThrows(
                 NullPointerException.class,
-                () -> new EventBroadcasterPermanentTrigger(null, routingService));
+                () ->
+                        new EventBroadcasterPermanentTrigger(
+                                null, routingService, producers, configurations));
         assertThrows(
                 NullPointerException.class,
-                () -> new EventBroadcasterPermanentTrigger(wrappers, null));
+                () ->
+                        new EventBroadcasterPermanentTrigger(
+                                broadcasters, null, producers, configurations));
+        assertThrows(
+                NullPointerException.class,
+                () ->
+                        new EventBroadcasterPermanentTrigger(
+                                broadcasters, routingService, null, configurations));
+        assertThrows(
+                NullPointerException.class,
+                () ->
+                        new EventBroadcasterPermanentTrigger(
+                                broadcasters, routingService, producers, null));
     }
 
     @Test
     void onExecute_setsConsumerAnd_invokesAfterProduce() throws Exception {
         // no wrappers match → only consumer runs
-        when(routingService.matchingWrappers(event, wrappers)).thenReturn(List.of());
+        when(routingService.matchingWrappers(event, broadcasters)).thenReturn(List.of());
 
         @SuppressWarnings("unchecked")
         io.reactivex.functions.Consumer<Event> consumer =
@@ -70,42 +92,55 @@ class EventBroadcasterPermanentTriggerTest {
     @Test
     void trigger_delegatesToRoutingService_and_usesProducer() {
         // only wrapper2 should be invoked
-        when(routingService.matchingWrappers(event, wrappers)).thenReturn(List.of(wrapper2));
-        when(wrapper2.producer()).thenReturn(producer2);
-        when(wrapper2.broadcaster()).thenReturn(broadcaster2);
+        when(routingService.matchingWrappers(event, broadcasters))
+                .thenReturn(List.of(broadcaster2));
+        UUID configurationId = UUID.randomUUID();
+        when(broadcaster2.getConfigurationId()).thenReturn(configurationId);
+        when(configuration1.getId()).thenReturn(UUID.randomUUID());
+        when(configuration2.getId()).thenReturn(configurationId);
+        when(configuration2.getType()).thenReturn(() -> "type2");
+        when(producer2.supports(any())).thenReturn(true);
+        when(producer1.supports(any())).thenReturn(false);
 
-        trigger.trigger(event);
+        assertDoesNotThrow(() -> trigger.trigger(event));
 
-        verify(producer2).produce(broadcaster2, event);
-        verifyNoInteractions(producer1);
+        verify(producer2).produce(broadcaster2, configuration2, event);
+        verify(producer1, never()).produce(any(), any(), any());
     }
 
     @Test
     void trigger_continuesWhenProducerThrowsAndInvokesAll() {
-        // both wrappers match
-        when(routingService.matchingWrappers(event, wrappers))
-                .thenReturn(List.of(wrapper1, wrapper2));
-        when(wrapper1.producer()).thenReturn(producer1);
-        when(wrapper1.broadcaster()).thenReturn(broadcaster1);
-        when(wrapper2.producer()).thenReturn(producer2);
-        when(wrapper2.broadcaster()).thenReturn(broadcaster2);
+        when(routingService.matchingWrappers(event, broadcasters))
+                .thenReturn(List.of(broadcaster1, broadcaster2));
 
-        doThrow(new RuntimeException("fail1")).when(producer1).produce(broadcaster1, event);
-        // producer2 will succeed
+        UUID configurationId = UUID.randomUUID();
+        UUID configurationId2 = UUID.randomUUID();
+        BroadcasterType broadcasterType = () -> "type1";
+        BroadcasterType broadcasterType2 = () -> "type2";
+        when(broadcaster1.getConfigurationId()).thenReturn(configurationId);
+        when(broadcaster2.getConfigurationId()).thenReturn(configurationId2);
+        when(configuration1.getId()).thenReturn(configurationId);
+        when(configuration2.getId()).thenReturn(configurationId2);
+        when(configuration1.getType()).thenReturn(broadcasterType);
+        when(configuration2.getType()).thenReturn(broadcasterType2);
+        when(producer1.supports(broadcasterType)).thenReturn(true);
+        when(producer1.supports(broadcasterType2)).thenReturn(false);
+        when(producer2.supports(broadcasterType2)).thenReturn(true);
+        doThrow(new RuntimeException("fail1"))
+                .when(producer1)
+                .produce(broadcaster1, configuration1, event);
 
         trigger.trigger(event);
 
-        verify(producer1).produce(broadcaster1, event);
-        verify(producer2).produce(broadcaster2, event);
+        verify(producer1).produce(broadcaster1, configuration1, event);
+        verify(producer2).produce(broadcaster2, configuration2, event);
     }
 
     @Test
     void trigger_consumesEventEvenIfProducerFails() throws Exception {
         // both wrappers match
-        when(routingService.matchingWrappers(event, wrappers)).thenReturn(List.of(wrapper1));
-        when(wrapper1.producer()).thenReturn(producer1);
-        when(wrapper1.broadcaster()).thenReturn(broadcaster1);
-        doThrow(new RuntimeException("boom")).when(producer1).produce(broadcaster1, event);
+        when(routingService.matchingWrappers(event, broadcasters))
+                .thenReturn(List.of(broadcaster1));
 
         @SuppressWarnings("unchecked")
         io.reactivex.functions.Consumer<Event> consumer =

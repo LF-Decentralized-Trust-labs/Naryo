@@ -1,8 +1,10 @@
 package io.librevents.application.node.routing;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
-import io.librevents.application.broadcaster.BroadcasterWrapper;
 import io.librevents.domain.broadcaster.Broadcaster;
 import io.librevents.domain.broadcaster.BroadcasterTarget;
 import io.librevents.domain.broadcaster.BroadcasterTargetType;
@@ -34,11 +36,11 @@ import static org.mockito.Mockito.*;
 class EventRoutingServiceTest {
 
     @Mock private FilterRepository repository;
-    @Mock private BroadcasterWrapper wrapperAll;
-    @Mock private BroadcasterWrapper wrapperBlock;
-    @Mock private BroadcasterWrapper wrapperTx;
-    @Mock private BroadcasterWrapper wrapperContractEvent;
-    @Mock private BroadcasterWrapper wrapperFilter;
+    @Mock private Broadcaster wrapperAll;
+    @Mock private Broadcaster wrapperBlock;
+    @Mock private Broadcaster wrapperTx;
+    @Mock private Broadcaster wrapperContractEvent;
+    @Mock private Broadcaster wrapperFilter;
 
     private EventRoutingService service;
 
@@ -49,19 +51,11 @@ class EventRoutingServiceTest {
 
     @Test
     void getAllFilters_shouldLoadOnceAndCache() {
-        var bcFilter = mock(Broadcaster.class);
         UUID filterId = UUID.randomUUID();
         var filterTarget = new FilterEventBroadcasterTarget(new Destination("dest"), filterId);
-        when(wrapperFilter.broadcaster()).thenReturn(bcFilter);
-        when(bcFilter.target()).thenReturn(filterTarget);
-
-        var bcAll = mock(Broadcaster.class);
-        when(wrapperAll.broadcaster()).thenReturn(bcAll);
-        when(bcAll.target()).thenReturn(new DummyTarget(BroadcasterTargetType.ALL));
-
-        var bcBlock = mock(Broadcaster.class);
-        when(wrapperBlock.broadcaster()).thenReturn(bcBlock);
-        when(bcBlock.target()).thenReturn(new DummyTarget(BroadcasterTargetType.BLOCK));
+        when(wrapperFilter.getTarget()).thenReturn(filterTarget);
+        when(wrapperAll.getTarget()).thenReturn(new DummyTarget(BroadcasterTargetType.ALL));
+        when(wrapperBlock.getTarget()).thenReturn(new DummyTarget(BroadcasterTargetType.BLOCK));
 
         Filter f1 = mock(Filter.class);
         when(repository.findAllById(List.of(filterId))).thenReturn(List.of(f1));
@@ -79,23 +73,15 @@ class EventRoutingServiceTest {
 
     @Test
     void matchingWrappers_blockEvent_filtersByBlockAndAll() {
-        var bcAll = mock(Broadcaster.class);
-        when(wrapperAll.broadcaster()).thenReturn(bcAll);
-        when(bcAll.target()).thenReturn(new DummyTarget(BroadcasterTargetType.ALL));
-
-        var bcBlock = mock(Broadcaster.class);
-        when(wrapperBlock.broadcaster()).thenReturn(bcBlock);
-        when(bcBlock.target()).thenReturn(new DummyTarget(BroadcasterTargetType.BLOCK));
-
-        var bcTx = mock(Broadcaster.class);
-        when(wrapperTx.broadcaster()).thenReturn(bcTx);
-        when(bcTx.target()).thenReturn(new DummyTarget(BroadcasterTargetType.TRANSACTION));
+        when(wrapperAll.getTarget()).thenReturn(new DummyTarget(BroadcasterTargetType.ALL));
+        when(wrapperBlock.getTarget()).thenReturn(new DummyTarget(BroadcasterTargetType.BLOCK));
+        when(wrapperTx.getTarget()).thenReturn(new DummyTarget(BroadcasterTargetType.TRANSACTION));
 
         Event block = mock(Event.class);
         when(block.getEventType()).thenReturn(EventType.BLOCK);
 
-        List<BroadcasterWrapper> wrappers = List.of(wrapperAll, wrapperBlock, wrapperTx);
-        List<BroadcasterWrapper> result = service.matchingWrappers(block, wrappers);
+        List<Broadcaster> wrappers = List.of(wrapperAll, wrapperBlock, wrapperTx);
+        List<Broadcaster> result = service.matchingWrappers(block, wrappers);
 
         assertTrue(result.contains(wrapperAll), "ALL should always be included");
         assertTrue(result.contains(wrapperBlock), "BLOCK should be included for BLOCK events");
@@ -105,23 +91,15 @@ class EventRoutingServiceTest {
 
     @Test
     void matchingWrappers_transactionEvent_filtersByTxAndAll() {
-        var bcAll = mock(Broadcaster.class);
-        when(wrapperAll.broadcaster()).thenReturn(bcAll);
-        when(bcAll.target()).thenReturn(new DummyTarget(BroadcasterTargetType.ALL));
-
-        var bcBlock = mock(Broadcaster.class);
-        when(wrapperBlock.broadcaster()).thenReturn(bcBlock);
-        when(bcBlock.target()).thenReturn(new DummyTarget(BroadcasterTargetType.BLOCK));
-
-        var bcTx = mock(Broadcaster.class);
-        when(wrapperTx.broadcaster()).thenReturn(bcTx);
-        when(bcTx.target()).thenReturn(new DummyTarget(BroadcasterTargetType.TRANSACTION));
+        when(wrapperAll.getTarget()).thenReturn(new DummyTarget(BroadcasterTargetType.ALL));
+        when(wrapperBlock.getTarget()).thenReturn(new DummyTarget(BroadcasterTargetType.BLOCK));
+        when(wrapperTx.getTarget()).thenReturn(new DummyTarget(BroadcasterTargetType.TRANSACTION));
 
         Event tx = mock(Event.class);
         when(tx.getEventType()).thenReturn(EventType.TRANSACTION);
 
-        List<BroadcasterWrapper> wrappers = List.of(wrapperAll, wrapperBlock, wrapperTx);
-        List<BroadcasterWrapper> result = service.matchingWrappers(tx, wrappers);
+        List<Broadcaster> wrappers = List.of(wrapperAll, wrapperBlock, wrapperTx);
+        List<Broadcaster> result = service.matchingWrappers(tx, wrappers);
 
         assertTrue(result.contains(wrapperAll));
         assertTrue(result.contains(wrapperTx));
@@ -130,19 +108,12 @@ class EventRoutingServiceTest {
 
     @Test
     void matchingWrappers_contractEvent_includesContractAndFilterMatches() {
-        var bcAll = mock(Broadcaster.class);
-        when(wrapperAll.broadcaster()).thenReturn(bcAll);
-        when(bcAll.target()).thenReturn(new DummyTarget(BroadcasterTargetType.ALL));
-
-        var bcContract = mock(Broadcaster.class);
-        when(wrapperContractEvent.broadcaster()).thenReturn(bcContract);
-        when(bcContract.target()).thenReturn(new DummyTarget(BroadcasterTargetType.CONTRACT_EVENT));
-
-        var bcFilter = mock(Broadcaster.class);
+        when(wrapperAll.getTarget()).thenReturn(new DummyTarget(BroadcasterTargetType.ALL));
+        when(wrapperContractEvent.getTarget())
+                .thenReturn(new DummyTarget(BroadcasterTargetType.CONTRACT_EVENT));
         UUID filterId = UUID.randomUUID();
         var filterTarget = new FilterEventBroadcasterTarget(new Destination("d"), filterId);
-        when(wrapperFilter.broadcaster()).thenReturn(bcFilter);
-        when(bcFilter.target()).thenReturn(filterTarget);
+        when(wrapperFilter.getTarget()).thenReturn(filterTarget);
 
         EventFilter evtFilter = mock(EventFilter.class);
         when(evtFilter.getType()).thenReturn(FilterType.EVENT);
@@ -164,9 +135,8 @@ class EventRoutingServiceTest {
         IntParameter param = new IntParameter(false, 0, 42);
         when(ce.getParameters()).thenReturn(Set.of(param));
 
-        List<BroadcasterWrapper> wrappers =
-                List.of(wrapperAll, wrapperContractEvent, wrapperFilter);
-        List<BroadcasterWrapper> result = service.matchingWrappers(ce, wrappers);
+        List<Broadcaster> wrappers = List.of(wrapperAll, wrapperContractEvent, wrapperFilter);
+        List<Broadcaster> result = service.matchingWrappers(ce, wrappers);
 
         assertTrue(result.contains(wrapperAll));
         assertTrue(result.contains(wrapperContractEvent));

@@ -25,7 +25,7 @@ public final class BlockSubscriptionMethodPropertiesDeserializer
         JsonNode root = codec.readTree(p);
 
         BlockSubscriptionMethod method = BlockSubscriptionMethod.valueOf(root.get("type").asText());
-        JsonNode configurationNode = root.get("configuration");
+        JsonNode configurationNode = root.get("configurationId");
         BlockSubscriptionMethodConfigurationProperties configuration = null;
 
         switch (method) {
