@@ -49,14 +49,15 @@ class HttpBroadcasterProducerTest {
         ConnectionEndpoint endpoint = mock();
         BroadcasterTarget target = mock();
 
-        doReturn(configuration).when(broadcaster).configuration();
         doReturn(endpoint).when(configuration).getEndpoint();
         doReturn("invalid-url").when(endpoint).getUrl();
-        doReturn(target).when(broadcaster).target();
+        doReturn(target).when(broadcaster).getTarget();
         doReturn(new Destination("test")).when(target).getDestination();
 
         HttpBroadcasterProducer producer = new HttpBroadcasterProducer(httpClient, objectMapper);
-        assertThrows(IllegalArgumentException.class, () -> producer.produce(broadcaster, mock()));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> producer.produce(broadcaster, configuration, mock()));
     }
 
     @Test
@@ -67,17 +68,16 @@ class HttpBroadcasterProducerTest {
         BroadcasterTarget target = mock();
         Call call = mock();
 
-        doReturn(configuration).when(broadcaster).configuration();
         doReturn(endpoint).when(configuration).getEndpoint();
         doReturn(Map.of()).when(endpoint).getHeaders();
         doReturn("http://localhost:8080").when(endpoint).getUrl();
-        doReturn(target).when(broadcaster).target();
+        doReturn(target).when(broadcaster).getTarget();
         doReturn(new Destination("test")).when(target).getDestination();
         doReturn("").when(objectMapper).writeValueAsString(any());
         doReturn(call).when(httpClient).newCall(any());
         doReturn(null).when(call).execute();
 
         HttpBroadcasterProducer producer = new HttpBroadcasterProducer(httpClient, objectMapper);
-        assertDoesNotThrow(() -> producer.produce(broadcaster, mock()));
+        assertDoesNotThrow(() -> producer.produce(broadcaster, configuration, mock()));
     }
 }

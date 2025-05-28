@@ -3,8 +3,10 @@ package io.librevents.application.node.trigger.permanent;
 import java.util.List;
 import java.util.Objects;
 
-import io.librevents.application.broadcaster.BroadcasterWrapper;
+import io.librevents.application.broadcaster.BroadcasterProducer;
 import io.librevents.application.node.routing.EventRoutingService;
+import io.librevents.domain.broadcaster.Broadcaster;
+import io.librevents.domain.configuration.broadcaster.BroadcasterConfiguration;
 import io.librevents.domain.event.Event;
 import io.reactivex.functions.Consumer;
 import lombok.extern.slf4j.Slf4j;
@@ -13,15 +15,24 @@ import lombok.extern.slf4j.Slf4j;
 public final class EventBroadcasterPermanentTrigger implements PermanentTrigger<Event> {
 
     private final EventRoutingService eventRoutingService;
-    private final List<BroadcasterWrapper> broadcasters;
+    private final List<BroadcasterProducer> producers;
+    private final List<Broadcaster> broadcasters;
+    private final List<BroadcasterConfiguration> configurations;
     private Consumer<Event> consumer;
 
     public EventBroadcasterPermanentTrigger(
-            List<BroadcasterWrapper> broadcasters, EventRoutingService eventRoutingService) {
+            List<Broadcaster> broadcasters,
+            EventRoutingService eventRoutingService,
+            List<BroadcasterProducer> producers,
+            List<BroadcasterConfiguration> configurations) {
         Objects.requireNonNull(broadcasters, "broadcasters must not be null");
+        Objects.requireNonNull(producers, "producers must not be null");
         Objects.requireNonNull(eventRoutingService, "Event routing service must not be null");
+        Objects.requireNonNull(configurations, "configurations must not be null");
         this.eventRoutingService = eventRoutingService;
+        this.producers = producers;
         this.broadcasters = broadcasters;
+        this.configurations = configurations;
     }
 
     @Override
@@ -31,12 +42,26 @@ public final class EventBroadcasterPermanentTrigger implements PermanentTrigger<
 
     @Override
     public void trigger(Event event) {
-        final List<BroadcasterWrapper> wrappers =
+        final List<Broadcaster> matchedBroadcasters =
                 eventRoutingService.matchingWrappers(event, broadcasters);
 
-        for (BroadcasterWrapper wrapper : wrappers) {
+        for (Broadcaster broadcaster : matchedBroadcasters) {
             try {
-                wrapper.producer().produce(wrapper.broadcaster(), event);
+                BroadcasterConfiguration configuration =
+                        configurations.stream()
+                                .filter(
+                                        config ->
+                                                config.getId()
+                                                        .equals(broadcaster.getConfigurationId()))
+                                .findFirst()
+                                .orElseThrow(
+                                        () ->
+                                                new IllegalStateException(
+                                                        "Configuration not found for broadcaster: "
+                                                                + broadcaster.getId()));
+                producers.stream()
+                        .filter(producer -> producer.supports(configuration.getType()))
+                        .forEach(producer -> producer.produce(broadcaster, configuration, event));
             } catch (Exception e) {
                 log.error("Error produce block event", e);
             }

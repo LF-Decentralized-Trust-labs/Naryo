@@ -1,4 +1,9 @@
 package io.librevents.infrastructure.configuration.source.env.model.broadcaster.configuration;
 
+import java.util.UUID;
+
 public record BroadcasterConfigurationEntryProperties(
-        String name, String type, BroadcasterConfigurationAdditionalProperties configuration) {}
+        UUID id,
+        String type,
+        BroadcasterCacheProperties cache,
+        BroadcasterConfigurationAdditionalProperties configuration) {}

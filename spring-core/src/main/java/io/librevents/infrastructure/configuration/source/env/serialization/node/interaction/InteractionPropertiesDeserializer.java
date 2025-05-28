@@ -24,7 +24,7 @@ public final class InteractionPropertiesDeserializer
         JsonNode root = codec.readTree(p);
 
         InteractionStrategy strategy = InteractionStrategy.valueOf(root.get("strategy").asText());
-        JsonNode configurationNode = root.get("configuration");
+        JsonNode configurationNode = root.get("configurationId");
         InteractionConfigurationProperties configuration = null;
 
         if (strategy == InteractionStrategy.BLOCK_BASED) {

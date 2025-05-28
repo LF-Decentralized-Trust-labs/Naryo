@@ -1,6 +1,7 @@
 package io.librevents.infrastructure.configuration.source.env.serialization.broadcaster.target;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
@@ -23,7 +24,7 @@ public final class BroadcasterTargetEntryPropertiesDeserializer
         ObjectCodec codec = p.getCodec();
         JsonNode root = codec.readTree(p);
 
-        String configurationName = root.get("configurationName").asText();
+        String configurationId = root.get("configurationId").asText();
         BroadcasterTargetType type = BroadcasterTargetType.valueOf(root.get("type").asText());
         String destination = root.get("destination").asText();
         JsonNode configurationNode = root.get("configuration");
@@ -37,6 +38,6 @@ public final class BroadcasterTargetEntryPropertiesDeserializer
         }
 
         return new BroadcasterTargetEntryProperties(
-                configurationName, type, destination, configuration);
+                UUID.fromString(configurationId), type, destination, configuration);
     }
 }

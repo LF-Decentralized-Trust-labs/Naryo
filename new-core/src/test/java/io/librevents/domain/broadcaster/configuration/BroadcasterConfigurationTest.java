@@ -1,8 +1,11 @@
 package io.librevents.domain.broadcaster.configuration;
 
 import java.time.Duration;
+import java.util.UUID;
 
 import io.librevents.domain.broadcaster.BroadcasterType;
+import io.librevents.domain.configuration.broadcaster.BroadcasterCache;
+import io.librevents.domain.configuration.broadcaster.BroadcasterConfiguration;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,7 +22,12 @@ class BroadcasterConfigurationTest {
 
     private static class MockBroadcasterConfiguration extends BroadcasterConfiguration {
         protected MockBroadcasterConfiguration(BroadcasterType type, BroadcasterCache cache) {
-            super(type, cache);
+            super(UUID.randomUUID(), type, cache);
+        }
+
+        @Override
+        public BroadcasterConfiguration merge(BroadcasterConfiguration other) {
+            return this;
         }
     }
 
