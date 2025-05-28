@@ -24,7 +24,9 @@ public class EnvironmentAutoConfiguration {
                         Binder.get(env)
                                 .bind(ROOT_PROP_KEY, Bindable.mapOf(String.class, Object.class))
                                 .orElseThrow(
-                                        () -> new IllegalStateException("No configuration found")));
+                                        () ->
+                                                new IllegalStateException(
+                                                        "No configurationId found")));
 
         return objectMapper.convertValue(raw, EnvironmentProperties.class);
     }
