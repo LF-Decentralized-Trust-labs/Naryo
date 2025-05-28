@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import io.librevents.application.broadcaster.BroadcasterWrapper;
+import io.librevents.domain.broadcaster.Broadcaster;
 import io.librevents.domain.broadcaster.BroadcasterTargetType;
 import io.librevents.domain.broadcaster.target.FilterEventBroadcasterTarget;
 import io.librevents.domain.common.ParameterType;
@@ -27,23 +27,22 @@ public final class EventRoutingService {
         this.repository = Objects.requireNonNull(repository, "repository must not be null");
     }
 
-    public List<Filter> getAllFilters(List<BroadcasterWrapper> wrappers) {
+    public List<Filter> getAllFilters(List<Broadcaster> broadcasters) {
         if (cachedFilters == null) {
             synchronized (this) {
                 if (cachedFilters == null) {
                     cachedFilters =
                             repository.findAllById(
-                                    wrappers.stream()
+                                    broadcasters.stream()
                                             .filter(
-                                                    w ->
-                                                            w.broadcaster().target()
+                                                    b ->
+                                                            b.getTarget()
                                                                     instanceof
                                                                     FilterEventBroadcasterTarget)
                                             .map(
-                                                    w ->
+                                                    b ->
                                                             ((FilterEventBroadcasterTarget)
-                                                                            w.broadcaster()
-                                                                                    .target())
+                                                                            b.getTarget())
                                                                     .getFilterId())
                                             .collect(Collectors.toList()));
                 }
@@ -52,13 +51,12 @@ public final class EventRoutingService {
         return cachedFilters;
     }
 
-    public List<BroadcasterWrapper> matchingWrappers(
-            Event event, List<BroadcasterWrapper> broadcasters) {
+    public List<Broadcaster> matchingWrappers(Event event, List<Broadcaster> broadcasters) {
         return switch (event.getEventType()) {
             case BLOCK -> filterByTypes(broadcasters, BroadcasterTargetType.BLOCK);
             case TRANSACTION -> filterByTypes(broadcasters, BroadcasterTargetType.TRANSACTION);
             case CONTRACT -> {
-                List<BroadcasterWrapper> result =
+                List<Broadcaster> result =
                         filterByTypes(broadcasters, BroadcasterTargetType.CONTRACT_EVENT);
                 List<Filter> filters =
                         getAllFilters(broadcasters).stream()
@@ -68,26 +66,26 @@ public final class EventRoutingService {
                                 .filter(evtFilter -> matches(evtFilter, (ContractEvent) event))
                                 .collect(Collectors.toList());
                 if (!filters.isEmpty()) {
-                    List<BroadcasterWrapper> filterWrappers =
+                    List<Broadcaster> filterWrappers =
                             broadcasters.stream()
                                     .filter(
-                                            w ->
-                                                    w.broadcaster().target().getType()
+                                            b ->
+                                                    b.getTarget().getType()
                                                             == BroadcasterTargetType.FILTER)
                                     .filter(
-                                            w ->
-                                                    w.broadcaster().target()
+                                            b ->
+                                                    b.getTarget()
                                                             instanceof FilterEventBroadcasterTarget)
                                     .filter(
-                                            w ->
+                                            b ->
                                                     filters.stream()
                                                             .anyMatch(
                                                                     f ->
                                                                             f.getId()
                                                                                     .equals(
                                                                                             ((FilterEventBroadcasterTarget)
-                                                                                                            w.broadcaster()
-                                                                                                                    .target())
+                                                                                                            b
+                                                                                                                    .getTarget())
                                                                                                     .getFilterId())))
                                     .toList();
                     result.addAll(filterWrappers);
@@ -97,12 +95,12 @@ public final class EventRoutingService {
         };
     }
 
-    private List<BroadcasterWrapper> filterByTypes(
-            List<BroadcasterWrapper> wrappers, BroadcasterTargetType type) {
-        return wrappers.stream()
+    private List<Broadcaster> filterByTypes(
+            List<Broadcaster> broadcasters, BroadcasterTargetType type) {
+        return broadcasters.stream()
                 .filter(
-                        w -> {
-                            var t = w.broadcaster().target().getType();
+                        b -> {
+                            var t = b.getTarget().getType();
                             return t == type || t == BroadcasterTargetType.ALL;
                         })
                 .collect(Collectors.toList());

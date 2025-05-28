@@ -1,7 +1,9 @@
 package io.librevents.infrastructure.broadcaster.http.configuration;
 
-import io.librevents.domain.broadcaster.configuration.BroadcasterCache;
+import java.util.UUID;
+
 import io.librevents.domain.common.connection.endpoint.ConnectionEndpoint;
+import io.librevents.domain.configuration.broadcaster.BroadcasterCache;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -19,17 +21,26 @@ class HttpBroadcasterConfigurationTest {
     @Test
     void constructor_withNullValues() {
         assertThrows(
-                NullPointerException.class, () -> new HttpBroadcasterConfiguration(cache, null));
+                NullPointerException.class,
+                () -> new HttpBroadcasterConfiguration(null, cache, endpoint));
+        assertThrows(
+                NullPointerException.class,
+                () -> new HttpBroadcasterConfiguration(UUID.randomUUID(), null, endpoint));
+        assertThrows(
+                NullPointerException.class,
+                () -> new HttpBroadcasterConfiguration(UUID.randomUUID(), cache, null));
     }
 
     @Test
     void constructor_withValidValues() {
-        assertDoesNotThrow(() -> new HttpBroadcasterConfiguration(cache, endpoint));
+        assertDoesNotThrow(
+                () -> new HttpBroadcasterConfiguration(UUID.randomUUID(), cache, endpoint));
     }
 
     @Test
     void getType() {
-        HttpBroadcasterConfiguration config = new HttpBroadcasterConfiguration(cache, endpoint);
+        HttpBroadcasterConfiguration config =
+                new HttpBroadcasterConfiguration(UUID.randomUUID(), cache, endpoint);
         assertDoesNotThrow(config::getType);
     }
 }

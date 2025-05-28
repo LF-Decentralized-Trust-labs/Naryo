@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.librevents.application.broadcaster.BroadcasterProducer;
 import io.librevents.domain.broadcaster.Broadcaster;
 import io.librevents.domain.broadcaster.BroadcasterType;
+import io.librevents.domain.common.connection.endpoint.ConnectionEndpoint;
+import io.librevents.domain.configuration.broadcaster.BroadcasterConfiguration;
 import io.librevents.domain.event.Event;
 import io.librevents.infrastructure.broadcaster.http.configuration.HttpBroadcasterConfiguration;
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +28,12 @@ public final class HttpBroadcasterProducer implements BroadcasterProducer {
     }
 
     @Override
-    public void produce(Broadcaster broadcaster, Event event) {
-        var endpoint = ((HttpBroadcasterConfiguration) broadcaster.configuration()).getEndpoint();
-        var unparsedUrl = endpoint.getUrl() + "/" + broadcaster.target().getDestination().value();
+    public void produce(
+            Broadcaster broadcaster, BroadcasterConfiguration configuration, Event event) {
+        final ConnectionEndpoint endpoint =
+                ((HttpBroadcasterConfiguration) configuration).getEndpoint();
+        var unparsedUrl =
+                endpoint.getUrl() + "/" + broadcaster.getTarget().getDestination().value();
         var url = HttpUrl.parse(unparsedUrl);
         if (url == null) {
             throw new IllegalArgumentException("Invalid URL: " + unparsedUrl);

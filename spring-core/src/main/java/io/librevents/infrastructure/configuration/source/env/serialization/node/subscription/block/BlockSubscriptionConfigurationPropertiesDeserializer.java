@@ -1,6 +1,7 @@
 package io.librevents.infrastructure.configuration.source.env.serialization.node.subscription.block;
 
 import java.io.IOException;
+import java.math.BigInteger;
 
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
@@ -24,13 +25,14 @@ public final class BlockSubscriptionConfigurationPropertiesDeserializer
 
         BlockSubscriptionMethodProperties method =
                 codec.treeToValue(root.get("method"), BlockSubscriptionMethodProperties.class);
-        Integer initialBlock = root.get("initialBlock").asInt();
-        Integer confirmationBlocks = root.get("confirmationBlocks").asInt();
-        Integer missingTxRetryBlocks = root.get("missingTxRetryBlocks").asInt();
-        Integer eventInvalidationBlockThreshold =
-                root.get("eventInvalidationBlockThreshold").asInt();
-        Integer replayBlockOffset = root.get("replayBlockOffset").asInt();
-        Integer syncBlockLimit = root.get("syncBlockLimit").asInt();
+        BigInteger initialBlock = BigInteger.valueOf(root.get("initialBlock").asInt());
+        BigInteger confirmationBlocks = BigInteger.valueOf(root.get("confirmationBlocks").asInt());
+        BigInteger missingTxRetryBlocks =
+                BigInteger.valueOf(root.get("missingTxRetryBlocks").asInt());
+        BigInteger eventInvalidationBlockThreshold =
+                BigInteger.valueOf(root.get("eventInvalidationBlockThreshold").asInt());
+        BigInteger replayBlockOffset = BigInteger.valueOf(root.get("replayBlockOffset").asInt());
+        BigInteger syncBlockLimit = BigInteger.valueOf(root.get("syncBlockLimit").asInt());
 
         return new BlockSubscriptionConfigurationProperties(
                 method,
