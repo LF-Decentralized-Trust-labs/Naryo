@@ -26,7 +26,7 @@ public final class BlockInteractionConfigurationPropertiesDeserializer
         JsonNode root = codec.readTree(p);
 
         InteractionMode mode = InteractionMode.valueOf(root.get("mode").asText());
-        JsonNode configurationNode = root.get("configuration");
+        JsonNode configurationNode = root.get("configurationId");
         BlockInteractionModeConfigurationProperties configuration = null;
 
         switch (mode) {

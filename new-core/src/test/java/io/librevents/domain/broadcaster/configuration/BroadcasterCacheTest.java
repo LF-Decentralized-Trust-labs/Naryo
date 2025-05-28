@@ -2,6 +2,7 @@ package io.librevents.domain.broadcaster.configuration;
 
 import java.time.Duration;
 
+import io.librevents.domain.configuration.broadcaster.BroadcasterCache;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
