@@ -3,7 +3,6 @@ package io.librevents.application.node.trigger.permanent.block;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 import io.librevents.application.common.util.EncryptionUtil;
@@ -22,35 +21,34 @@ import io.librevents.domain.filter.event.ContractEventFilter;
 import io.librevents.domain.filter.event.EventFilter;
 import io.librevents.domain.filter.event.GlobalEventFilter;
 import io.librevents.domain.node.Node;
-import io.librevents.domain.node.NodeRepository;
 import io.reactivex.functions.Consumer;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public final class BlockProcessorPermanentTrigger implements PermanentTrigger<BlockEvent> {
 
+    private final Node node;
     private final List<EventFilter> filters;
     private final BlockInteractor interactor;
     private final ContractEventParameterDecoder decoder;
-    private final NodeRepository nodeRepository;
     private final ContractEventDispatcherHelper helper;
     private Consumer<BlockEvent> consumer;
 
     public BlockProcessorPermanentTrigger(
+            Node node,
             List<EventFilter> filters,
             BlockInteractor interactor,
             ContractEventParameterDecoder decoder,
-            NodeRepository nodeRepository,
             ContractEventDispatcherHelper helper) {
+        Objects.requireNonNull(node, "node cannot be null");
         Objects.requireNonNull(filters, "filters cannot be null");
         Objects.requireNonNull(interactor, "interactor cannot be null");
         Objects.requireNonNull(decoder, "decoder cannot be null");
-        Objects.requireNonNull(nodeRepository, "nodeRepository cannot be null");
         Objects.requireNonNull(helper, "helper cannot be null");
+        this.node = node;
         this.filters = filters;
         this.interactor = interactor;
         this.decoder = decoder;
-        this.nodeRepository = nodeRepository;
         this.helper = helper;
     }
 
@@ -76,9 +74,8 @@ public final class BlockProcessorPermanentTrigger implements PermanentTrigger<Bl
     }
 
     private void processBlock(BlockEvent event) throws IOException {
-        Optional<Node> nodeOptional = nodeRepository.findById(event.getNodeId());
-        if (nodeOptional.isEmpty()) {
-            log.debug("Node not found for block event {}", event);
+        if (!event.getNodeId().equals(node.getId())) {
+            log.debug("Skipping block event {} for node {}", event, node.getId());
             return;
         }
         List<EventFilter> foundFilters = findFilters(event);
@@ -125,7 +122,7 @@ public final class BlockProcessorPermanentTrigger implements PermanentTrigger<Bl
                                                 transaction != null ? transaction.from() : null,
                                                 ContractEventStatus.CONFIRMED,
                                                 event.getTimestamp());
-                                helper.execute(nodeOptional.get(), filter, contractEvent);
+                                helper.execute(node, filter, contractEvent);
                             });
         }
     }

@@ -1,5 +1,7 @@
 package io.librevents.infrastructure.configuration.source.env.serialization.node;
 
+import java.io.IOException;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -12,8 +14,6 @@ import io.librevents.infrastructure.configuration.source.env.model.node.interact
 import io.librevents.infrastructure.configuration.source.env.model.node.subscription.SubscriptionProperties;
 import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentSerializer;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
 
 @Component
 public final class NodePropertiesDeserializer extends EnvironmentSerializer<NodeProperties> {

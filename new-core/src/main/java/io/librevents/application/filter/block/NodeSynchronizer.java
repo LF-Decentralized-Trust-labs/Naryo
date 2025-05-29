@@ -6,11 +6,9 @@ import java.util.Objects;
 import io.librevents.application.event.decoder.ContractEventParameterDecoder;
 import io.librevents.application.filter.Synchronizer;
 import io.librevents.application.node.calculator.StartBlockCalculator;
-import io.librevents.application.node.dispatch.Dispatcher;
 import io.librevents.application.node.helper.ContractEventDispatcherHelper;
 import io.librevents.application.node.interactor.block.BlockInteractor;
 import io.librevents.domain.filter.Filter;
-import io.librevents.domain.filter.FilterRepository;
 import io.librevents.domain.filter.FilterType;
 import io.librevents.domain.filter.event.EventFilter;
 import io.librevents.domain.filter.event.sync.ActiveSyncState;
@@ -24,33 +22,29 @@ import lombok.extern.slf4j.Slf4j;
 public final class NodeSynchronizer implements Synchronizer {
 
     private final Node node;
-    private final Dispatcher dispatcher;
     private final StartBlockCalculator calculator;
     private final BlockInteractor blockInteractor;
-    private final FilterRepository filterRepository;
     private final ContractEventParameterDecoder decoder;
     private final ContractEventDispatcherHelper helper;
+    private final List<Filter> filters;
 
     public NodeSynchronizer(
             Node node,
-            Dispatcher dispatcher,
             StartBlockCalculator calculator,
             BlockInteractor blockInteractor,
-            FilterRepository filterRepository,
+            List<Filter> filters,
             ContractEventParameterDecoder decoder,
             ContractEventDispatcherHelper helper) {
         Objects.requireNonNull(node, "node must not be null");
-        Objects.requireNonNull(dispatcher, "dispatcher must not be null");
         Objects.requireNonNull(calculator, "calculator must not be null");
         Objects.requireNonNull(blockInteractor, "blockInteractor must not be null");
-        Objects.requireNonNull(filterRepository, "filterRepository must not be null");
+        Objects.requireNonNull(filters, "filters must not be null");
         Objects.requireNonNull(decoder, "decoder must not be null");
         Objects.requireNonNull(helper, "helper must not be null");
         this.node = node;
-        this.dispatcher = dispatcher;
         this.calculator = calculator;
         this.blockInteractor = blockInteractor;
-        this.filterRepository = filterRepository;
+        this.filters = filters;
         this.decoder = decoder;
         this.helper = helper;
     }
@@ -58,7 +52,7 @@ public final class NodeSynchronizer implements Synchronizer {
     @Override
     public Disposable synchronize() {
         List<Filter> filters =
-                filterRepository.findByNodeId(node.getId()).stream()
+                this.filters.stream()
                         .filter(
                                 filter ->
                                         filter.getType().equals(FilterType.EVENT)

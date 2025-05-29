@@ -1,5 +1,8 @@
 package io.librevents.infrastructure.configuration.source.env.serialization.broadcaster.configuration;
 
+import java.io.IOException;
+import java.util.UUID;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -10,9 +13,6 @@ import io.librevents.infrastructure.configuration.source.env.model.broadcaster.c
 import io.librevents.infrastructure.configuration.source.env.registry.broadcaster.BroadcasterConfigurationPropertiesRegistry;
 import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentSerializer;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.util.UUID;
 
 @Component
 public final class BroadcasterConfigurationEntryPropertiesDeserializer
@@ -36,7 +36,7 @@ public final class BroadcasterConfigurationEntryPropertiesDeserializer
         BroadcasterCacheProperties cache =
                 codec.treeToValue(root.get("cache"), BroadcasterCacheProperties.class);
         BroadcasterConfigurationAdditionalProperties configuration =
-                codec.treeToValue(root.get("configurationId"), registry.get(type));
+                codec.treeToValue(root.get("configuration"), registry.get(type));
 
         return new BroadcasterConfigurationEntryProperties(
                 UUID.fromString(id), type, cache, configuration);
