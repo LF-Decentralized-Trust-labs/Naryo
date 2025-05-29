@@ -46,7 +46,7 @@ class BlockDispatcherTest {
         Consumer<Event> disposeCallback = onDisposeCaptor.getValue();
         assertNotNull(disposeCallback);
         disposeCallback.accept(event);
-        assertFalse(dispatcher.getTriggers().contains(disposableTrigger));
+        assertFalse(dispatcher.triggers().contains(disposableTrigger));
     }
 
     @Test
@@ -63,13 +63,13 @@ class BlockDispatcherTest {
 
         verify(permanentTrigger).onExecute(any());
         verify(permanentTrigger).trigger(event);
-        assertTrue(dispatcher.getTriggers().contains(permanentTrigger));
+        assertTrue(dispatcher.triggers().contains(permanentTrigger));
 
         // invoke onExecute callback to ensure it doesn't remove
         Consumer<Event> execCallback = onExecuteCaptor.getValue();
         assertNotNull(execCallback);
         execCallback.accept(event);
-        assertTrue(dispatcher.getTriggers().contains(permanentTrigger));
+        assertTrue(dispatcher.triggers().contains(permanentTrigger));
     }
 
     @Test
@@ -128,12 +128,12 @@ class BlockDispatcherTest {
     @Test
     void addRemoveGetTriggers_workAsExpected() {
         dispatcher = new BlockDispatcher(Set.of());
-        assertTrue(dispatcher.getTriggers().isEmpty());
+        assertTrue(dispatcher.triggers().isEmpty());
 
         dispatcher.addTrigger(disposableTrigger);
-        assertTrue(dispatcher.getTriggers().contains(disposableTrigger));
+        assertTrue(dispatcher.triggers().contains(disposableTrigger));
 
         dispatcher.removeTrigger(disposableTrigger);
-        assertFalse(dispatcher.getTriggers().contains(disposableTrigger));
+        assertFalse(dispatcher.triggers().contains(disposableTrigger));
     }
 }

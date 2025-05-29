@@ -37,6 +37,6 @@ public final class EnvBroadcasterConfigurationConfigurationProvider
 
     private BroadcasterConfiguration toBroadcasterConfiguration(
             BroadcasterConfigurationEntryProperties props) {
-        return registry.map(props.type(), props.configuration());
+        return registry.map(props.type(), props);
     }
 }

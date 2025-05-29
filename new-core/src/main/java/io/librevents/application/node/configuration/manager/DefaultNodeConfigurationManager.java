@@ -1,35 +1,33 @@
 package io.librevents.application.node.configuration.manager;
 
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collector;
 
-import io.librevents.application.node.configuration.provider.NodeConfigurationProvider;
+import io.librevents.application.configuration.manager.BaseCollectionConfigurationManager;
+import io.librevents.application.configuration.provider.CollectionConfigurationProvider;
 import io.librevents.domain.node.Node;
 
 import static java.util.stream.Collectors.toMap;
 
-public final class DefaultNodeConfigurationManager implements NodeConfigurationManager {
+public final class DefaultNodeConfigurationManager
+        extends BaseCollectionConfigurationManager<Node, String>
+        implements NodeConfigurationManager {
 
-    private final List<NodeConfigurationProvider> providers;
-
-    public DefaultNodeConfigurationManager(List<NodeConfigurationProvider> providers) {
-        this.providers = providers;
+    public DefaultNodeConfigurationManager(
+            List<? extends CollectionConfigurationProvider<Node>>
+                    collectionConfigurationProviders) {
+        super(collectionConfigurationProviders);
     }
 
     @Override
-    public Collection<Node> load() {
-        return providers.stream()
-                .sorted(Comparator.comparingInt(NodeConfigurationProvider::priority))
-                .flatMap(provider -> provider.load().stream())
-                .collect(
-                        toMap(
-                                Node::getName,
-                                Function.identity(),
-                                (oldNode, newNode) -> newNode,
-                                LinkedHashMap::new))
-                .values();
+    protected Collector<Node, ?, Map<String, Node>> getCollector() {
+        return toMap(
+                node -> node.getName().value(),
+                Function.identity(),
+                Node::merge,
+                LinkedHashMap::new);
     }
 }

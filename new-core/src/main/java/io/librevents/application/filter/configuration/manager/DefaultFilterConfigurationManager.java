@@ -17,8 +17,9 @@ public final class DefaultFilterConfigurationManager
         extends BaseCollectionConfigurationManager<Filter, UUID>
         implements FilterConfigurationManager {
 
-    DefaultFilterConfigurationManager(
-            List<CollectionConfigurationProvider<Filter>> collectionConfigurationProviders) {
+    public DefaultFilterConfigurationManager(
+            List<? extends CollectionConfigurationProvider<Filter>>
+                    collectionConfigurationProviders) {
         super(collectionConfigurationProviders);
     }
 

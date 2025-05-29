@@ -13,6 +13,7 @@ ext {
 
 dependencies {
     implementation "com.squareup.okhttp3:okhttp:$okHttpVersion"
+    implementation "com.squareup.okhttp3:okhttp-urlconnection:$okHttpVersion"
     implementation "org.web3j:core:$web3jVersion"
     implementation "org.bouncycastle:bcprov-jdk15on:$bcprovVersion"
 
