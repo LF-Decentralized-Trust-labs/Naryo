@@ -25,7 +25,7 @@ public final class SubscriptionPropertiesDeserializer
         JsonNode root = codec.readTree(p);
 
         SubscriptionStrategy strategy = SubscriptionStrategy.valueOf(root.get("strategy").asText());
-        JsonNode configurationNode = root.get("configurationId");
+        JsonNode configurationNode = root.get("configuration");
         SubscriptionConfigurationProperties configuration = null;
 
         if (strategy == SubscriptionStrategy.BLOCK_BASED) {

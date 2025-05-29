@@ -17,8 +17,8 @@ public final class DefaultBroadcasterConfigurationConfigurationManager
         extends BaseCollectionConfigurationManager<BroadcasterConfiguration, UUID>
         implements BroadcasterConfigurationConfigurationManager {
 
-    DefaultBroadcasterConfigurationConfigurationManager(
-            List<CollectionConfigurationProvider<BroadcasterConfiguration>>
+    public DefaultBroadcasterConfigurationConfigurationManager(
+            List<? extends CollectionConfigurationProvider<BroadcasterConfiguration>>
                     collectionConfigurationProviders) {
         super(collectionConfigurationProviders);
     }

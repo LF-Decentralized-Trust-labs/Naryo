@@ -15,6 +15,7 @@ public record ContractResultResponseModel(
         String functionParameters,
         BigInteger gasLimit,
         BigInteger gasUsed,
+        BigInteger gasConsumed,
         String hash,
         String result,
         String status,

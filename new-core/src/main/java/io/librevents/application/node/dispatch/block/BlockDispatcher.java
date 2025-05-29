@@ -12,9 +12,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public final class BlockDispatcher implements Dispatcher {
-
-    @Getter private final Set<Trigger<?>> triggers;
+public record BlockDispatcher(@Getter Set<Trigger<?>> triggers) implements Dispatcher {
 
     public BlockDispatcher(Set<Trigger<?>> triggers) {
         this.triggers = new HashSet<>(triggers);

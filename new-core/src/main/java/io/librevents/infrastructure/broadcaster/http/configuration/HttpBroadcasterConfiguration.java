@@ -1,13 +1,13 @@
 package io.librevents.infrastructure.broadcaster.http.configuration;
 
+import java.util.Objects;
+import java.util.UUID;
+
 import io.librevents.domain.broadcaster.BroadcasterType;
 import io.librevents.domain.common.connection.endpoint.ConnectionEndpoint;
 import io.librevents.domain.configuration.broadcaster.BroadcasterCache;
 import io.librevents.domain.configuration.broadcaster.BroadcasterConfiguration;
 import lombok.Getter;
-
-import java.util.Objects;
-import java.util.UUID;
 
 @Getter
 public final class HttpBroadcasterConfiguration extends BroadcasterConfiguration {

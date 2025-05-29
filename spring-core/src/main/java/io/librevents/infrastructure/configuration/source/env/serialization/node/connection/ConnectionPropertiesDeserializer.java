@@ -31,7 +31,7 @@ public final class ConnectionPropertiesDeserializer
                 codec.treeToValue(root.get("retry"), RetryConfigurationProperties.class);
         ConnectionEndpointProperties endpoint =
                 codec.treeToValue(root.get("endpoint"), ConnectionEndpointProperties.class);
-        JsonNode configurationNode = root.get("configurationId");
+        JsonNode configurationNode = root.get("configuration");
         ConnectionConfigurationProperties configuration = null;
 
         switch (type) {

@@ -12,10 +12,10 @@ import io.librevents.application.configuration.provider.ConfigurationProvider;
 public abstract class BaseCollectionConfigurationManager<T, K>
         implements CollectionConfigurationManager<T> {
 
-    protected final List<CollectionConfigurationProvider<T>> providers;
+    protected final List<? extends CollectionConfigurationProvider<T>> providers;
 
     protected BaseCollectionConfigurationManager(
-            List<CollectionConfigurationProvider<T>> providers) {
+            List<? extends CollectionConfigurationProvider<T>> providers) {
         this.providers = providers;
     }
 
