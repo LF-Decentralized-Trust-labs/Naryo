@@ -1,10 +1,5 @@
 package io.librevents.application.node.routing;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
 import io.librevents.domain.broadcaster.Broadcaster;
 import io.librevents.domain.broadcaster.BroadcasterTarget;
 import io.librevents.domain.broadcaster.BroadcasterTargetType;
@@ -17,7 +12,6 @@ import io.librevents.domain.event.EventType;
 import io.librevents.domain.event.contract.ContractEvent;
 import io.librevents.domain.event.contract.parameter.IntParameter;
 import io.librevents.domain.filter.Filter;
-import io.librevents.domain.filter.FilterRepository;
 import io.librevents.domain.filter.FilterType;
 import io.librevents.domain.filter.event.EventFilter;
 import io.librevents.domain.filter.event.EventFilterSpecification;
@@ -29,13 +23,20 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class EventRoutingServiceTest {
 
-    @Mock private FilterRepository repository;
+    private List<Filter> filters = new ArrayList<>();
     @Mock private Broadcaster wrapperAll;
     @Mock private Broadcaster wrapperBlock;
     @Mock private Broadcaster wrapperTx;
@@ -46,29 +47,7 @@ class EventRoutingServiceTest {
 
     @BeforeEach
     void setUp() {
-        service = new EventRoutingService(repository);
-    }
-
-    @Test
-    void getAllFilters_shouldLoadOnceAndCache() {
-        UUID filterId = UUID.randomUUID();
-        var filterTarget = new FilterEventBroadcasterTarget(new Destination("dest"), filterId);
-        when(wrapperFilter.getTarget()).thenReturn(filterTarget);
-        when(wrapperAll.getTarget()).thenReturn(new DummyTarget(BroadcasterTargetType.ALL));
-        when(wrapperBlock.getTarget()).thenReturn(new DummyTarget(BroadcasterTargetType.BLOCK));
-
-        Filter f1 = mock(Filter.class);
-        when(repository.findAllById(List.of(filterId))).thenReturn(List.of(f1));
-
-        List<Filter> first =
-                service.getAllFilters(List.of(wrapperAll, wrapperFilter, wrapperBlock));
-        assertEquals(1, first.size());
-        assertSame(f1, first.getFirst());
-        verify(repository, times(1)).findAllById(List.of(filterId));
-
-        List<Filter> second = service.getAllFilters(Collections.emptyList());
-        assertSame(first, second);
-        verifyNoMoreInteractions(repository);
+        service = new EventRoutingService(filters);
     }
 
     @Test
@@ -126,7 +105,7 @@ class EventRoutingServiceTest {
         when(evtFilter.getSpecification()).thenReturn(spec);
         when(evtFilter.getStatuses()).thenReturn(List.of(ContractEventStatus.CONFIRMED));
 
-        when(repository.findAllById(List.of(filterId))).thenReturn(List.of(evtFilter));
+        filters.add(evtFilter);
 
         ContractEvent ce = mock(ContractEvent.class);
         when(ce.getEventType()).thenReturn(EventType.CONTRACT);

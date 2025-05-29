@@ -1,5 +1,6 @@
 package io.librevents.infrastructure.configuration.beans.env;
 
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,7 +19,10 @@ public class EnvironmentAutoConfiguration {
 
     @Bean
     public EnvironmentProperties mainProperties(
-            ConfigurableEnvironment env, ObjectMapper objectMapper) {
+            ConfigurableEnvironment env,
+            ObjectMapper objectMapper,
+            List<EnvironmentInitializer> initializers) {
+        initializers.forEach(EnvironmentInitializer::initialize);
         Map<String, Object> raw =
                 CamelCaseNormalizer.normalize(
                         Binder.get(env)
