@@ -15,7 +15,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 public final class BlockSubscriptionConfiguration extends SubscriptionConfiguration {
 
-    private final BlockSubscriptionMethodConfiguration blockSubscriptionMethodConfiguration;
+    private final BlockSubscriptionMethodConfiguration methodConfiguration;
     private final NonNegativeBlockNumber initialBlock;
     private final NonNegativeBlockNumber latestBlock;
     private final NonNegativeBlockNumber confirmationBlocks;
@@ -25,7 +25,7 @@ public final class BlockSubscriptionConfiguration extends SubscriptionConfigurat
     private final NonNegativeBlockNumber syncBlockLimit;
 
     public BlockSubscriptionConfiguration(
-            BlockSubscriptionMethodConfiguration blockSubscriptionMethodConfiguration,
+            BlockSubscriptionMethodConfiguration methodConfiguration,
             NonNegativeBlockNumber initialBlock,
             NonNegativeBlockNumber latestBlock,
             NonNegativeBlockNumber confirmationBlocks,
@@ -35,8 +35,7 @@ public final class BlockSubscriptionConfiguration extends SubscriptionConfigurat
             NonNegativeBlockNumber syncBlockLimit) {
         super(SubscriptionStrategy.BLOCK_BASED);
         Objects.requireNonNull(
-                blockSubscriptionMethodConfiguration,
-                "blockSubscriptionMethodConfiguration cannot be null");
+                methodConfiguration, "blockSubscriptionMethodConfiguration cannot be null");
         Objects.requireNonNull(initialBlock, "initialBlock cannot be null");
         Objects.requireNonNull(latestBlock, "latestBlock cannot be null");
         Objects.requireNonNull(confirmationBlocks, "confirmationBlocks cannot be null");
@@ -47,7 +46,7 @@ public final class BlockSubscriptionConfiguration extends SubscriptionConfigurat
         Objects.requireNonNull(syncBlockLimit, "syncBlockLimit cannot be null");
         this.confirmationBlocks = confirmationBlocks;
         this.missingTxRetryBlocks = missingTxRetryBlocks;
-        this.blockSubscriptionMethodConfiguration = blockSubscriptionMethodConfiguration;
+        this.methodConfiguration = methodConfiguration;
         this.initialBlock = initialBlock;
         this.latestBlock = latestBlock;
         this.eventInvalidationBlockThreshold = eventInvalidationBlockThreshold;

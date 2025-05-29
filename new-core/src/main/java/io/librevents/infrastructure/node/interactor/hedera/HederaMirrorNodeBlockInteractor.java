@@ -55,7 +55,7 @@ public final class HederaMirrorNodeBlockInteractor implements BlockInteractor {
     public HederaMirrorNodeBlockInteractor(
             OkHttpClient httpClient,
             ObjectMapper objectMapper,
-            String host,
+            String url,
             Map<String, String> headers,
             Duration pollingInterval,
             int maxRetries,
@@ -63,9 +63,9 @@ public final class HederaMirrorNodeBlockInteractor implements BlockInteractor {
             ScheduledExecutorService scheduler) {
         Objects.requireNonNull(httpClient, "httpClient");
         Objects.requireNonNull(objectMapper, "objectMapper");
-        Objects.requireNonNull(host, "host");
-        if (host.isBlank()) throw new IllegalArgumentException("host cannot be blank");
-        this.client = new MirrorNodeHttpClient(httpClient, objectMapper, host, headers);
+        Objects.requireNonNull(url, "url");
+        if (url.isBlank()) throw new IllegalArgumentException("url cannot be blank");
+        this.client = new MirrorNodeHttpClient(httpClient, objectMapper, url, headers);
         this.pollingInterval = Objects.requireNonNull(pollingInterval, "pollingInterval");
         this.maxRetries = maxRetries;
         this.limitPerPage = limitPerPage;

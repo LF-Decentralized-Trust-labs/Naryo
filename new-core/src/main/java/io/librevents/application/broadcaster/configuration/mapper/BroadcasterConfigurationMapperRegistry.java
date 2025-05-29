@@ -18,19 +18,20 @@ public final class BroadcasterConfigurationMapperRegistry
             String type,
             Class<S> sourceClass,
             ConfigurationMapper<BroadcasterConfiguration, S> mapper) {
-        registry.computeIfAbsent(type, __ -> new HashMap<>()).put(sourceClass, mapper);
+        registry.computeIfAbsent(type.toLowerCase(), __ -> new HashMap<>())
+                .put(sourceClass, mapper);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <S> BroadcasterConfiguration map(String type, S source) {
-        var mapper = registry.getOrDefault(type, Map.of()).get(source.getClass());
+        var mapper = registry.getOrDefault(type.toLowerCase(), Map.of()).get(source.getClass());
 
         if (mapper == null) {
             throw new IllegalArgumentException(
                     "No mapper registered for type " + type + " and source " + source.getClass());
         }
 
-        return ((BroadcasterConfigurationMapper<S>) mapper).map(source);
+        return ((ConfigurationMapper<BroadcasterConfiguration, S>) mapper).map(source);
     }
 }

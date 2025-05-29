@@ -228,10 +228,10 @@ class BlockProcessorPermanentTriggerTest {
     void testConstructor() {
         BlockProcessorPermanentTrigger trigger =
                 new BlockProcessorPermanentTrigger(
+                        new MockNode(),
                         List.of(),
                         new MockBlockInteractor(),
                         decoder,
-                        new DefaultNodeRepository(),
                         new ContractEventDispatcherHelper(new TestDispatcher()));
         assertNotNull(trigger);
     }
@@ -242,10 +242,10 @@ class BlockProcessorPermanentTriggerTest {
                 NullPointerException.class,
                 () ->
                         new BlockProcessorPermanentTrigger(
+                                new MockNode(),
                                 null,
                                 new MockBlockInteractor(),
                                 decoder,
-                                new DefaultNodeRepository(),
                                 new ContractEventDispatcherHelper(new TestDispatcher())));
     }
 
@@ -255,10 +255,10 @@ class BlockProcessorPermanentTriggerTest {
                 NullPointerException.class,
                 () ->
                         new BlockProcessorPermanentTrigger(
+                                new MockNode(),
                                 List.of(),
                                 null,
                                 decoder,
-                                new DefaultNodeRepository(),
                                 new ContractEventDispatcherHelper(new TestDispatcher())));
     }
 
@@ -268,10 +268,10 @@ class BlockProcessorPermanentTriggerTest {
                 NullPointerException.class,
                 () ->
                         new BlockProcessorPermanentTrigger(
+                                new MockNode(),
                                 List.of(),
                                 new MockBlockInteractor(),
                                 decoder,
-                                new DefaultNodeRepository(),
                                 null));
     }
 
@@ -281,23 +281,23 @@ class BlockProcessorPermanentTriggerTest {
                 NullPointerException.class,
                 () ->
                         new BlockProcessorPermanentTrigger(
+                                new MockNode(),
                                 List.of(),
                                 new MockBlockInteractor(),
                                 null,
-                                new DefaultNodeRepository(),
                                 new ContractEventDispatcherHelper(new TestDispatcher())));
     }
 
     @Test
-    void testConstructorWithNullNodeRepository() {
+    void testConstructorWithNullNode() {
         assertThrows(
                 NullPointerException.class,
                 () ->
                         new BlockProcessorPermanentTrigger(
+                                null,
                                 List.of(),
                                 new MockBlockInteractor(),
                                 decoder,
-                                null,
                                 new ContractEventDispatcherHelper(new TestDispatcher())));
     }
 
@@ -305,10 +305,10 @@ class BlockProcessorPermanentTriggerTest {
     void testSupports() {
         BlockProcessorPermanentTrigger trigger =
                 new BlockProcessorPermanentTrigger(
+                        new MockNode(),
                         List.of(),
                         new MockBlockInteractor(),
                         decoder,
-                        new DefaultNodeRepository(),
                         new ContractEventDispatcherHelper(new TestDispatcher()));
         assertTrue(trigger.supports(createBlockEvent(UUID.randomUUID())));
     }
@@ -317,10 +317,10 @@ class BlockProcessorPermanentTriggerTest {
     void testSupportsFalse() {
         BlockProcessorPermanentTrigger trigger =
                 new BlockProcessorPermanentTrigger(
+                        new MockNode(),
                         List.of(),
                         new MockBlockInteractor(),
                         decoder,
-                        new DefaultNodeRepository(),
                         new ContractEventDispatcherHelper(new TestDispatcher()));
         ContractEvent contractEvent =
                 new ContractEvent(
@@ -342,10 +342,10 @@ class BlockProcessorPermanentTriggerTest {
     void testOnExecuteDoesNotThrow() {
         BlockProcessorPermanentTrigger trigger =
                 new BlockProcessorPermanentTrigger(
+                        new MockNode(),
                         List.of(),
                         new MockBlockInteractor(),
                         decoder,
-                        new DefaultNodeRepository(),
                         new ContractEventDispatcherHelper(new TestDispatcher()));
         assertDoesNotThrow(() -> trigger.onExecute(ev -> {}));
     }
@@ -356,10 +356,10 @@ class BlockProcessorPermanentTriggerTest {
         TestDispatcher dispatcher = new TestDispatcher();
         BlockProcessorPermanentTrigger trigger =
                 new BlockProcessorPermanentTrigger(
+                        node,
                         List.of(),
                         new MockBlockInteractor(),
                         decoder,
-                        new DefaultNodeRepository(node),
                         new ContractEventDispatcherHelper(dispatcher));
         assertDoesNotThrow(() -> trigger.trigger(createBlockEvent(UUID.randomUUID())));
         assertFalse(dispatcher.isDispatched());
@@ -371,6 +371,7 @@ class BlockProcessorPermanentTriggerTest {
         TestDispatcher dispatcher = new TestDispatcher();
         BlockProcessorPermanentTrigger trigger =
                 new BlockProcessorPermanentTrigger(
+                        node,
                         List.of(
                                 new ContractEventFilter(
                                         UUID.randomUUID(),
@@ -385,7 +386,6 @@ class BlockProcessorPermanentTriggerTest {
                                         "0xa6c9f780caeafc2b8e83469a8b6422c22fa39ba1")),
                         new MockBlockInteractor(),
                         decoder,
-                        new DefaultNodeRepository(node),
                         new ContractEventDispatcherHelper(dispatcher));
         assertDoesNotThrow(() -> trigger.trigger(createBlockEvent(UUID.randomUUID())));
         assertFalse(dispatcher.isDispatched());
@@ -397,6 +397,7 @@ class BlockProcessorPermanentTriggerTest {
         TestDispatcher dispatcher = new TestDispatcher();
         BlockProcessorPermanentTrigger trigger =
                 new BlockProcessorPermanentTrigger(
+                        node,
                         List.of(
                                 new ContractEventFilter(
                                         node.getId(),
@@ -411,7 +412,6 @@ class BlockProcessorPermanentTriggerTest {
                                         "0xa6c9f780caeafc2b8e83469a8b6422c22fa39ba1")),
                         new MockBlockInteractor(),
                         decoder,
-                        new DefaultNodeRepository(node),
                         new ContractEventDispatcherHelper(dispatcher));
         assertDoesNotThrow(() -> trigger.trigger(createBlockEvent(node.getId())));
         assertFalse(dispatcher.isDispatched());
@@ -435,6 +435,7 @@ class BlockProcessorPermanentTriggerTest {
                                 "0xaa9449f2bca09a7b28319d46fd3f3b58a1bb7d94039fc4b69b7bfe5d8535d527"));
         BlockProcessorPermanentTrigger trigger =
                 new BlockProcessorPermanentTrigger(
+                        node,
                         List.of(
                                 new ContractEventFilter(
                                         node.getId(),
@@ -451,7 +452,6 @@ class BlockProcessorPermanentTriggerTest {
                                         "0xa6c9f780caeafc2b8e83469a8b6422c22fa39ba1")),
                         new MockBlockInteractor(log),
                         decoder,
-                        new DefaultNodeRepository(node),
                         new ContractEventDispatcherHelper(dispatcher));
         assertDoesNotThrow(() -> trigger.trigger(createBlockEvent(node.getId())));
         assertTrue(dispatcher.isDispatched());
@@ -475,6 +475,7 @@ class BlockProcessorPermanentTriggerTest {
                                 "0xaa9449f2bca09a7b28319d46fd3f3b58a1bb7d94039fc4b69b7bfe5d8535d527"));
         BlockProcessorPermanentTrigger trigger =
                 new BlockProcessorPermanentTrigger(
+                        node,
                         List.of(
                                 new GlobalEventFilter(
                                         node.getId(),
@@ -490,7 +491,6 @@ class BlockProcessorPermanentTriggerTest {
                                         new NoSyncState())),
                         new MockBlockInteractor(log),
                         decoder,
-                        new DefaultNodeRepository(node),
                         new ContractEventDispatcherHelper(dispatcher));
         assertDoesNotThrow(() -> trigger.trigger(createBlockEvent(node.getId())));
         assertTrue(dispatcher.isDispatched());
@@ -514,6 +514,7 @@ class BlockProcessorPermanentTriggerTest {
                                 "0xaa9449f2bca09a7b28319d46fd3f3b58a1bb7d94039fc4b69b7bfe5d8535d527"));
         BlockProcessorPermanentTrigger trigger =
                 new BlockProcessorPermanentTrigger(
+                        node,
                         List.of(
                                 new GlobalEventFilter(
                                         node.getId(),
@@ -529,7 +530,6 @@ class BlockProcessorPermanentTriggerTest {
                                         new NoSyncState())),
                         new MockBlockInteractor(log),
                         decoder,
-                        new DefaultNodeRepository(node),
                         new ContractEventDispatcherHelper(dispatcher));
         assertDoesNotThrow(() -> trigger.trigger(createBlockEvent(node.getId())));
         assertTrue(dispatcher.isDispatched());
@@ -539,10 +539,10 @@ class BlockProcessorPermanentTriggerTest {
     void testCallbackInvocation() {
         BlockProcessorPermanentTrigger trigger =
                 new BlockProcessorPermanentTrigger(
+                        new MockNode(),
                         List.of(),
                         new MockBlockInteractor(),
                         decoder,
-                        new DefaultNodeRepository(),
                         new ContractEventDispatcherHelper(new TestDispatcher()));
         AtomicBoolean called = new AtomicBoolean(false);
         trigger.onExecute(ev -> called.set(true));
@@ -554,10 +554,10 @@ class BlockProcessorPermanentTriggerTest {
     void testCallbackExceptionIsHandled() {
         BlockProcessorPermanentTrigger trigger =
                 new BlockProcessorPermanentTrigger(
+                        new MockNode(),
                         List.of(),
                         new MockBlockInteractor(),
                         decoder,
-                        new DefaultNodeRepository(),
                         new ContractEventDispatcherHelper(new TestDispatcher()));
         trigger.onExecute(
                 ev -> {

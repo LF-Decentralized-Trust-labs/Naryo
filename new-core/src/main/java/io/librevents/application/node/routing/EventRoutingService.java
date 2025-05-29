@@ -2,8 +2,8 @@ package io.librevents.application.node.routing;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import io.librevents.domain.broadcaster.Broadcaster;
@@ -14,41 +14,24 @@ import io.librevents.domain.event.Event;
 import io.librevents.domain.event.contract.ContractEvent;
 import io.librevents.domain.event.contract.ContractEventParameter;
 import io.librevents.domain.filter.Filter;
-import io.librevents.domain.filter.FilterRepository;
 import io.librevents.domain.filter.FilterType;
 import io.librevents.domain.filter.event.EventFilter;
 import io.librevents.domain.filter.event.ParameterDefinition;
 
 public final class EventRoutingService {
-    private final FilterRepository repository;
-    private volatile List<Filter> cachedFilters;
+    private final List<Filter> filters;
 
-    public EventRoutingService(FilterRepository repository) {
-        this.repository = Objects.requireNonNull(repository, "repository must not be null");
+    public EventRoutingService(List<Filter> filters) {
+        this.filters = filters;
     }
 
     public List<Filter> getAllFilters(List<Broadcaster> broadcasters) {
-        if (cachedFilters == null) {
-            synchronized (this) {
-                if (cachedFilters == null) {
-                    cachedFilters =
-                            repository.findAllById(
-                                    broadcasters.stream()
-                                            .filter(
-                                                    b ->
-                                                            b.getTarget()
-                                                                    instanceof
-                                                                    FilterEventBroadcasterTarget)
-                                            .map(
-                                                    b ->
-                                                            ((FilterEventBroadcasterTarget)
-                                                                            b.getTarget())
-                                                                    .getFilterId())
-                                            .collect(Collectors.toList()));
-                }
-            }
-        }
-        return cachedFilters;
+        List<UUID> filterIds =
+                broadcasters.stream()
+                        .filter(b -> b.getTarget() instanceof FilterEventBroadcasterTarget)
+                        .map(b -> ((FilterEventBroadcasterTarget) b.getTarget()).getFilterId())
+                        .toList();
+        return filters.stream().filter(filter -> filterIds.contains(filter.getId())).toList();
     }
 
     public List<Broadcaster> matchingWrappers(Event event, List<Broadcaster> broadcasters) {

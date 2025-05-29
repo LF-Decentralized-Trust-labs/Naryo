@@ -61,4 +61,28 @@ public abstract class Node {
         Objects.requireNonNull(interactionConfiguration, "InteractionConfiguration cannot be null");
         Objects.requireNonNull(connection, "Connection cannot be null");
     }
+
+    public Node merge(Node other) {
+        if (other == null) {
+            return this;
+        }
+        if (!this.id.equals(other.id)) {
+            throw new IllegalArgumentException("Cannot merge nodes with different IDs");
+        }
+        if (other.name != null && !other.name.equals(this.name)) {
+            this.name = other.name;
+        }
+        if (other.connection != null && !other.connection.equals(this.connection)) {
+            this.connection = other.connection;
+        }
+        if (other.subscriptionConfiguration != null
+                && !other.subscriptionConfiguration.equals(this.subscriptionConfiguration)) {
+            this.subscriptionConfiguration = other.subscriptionConfiguration;
+        }
+        if (other.interactionConfiguration != null
+                && !other.interactionConfiguration.equals(this.interactionConfiguration)) {
+            this.interactionConfiguration = other.interactionConfiguration;
+        }
+        return this;
+    }
 }
