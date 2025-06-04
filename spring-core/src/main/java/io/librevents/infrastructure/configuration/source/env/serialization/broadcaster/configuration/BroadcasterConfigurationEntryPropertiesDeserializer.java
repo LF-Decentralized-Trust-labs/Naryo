@@ -11,12 +11,12 @@ import io.librevents.infrastructure.configuration.source.env.model.broadcaster.c
 import io.librevents.infrastructure.configuration.source.env.model.broadcaster.configuration.BroadcasterConfigurationAdditionalProperties;
 import io.librevents.infrastructure.configuration.source.env.model.broadcaster.configuration.BroadcasterConfigurationEntryProperties;
 import io.librevents.infrastructure.configuration.source.env.registry.broadcaster.BroadcasterConfigurationPropertiesRegistry;
-import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentSerializer;
+import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class BroadcasterConfigurationEntryPropertiesDeserializer
-        extends EnvironmentSerializer<BroadcasterConfigurationEntryProperties> {
+        extends EnvironmentDeserializer<BroadcasterConfigurationEntryProperties> {
 
     private final BroadcasterConfigurationPropertiesRegistry registry;
 

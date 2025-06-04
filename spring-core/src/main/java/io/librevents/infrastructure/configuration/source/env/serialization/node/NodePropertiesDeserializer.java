@@ -1,6 +1,7 @@
 package io.librevents.infrastructure.configuration.source.env.serialization.node;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
@@ -12,11 +13,11 @@ import io.librevents.infrastructure.configuration.source.env.model.node.NodeProp
 import io.librevents.infrastructure.configuration.source.env.model.node.connection.ConnectionProperties;
 import io.librevents.infrastructure.configuration.source.env.model.node.interaction.InteractionProperties;
 import io.librevents.infrastructure.configuration.source.env.model.node.subscription.SubscriptionProperties;
-import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentSerializer;
+import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class NodePropertiesDeserializer extends EnvironmentSerializer<NodeProperties> {
+public final class NodePropertiesDeserializer extends EnvironmentDeserializer<NodeProperties> {
 
     @Override
     public NodeProperties deserialize(JsonParser p, DeserializationContext context)
@@ -24,6 +25,7 @@ public final class NodePropertiesDeserializer extends EnvironmentSerializer<Node
         ObjectCodec codec = p.getCodec();
         JsonNode root = codec.readTree(p);
 
+        String id = root.get("id").asText();
         String name = root.get("name").asText();
         NodeType type = NodeType.valueOf(root.get("type").asText());
         SubscriptionProperties subscription =
@@ -35,6 +37,13 @@ public final class NodePropertiesDeserializer extends EnvironmentSerializer<Node
         NodeConfigurationProperties configuration =
                 codec.treeToValue(root.get("configurationId"), NodeConfigurationProperties.class);
 
-        return new NodeProperties(name, type, subscription, interaction, connection, configuration);
+        return new NodeProperties(
+                UUID.fromString(id),
+                name,
+                type,
+                subscription,
+                interaction,
+                connection,
+                configuration);
     }
 }

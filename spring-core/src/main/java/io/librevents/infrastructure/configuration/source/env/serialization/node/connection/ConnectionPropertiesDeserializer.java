@@ -13,12 +13,12 @@ import io.librevents.infrastructure.configuration.source.env.model.node.connecti
 import io.librevents.infrastructure.configuration.source.env.model.node.connection.RetryConfigurationProperties;
 import io.librevents.infrastructure.configuration.source.env.model.node.connection.http.HttpConnectionConfigurationProperties;
 import io.librevents.infrastructure.configuration.source.env.model.node.connection.ws.WsConnectionConfigurationProperties;
-import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentSerializer;
+import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class ConnectionPropertiesDeserializer
-        extends EnvironmentSerializer<ConnectionProperties> {
+        extends EnvironmentDeserializer<ConnectionProperties> {
 
     @Override
     public ConnectionProperties deserialize(JsonParser p, DeserializationContext context)

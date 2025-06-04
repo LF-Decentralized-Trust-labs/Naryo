@@ -1,5 +1,11 @@
 package io.librevents.application.filter.block;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
 import io.librevents.application.event.decoder.ContractEventParameterDecoder;
 import io.librevents.application.node.calculator.StartBlockCalculator;
 import io.librevents.application.node.helper.ContractEventDispatcherHelper;
@@ -22,12 +28,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
