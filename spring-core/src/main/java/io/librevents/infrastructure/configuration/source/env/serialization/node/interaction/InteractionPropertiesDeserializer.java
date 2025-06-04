@@ -10,12 +10,12 @@ import io.librevents.domain.node.interaction.InteractionStrategy;
 import io.librevents.infrastructure.configuration.source.env.model.node.interaction.InteractionConfigurationProperties;
 import io.librevents.infrastructure.configuration.source.env.model.node.interaction.InteractionProperties;
 import io.librevents.infrastructure.configuration.source.env.model.node.interaction.block.BlockInteractionConfigurationProperties;
-import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentSerializer;
+import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class InteractionPropertiesDeserializer
-        extends EnvironmentSerializer<InteractionProperties> {
+        extends EnvironmentDeserializer<InteractionProperties> {
 
     @Override
     public InteractionProperties deserialize(JsonParser p, DeserializationContext context)

@@ -1,5 +1,10 @@
 package io.librevents.application.node.routing;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
 import io.librevents.domain.broadcaster.Broadcaster;
 import io.librevents.domain.broadcaster.BroadcasterTarget;
 import io.librevents.domain.broadcaster.BroadcasterTargetType;
@@ -22,11 +27,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;

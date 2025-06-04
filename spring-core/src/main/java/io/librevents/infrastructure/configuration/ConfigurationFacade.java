@@ -15,35 +15,38 @@ import org.springframework.stereotype.Component;
 @Component
 public final class ConfigurationFacade {
 
-    private final BroadcasterConfigurationConfigurationManager bccm;
-    private final BroadcasterConfigurationManager bcm;
-    private final FilterConfigurationManager fcm;
-    private final NodeConfigurationManager ncm;
+    private final BroadcasterConfigurationConfigurationManager
+            broadcasterConfigurationConfigurationManager;
+    private final BroadcasterConfigurationManager broadcasterConfigurationManager;
+    private final FilterConfigurationManager filterConfigurationManager;
+    private final NodeConfigurationManager nodeConfigurationManager;
 
     public ConfigurationFacade(
-            BroadcasterConfigurationConfigurationManager bccm,
-            BroadcasterConfigurationManager bcm,
-            FilterConfigurationManager fcm,
-            NodeConfigurationManager ncm) {
-        this.bccm = bccm;
-        this.bcm = bcm;
-        this.fcm = fcm;
-        this.ncm = ncm;
+            BroadcasterConfigurationConfigurationManager
+                    broadcasterConfigurationConfigurationManager,
+            BroadcasterConfigurationManager broadcasterConfigurationManager,
+            FilterConfigurationManager filterConfigurationManager,
+            NodeConfigurationManager nodeConfigurationManager) {
+        this.broadcasterConfigurationConfigurationManager =
+                broadcasterConfigurationConfigurationManager;
+        this.broadcasterConfigurationManager = broadcasterConfigurationManager;
+        this.filterConfigurationManager = filterConfigurationManager;
+        this.nodeConfigurationManager = nodeConfigurationManager;
     }
 
     public List<BroadcasterConfiguration> getBroadcasterConfigurations() {
-        return List.copyOf(bccm.load());
+        return List.copyOf(broadcasterConfigurationConfigurationManager.load());
     }
 
     public List<Broadcaster> getBroadcasters() {
-        return List.copyOf(bcm.load());
+        return List.copyOf(broadcasterConfigurationManager.load());
     }
 
     public List<Filter> getFilters() {
-        return List.copyOf(fcm.load());
+        return List.copyOf(filterConfigurationManager.load());
     }
 
     public List<Node> getNodes() {
-        return List.copyOf(ncm.load());
+        return List.copyOf(nodeConfigurationManager.load());
     }
 }

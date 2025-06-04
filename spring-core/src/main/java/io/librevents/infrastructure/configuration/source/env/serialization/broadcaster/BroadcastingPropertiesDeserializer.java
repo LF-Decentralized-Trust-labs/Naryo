@@ -10,12 +10,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.librevents.infrastructure.configuration.source.env.model.broadcaster.BroadcastingProperties;
 import io.librevents.infrastructure.configuration.source.env.model.broadcaster.configuration.BroadcasterConfigurationEntryProperties;
 import io.librevents.infrastructure.configuration.source.env.model.broadcaster.target.BroadcasterTargetEntryProperties;
-import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentSerializer;
+import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class BroadcastingPropertiesDeserializer
-        extends EnvironmentSerializer<BroadcastingProperties> {
+        extends EnvironmentDeserializer<BroadcastingProperties> {
 
     @Override
     public BroadcastingProperties deserialize(JsonParser p, DeserializationContext context)
