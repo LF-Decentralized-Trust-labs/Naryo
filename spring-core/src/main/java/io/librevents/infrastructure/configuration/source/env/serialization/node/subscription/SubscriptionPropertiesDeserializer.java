@@ -11,12 +11,12 @@ import io.librevents.domain.node.subscription.SubscriptionStrategy;
 import io.librevents.infrastructure.configuration.source.env.model.node.subscription.SubscriptionConfigurationProperties;
 import io.librevents.infrastructure.configuration.source.env.model.node.subscription.SubscriptionProperties;
 import io.librevents.infrastructure.configuration.source.env.model.node.subscription.block.BlockSubscriptionConfigurationProperties;
-import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentSerializer;
+import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class SubscriptionPropertiesDeserializer
-        extends EnvironmentSerializer<SubscriptionProperties> {
+        extends EnvironmentDeserializer<SubscriptionProperties> {
 
     @Override
     public SubscriptionProperties deserialize(JsonParser p, DeserializationContext context)
