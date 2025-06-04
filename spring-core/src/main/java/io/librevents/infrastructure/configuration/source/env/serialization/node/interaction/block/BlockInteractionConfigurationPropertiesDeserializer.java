@@ -12,12 +12,12 @@ import io.librevents.infrastructure.configuration.source.env.model.node.interact
 import io.librevents.infrastructure.configuration.source.env.model.node.interaction.block.BlockInteractionModeConfigurationProperties;
 import io.librevents.infrastructure.configuration.source.env.model.node.interaction.block.EthereumRpcBlockInteractionModeConfigurationProperties;
 import io.librevents.infrastructure.configuration.source.env.model.node.interaction.block.HederaMirrorNodeBlockInteractionModeConfigurationProperties;
-import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentSerializer;
+import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class BlockInteractionConfigurationPropertiesDeserializer
-        extends EnvironmentSerializer<BlockInteractionConfigurationProperties> {
+        extends EnvironmentDeserializer<BlockInteractionConfigurationProperties> {
 
     @Override
     public BlockInteractionConfigurationProperties deserialize(
