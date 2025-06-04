@@ -10,12 +10,12 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.librevents.infrastructure.configuration.source.env.model.node.subscription.block.BlockSubscriptionConfigurationProperties;
 import io.librevents.infrastructure.configuration.source.env.model.node.subscription.block.method.BlockSubscriptionMethodProperties;
-import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentSerializer;
+import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class BlockSubscriptionConfigurationPropertiesDeserializer
-        extends EnvironmentSerializer<BlockSubscriptionConfigurationProperties> {
+        extends EnvironmentDeserializer<BlockSubscriptionConfigurationProperties> {
 
     @Override
     public BlockSubscriptionConfigurationProperties deserialize(

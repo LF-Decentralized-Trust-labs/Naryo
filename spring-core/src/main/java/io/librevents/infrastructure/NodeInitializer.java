@@ -1,5 +1,10 @@
 package io.librevents.infrastructure;
 
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.UUID;
+
 import io.librevents.application.broadcaster.BroadcasterProducer;
 import io.librevents.application.event.decoder.ContractEventParameterDecoder;
 import io.librevents.application.filter.block.NodeSynchronizer;
@@ -22,11 +27,6 @@ import io.librevents.infrastructure.configuration.ConfigurationFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @Component

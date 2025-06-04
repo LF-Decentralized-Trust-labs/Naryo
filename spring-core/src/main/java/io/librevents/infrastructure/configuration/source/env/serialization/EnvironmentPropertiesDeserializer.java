@@ -9,12 +9,14 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.librevents.infrastructure.configuration.source.env.model.EnvironmentProperties;
 import io.librevents.infrastructure.configuration.source.env.model.broadcaster.BroadcastingProperties;
+import io.librevents.infrastructure.configuration.source.env.model.filter.FilterProperties;
 import io.librevents.infrastructure.configuration.source.env.model.http.HttpClientProperties;
 import io.librevents.infrastructure.configuration.source.env.model.node.NodeProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class MainPropertiesSerializer extends EnvironmentSerializer<EnvironmentProperties> {
+public final class EnvironmentPropertiesDeserializer
+        extends EnvironmentDeserializer<EnvironmentProperties> {
 
     @Override
     public EnvironmentProperties deserialize(JsonParser p, DeserializationContext context)
@@ -34,6 +36,12 @@ public final class MainPropertiesSerializer extends EnvironmentSerializer<Enviro
             nodes.add(codec.treeToValue(nodeEntry, NodeProperties.class));
         }
 
-        return new EnvironmentProperties(httpClient, broadcasting, nodes);
+        JsonNode filtersNode = root.get("filters");
+        List<FilterProperties> filters = new java.util.ArrayList<>();
+        for (JsonNode filterEntry : filtersNode) {
+            filters.add(codec.treeToValue(filterEntry, FilterProperties.class));
+        }
+
+        return new EnvironmentProperties(httpClient, broadcasting, nodes, filters);
     }
 }

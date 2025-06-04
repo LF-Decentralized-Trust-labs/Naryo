@@ -11,12 +11,12 @@ import io.librevents.infrastructure.configuration.source.env.model.node.subscrip
 import io.librevents.infrastructure.configuration.source.env.model.node.subscription.block.method.BlockSubscriptionMethodProperties;
 import io.librevents.infrastructure.configuration.source.env.model.node.subscription.block.method.PollBlockSubscriptionMethodConfigurationProperties;
 import io.librevents.infrastructure.configuration.source.env.model.node.subscription.block.method.PubSubBlockSubscriptionMethodConfigurationProperties;
-import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentSerializer;
+import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class BlockSubscriptionMethodPropertiesDeserializer
-        extends EnvironmentSerializer<BlockSubscriptionMethodProperties> {
+        extends EnvironmentDeserializer<BlockSubscriptionMethodProperties> {
 
     @Override
     public BlockSubscriptionMethodProperties deserialize(

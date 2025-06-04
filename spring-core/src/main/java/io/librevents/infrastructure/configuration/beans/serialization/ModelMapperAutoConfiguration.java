@@ -6,7 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentSerializer;
+import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import io.librevents.infrastructure.util.reflection.TypeResolver;
 import io.librevents.infrastructure.util.serialization.DurationDeserializer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -18,7 +18,7 @@ public class ModelMapperAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(ObjectMapper.class)
-    public ObjectMapper objectMapper(List<EnvironmentSerializer<?>> serializers) {
+    public ObjectMapper objectMapper(List<EnvironmentDeserializer<?>> serializers) {
         SimpleModule module = new SimpleModule();
         module.addDeserializer(Duration.class, new DurationDeserializer());
         serializers.forEach(
