@@ -2,5 +2,7 @@ package io.librevents.infrastructure.configuration.source.env.model.broadcaster.
 
 import java.util.UUID;
 
-public record FilterBroadcasterTargetConfigurationProperties(UUID filterId)
+import jakarta.validation.constraints.NotNull;
+
+public record FilterBroadcasterTargetConfigurationProperties(@NotNull UUID filterId)
         implements BroadcasterTargetAdditionalProperties {}

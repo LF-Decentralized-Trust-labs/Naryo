@@ -24,22 +24,22 @@ public final class BlockSubscriptionMethodPropertiesDeserializer
         ObjectCodec codec = p.getCodec();
         JsonNode root = codec.readTree(p);
 
-        BlockSubscriptionMethod method = BlockSubscriptionMethod.valueOf(root.get("type").asText());
-        JsonNode configurationNode = root.get("configuration");
-        BlockSubscriptionMethodConfigurationProperties configuration = null;
-
-        switch (method) {
-            case BlockSubscriptionMethod.POLL ->
-                    configuration =
-                            codec.treeToValue(
-                                    configurationNode,
-                                    PollBlockSubscriptionMethodConfigurationProperties.class);
-            case BlockSubscriptionMethod.PUBSUB ->
-                    configuration =
-                            codec.treeToValue(
-                                    configurationNode,
-                                    PubSubBlockSubscriptionMethodConfigurationProperties.class);
-        }
+        String methodStr = getTextOrNull(root.get("type"));
+        BlockSubscriptionMethod method =
+                methodStr != null && !methodStr.isBlank()
+                        ? BlockSubscriptionMethod.valueOf(methodStr.toUpperCase())
+                        : BlockSubscriptionMethod.POLL;
+        BlockSubscriptionMethodConfigurationProperties configuration =
+                safeTreeToValue(
+                        root,
+                        "configuration",
+                        codec,
+                        switch (method) {
+                            case BlockSubscriptionMethod.POLL ->
+                                    PollBlockSubscriptionMethodConfigurationProperties.class;
+                            case BlockSubscriptionMethod.PUBSUB ->
+                                    PubSubBlockSubscriptionMethodConfigurationProperties.class;
+                        });
 
         return new BlockSubscriptionMethodProperties(method, configuration);
     }

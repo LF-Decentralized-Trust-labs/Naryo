@@ -1,7 +1,6 @@
 package io.librevents.infrastructure.configuration.source.env.serialization.filter;
 
 import java.io.IOException;
-import java.util.UUID;
 
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
@@ -12,6 +11,7 @@ import io.librevents.domain.filter.FilterType;
 import io.librevents.infrastructure.configuration.source.env.model.filter.FilterConfigurationProperties;
 import io.librevents.infrastructure.configuration.source.env.model.filter.FilterProperties;
 import io.librevents.infrastructure.configuration.source.env.model.filter.event.EventFilterConfigurationProperties;
+import io.librevents.infrastructure.configuration.source.env.model.filter.transaction.TransactionFilterConfigurationProperties;
 import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import org.springframework.stereotype.Component;
 
@@ -24,19 +24,25 @@ public final class FilterPropertiesDeserializer extends EnvironmentDeserializer<
         ObjectCodec codec = p.getCodec();
         JsonNode root = codec.readTree(p);
 
-        String id = root.get("id").asText();
-        String name = root.get("name").asText();
-        FilterType type = FilterType.valueOf(root.get("type").asText());
-        String nodeId = root.get("nodeId").asText();
+        String id = getTextOrNull(root.get("id"));
+        String name = getTextOrNull(root.get("name"));
+        String typeStr = getTextOrNull(root.get("type"));
+        FilterType type =
+                typeStr != null && !typeStr.isBlank()
+                        ? FilterType.valueOf(typeStr.toUpperCase())
+                        : FilterType.EVENT;
+        String nodeId = getTextOrNull(root.get("nodeId"));
         FilterConfigurationProperties configuration =
-                codec.treeToValue(
-                        root.get("configuration"),
+                safeTreeToValue(
+                        root,
+                        "configuration",
+                        codec,
                         switch (type) {
                             case EVENT -> EventFilterConfigurationProperties.class;
-                            case TRANSACTION -> null;
+                            case TRANSACTION -> TransactionFilterConfigurationProperties.class;
                         });
 
         return new FilterProperties(
-                UUID.fromString(id), name, type, UUID.fromString(nodeId), configuration);
+                getUuidOrNull(id), name, type, getUuidOrNull(nodeId), configuration);
     }
 }

@@ -21,6 +21,7 @@ import io.librevents.infrastructure.configuration.source.env.model.filter.event.
 import io.librevents.infrastructure.configuration.source.env.model.filter.event.EventFilterConfigurationProperties;
 import io.librevents.infrastructure.configuration.source.env.model.filter.event.EventSpecification;
 import io.librevents.infrastructure.configuration.source.env.model.filter.event.contract.ContractEventFilterConfigurationAdditionalProperties;
+import io.librevents.infrastructure.configuration.source.env.model.filter.event.global.GlobalEventFilterConfigurationAdditionalProperties;
 import io.librevents.infrastructure.configuration.source.env.model.filter.event.sync.SyncConfigurationProperties;
 import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import org.springframework.stereotype.Component;
@@ -35,19 +36,26 @@ public final class EventFilterConfigurationPropertiesDeserializer
         ObjectCodec codec = p.getCodec();
         JsonNode root = codec.readTree(p);
 
-        EventFilterScope scope = EventFilterScope.valueOf(root.get("scope").asText());
+        String scopeStr = getTextOrNull(root.get("scope"));
+        EventFilterScope scope =
+                scopeStr != null && !scopeStr.isBlank()
+                        ? EventFilterScope.valueOf(scopeStr.toUpperCase())
+                        : EventFilterScope.GLOBAL;
         EventSpecification specification =
-                codec.treeToValue(root.get("specification"), EventSpecification.class);
+                safeTreeToValue(root, "specification", codec, EventSpecification.class);
         List<ContractEventStatus> statuses = getStatuses(root, codec);
         SyncConfigurationProperties sync =
-                codec.treeToValue(root.get("sync"), SyncConfigurationProperties.class);
-        EventFilterConfigurationAdditionalProperties configuration = null;
-        if (scope.equals(EventFilterScope.CONTRACT)) {
-            configuration =
-                    codec.treeToValue(
-                            root.get("configuration"),
-                            ContractEventFilterConfigurationAdditionalProperties.class);
-        }
+                safeTreeToValue(root, "sync", codec, SyncConfigurationProperties.class);
+        EventFilterConfigurationAdditionalProperties configuration =
+                safeTreeToValue(
+                        root,
+                        "configuration",
+                        codec,
+                        switch (scope) {
+                            case GLOBAL -> GlobalEventFilterConfigurationAdditionalProperties.class;
+                            case CONTRACT ->
+                                    ContractEventFilterConfigurationAdditionalProperties.class;
+                        });
 
         return new EventFilterConfigurationProperties(
                 scope, specification, statuses, sync, configuration);

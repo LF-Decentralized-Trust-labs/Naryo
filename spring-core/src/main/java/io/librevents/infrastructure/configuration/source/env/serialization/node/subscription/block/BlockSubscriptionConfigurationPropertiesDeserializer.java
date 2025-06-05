@@ -23,24 +23,27 @@ public final class BlockSubscriptionConfigurationPropertiesDeserializer
         ObjectCodec codec = p.getCodec();
         JsonNode root = codec.readTree(p);
 
+        String initialBlockStr = getTextOrNull(root.get("initialBlock"));
+        String confirmationBlocksStr = getTextOrNull(root.get("confirmationBlocks"));
+        String missingTxRetryBlocksStr = getTextOrNull(root.get("missingTxRetryBlocks"));
+        String eventInvalidationBlockThresholdStr =
+                getTextOrNull(root.get("eventInvalidationBlockThreshold"));
+        String replayBlockOffsetStr = getTextOrNull(root.get("replayBlockOffset"));
+        String syncBlockLimitStr = getTextOrNull(root.get("syncBlockLimit"));
         BlockSubscriptionMethodProperties method =
-                codec.treeToValue(root.get("method"), BlockSubscriptionMethodProperties.class);
-        BigInteger initialBlock = BigInteger.valueOf(root.get("initialBlock").asInt());
-        BigInteger confirmationBlocks = BigInteger.valueOf(root.get("confirmationBlocks").asInt());
-        BigInteger missingTxRetryBlocks =
-                BigInteger.valueOf(root.get("missingTxRetryBlocks").asInt());
-        BigInteger eventInvalidationBlockThreshold =
-                BigInteger.valueOf(root.get("eventInvalidationBlockThreshold").asInt());
-        BigInteger replayBlockOffset = BigInteger.valueOf(root.get("replayBlockOffset").asInt());
-        BigInteger syncBlockLimit = BigInteger.valueOf(root.get("syncBlockLimit").asInt());
+                safeTreeToValue(root, "method", codec, BlockSubscriptionMethodProperties.class);
 
         return new BlockSubscriptionConfigurationProperties(
                 method,
-                initialBlock,
-                confirmationBlocks,
-                missingTxRetryBlocks,
-                eventInvalidationBlockThreshold,
-                replayBlockOffset,
-                syncBlockLimit);
+                parseBigInteger(initialBlockStr),
+                parseBigInteger(confirmationBlocksStr),
+                parseBigInteger(missingTxRetryBlocksStr),
+                parseBigInteger(eventInvalidationBlockThresholdStr),
+                parseBigInteger(replayBlockOffsetStr),
+                parseBigInteger(syncBlockLimitStr));
+    }
+
+    private BigInteger parseBigInteger(String value) {
+        return value != null && !value.isEmpty() ? new BigInteger(value) : null;
     }
 }

@@ -23,15 +23,18 @@ public final class SyncConfigurationPropertiesDeserializer
         ObjectCodec codec = p.getCodec();
         JsonNode root = codec.readTree(p);
 
-        SyncType type = SyncType.valueOf(root.get("type").asText());
-        JsonNode configurationNode = root.get("configuration");
+        String typeStr = getTextOrNull(root.get("type"));
+        SyncType type =
+                typeStr != null && !typeStr.isBlank()
+                        ? SyncType.valueOf(typeStr)
+                        : SyncType.BLOCK_BASED;
         SyncConfigurationAdditionalProperties configuration =
-                switch (type) {
-                    case BLOCK_BASED ->
-                            codec.treeToValue(
-                                    root.get("configuration"),
-                                    BlockSyncConfigurationAdditionalProperties.class);
-                };
+                safeTreeToValue(
+                        root,
+                        "configuration",
+                        codec,
+                        BlockSyncConfigurationAdditionalProperties
+                                .class); // Default cause BLOCK_BASED is the only one we support now
 
         return new SyncConfigurationProperties(type, configuration);
     }
