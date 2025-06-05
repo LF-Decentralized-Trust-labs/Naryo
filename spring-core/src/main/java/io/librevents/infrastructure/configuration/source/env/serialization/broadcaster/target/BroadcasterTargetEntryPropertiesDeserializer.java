@@ -1,16 +1,13 @@
 package io.librevents.infrastructure.configuration.source.env.serialization.broadcaster.target;
 
 import java.io.IOException;
-import java.util.UUID;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.librevents.domain.broadcaster.BroadcasterTargetType;
-import io.librevents.infrastructure.configuration.source.env.model.broadcaster.target.BroadcasterTargetAdditionalProperties;
-import io.librevents.infrastructure.configuration.source.env.model.broadcaster.target.BroadcasterTargetEntryProperties;
-import io.librevents.infrastructure.configuration.source.env.model.broadcaster.target.FilterBroadcasterTargetConfigurationProperties;
+import io.librevents.infrastructure.configuration.source.env.model.broadcaster.target.*;
 import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import org.springframework.stereotype.Component;
 
@@ -24,20 +21,29 @@ public final class BroadcasterTargetEntryPropertiesDeserializer
         ObjectCodec codec = p.getCodec();
         JsonNode root = codec.readTree(p);
 
-        String configurationId = root.get("configurationId").asText();
-        BroadcasterTargetType type = BroadcasterTargetType.valueOf(root.get("type").asText());
-        String destination = root.get("destination").asText();
-        JsonNode configurationNode = root.get("configuration");
-        BroadcasterTargetAdditionalProperties configuration = null;
-
-        if (type == BroadcasterTargetType.FILTER) {
-            configuration =
-                    codec.treeToValue(
-                            configurationNode,
-                            FilterBroadcasterTargetConfigurationProperties.class);
-        }
+        String configurationId = getTextOrNull(root.get("configurationId"));
+        String typeString = getTextOrNull(root.get("type"));
+        BroadcasterTargetType type =
+                typeString != null && !typeString.isBlank()
+                        ? BroadcasterTargetType.valueOf(typeString.toUpperCase())
+                        : BroadcasterTargetType.ALL;
+        String destination = getTextOrNull(root.get("destination"));
+        BroadcasterTargetAdditionalProperties configuration =
+                safeTreeToValue(
+                        root,
+                        "configuration",
+                        codec,
+                        switch (type) {
+                            case ALL -> AllBroadcasterTargetConfigurationProperties.class;
+                            case TRANSACTION ->
+                                    TransactionBroadcasterTargetConfigurationProperties.class;
+                            case CONTRACT_EVENT ->
+                                    ContractEventBroadcasterTargetConfigurationProperties.class;
+                            case FILTER -> FilterBroadcasterTargetConfigurationProperties.class;
+                            case BLOCK -> BlockBroadcasterTargetConfigurationProperties.class;
+                        });
 
         return new BroadcasterTargetEntryProperties(
-                UUID.fromString(configurationId), type, destination, configuration);
+                getUuidOrNull(configurationId), type, destination, configuration);
     }
 }

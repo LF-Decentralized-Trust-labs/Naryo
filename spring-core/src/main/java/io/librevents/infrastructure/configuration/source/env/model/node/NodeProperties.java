@@ -6,12 +6,15 @@ import io.librevents.domain.node.NodeType;
 import io.librevents.infrastructure.configuration.source.env.model.node.connection.ConnectionProperties;
 import io.librevents.infrastructure.configuration.source.env.model.node.interaction.InteractionProperties;
 import io.librevents.infrastructure.configuration.source.env.model.node.subscription.SubscriptionProperties;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record NodeProperties(
-        UUID id,
-        String name,
-        NodeType type,
-        SubscriptionProperties subscription,
-        InteractionProperties interaction,
-        ConnectionProperties connection,
-        NodeConfigurationProperties configuration) {}
+        @NotNull UUID id,
+        @NotBlank String name,
+        @NotNull NodeType type,
+        @Valid @NotNull SubscriptionProperties subscription,
+        @Valid @NotNull InteractionProperties interaction,
+        @Valid @NotNull ConnectionProperties connection,
+        @Valid @NotNull NodeConfigurationProperties configuration) {}

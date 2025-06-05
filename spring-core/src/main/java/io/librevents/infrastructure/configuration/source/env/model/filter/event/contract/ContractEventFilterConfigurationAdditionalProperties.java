@@ -1,6 +1,7 @@
 package io.librevents.infrastructure.configuration.source.env.model.filter.event.contract;
 
 import io.librevents.infrastructure.configuration.source.env.model.filter.event.EventFilterConfigurationAdditionalProperties;
+import jakarta.validation.constraints.NotBlank;
 
-public record ContractEventFilterConfigurationAdditionalProperties(String address)
+public record ContractEventFilterConfigurationAdditionalProperties(@NotBlank String address)
         implements EventFilterConfigurationAdditionalProperties {}
