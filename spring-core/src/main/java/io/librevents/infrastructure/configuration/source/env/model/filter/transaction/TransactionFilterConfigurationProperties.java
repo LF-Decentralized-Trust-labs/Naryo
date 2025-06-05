@@ -5,7 +5,19 @@ import java.util.List;
 import io.librevents.domain.common.TransactionStatus;
 import io.librevents.domain.filter.transaction.IdentifierType;
 import io.librevents.infrastructure.configuration.source.env.model.filter.FilterConfigurationProperties;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 public record TransactionFilterConfigurationProperties(
-        IdentifierType identifierType, String value, List<TransactionStatus> statuses)
-        implements FilterConfigurationProperties {}
+        @NotNull IdentifierType identifierType,
+        @NotBlank String value,
+        @NotEmpty List<TransactionStatus> statuses)
+        implements FilterConfigurationProperties {
+
+    public TransactionFilterConfigurationProperties {
+        if (statuses == null || statuses.isEmpty()) {
+            statuses = List.of(TransactionStatus.values());
+        }
+    }
+}

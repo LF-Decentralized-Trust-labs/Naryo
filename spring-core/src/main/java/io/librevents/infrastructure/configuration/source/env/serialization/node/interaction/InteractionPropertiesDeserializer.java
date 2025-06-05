@@ -23,15 +23,20 @@ public final class InteractionPropertiesDeserializer
         ObjectCodec codec = p.getCodec();
         JsonNode root = codec.readTree(p);
 
-        InteractionStrategy strategy = InteractionStrategy.valueOf(root.get("strategy").asText());
-        JsonNode configurationNode = root.get("configuration");
-        InteractionConfigurationProperties configuration = null;
+        String strategyStr = getTextOrNull(root.get("strategy"));
+        InteractionStrategy strategy =
+                strategyStr != null && !strategyStr.isBlank()
+                        ? InteractionStrategy.valueOf(strategyStr.toUpperCase())
+                        : InteractionStrategy.BLOCK_BASED;
 
-        if (strategy == InteractionStrategy.BLOCK_BASED) {
-            configuration =
-                    codec.treeToValue(
-                            configurationNode, BlockInteractionConfigurationProperties.class);
-        }
+        InteractionConfigurationProperties configuration =
+                safeTreeToValue(
+                        root,
+                        "configuration",
+                        codec,
+                        BlockInteractionConfigurationProperties
+                                .class // Default cause BLOCK_BASED is the only one we support now
+                        );
 
         return new InteractionProperties(strategy, configuration);
     }

@@ -28,7 +28,7 @@ public class HttpClientAutoConfiguration {
                 .writeTimeout(config.writeTimeout())
                 .callTimeout(config.callTimeout())
                 .pingInterval(config.pingInterval())
-                .retryOnConnectionFailure(config.isRetryOnConnectionFailure())
+                .retryOnConnectionFailure(config.retryOnConnectionFailure())
                 .build();
     }
 }

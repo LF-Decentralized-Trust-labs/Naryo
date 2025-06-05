@@ -2,7 +2,6 @@ package io.librevents.infrastructure.configuration.source.env.serialization.node
 
 import java.io.IOException;
 
-import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -20,20 +19,22 @@ public final class SubscriptionPropertiesDeserializer
 
     @Override
     public SubscriptionProperties deserialize(JsonParser p, DeserializationContext context)
-            throws IOException, JacksonException {
+            throws IOException {
         ObjectCodec codec = p.getCodec();
         JsonNode root = codec.readTree(p);
 
-        SubscriptionStrategy strategy = SubscriptionStrategy.valueOf(root.get("strategy").asText());
-        JsonNode configurationNode = root.get("configuration");
-        SubscriptionConfigurationProperties configuration = null;
-
-        if (strategy == SubscriptionStrategy.BLOCK_BASED) {
-            configuration =
-                    codec.treeToValue(
-                            configurationNode, BlockSubscriptionConfigurationProperties.class);
-        }
-
+        String strategyStr = getTextOrNull(root.get("strategy"));
+        SubscriptionStrategy strategy =
+                strategyStr != null && !strategyStr.isBlank()
+                        ? SubscriptionStrategy.valueOf(strategyStr)
+                        : SubscriptionStrategy.BLOCK_BASED;
+        SubscriptionConfigurationProperties configuration =
+                safeTreeToValue(
+                        root,
+                        "configuration",
+                        codec,
+                        BlockSubscriptionConfigurationProperties
+                                .class); // Default cause BLOCK_BASED is the only one we support now
         return new SubscriptionProperties(strategy, configuration);
     }
 }

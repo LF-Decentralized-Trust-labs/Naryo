@@ -11,6 +11,8 @@ import io.librevents.domain.node.NodeType;
 import io.librevents.infrastructure.configuration.source.env.model.node.NodeConfigurationProperties;
 import io.librevents.infrastructure.configuration.source.env.model.node.NodeProperties;
 import io.librevents.infrastructure.configuration.source.env.model.node.connection.ConnectionProperties;
+import io.librevents.infrastructure.configuration.source.env.model.node.eth.EthereumNodeConfigurationProperties;
+import io.librevents.infrastructure.configuration.source.env.model.node.hedera.HederaNodeConfigurationProperties;
 import io.librevents.infrastructure.configuration.source.env.model.node.interaction.InteractionProperties;
 import io.librevents.infrastructure.configuration.source.env.model.node.subscription.SubscriptionProperties;
 import io.librevents.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
@@ -25,20 +27,31 @@ public final class NodePropertiesDeserializer extends EnvironmentDeserializer<No
         ObjectCodec codec = p.getCodec();
         JsonNode root = codec.readTree(p);
 
-        String id = root.get("id").asText();
-        String name = root.get("name").asText();
-        NodeType type = NodeType.valueOf(root.get("type").asText());
+        String id = getTextOrNull(root.get("id"));
+        String name = getTextOrNull(root.get("name"));
+        String typeStr = getTextOrNull(root.get("type"));
+        NodeType type =
+                typeStr != null && !typeStr.isBlank()
+                        ? NodeType.valueOf(typeStr.toUpperCase())
+                        : NodeType.ETHEREUM;
+
         SubscriptionProperties subscription =
-                codec.treeToValue(root.get("subscription"), SubscriptionProperties.class);
+                safeTreeToValue(root, "subscription", codec, SubscriptionProperties.class);
         InteractionProperties interaction =
-                codec.treeToValue(root.get("interaction"), InteractionProperties.class);
+                safeTreeToValue(root, "interaction", codec, InteractionProperties.class);
         ConnectionProperties connection =
-                codec.treeToValue(root.get("connection"), ConnectionProperties.class);
+                safeTreeToValue(root, "connection", codec, ConnectionProperties.class);
         NodeConfigurationProperties configuration =
-                codec.treeToValue(root.get("configurationId"), NodeConfigurationProperties.class);
+                safeTreeToValue(
+                        root,
+                        "configuration",
+                        codec,
+                        type == NodeType.ETHEREUM
+                                ? EthereumNodeConfigurationProperties.class
+                                : HederaNodeConfigurationProperties.class);
 
         return new NodeProperties(
-                UUID.fromString(id),
+                id != null ? UUID.fromString(id) : null,
                 name,
                 type,
                 subscription,
