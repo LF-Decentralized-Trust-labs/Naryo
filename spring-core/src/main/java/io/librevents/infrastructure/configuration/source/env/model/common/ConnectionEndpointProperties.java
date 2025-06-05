@@ -1,3 +1,5 @@
 package io.librevents.infrastructure.configuration.source.env.model.common;
 
-public record ConnectionEndpointProperties(String url) {}
+import jakarta.validation.constraints.NotBlank;
+
+public record ConnectionEndpointProperties(@NotBlank String url) {}

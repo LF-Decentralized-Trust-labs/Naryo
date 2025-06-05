@@ -23,6 +23,9 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:$okHttpVersion"
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     implementation "org.web3j:core:$web3jVersion"
+    implementation 'org.hibernate.validator:hibernate-validator'
+    implementation 'jakarta.validation:jakarta.validation-api'
+
 
     compileOnly 'org.projectlombok:lombok'
 
