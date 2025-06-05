@@ -25,22 +25,12 @@ public final class EnvironmentPropertiesDeserializer
         JsonNode root = codec.readTree(p);
 
         HttpClientProperties httpClient =
-                codec.treeToValue(root.get("httpClient"), HttpClientProperties.class);
+                safeTreeToValue(root, "httpClient", codec, HttpClientProperties.class);
         BroadcastingProperties broadcasting =
-                codec.treeToValue(root.get("broadcasting"), BroadcastingProperties.class);
-
-        JsonNode nodesNode = root.get("nodes");
-        List<NodeProperties> nodes = new java.util.ArrayList<>();
-
-        for (JsonNode nodeEntry : nodesNode) {
-            nodes.add(codec.treeToValue(nodeEntry, NodeProperties.class));
-        }
-
-        JsonNode filtersNode = root.get("filters");
-        List<FilterProperties> filters = new java.util.ArrayList<>();
-        for (JsonNode filterEntry : filtersNode) {
-            filters.add(codec.treeToValue(filterEntry, FilterProperties.class));
-        }
+                safeTreeToValue(root, "broadcasting", codec, BroadcastingProperties.class);
+        List<NodeProperties> nodes = safeTreeToList(root, "nodes", codec, NodeProperties.class);
+        List<FilterProperties> filters =
+                safeTreeToList(root, "filters", codec, FilterProperties.class);
 
         return new EnvironmentProperties(httpClient, broadcasting, nodes, filters);
     }

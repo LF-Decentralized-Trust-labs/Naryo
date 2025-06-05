@@ -1,7 +1,8 @@
 package io.librevents.infrastructure.configuration.source.env.model.node.eth.priv;
 
 import io.librevents.infrastructure.configuration.source.env.model.node.eth.EthNodeVisibilityConfigurationProperties;
+import jakarta.validation.constraints.NotBlank;
 
 public record PrivateEthNodeVisibilityConfigurationProperties(
-        String groupId, String precompiledAddress)
+        @NotBlank String groupId, @NotBlank String precompiledAddress)
         implements EthNodeVisibilityConfigurationProperties {}

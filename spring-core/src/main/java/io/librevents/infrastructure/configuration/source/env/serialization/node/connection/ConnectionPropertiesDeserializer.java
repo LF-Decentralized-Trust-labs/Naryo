@@ -26,24 +26,24 @@ public final class ConnectionPropertiesDeserializer
         ObjectCodec codec = p.getCodec();
         JsonNode root = codec.readTree(p);
 
-        NodeConnectionType type = NodeConnectionType.valueOf(root.get("type").asText());
+        String typeStr = getTextOrNull(root.get("type"));
+        NodeConnectionType type =
+                typeStr != null && !typeStr.isBlank()
+                        ? NodeConnectionType.valueOf(typeStr.toUpperCase())
+                        : NodeConnectionType.HTTP;
         RetryConfigurationProperties retry =
-                codec.treeToValue(root.get("retry"), RetryConfigurationProperties.class);
+                safeTreeToValue(root, "retry", codec, RetryConfigurationProperties.class);
         ConnectionEndpointProperties endpoint =
-                codec.treeToValue(root.get("endpoint"), ConnectionEndpointProperties.class);
-        JsonNode configurationNode = root.get("configuration");
-        ConnectionConfigurationProperties configuration = null;
-
-        switch (type) {
-            case HTTP ->
-                    configuration =
-                            codec.treeToValue(
-                                    configurationNode, HttpConnectionConfigurationProperties.class);
-            case WS ->
-                    configuration =
-                            codec.treeToValue(
-                                    configurationNode, WsConnectionConfigurationProperties.class);
-        }
+                safeTreeToValue(root, "endpoint", codec, ConnectionEndpointProperties.class);
+        ConnectionConfigurationProperties configuration =
+                safeTreeToValue(
+                        root,
+                        "configuration",
+                        codec,
+                        switch (type) {
+                            case HTTP -> HttpConnectionConfigurationProperties.class;
+                            case WS -> WsConnectionConfigurationProperties.class;
+                        });
 
         return new ConnectionProperties(type, retry, endpoint, configuration);
     }

@@ -25,23 +25,23 @@ public final class BlockInteractionConfigurationPropertiesDeserializer
         ObjectCodec codec = p.getCodec();
         JsonNode root = codec.readTree(p);
 
-        InteractionMode mode = InteractionMode.valueOf(root.get("mode").asText());
-        JsonNode configurationNode = root.get("configuration");
-        BlockInteractionModeConfigurationProperties configuration = null;
-
-        switch (mode) {
-            case InteractionMode.ETHEREUM_RPC ->
-                    configuration =
-                            codec.treeToValue(
-                                    configurationNode,
-                                    EthereumRpcBlockInteractionModeConfigurationProperties.class);
-            case InteractionMode.HEDERA_MIRROR_NODE ->
-                    configuration =
-                            codec.treeToValue(
-                                    configurationNode,
+        String modeStr = getTextOrNull(root.get("mode"));
+        InteractionMode mode =
+                modeStr != null && !modeStr.isBlank()
+                        ? InteractionMode.valueOf(modeStr.toUpperCase())
+                        : InteractionMode.ETHEREUM_RPC;
+        BlockInteractionModeConfigurationProperties configuration =
+                safeTreeToValue(
+                        root,
+                        "configuration",
+                        codec,
+                        switch (mode) {
+                            case ETHEREUM_RPC ->
+                                    EthereumRpcBlockInteractionModeConfigurationProperties.class;
+                            case HEDERA_MIRROR_NODE ->
                                     HederaMirrorNodeBlockInteractionModeConfigurationProperties
-                                            .class);
-        }
+                                            .class;
+                        });
 
         return new BlockInteractionConfigurationProperties(mode, configuration);
     }

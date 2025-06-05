@@ -2,7 +2,9 @@ package io.librevents.infrastructure.configuration.source.env.model.broadcaster.
 
 import io.librevents.infrastructure.configuration.source.env.model.broadcaster.configuration.BroadcasterConfigurationAdditionalProperties;
 import io.librevents.infrastructure.configuration.source.env.model.common.ConnectionEndpointProperties;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 public record HttpBroadcasterConfigurationAdditionalProperties(
-        ConnectionEndpointProperties endpoint)
+        @Valid @NotNull ConnectionEndpointProperties endpoint)
         implements BroadcasterConfigurationAdditionalProperties {}

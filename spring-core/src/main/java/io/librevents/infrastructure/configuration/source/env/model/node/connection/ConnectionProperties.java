@@ -2,9 +2,11 @@ package io.librevents.infrastructure.configuration.source.env.model.node.connect
 
 import io.librevents.domain.node.connection.NodeConnectionType;
 import io.librevents.infrastructure.configuration.source.env.model.common.ConnectionEndpointProperties;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 public record ConnectionProperties(
-        NodeConnectionType type,
-        RetryConfigurationProperties retry,
-        ConnectionEndpointProperties endpoint,
-        ConnectionConfigurationProperties configuration) {}
+        @NotNull NodeConnectionType type,
+        @Valid @NotNull RetryConfigurationProperties retry,
+        @Valid @NotNull ConnectionEndpointProperties endpoint,
+        @Valid @NotNull ConnectionConfigurationProperties configuration) {}

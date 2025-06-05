@@ -23,20 +23,14 @@ public final class BroadcastingPropertiesDeserializer
         ObjectCodec codec = p.getCodec();
         JsonNode root = codec.readTree(p);
 
-        JsonNode configurationNode = root.get("configuration");
-        List<BroadcasterConfigurationEntryProperties> configurations = new java.util.ArrayList<>();
-
-        for (JsonNode nodeEntry : configurationNode) {
-            configurations.add(
-                    codec.treeToValue(nodeEntry, BroadcasterConfigurationEntryProperties.class));
-        }
-
-        JsonNode broadcastersNode = root.get("broadcasters");
-        List<BroadcasterTargetEntryProperties> broadcasters = new java.util.ArrayList<>();
-
-        for (JsonNode nodeEntry : broadcastersNode) {
-            broadcasters.add(codec.treeToValue(nodeEntry, BroadcasterTargetEntryProperties.class));
-        }
+        List<BroadcasterConfigurationEntryProperties> configurations =
+                safeTreeToList(
+                        root,
+                        "configuration",
+                        codec,
+                        BroadcasterConfigurationEntryProperties.class);
+        List<BroadcasterTargetEntryProperties> broadcasters =
+                safeTreeToList(root, "broadcasters", codec, BroadcasterTargetEntryProperties.class);
 
         return new BroadcastingProperties(configurations, broadcasters);
     }

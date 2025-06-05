@@ -2,7 +2,10 @@ package io.librevents.infrastructure.configuration.source.env.model.node.interac
 
 import io.librevents.domain.node.interaction.block.InteractionMode;
 import io.librevents.infrastructure.configuration.source.env.model.node.interaction.InteractionConfigurationProperties;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 public record BlockInteractionConfigurationProperties(
-        InteractionMode mode, BlockInteractionModeConfigurationProperties configuration)
+        @NotNull InteractionMode mode,
+        @Valid @NotNull BlockInteractionModeConfigurationProperties configuration)
         implements InteractionConfigurationProperties {}

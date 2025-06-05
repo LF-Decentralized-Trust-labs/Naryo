@@ -1,7 +1,6 @@
 package io.librevents.infrastructure.configuration.source.env.serialization.broadcaster.configuration;
 
 import java.io.IOException;
-import java.util.UUID;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
@@ -31,14 +30,14 @@ public final class BroadcasterConfigurationEntryPropertiesDeserializer
         ObjectCodec codec = p.getCodec();
         JsonNode root = codec.readTree(p);
 
-        String id = root.get("id").asText();
-        String type = root.get("type").asText();
+        String id = getTextOrNull(root.get("id"));
+        String type = getTextOrNull(root.get("type"));
         BroadcasterCacheProperties cache =
-                codec.treeToValue(root.get("cache"), BroadcasterCacheProperties.class);
+                safeTreeToValue(root, "cache", codec, BroadcasterCacheProperties.class);
         BroadcasterConfigurationAdditionalProperties configuration =
-                codec.treeToValue(root.get("configuration"), registry.get(type));
+                safeTreeToValue(root, "configuration", codec, registry.get(type));
 
         return new BroadcasterConfigurationEntryProperties(
-                UUID.fromString(id), type, cache, configuration);
+                getUuidOrNull(id), type, cache, configuration);
     }
 }
