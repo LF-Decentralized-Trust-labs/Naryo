@@ -1,8 +1,8 @@
 package io.librevents.infrastructure.configuration.source.env.model.node.connection;
 
-import jakarta.validation.constraints.NotNull;
-
 import java.time.Duration;
+
+import jakarta.validation.constraints.NotNull;
 
 public record RetryConfigurationProperties(int times, @NotNull Duration backoff) {
 
