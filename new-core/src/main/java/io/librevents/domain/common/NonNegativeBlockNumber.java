@@ -21,4 +21,12 @@ public record NonNegativeBlockNumber(BigInteger value) {
     public boolean isGreaterThan(NonNegativeBlockNumber other) {
         return this.value.compareTo(other.value) > 0;
     }
+
+    public int compareTo(NonNegativeBlockNumber other) {
+        return this.value.compareTo(other.value);
+    }
+
+    public static NonNegativeBlockNumber valueOf(BigInteger value) {
+        return new NonNegativeBlockNumber(value);
+    }
 }
