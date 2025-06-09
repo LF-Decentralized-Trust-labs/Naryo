@@ -1,9 +1,12 @@
 package io.librevents.application.node.trigger.disposable.block;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Set;
 
 import io.librevents.application.node.dispatch.Dispatcher;
+import io.librevents.application.node.interactor.block.BlockInteractor;
+import io.librevents.application.node.interactor.block.dto.Transaction;
 import io.librevents.application.node.trigger.Trigger;
 import io.librevents.domain.common.NonNegativeBlockNumber;
 import io.librevents.domain.common.event.ContractEventStatus;
@@ -24,6 +27,7 @@ import static org.mockito.Mockito.*;
 class ContractEventConfirmationDisposableTriggerTest {
 
     @Mock private Dispatcher dispatcher;
+    @Mock private BlockInteractor interactor;
 
     private ContractEventConfirmationDisposableTrigger trigger;
     private ContractEvent contractEvent;
@@ -49,22 +53,38 @@ class ContractEventConfirmationDisposableTriggerTest {
         requiredConfirmations = BigInteger.valueOf(5);
         trigger =
                 new ContractEventConfirmationDisposableTrigger(
-                        contractEvent, requiredConfirmations, dispatcher);
+                        contractEvent,
+                        new NonNegativeBlockNumber(requiredConfirmations),
+                        new NonNegativeBlockNumber(BigInteger.ONE),
+                        new NonNegativeBlockNumber(BigInteger.valueOf(10)),
+                        dispatcher,
+                        interactor);
     }
 
     @Test
-    void trigger_onOrAfterRequiredBlock_dispatchesConfirmedEvent() {
+    void trigger_onOrAfterRequiredBlock_dispatchesConfirmedEvent() throws IOException {
         // block number equal to required confirmations
         BlockEvent blockEvent =
                 new BlockEvent(
                         java.util.UUID.randomUUID(),
                         new NonNegativeBlockNumber(requiredConfirmations),
-                        "0xblockHash", // hash
+                        contractEvent.getBlockHash(), // hash
                         "0xparentHash", // parent
                         BigInteger.ZERO,
                         BigInteger.ZERO,
                         BigInteger.ZERO,
                         java.util.Collections.emptyList());
+
+        doReturn(
+                        new Transaction(
+                                contractEvent.getTransactionHash(),
+                                BigInteger.ZERO,
+                                BigInteger.ZERO,
+                                blockEvent.getHash(),
+                                "0xfrom",
+                                "0xto"))
+                .when(interactor)
+                .getTransactionReceipt(contractEvent.getTransactionHash());
 
         trigger.trigger(blockEvent);
 
@@ -74,6 +94,63 @@ class ContractEventConfirmationDisposableTriggerTest {
         assertNotNull(dispatched);
         assertEquals(ContractEventStatus.CONFIRMED, dispatched.getStatus());
         assertEquals(contractEvent.getBlockHash(), dispatched.getBlockHash());
+    }
+
+    @Test
+    void trigger_missingTransaction_invalidateEvent() throws IOException {
+        BlockEvent blockEvent =
+                new BlockEvent(
+                        java.util.UUID.randomUUID(),
+                        new NonNegativeBlockNumber(requiredConfirmations),
+                        contractEvent.getBlockHash(), // hash
+                        "0xparentHash", // parent
+                        BigInteger.ZERO,
+                        BigInteger.ZERO,
+                        BigInteger.ZERO,
+                        java.util.Collections.emptyList());
+
+        doReturn(null).when(interactor).getTransactionReceipt(contractEvent.getTransactionHash());
+
+        trigger.trigger(blockEvent);
+
+        BlockEvent secondBlockEvent =
+                new BlockEvent(
+                        java.util.UUID.randomUUID(),
+                        new NonNegativeBlockNumber(requiredConfirmations.add(BigInteger.TWO)),
+                        contractEvent.getBlockHash(),
+                        "0xparentHash", // parent
+                        BigInteger.ZERO,
+                        BigInteger.ZERO,
+                        BigInteger.ZERO,
+                        java.util.Collections.emptyList());
+        trigger.trigger(secondBlockEvent);
+
+        ArgumentCaptor<ContractEvent> captor = ArgumentCaptor.forClass(ContractEvent.class);
+        verify(dispatcher).dispatch(captor.capture());
+        ContractEvent dispatched = captor.getValue();
+        assertNotNull(dispatched);
+        assertEquals(ContractEventStatus.INVALIDATED, dispatched.getStatus());
+        assertEquals(contractEvent.getBlockHash(), dispatched.getBlockHash());
+    }
+
+    @Test
+    void trigger_missingTransactionReceipt_doCallback() throws IOException {
+        BlockEvent blockEvent =
+                new BlockEvent(
+                        java.util.UUID.randomUUID(),
+                        new NonNegativeBlockNumber(requiredConfirmations),
+                        contractEvent.getBlockHash(), // hash
+                        "0xparentHash", // parent
+                        BigInteger.ZERO,
+                        BigInteger.ZERO,
+                        BigInteger.ZERO,
+                        java.util.Collections.emptyList());
+
+        doReturn(null).when(interactor).getTransactionReceipt(contractEvent.getTransactionHash());
+
+        trigger.trigger(blockEvent);
+
+        verify(dispatcher, never()).dispatch(any());
     }
 
     @Test
