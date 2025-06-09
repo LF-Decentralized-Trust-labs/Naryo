@@ -77,7 +77,7 @@ public class NodeInitializer implements InitializingBean {
         var interactor = interactorFactory.create(node);
         var nodeFilters = filterForNode(allFilters, node.getId());
         var dispatcher = new BlockDispatcher(new HashSet<>(sharedTriggers));
-        var helper = new ContractEventDispatcherHelper(dispatcher);
+        var helper = new ContractEventDispatcherHelper(dispatcher, interactor);
 
         var blockTrigger =
                 new BlockProcessorPermanentTrigger(
