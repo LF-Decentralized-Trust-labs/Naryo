@@ -3,13 +3,13 @@
 set -e  # Exit immediately if a command exits with a non-zero status
 
 # Default values
-INCLUDE_EVENTEUM=false
+INCLUDE_NARYO=false
 
 # Parse options
 while getopts "e" opt; do
   case ${opt} in
     e )
-      INCLUDE_EVENTEUM=true
+      INCLUDE_NARYO=true
       ;;
     * )
       echo "Usage: $0 [-e] <broker (kafka|rabbitmq)> <database (postgresql|mongodb)> <blockchain (ethereum|hedera)>"
@@ -50,17 +50,17 @@ if [[ ! " ${VALID_BLOCKCHAINS[*]} " =~ (^|[[:space:]])$BLOCKCHAIN($|[[:space:]])
   exit 1
 fi
 
-# Ask for confirmation to start eventeum service
-if [[ $INCLUDE_EVENTEUM = false ]]; then
-  read -r -p "Do you want to start the eventeum service as well? (y/N): " confirm
+# Ask for confirmation to start naryo service
+if [[ $INCLUDE_NARYO = false ]]; then
+  read -r -p "Do you want to start the naryo service as well? (y/N): " confirm
   if [[ "$confirm" =~ ^[Yy]$ ]]; then
-    INCLUDE_EVENTEUM=true
+    INCLUDE_NARYO=true
   fi
 fi
 
 # Start the environment with docker-compose
 echo "Starting environment..."
-docker build -t eventeum/eventeum .
+docker build -t naryo/naryo .
 
 # Set SPRING_PROFILES_ACTIVE
 SPRING_PROFILES_ACTIVE="$BROKER,$DATABASE,$BLOCKCHAIN"
@@ -79,8 +79,8 @@ fi
 # Add profiles
 DOCKER_COMPOSE_CMD+=" --profile $BROKER --profile $DATABASE"
 
-if [[ "$INCLUDE_EVENTEUM" == true ]]; then
-  DOCKER_COMPOSE_CMD+=" --profile eventeum"
+if [[ "$INCLUDE_NARYO" == true ]]; then
+  DOCKER_COMPOSE_CMD+=" --profile naryo"
 fi
 
 # Run docker compose with environment variable

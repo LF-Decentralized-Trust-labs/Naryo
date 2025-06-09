@@ -1,6 +1,6 @@
-# Librevents
+# Naryo
 
-Librevents is a multi-chain tool for capturing and processing events from Distributed Ledger Technology (DLT) networks.
+Naryo is a multi-chain tool for capturing and processing events from Distributed Ledger Technology (DLT) networks.
 This project is built upon [Eventeum](https://github.com/eventeum/eventeum) and aims to provide a user-friendly,
 resilient event listener that supports a wide range of DLT protocols. It is designed to simplify event handling by
 reducing the complexity of developing, deploying, and maintaining application logic for capturing, processing, and

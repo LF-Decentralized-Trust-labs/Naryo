@@ -1,5 +1,5 @@
 name: 'Install pre-requisites'
-description: 'Install pre-requisites for building librevents'
+description: 'Install pre-requisites for building Naryo'
 
 runs:
   using: 'composite'

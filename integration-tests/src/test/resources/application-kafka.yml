@@ -16,7 +16,7 @@ kafka:
   topic:
     contractEvents: contract-events
     blockEvents: block-events
-    eventeumEvents: eventeum-events
+    naryoEvents: naryo-events
     messageEvents: message-events
     transactionEvents: transaction-events
     partitions: 1

@@ -1,10 +1,10 @@
-# Configuring Librevents
+# Configuring Naryo
 
-Librevents can be configured in two primary ways:
+Naryo can be configured in two primary ways:
 
 ## 1. YAML Configuration Files
 
-Librevents uses YAML files to define its configuration, and these files can be customized based on the messaging
+Naryo uses YAML files to define its configuration, and these files can be customized based on the messaging
 technology you choose.
 
 - The default configuration is located in `server/src/main/resources/application.yml`.
@@ -14,13 +14,13 @@ technology you choose.
     - `application-sqs.yml`
 - You can override these configurations by
   using [Spring Profiles](https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.profiles)
-  to load the appropriate file automatically. Alternatively, you can manually specify a profile when running Librevents.
+  to load the appropriate file automatically. Alternatively, you can manually specify a profile when running Naryo.
 - To customize settings, place an `application.yml` file alongside your built JAR. This will overlay the default values
   from the included configuration files.
 
 ## 2. Environment Variables
 
-You can override any YAML-defined property using environment variables. Librevents supports Spring Boot’s syntax for
+You can override any YAML-defined property using environment variables. Naryo supports Spring Boot’s syntax for
 environment variable expansion, meaning many properties are defined as:
 
 ```yaml
@@ -31,7 +31,7 @@ This allows you to configure the application dynamically without modifying YAML 
 different environments.
 
 > **Note**: You can use the `setup_env.sh` script to set up environment variables automatically before running
-> Librevents.
+> Naryo.
 > This
 > simplifies the configuration process by loading predefined variables into your shell session.
 
@@ -40,24 +40,24 @@ For more details on available configuration properties, refer to the documentati
 
 | Env Variable                                                          | Default                           | Description                                                                                                                                                                                 |
 |-----------------------------------------------------------------------|-----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| SERVER_PORT                                                           | 8060                              | The port for the librevents instance.                                                                                                                                                       |
+| SERVER_PORT                                                           | 8060                              | The port for the naryo instance.                                                                                                                                                       |
 | ETHEREUM_BLOCK_STRATEGY                                               | POLL                              | The strategy for obtaining block events from an ethereum node (POLL or PUBSUB). It will be overwritten by the specific node configuration.                                                  |
 | ETHEREUM_NODE_URL                                                     | http://localhost:8545             | The default ethereum node url.                                                                                                                                                              |
 | ETHEREUM_NODE_BLOCK_STRATEGY                                          | POLL                              | The strategy for obtaining block events for the ethereum node (POLL or PUBSUB).                                                                                                             |
 | ETHEREUM_NODE_HEALTHCHECK_POLL_INTERVAL                               | 2000                              | The interval time in ms, in which a request is made to the ethereum node, to ensure that the node is running and functional.                                                                |
-| ETHEREUM_NODE_ADD_TRANSACTION_REVERT_REASON                           | false                             | In case of a failing transaction it indicates if Librevents should get the revert reason. Currently not working for Ganache and Parity.                                                     |
+| ETHEREUM_NODE_ADD_TRANSACTION_REVERT_REASON                           | false                             | In case of a failing transaction it indicates if Naryo should get the revert reason. Currently not working for Ganache and Parity.                                                     |
 | ETHEREUM_NUM_BLOCKS_TO_REPLAY                                         | 12                                | Number of blocks to replay on node or service failure (ensures no blocks / events are missed on chain reorg)                                                                                |
 | POLLING_INTERVAL                                                      | 10000                             | The polling interval used by Web3j to get events from the blockchain.                                                                                                                       |
-| EVENT_STORE_TYPE                                                      | DB                                | The type of event store used in Librevents. (See the Advanced section for more details)                                                                                                     |
+| EVENT_STORE_TYPE                                                      | DB                                | The type of event store used in Naryo. (See the Advanced section for more details)                                                                                                     |
 | EVENT_STORE_URL                                                       | http://localhost:8081/api/rest/v1 | The URL of the event store endpoint to be queried.                                                                                                                                          |
 | EVENT_STORE_EVENT_PATH                                                | /event                            | The path to query the event store's events.                                                                                                                                                 |
 | EVENT_STORE_LATEST_BLOCK_PATH                                         | /latest-block                     | The path to query the event store's latest block.                                                                                                                                           |
 | BROADCASTER_TYPE                                                      | RABBIT                            | The broadcast mechanism to use.  (KAFKA or HTTP or RABBIT)                                                                                                                                  |
-| BROADCASTER_CACHE_EXPIRATION_MILLIS                                   | 6000000                           | The librevents broadcaster has an internal cache of sent messages, which ensures that duplicate messages are not broadcast.  This is the time that a message should live within this cache. |
+| BROADCASTER_CACHE_EXPIRATION_MILLIS                                   | 6000000                           | The naryo broadcaster has an internal cache of sent messages, which ensures that duplicate messages are not broadcast.  This is the time that a message should live within this cache. |
 | BROADCASTER_EVENT_CONFIRMATION_NUM_BLOCKS_TO_WAIT                     | 12                                | The number of blocks to wait (after the initial mined block) before broadcasting a CONFIRMED event                                                                                          |
 | BROADCASTER_EVENT_CONFIRMATION_NUM_BLOCKS_TO_WAIT_FOR_MISSING_TX      | 200                               | After a fork, a transaction may disappear, and this is the number of blocks to wait on the new fork, before assuming that an event emitted during this transaction has been INVALIDATED     |
 | BROADCASTER_EVENT_CONFIRMATION_NUM_BLOCKS_TO_WAIT_BEFORE_INVALIDATING | 2                                 | Number of blocks to wait before considering a block as invalid.                                                                                                                             |
-| BROADCASTER_MULTI_INSTANCE                                            | false                             | If multiple instances of librevents are to be deployed in your system, this should be set to true so that the librevents communicates added/removed filters to other instances, via kafka.  |
+| BROADCASTER_MULTI_INSTANCE                                            | false                             | If multiple instances of naryo are to be deployed in your system, this should be set to true so that the naryo communicates added/removed filters to other instances, via kafka.  |
 | BROADCASTER_HTTP_CONTRACT_EVENTS_URL                                  |                                   | The http url for posting contract events (for HTTP broadcasting)                                                                                                                            |
 | BROADCASTER_HTTP_BLOCK_EVENTS_URL                                     |                                   | The http url for posting block events (for HTTP broadcasting)                                                                                                                               |
 | BROADCASTER_BYTES_TO_ASCII                                            | false                             | If any bytes values within events should be converted to ascii (default is hex)                                                                                                             |
@@ -67,7 +67,7 @@ For more details on available configuration properties, refer to the documentati
 | KAFKA_TOPIC_CONTRACT_EVENTS                                           | contract-events                   | The topic name for broadcast contract event messages                                                                                                                                        |
 | KAFKA_TOPIC_BLOCK_EVENTS                                              | block-events                      | The topic name for broadcast block event messages                                                                                                                                           |
 | KAFKA_TOPIC_TRANSACTION_EVENTS                                        | transaction-events                | The topic name for broadcast transaction messages                                                                                                                                           |
-| KAFKA_TOPIC_LIBREVENTS_EVENTS                                         | librevents-events                 | The topic name for broadcast librevents event messages                                                                                                                                      |
+| KAFKA_TOPIC_NARYO_EVENTS                                              | naryo-events                 | The topic name for broadcast naryo event messages                                                                                                                                      |
 | KAFKA_TOPIC_PARTITIONS                                                | 1                                 | The number of kafka partitions                                                                                                                                                              |
 | KAFKA_TOPIC_REPLICATION_SETS                                          | 1                                 | The number of replication sets                                                                                                                                                              |
 | KAFKA_REQUEST_TIMEOUT_MS                                              | 20000                             | The duration after which a request timeouts                                                                                                                                                 |
@@ -80,7 +80,7 @@ For more details on available configuration properties, refer to the documentati
 | KAFKA_RETRY_BACKOFF_MS                                                | 500                               | The duration between each retry                                                                                                                                                             ||                                   |                                                                                                                                                                                           |
 | KEEP_ALIVE_DURATION                                                   | 15000                             | Rpc http idle threads keep alive timeout in ms                                                                                                                                              |
 | MAX_IDLE_CONNECTIONS                                                  | 10                                | The max number of HTTP rpc idle threads at the pool                                                                                                                                         |
-| SYNCING_THRESHOLD                                                     | 60                                | Number of blocks of difference to consider that librevents is "syncing" with a node                                                                                                         |
+| SYNCING_THRESHOLD                                                     | 60                                | Number of blocks of difference to consider that naryo is "syncing" with a node                                                                                                         |
 | SPRING_DATA_MONGODB_HOST                                              | localhost                         | The mongoDB host (used when event store is set to DB)                                                                                                                                       |
 | SPRING_DATA_MONGODB_PORT                                              | 27017                             | The mongoDB post (used when event store is set to DB)                                                                                                                                       |
 | RABBIT_HOST                                                           | localhost                         | Property spring.rabbitmq.host                                                                                                                                                               |
@@ -122,10 +122,10 @@ broadcasting.
 
 ## Event Store
 
-Librevents utilises an event store in order to establish the block number to start event subscriptions from, in the
+Naryo utilises an event store in order to establish the block number to start event subscriptions from, in the
 event
 of a failover. For example, if the last event broadcast for event with id X had a block number of 123, then on a
-failover, librevents will subscribe to events from block 124.
+failover, naryo will subscribe to events from block 124.
 
 There are currently 2 supported event store implementations:
 
@@ -143,9 +143,9 @@ Broadcast events are saved and retrieved from a mongoDB database.
 
 #### REST Service
 
-Librevents polls an external REST service in order to obtain a list of events broadcast for a specific event
+Naryo polls an external REST service in order to obtain a list of events broadcast for a specific event
 specification. It is assumed that this REST service listens for broadcast events on the kafka topic and updates its
-internal state...broadcast events are not directly sent to the REST service by librevents.
+internal state...broadcast events are not directly sent to the REST service by naryo.
 
 The implemented REST service should have a pageable endpoint which accepts a request with the following specification:
 
@@ -200,9 +200,9 @@ The implemented REST service should have a pageable endpoint which accepts a req
 | EVENT_STORE_URL        | http://localhost:8081/api/rest/v1 | The REST endpoint url               |
 | EVENT_STORE_EVENT_PATH | /event                            | The path to the event REST endpoint |
 
-## Integrating Librevents into Third Party Spring Application
+## Integrating Naryo into Third Party Spring Application
 
-Librevents can be embedded into an existing Spring Application via an annotation.
+Naryo can be embedded into an existing Spring Application via an annotation.
 
 #### Steps to Embed
 
@@ -211,8 +211,8 @@ Librevents can be embedded into an existing Spring Application via an annotation
     ```xml
     <repositories>
         <repository>
-            <id>github-librevents</id>
-            <url>https://maven.pkg.github.com/IoBuilders/librevents</url>
+            <id>github-naryo</id>
+            <url>https://maven.pkg.github.com/IoBuilders/naryo</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
@@ -226,28 +226,28 @@ Librevents can be embedded into an existing Spring Application via an annotation
     ```xml
     <servers>
         <server>
-            <id>github-librevents</id>
+            <id>github-naryo</id>
             <username>YOUR_GITHUB_USERNAME</username>
             <password>YOUR_GITHUB_TOKEN</password>
         </server>
     </servers>
     ```
 
-3. Add the `librevents-core` dependency to your `pom.xml` file:
+3. Add the `naryo-core` dependency to your `pom.xml` file:
 
     ```xml
     <dependency>
-        <groupId>io.librevents</groupId>
-        <artifactId>librevents-core</artifactId>
-        <version>*LATEST_LIBREVENTS_VERSION*</version>
+        <groupId>io.naryo</groupId>
+        <artifactId>naryo-core</artifactId>
+        <version>*LATEST_NARYO_VERSION*</version>
     </dependency>
     ```
 
-4. Within your Application class or a `@Configuration` annotated class, add the `@EnableLibrevents` annotation.
+4. Within your Application class or a `@Configuration` annotated class, add the `@EnableNaryo` annotation.
 
 #### Health check endpoint
 
-Librevents offers a healthcheck url where you can ask for the status of the systems you are using. It will look like:
+Naryo offers a healthcheck url where you can ask for the status of the systems you are using. It will look like:
 
 ```json
 {

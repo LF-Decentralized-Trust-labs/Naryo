@@ -7,8 +7,8 @@ server:
 logging:
   level:
     org.springframework.web: ERROR
-    io.librevents: DEBUG
-    io.librevents.configs: ERROR
+    io.naryo: DEBUG
+    io.naryo.configs: ERROR
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5p %c: %M - %m%n"
     file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5p %c: %M - %m%n"
@@ -102,7 +102,7 @@ spring:
   # docker run -d --name sql_server_demo -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=reallyStrongPwd123' -p 1433:1433 microsoft/mssql-server-linux
   datasource:
     driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    url: jdbc:sqlserver://localhost;databaseName=eventeum
+    url: jdbc:sqlserver://localhost;databaseName=naryo
     username: sa
     password: reallyStrongPwd123
   jpa:
@@ -145,7 +145,7 @@ kafka:
   topic:
     contractEvents: contract-events
     blockEvents: block-events
-    eventeumEvents: eventeum-events
+    naryoEvents: naryo-events
     transactionEvents: transaction-events
     partitions: 1
     replicationSets: 1

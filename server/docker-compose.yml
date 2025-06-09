@@ -1,29 +1,29 @@
 services:
-  eventeum:
-    image: eventeum/eventeum:latest
+  naryo:
+    image: naryo/naryo:latest
     restart: on-failure
     ports:
       - "8060:8060"
     networks:
-      - eventeum
+      - naryo
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
       KAFKA_ADDRESSES: kafka:9092
       MONGO_HOST: mongodb
       MONGO_PORT: 27017
-      MONGO_DATABASE: eventeum
+      MONGO_DATABASE: naryo
       POSTGRESQL_HOST: postgresql
       POSTGRESQL_PORT: 5432
-      POSTGRESQL_DATABASE: eventeum
-      POSTGRESQL_USERNAME: eventeum
-      POSTGRESQL_PASSWORD: eventeum
+      POSTGRESQL_DATABASE: naryo
+      POSTGRESQL_USERNAME: naryo
+      POSTGRESQL_PASSWORD: naryo
       RABBIT_HOST: rabbitmq
-      RABBIT_USER: eventeum
-      RABBIT_PASSWORD: eventeum
+      RABBIT_USER: naryo
+      RABBIT_PASSWORD: naryo
       RABBIT_PORT: 5672
-      RABBIT_EXCHANGE: eventeum
+      RABBIT_EXCHANGE: naryo
     profiles:
-      - eventeum
+      - naryo
 
   mongodb:
     image: mongo:latest
@@ -32,7 +32,7 @@ services:
     volumes:
       - $HOME/mongodb/data/db:/data/db
     networks:
-      - eventeum
+      - naryo
     profiles:
       - mongodb
 
@@ -55,7 +55,7 @@ services:
     profiles:
       - kafka
     networks:
-      - eventeum
+      - naryo
 
   rabbitmq:
     image: rabbitmq:management
@@ -63,10 +63,10 @@ services:
       - "5672:5672"
       - "8080:15672"
     networks:
-      - eventeum
+      - naryo
     environment:
-      RABBITMQ_DEFAULT_USER: eventeum
-      RABBITMQ_DEFAULT_PASS: eventeum
+      RABBITMQ_DEFAULT_USER: naryo
+      RABBITMQ_DEFAULT_PASS: naryo
     profiles:
       - rabbitmq
 
@@ -76,16 +76,16 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - eventeum
+      - naryo
     environment:
-      POSTGRES_PASSWORD: eventeum
-      POSTGRES_USER: eventeum
-      POSTGRES_DB: eventeum
+      POSTGRES_PASSWORD: naryo
+      POSTGRES_USER: naryo
+      POSTGRES_DB: naryo
     volumes:
       - $HOME/postgres/data/db:/var/lib/postgresql/data
     profiles:
       - postgresql
 
 networks:
-  eventeum:
+  naryo:
     driver: bridge

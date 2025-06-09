@@ -2,7 +2,7 @@
 
 ## Configuring Nodes
 
-Listening for events from multiple different nodes is supported in Librevents, and these nodes can be configured in the
+Listening for events from multiple different nodes is supported in Naryo, and these nodes can be configured in the
 properties file.
 
 ```yaml
@@ -24,7 +24,7 @@ That is the simplest node configuration, but there is other custom flags you can
 - `readTimeout`: Http read timeout to the node in milliseconds (default: 60000)
 - `addTransactionRevertReason`: Enables receiving the revert reason when a transaction fails.  (default: false)
 - `pollInterval`: Polling interval of the rpc request to the node (default: 10000)
-- `healthcheckInterval`: Polling interval of that librevents will use to check if the node is active (default: 10000)
+- `healthcheckInterval`: Polling interval of that naryo will use to check if the node is active (default: 10000)
 - `numBlocksToWait`: Blocks to wait until we decide event is confirmed (default: 1). Overrides broadcaster config
 - `numBlocksToWaitBeforeInvalidating`:  Blocks to wait until we decide event is invalidated (default: 1). Overrides
   broadcaster config
@@ -55,7 +55,7 @@ ethereum:
 
 ### REST
 
-Librevents exposes a REST api that can be used to register events that should be subscribed to / broadcast.
+Naryo exposes a REST api that can be used to register events that should be subscribed to / broadcast.
 
 - **URL:** `/api/rest/v1/event-filter`
 - **Method:** `POST`
@@ -147,7 +147,7 @@ Dynamically sized arrays are also supported by suffixing the type with `[]`, e.g
 
 ### Hard Coded Configuration
 
-Static events can be configured within the application.yml file of Librevents.
+Static events can be configured within the application.yml file of Naryo.
 
 ```yaml
 eventFilters:
@@ -267,7 +267,7 @@ eventFilters:
 
 ## Registering a Transaction Monitor
 
-From version 0.6.2, librevents supports monitoring and broadcasting transactions. The matching criteria can be:
+From version 0.6.2, naryo supports monitoring and broadcasting transactions. The matching criteria can be:
 
 - HASH: Monitor a single transaction hash. The monitoring will be removed once is notified.
 - FROM_ADDRESS: Monitor all transactions that are sent from a specific address.

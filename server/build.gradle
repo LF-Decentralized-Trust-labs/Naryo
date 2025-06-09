@@ -39,7 +39,7 @@ dependencies {
 }
 
 bootJar {
-    mainClass = 'io.librevents.server.Application'
+    mainClass = 'io.naryo.server.Application'
 }
 
 tasks.named("spotlessJava").configure {

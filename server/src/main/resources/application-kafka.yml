@@ -16,7 +16,7 @@ kafka:
   topic:
     contractEvents: ${KAFKA_TOPIC_CONTRACT_EVENTS:contract-events}
     blockEvents: ${KAFKA_TOPIC_BLOCK_EVENTS:block-events}
-    eventeumEvents: ${KAFKA_TOPIC_EVENTEUM_EVENTS:eventeum-events}
+    naryoEvents: ${KAFKA_TOPIC_NARYO_EVENTS:naryo-events}
     messageEvents: ${KAFKA_TOPIC_MESSAGE_EVENTS:message-events}
     transactionEvents: ${KAFKA_TOPIC_TRANSACTION_EVENTS:transaction-events}
 

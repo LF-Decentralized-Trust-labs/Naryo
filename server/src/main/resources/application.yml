@@ -1,6 +1,6 @@
 spring:
   application:
-    name: eventeum
+    name: naryo
 
 server:
   tomcat:
@@ -10,8 +10,8 @@ server:
 logging:
   level:
     org.springframework.web: DEBUG
-    io.librevents: DEBUG
-    io.librevents.configs: ERROR
+    io.naryo: DEBUG
+    io.naryo.configs: ERROR
     org.springframework.amqp: DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5p %c: %M - %m%n"

@@ -8,7 +8,7 @@ plugins {
     id 'io.freefair.lombok' version '8.12.1'
 }
 
-description = 'Librevents base project'
+description = 'Naryo base project'
 
 allprojects {
     apply {

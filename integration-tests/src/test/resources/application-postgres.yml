@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:eventeum}
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:naryo}
     username: ${POSTGRES_USER:user}
     password: ${POSTGRES_PASSWORD:password}
     driver-class-name: org.postgresql.Driver

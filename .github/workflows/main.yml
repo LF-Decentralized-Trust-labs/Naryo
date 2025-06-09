@@ -1,4 +1,4 @@
-name: Librevents CI
+name: Naryo CI
 
 on:
   push:
