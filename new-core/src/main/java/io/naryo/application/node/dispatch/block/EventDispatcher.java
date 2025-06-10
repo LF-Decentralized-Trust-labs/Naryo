@@ -12,9 +12,9 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public record BlockDispatcher(@Getter Set<Trigger<?>> triggers) implements Dispatcher {
+public record EventDispatcher(@Getter Set<Trigger<?>> triggers) implements Dispatcher {
 
-    public BlockDispatcher(Set<Trigger<?>> triggers) {
+    public EventDispatcher(Set<Trigger<?>> triggers) {
         this.triggers = new HashSet<>(triggers);
     }
 
@@ -36,11 +36,10 @@ public record BlockDispatcher(@Getter Set<Trigger<?>> triggers) implements Dispa
                     } else {
                         ((PermanentTrigger<?>) trigger)
                                 .onExecute(
-                                        ignore -> {
-                                            log.debug(
-                                                    "Trigger {} executed",
-                                                    trigger.getClass().getSimpleName());
-                                        });
+                                        ignore ->
+                                                log.debug(
+                                                        "Trigger {} executed",
+                                                        trigger.getClass().getSimpleName()));
                     }
 
                     Trigger<Event> typedTrigger = (Trigger<Event>) trigger;
