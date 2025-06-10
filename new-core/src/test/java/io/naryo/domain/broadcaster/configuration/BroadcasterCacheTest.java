@@ -5,7 +5,8 @@ import java.time.Duration;
 import io.naryo.domain.configuration.broadcaster.BroadcasterCache;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BroadcasterCacheTest {
 

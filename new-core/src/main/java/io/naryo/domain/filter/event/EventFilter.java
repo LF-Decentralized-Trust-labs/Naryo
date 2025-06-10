@@ -21,6 +21,7 @@ public abstract class EventFilter extends Filter {
     private final EventFilterSpecification specification;
     private final List<ContractEventStatus> statuses;
     private final SyncState syncState;
+    private final EventFilterVisibilityConfiguration visibilityConfiguration;
 
     protected EventFilter(
             UUID id,
@@ -29,11 +30,13 @@ public abstract class EventFilter extends Filter {
             EventFilterScope scope,
             EventFilterSpecification specification,
             List<ContractEventStatus> statuses,
-            SyncState syncState) {
+            SyncState syncState,
+            EventFilterVisibilityConfiguration visibilityConfiguration) {
         super(id, name, FilterType.EVENT, nodeId);
         Objects.requireNonNull(specification, "Specification cannot be null");
         Objects.requireNonNull(statuses, "Statuses cannot be null");
         Objects.requireNonNull(syncState, "SyncState cannot be null");
+        Objects.requireNonNull(visibilityConfiguration, "VisibilityConfiguration cannot be null");
         if (statuses.isEmpty()) {
             throw new IllegalArgumentException("Statuses cannot be empty");
         }
@@ -41,5 +44,6 @@ public abstract class EventFilter extends Filter {
         this.specification = specification;
         this.statuses = statuses;
         this.syncState = syncState;
+        this.visibilityConfiguration = visibilityConfiguration;
     }
 }

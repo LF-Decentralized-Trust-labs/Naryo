@@ -28,8 +28,7 @@ public class SchedulerConfiguration implements SchedulingConfigurer {
 
         scheduledExecutorService =
                 Executors.newScheduledThreadPool(
-                        envProps.nodes().size(),
-                        new CustomizableThreadFactory("naryo-scheduler"));
+                        envProps.nodes().size(), new CustomizableThreadFactory("naryo-scheduler"));
         return scheduledExecutorService;
     }
 }

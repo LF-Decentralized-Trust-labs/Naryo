@@ -35,10 +35,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(MockitoExtension.class)
 class NodeSynchronizerTest {
 
+    private final List<Filter> filters = new ArrayList<>();
     @Mock private Node node;
     @Mock private StartBlockCalculator calculator;
     @Mock private BlockInteractor blockInteractor;
-    private final List<Filter> filters = new ArrayList<>();
     @Mock private ContractEventParameterDecoder decoder;
     @Mock private ContractEventDispatcherHelper helper;
 

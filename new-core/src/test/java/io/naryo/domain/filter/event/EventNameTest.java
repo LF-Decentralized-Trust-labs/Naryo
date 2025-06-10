@@ -3,7 +3,8 @@ package io.naryo.domain.filter.event;
 import io.naryo.domain.common.event.EventName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class EventNameTest {
 

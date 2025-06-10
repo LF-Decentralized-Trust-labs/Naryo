@@ -6,7 +6,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static io.naryo.application.common.util.EncryptionUtil.*;
+import static io.naryo.application.common.util.EncryptionUtil.hexStringToByteArray;
+import static io.naryo.application.common.util.EncryptionUtil.keccak256;
 
 public final class BloomFilterUtil {
 

@@ -23,6 +23,7 @@ import io.naryo.infrastructure.configuration.source.env.model.filter.event.Event
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.contract.ContractEventFilterConfigurationAdditionalProperties;
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.global.GlobalEventFilterConfigurationAdditionalProperties;
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.SyncConfigurationProperties;
+import io.naryo.infrastructure.configuration.source.env.model.filter.event.visibility.EventFilterVisibilityConfigurationProperties;
 import io.naryo.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import org.springframework.stereotype.Component;
 
@@ -46,6 +47,12 @@ public final class EventFilterConfigurationPropertiesDeserializer
         List<ContractEventStatus> statuses = getStatuses(root, codec);
         SyncConfigurationProperties sync =
                 safeTreeToValue(root, "sync", codec, SyncConfigurationProperties.class);
+        EventFilterVisibilityConfigurationProperties visibilityConfiguration =
+                safeTreeToValue(
+                        root,
+                        "visibilityConfiguration",
+                        codec,
+                        EventFilterVisibilityConfigurationProperties.class);
         EventFilterConfigurationAdditionalProperties configuration =
                 safeTreeToValue(
                         root,
@@ -58,7 +65,7 @@ public final class EventFilterConfigurationPropertiesDeserializer
                         });
 
         return new EventFilterConfigurationProperties(
-                scope, specification, statuses, sync, configuration);
+                scope, specification, statuses, sync, visibilityConfiguration, configuration);
     }
 
     private List<ContractEventStatus> getStatuses(JsonNode root, ObjectCodec codec) {

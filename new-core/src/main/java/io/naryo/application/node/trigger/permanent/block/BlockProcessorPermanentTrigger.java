@@ -25,19 +25,20 @@ import io.reactivex.functions.Consumer;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public final class BlockProcessorPermanentTrigger implements PermanentTrigger<BlockEvent> {
+public class BlockProcessorPermanentTrigger<N extends Node, I extends BlockInteractor>
+        implements PermanentTrigger<BlockEvent> {
 
-    private final Node node;
-    private final List<EventFilter> filters;
-    private final BlockInteractor interactor;
-    private final ContractEventParameterDecoder decoder;
-    private final ContractEventDispatcherHelper helper;
-    private Consumer<BlockEvent> consumer;
+    protected final N node;
+    protected final List<EventFilter> filters;
+    protected final I interactor;
+    protected final ContractEventParameterDecoder decoder;
+    protected final ContractEventDispatcherHelper helper;
+    protected Consumer<BlockEvent> consumer;
 
     public BlockProcessorPermanentTrigger(
-            Node node,
+            N node,
             List<EventFilter> filters,
-            BlockInteractor interactor,
+            I interactor,
             ContractEventParameterDecoder decoder,
             ContractEventDispatcherHelper helper) {
         Objects.requireNonNull(node, "node cannot be null");
@@ -50,6 +51,22 @@ public final class BlockProcessorPermanentTrigger implements PermanentTrigger<Bl
         this.interactor = interactor;
         this.decoder = decoder;
         this.helper = helper;
+    }
+
+    protected static Predicate<Log> getLogPredicate(EventFilter filter) {
+        if (filter instanceof ContractEventFilter contractFilter) {
+            return log ->
+                    log.address().equals(contractFilter.getContractAddress())
+                            && log.topics()
+                                    .contains(
+                                            EncryptionUtil.keccak256Hex(
+                                                    filter.getSpecification().getEventSignature()));
+        }
+        return log ->
+                log.topics()
+                        .contains(
+                                EncryptionUtil.keccak256Hex(
+                                        filter.getSpecification().getEventSignature()));
     }
 
     @Override
@@ -73,7 +90,7 @@ public final class BlockProcessorPermanentTrigger implements PermanentTrigger<Bl
         callback(event);
     }
 
-    private void processBlock(BlockEvent event) throws IOException {
+    protected void processBlock(BlockEvent event) throws IOException {
         if (!event.getNodeId().equals(node.getId())) {
             log.debug("Skipping block event {} for node {}", event, node.getId());
             return;
@@ -93,41 +110,37 @@ public final class BlockProcessorPermanentTrigger implements PermanentTrigger<Bl
 
         for (EventFilter filter : foundFilters) {
             Predicate<Log> predicate = getLogPredicate(filter);
-            logs.stream()
-                    .filter(predicate)
-                    .forEach(
-                            value -> {
-                                log.debug("Found log {} for filter {}", value, filter);
-                                Transaction transaction =
-                                        event.getTransactions().stream()
-                                                .filter(
-                                                        tx ->
-                                                                tx.hash()
-                                                                        .equals(
-                                                                                value
-                                                                                        .transactionHash()))
-                                                .findFirst()
-                                                .orElse(null);
-                                ContractEvent contractEvent =
-                                        new ContractEvent(
-                                                event.getNodeId(),
-                                                filter.getSpecification().eventName(),
-                                                decoder.decode(
-                                                        filter.getSpecification(), value.data()),
-                                                value.transactionHash(),
-                                                value.index(),
-                                                event.getNumber().value(),
-                                                event.getHash(),
-                                                value.address(),
-                                                transaction != null ? transaction.from() : null,
-                                                ContractEventStatus.CONFIRMED,
-                                                event.getTimestamp());
-                                helper.execute(node, filter, contractEvent);
-                            });
+            logs.stream().filter(predicate).forEach(value -> processLog(event, filter, value));
         }
     }
 
-    private void callback(BlockEvent event) {
+    protected void processLog(BlockEvent event, EventFilter filter, Log value) {
+        log.debug("Found log {} for filter {}", value, filter);
+        ContractEvent contractEvent = extractEventFromLog(event, filter, value);
+        helper.execute(node, filter, contractEvent);
+    }
+
+    protected ContractEvent extractEventFromLog(BlockEvent event, EventFilter filter, Log value) {
+        Transaction transaction =
+                event.getTransactions().stream()
+                        .filter(tx -> tx.hash().equals(value.transactionHash()))
+                        .findFirst()
+                        .orElse(null);
+        return new ContractEvent(
+                event.getNodeId(),
+                filter.getSpecification().eventName(),
+                decoder.decode(filter.getSpecification(), value.data()),
+                value.transactionHash(),
+                value.index(),
+                event.getNumber().value(),
+                event.getHash(),
+                value.address(),
+                transaction != null ? transaction.from() : null,
+                ContractEventStatus.CONFIRMED,
+                event.getTimestamp());
+    }
+
+    protected void callback(BlockEvent event) {
         if (consumer != null) {
             try {
                 consumer.accept(event);
@@ -139,7 +152,7 @@ public final class BlockProcessorPermanentTrigger implements PermanentTrigger<Bl
         }
     }
 
-    private List<EventFilter> findFilters(BlockEvent event) {
+    protected List<EventFilter> findFilters(BlockEvent event) {
         return filters.stream()
                 .filter(
                         filter -> {
@@ -164,21 +177,5 @@ public final class BlockProcessorPermanentTrigger implements PermanentTrigger<Bl
                             return false;
                         })
                 .toList();
-    }
-
-    private static Predicate<Log> getLogPredicate(EventFilter filter) {
-        if (filter instanceof ContractEventFilter contractFilter) {
-            return log ->
-                    log.address().equals(contractFilter.getContractAddress())
-                            && log.topics()
-                                    .contains(
-                                            EncryptionUtil.keccak256Hex(
-                                                    filter.getSpecification().getEventSignature()));
-        }
-        return log ->
-                log.topics()
-                        .contains(
-                                EncryptionUtil.keccak256Hex(
-                                        filter.getSpecification().getEventSignature()));
     }
 }
