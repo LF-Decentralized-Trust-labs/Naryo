@@ -5,7 +5,8 @@ import java.util.Map;
 import io.naryo.domain.common.connection.endpoint.ConnectionEndpoint;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ConnectionEndpointTest {
 

@@ -20,27 +20,6 @@ public abstract class BaseNodeTest {
 
     protected static final String DEFAULT_NAME = "test";
 
-    protected static final class MockSubscriptionConfiguration extends SubscriptionConfiguration {
-        public MockSubscriptionConfiguration() {
-            super(SubscriptionStrategy.BLOCK_BASED);
-        }
-    }
-
-    protected static final class MockInteractionConfiguration extends InteractionConfiguration {
-        public MockInteractionConfiguration() {
-            super(InteractionStrategy.BLOCK_BASED);
-        }
-    }
-
-    protected static final class MockNodeConnection extends NodeConnection {
-        public MockNodeConnection() {
-            super(
-                    NodeConnectionType.HTTP,
-                    new ConnectionEndpoint("http://localhost:8545"),
-                    new RetryConfiguration(3, Duration.ofSeconds(1)));
-        }
-    }
-
     protected abstract Node createNode(
             UUID id,
             NodeName name,
@@ -215,5 +194,26 @@ public abstract class BaseNodeTest {
                                 new MockSubscriptionConfiguration(),
                                 new MockInteractionConfiguration(),
                                 null));
+    }
+
+    protected static final class MockSubscriptionConfiguration extends SubscriptionConfiguration {
+        public MockSubscriptionConfiguration() {
+            super(SubscriptionStrategy.BLOCK_BASED);
+        }
+    }
+
+    protected static final class MockInteractionConfiguration extends InteractionConfiguration {
+        public MockInteractionConfiguration() {
+            super(InteractionStrategy.BLOCK_BASED);
+        }
+    }
+
+    protected static final class MockNodeConnection extends NodeConnection {
+        public MockNodeConnection() {
+            super(
+                    NodeConnectionType.HTTP,
+                    new ConnectionEndpoint("http://localhost:8545"),
+                    new RetryConfiguration(3, Duration.ofSeconds(1)));
+        }
     }
 }

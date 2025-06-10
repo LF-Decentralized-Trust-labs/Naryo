@@ -13,7 +13,7 @@ import lombok.ToString;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public final class ContractEventFilter extends EventFilter {
+public class ContractEventFilter extends EventFilter {
 
     private final String contractAddress;
 
@@ -24,8 +24,41 @@ public final class ContractEventFilter extends EventFilter {
             EventFilterSpecification specification,
             List<ContractEventStatus> statuses,
             SyncState syncState,
+            EventFilterVisibilityConfiguration visibilityConfiguration,
             String contractAddress) {
-        super(id, name, nodeId, EventFilterScope.CONTRACT, specification, statuses, syncState);
+        super(
+                id,
+                name,
+                nodeId,
+                EventFilterScope.CONTRACT,
+                specification,
+                statuses,
+                syncState,
+                visibilityConfiguration);
+        Objects.requireNonNull(contractAddress, "Contract address cannot be null");
+        if (contractAddress.isEmpty()) {
+            throw new IllegalArgumentException("Contract address cannot be empty");
+        }
+        this.contractAddress = contractAddress;
+    }
+
+    public ContractEventFilter(
+            UUID id,
+            FilterName name,
+            UUID nodeId,
+            EventFilterSpecification specification,
+            List<ContractEventStatus> statuses,
+            SyncState syncState,
+            String contractAddress) {
+        super(
+                id,
+                name,
+                nodeId,
+                EventFilterScope.CONTRACT,
+                specification,
+                statuses,
+                syncState,
+                EventFilterVisibilityConfiguration.visible());
         Objects.requireNonNull(contractAddress, "Contract address cannot be null");
         if (contractAddress.isEmpty()) {
             throw new IllegalArgumentException("Contract address cannot be empty");
