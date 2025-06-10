@@ -17,7 +17,7 @@ import org.web3j.protocol.core.methods.response.EthBlock;
 import org.web3j.protocol.core.methods.response.EthLog;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
-public final class EthereumRpcBlockInteractor implements BlockInteractor {
+public class EthereumRpcBlockInteractor implements BlockInteractor {
 
     private final Web3j web3j;
 
@@ -113,7 +113,7 @@ public final class EthereumRpcBlockInteractor implements BlockInteractor {
         return mapToTransaction(web3j.ethGetTransactionReceipt(transactionHash).send().getResult());
     }
 
-    private List<Log> getLogs(
+    protected List<Log> getLogs(
             BigInteger startBlock, BigInteger endBlock, List<String> addresses, List<String> topics)
             throws IOException {
         var filter =
@@ -127,7 +127,7 @@ public final class EthereumRpcBlockInteractor implements BlockInteractor {
         return web3j.ethGetLogs(filter).send().getLogs().stream().map(this::mapToLog).toList();
     }
 
-    private Block mapToBlock(EthBlock block) {
+    protected Block mapToBlock(EthBlock block) {
         return new Block(
                 block.getBlock().getNumber(),
                 block.getBlock().getHash(),
@@ -145,12 +145,13 @@ public final class EthereumRpcBlockInteractor implements BlockInteractor {
                                             tx.getBlockNumber(),
                                             tx.getBlockHash(),
                                             tx.getFrom(),
-                                            tx.getTo());
+                                            tx.getTo(),
+                                            null);
                                 })
                         .toList());
     }
 
-    private Log mapToLog(EthLog.LogResult<EthLog.LogObject> result) {
+    protected Log mapToLog(EthLog.LogResult<EthLog.LogObject> result) {
         EthLog.LogObject log = result.get();
         return new Log(
                 log.getLogIndex(),
@@ -164,13 +165,14 @@ public final class EthereumRpcBlockInteractor implements BlockInteractor {
                 log.getTopics().stream().map(Object::toString).toList());
     }
 
-    private Transaction mapToTransaction(TransactionReceipt result) {
+    protected Transaction mapToTransaction(TransactionReceipt result) {
         return new Transaction(
                 result.getTransactionHash(),
                 null,
                 result.getBlockNumber(),
                 result.getBlockHash(),
                 result.getFrom(),
-                result.getTo());
+                result.getTo(),
+                result.getLogsBloom());
     }
 }

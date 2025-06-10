@@ -4,7 +4,8 @@ import io.naryo.domain.node.interaction.InteractionStrategy;
 import io.naryo.domain.node.interaction.block.InteractionMode;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 final class EthereumRpcBlockInteractionConfigurationTest {
 

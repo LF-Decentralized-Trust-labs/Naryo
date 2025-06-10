@@ -7,16 +7,10 @@ import io.naryo.domain.node.subscription.block.method.BlockSubscriptionMethod;
 import io.naryo.domain.node.subscription.block.method.BlockSubscriptionMethodConfiguration;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 final class BlockSubscriptionConfigurationTest {
-
-    protected static class MockBlockSubscriptionMethodConfiguration
-            extends BlockSubscriptionMethodConfiguration {
-        protected MockBlockSubscriptionMethodConfiguration() {
-            super(BlockSubscriptionMethod.POLL);
-        }
-    }
 
     @Test
     void testBlockSubscriptionConfigurationCreation() {
@@ -167,5 +161,12 @@ final class BlockSubscriptionConfigurationTest {
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             null);
                 });
+    }
+
+    protected static class MockBlockSubscriptionMethodConfiguration
+            extends BlockSubscriptionMethodConfiguration {
+        protected MockBlockSubscriptionMethodConfiguration() {
+            super(BlockSubscriptionMethod.POLL);
+        }
     }
 }

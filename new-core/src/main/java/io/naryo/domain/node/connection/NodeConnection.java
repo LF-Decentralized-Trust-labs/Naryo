@@ -12,9 +12,9 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = false)
 public abstract class NodeConnection {
 
+    private final NodeConnectionType type;
     protected RetryConfiguration retryConfiguration;
     protected ConnectionEndpoint endpoint;
-    private final NodeConnectionType type;
 
     protected NodeConnection(
             NodeConnectionType type,

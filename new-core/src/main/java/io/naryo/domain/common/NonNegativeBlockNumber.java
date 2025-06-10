@@ -10,6 +10,10 @@ public record NonNegativeBlockNumber(BigInteger value) {
         }
     }
 
+    public static NonNegativeBlockNumber valueOf(BigInteger value) {
+        return new NonNegativeBlockNumber(value);
+    }
+
     public boolean isZero() {
         return value.signum() == 0;
     }
@@ -24,9 +28,5 @@ public record NonNegativeBlockNumber(BigInteger value) {
 
     public int compareTo(NonNegativeBlockNumber other) {
         return this.value.compareTo(other.value);
-    }
-
-    public static NonNegativeBlockNumber valueOf(BigInteger value) {
-        return new NonNegativeBlockNumber(value);
     }
 }

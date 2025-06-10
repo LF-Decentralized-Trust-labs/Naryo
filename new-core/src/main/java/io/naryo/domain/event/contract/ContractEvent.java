@@ -1,7 +1,9 @@
 package io.naryo.domain.event.contract;
 
 import java.math.BigInteger;
-import java.util.*;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.common.event.EventName;
@@ -25,8 +27,8 @@ public final class ContractEvent extends Event {
     private final String blockHash;
     private final String contractAddress;
     private final String sender;
-    @Setter private ContractEventStatus status;
     private final BigInteger timestamp;
+    @Setter private ContractEventStatus status;
 
     public ContractEvent(
             UUID nodeId,

@@ -10,16 +10,6 @@ import io.naryo.domain.event.block.BlockEvent;
 
 public final class BlockToBlockEventMapper implements Mapper<Block, BlockEvent> {
 
-    @Override
-    public BlockEvent map(Block source) {
-        throw new UnsupportedOperationException("Mapping without nodeId is not supported");
-    }
-
-    @Override
-    public BlockEvent map(Block source, Map<String, Object> additionalProperties) {
-        return map(source, (UUID) additionalProperties.get("nodeId"));
-    }
-
     private static BlockEvent map(Block block, UUID nodeId) {
         return new BlockEvent(
                 nodeId,
@@ -30,5 +20,15 @@ public final class BlockToBlockEventMapper implements Mapper<Block, BlockEvent> 
                 block.gasUsed(),
                 block.timestamp(),
                 block.transactions());
+    }
+
+    @Override
+    public BlockEvent map(Block source) {
+        throw new UnsupportedOperationException("Mapping without nodeId is not supported");
+    }
+
+    @Override
+    public BlockEvent map(Block source, Map<String, Object> additionalProperties) {
+        return map(source, (UUID) additionalProperties.get("nodeId"));
     }
 }

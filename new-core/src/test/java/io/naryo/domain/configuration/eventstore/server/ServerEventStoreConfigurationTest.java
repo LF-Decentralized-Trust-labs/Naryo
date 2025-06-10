@@ -4,9 +4,17 @@ import io.naryo.domain.configuration.eventstore.EventStoreConfiguration;
 import io.naryo.domain.configuration.eventstore.EventStoreType;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ServerEventStoreConfigurationTest {
+
+    @Test
+    void testConstructor() {
+        ServerEventStoreConfiguration config =
+                new MockServerEventStoreConfiguration(new MockServerType());
+        assertEquals(EventStoreType.SERVER, config.getType());
+        assertEquals("MockServer", config.getServerType().getName());
+    }
 
     private static class MockServerType implements ServerType {
         @Override
@@ -24,13 +32,5 @@ class ServerEventStoreConfigurationTest {
         public EventStoreConfiguration merge(EventStoreConfiguration other) {
             return this;
         }
-    }
-
-    @Test
-    void testConstructor() {
-        ServerEventStoreConfiguration config =
-                new MockServerEventStoreConfiguration(new MockServerType());
-        assertEquals(EventStoreType.SERVER, config.getType());
-        assertEquals("MockServer", config.getServerType().getName());
     }
 }

@@ -152,7 +152,8 @@ class EventFilterSynchronizerTest {
                                 BigInteger.TEN,
                                 "0xabcdef1234567890",
                                 "0xabcdef1234567890",
-                                ""));
+                                "",
+                                "0x0"));
         when(blockInteractor.getBlock(any(BigInteger.class)))
                 .thenReturn(
                         new Block(
