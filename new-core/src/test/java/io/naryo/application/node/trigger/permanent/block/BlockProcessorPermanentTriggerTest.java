@@ -72,7 +72,7 @@ class BlockProcessorPermanentTriggerTest {
     void testConstructor() {
         BlockInteractor interactor = new MockBlockInteractor();
         BlockProcessorPermanentTrigger trigger =
-                new BlockProcessorPermanentTrigger(
+                new BlockProcessorPermanentTrigger<>(
                         new MockNode(),
                         List.of(),
                         interactor,
@@ -87,7 +87,7 @@ class BlockProcessorPermanentTriggerTest {
         assertThrows(
                 NullPointerException.class,
                 () ->
-                        new BlockProcessorPermanentTrigger(
+                        new BlockProcessorPermanentTrigger<>(
                                 new MockNode(),
                                 null,
                                 interactor,
@@ -101,7 +101,7 @@ class BlockProcessorPermanentTriggerTest {
         assertThrows(
                 NullPointerException.class,
                 () ->
-                        new BlockProcessorPermanentTrigger(
+                        new BlockProcessorPermanentTrigger<>(
                                 new MockNode(),
                                 List.of(),
                                 null,
@@ -114,7 +114,7 @@ class BlockProcessorPermanentTriggerTest {
         assertThrows(
                 NullPointerException.class,
                 () ->
-                        new BlockProcessorPermanentTrigger(
+                        new BlockProcessorPermanentTrigger<>(
                                 new MockNode(),
                                 List.of(),
                                 new MockBlockInteractor(),
@@ -128,7 +128,7 @@ class BlockProcessorPermanentTriggerTest {
         assertThrows(
                 NullPointerException.class,
                 () ->
-                        new BlockProcessorPermanentTrigger(
+                        new BlockProcessorPermanentTrigger<>(
                                 new MockNode(),
                                 List.of(),
                                 interactor,
@@ -143,7 +143,7 @@ class BlockProcessorPermanentTriggerTest {
         assertThrows(
                 NullPointerException.class,
                 () ->
-                        new BlockProcessorPermanentTrigger(
+                        new BlockProcessorPermanentTrigger<>(
                                 null,
                                 List.of(),
                                 interactor,
@@ -156,7 +156,7 @@ class BlockProcessorPermanentTriggerTest {
     void testSupports() {
         BlockInteractor interactor = new MockBlockInteractor();
         BlockProcessorPermanentTrigger trigger =
-                new BlockProcessorPermanentTrigger(
+                new BlockProcessorPermanentTrigger<>(
                         new MockNode(),
                         List.of(),
                         new MockBlockInteractor(),
@@ -169,7 +169,7 @@ class BlockProcessorPermanentTriggerTest {
     void testSupportsFalse() {
         BlockInteractor interactor = new MockBlockInteractor();
         BlockProcessorPermanentTrigger trigger =
-                new BlockProcessorPermanentTrigger(
+                new BlockProcessorPermanentTrigger<>(
                         new MockNode(),
                         List.of(),
                         interactor,
@@ -195,7 +195,7 @@ class BlockProcessorPermanentTriggerTest {
     void testOnExecuteDoesNotThrow() {
         BlockInteractor interactor = new MockBlockInteractor();
         BlockProcessorPermanentTrigger trigger =
-                new BlockProcessorPermanentTrigger(
+                new BlockProcessorPermanentTrigger<>(
                         new MockNode(),
                         List.of(),
                         interactor,
@@ -210,7 +210,7 @@ class BlockProcessorPermanentTriggerTest {
         TestDispatcher dispatcher = new TestDispatcher();
         BlockInteractor interactor = new MockBlockInteractor();
         BlockProcessorPermanentTrigger trigger =
-                new BlockProcessorPermanentTrigger(
+                new BlockProcessorPermanentTrigger<>(
                         node,
                         List.of(),
                         interactor,
@@ -226,7 +226,7 @@ class BlockProcessorPermanentTriggerTest {
         TestDispatcher dispatcher = new TestDispatcher();
         BlockInteractor interactor = new MockBlockInteractor();
         BlockProcessorPermanentTrigger trigger =
-                new BlockProcessorPermanentTrigger(
+                new BlockProcessorPermanentTrigger<>(
                         node,
                         List.of(
                                 new ContractEventFilter(
@@ -253,7 +253,7 @@ class BlockProcessorPermanentTriggerTest {
         TestDispatcher dispatcher = new TestDispatcher();
         BlockInteractor interactor = new MockBlockInteractor();
         BlockProcessorPermanentTrigger trigger =
-                new BlockProcessorPermanentTrigger(
+                new BlockProcessorPermanentTrigger<>(
                         node,
                         List.of(
                                 new ContractEventFilter(
@@ -292,7 +292,7 @@ class BlockProcessorPermanentTriggerTest {
                                 "0xaa9449f2bca09a7b28319d46fd3f3b58a1bb7d94039fc4b69b7bfe5d8535d527"));
         BlockInteractor interactor = new MockBlockInteractor(log);
         BlockProcessorPermanentTrigger trigger =
-                new BlockProcessorPermanentTrigger(
+                new BlockProcessorPermanentTrigger<>(
                         node,
                         List.of(
                                 new ContractEventFilter(
@@ -333,7 +333,7 @@ class BlockProcessorPermanentTriggerTest {
                                 "0xaa9449f2bca09a7b28319d46fd3f3b58a1bb7d94039fc4b69b7bfe5d8535d527"));
         BlockInteractor interactor = new MockBlockInteractor(log);
         BlockProcessorPermanentTrigger trigger =
-                new BlockProcessorPermanentTrigger(
+                new BlockProcessorPermanentTrigger<>(
                         node,
                         List.of(
                                 new GlobalEventFilter(
@@ -373,7 +373,7 @@ class BlockProcessorPermanentTriggerTest {
                                 "0xaa9449f2bca09a7b28319d46fd3f3b58a1bb7d94039fc4b69b7bfe5d8535d527"));
         BlockInteractor interactor = new MockBlockInteractor(log);
         BlockProcessorPermanentTrigger trigger =
-                new BlockProcessorPermanentTrigger(
+                new BlockProcessorPermanentTrigger<>(
                         node,
                         List.of(
                                 new GlobalEventFilter(
@@ -399,7 +399,7 @@ class BlockProcessorPermanentTriggerTest {
     void testCallbackInvocation() {
         BlockInteractor interactor = new MockBlockInteractor();
         BlockProcessorPermanentTrigger trigger =
-                new BlockProcessorPermanentTrigger(
+                new BlockProcessorPermanentTrigger<>(
                         new MockNode(),
                         List.of(),
                         interactor,
@@ -415,7 +415,7 @@ class BlockProcessorPermanentTriggerTest {
     void testCallbackExceptionIsHandled() {
         BlockInteractor interactor = new MockBlockInteractor();
         BlockProcessorPermanentTrigger trigger =
-                new BlockProcessorPermanentTrigger(
+                new BlockProcessorPermanentTrigger<>(
                         new MockNode(),
                         List.of(),
                         interactor,
