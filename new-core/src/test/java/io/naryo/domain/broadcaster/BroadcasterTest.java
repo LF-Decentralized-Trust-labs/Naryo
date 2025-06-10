@@ -9,13 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BroadcasterTest {
 
-    private static class MockBroadcasterType implements BroadcasterType {
-        @Override
-        public String getName() {
-            return "test";
-        }
-    }
-
     @Test
     void testBroadcasterCreation() {
         AllBroadcasterTarget target = new AllBroadcasterTarget(new Destination("value"));
@@ -24,5 +17,12 @@ class BroadcasterTest {
 
         assertEquals(target, broadcaster.getTarget());
         assertEquals(configurationId, broadcaster.getConfigurationId());
+    }
+
+    private static class MockBroadcasterType implements BroadcasterType {
+        @Override
+        public String getName() {
+            return "test";
+        }
     }
 }

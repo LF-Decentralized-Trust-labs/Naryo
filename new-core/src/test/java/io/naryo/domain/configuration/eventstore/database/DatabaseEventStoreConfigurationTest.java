@@ -4,9 +4,17 @@ import io.naryo.domain.configuration.eventstore.EventStoreConfiguration;
 import io.naryo.domain.configuration.eventstore.EventStoreType;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DatabaseEventStoreConfigurationTest {
+
+    @Test
+    void testConstructor() {
+        DatabaseEventStoreConfiguration config =
+                new MockDatabaseEventStoreConfiguration(new MockDatabaseEngine());
+        assertEquals(EventStoreType.DATABASE, config.getType());
+        assertEquals("MockDatabase", config.getEngine().getName());
+    }
 
     private static class MockDatabaseEngine implements DatabaseEngine {
         @Override
@@ -25,13 +33,5 @@ class DatabaseEventStoreConfigurationTest {
         public EventStoreConfiguration merge(EventStoreConfiguration other) {
             return this;
         }
-    }
-
-    @Test
-    void testConstructor() {
-        DatabaseEventStoreConfiguration config =
-                new MockDatabaseEventStoreConfiguration(new MockDatabaseEngine());
-        assertEquals(EventStoreType.DATABASE, config.getType());
-        assertEquals("MockDatabase", config.getEngine().getName());
     }
 }

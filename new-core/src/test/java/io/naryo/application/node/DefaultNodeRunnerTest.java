@@ -25,6 +25,25 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DefaultNodeRunnerTest {
 
+    @Test
+    void testRun() throws IOException {
+        Node node =
+                new HederaNode(
+                        UUID.randomUUID(),
+                        new NodeName("test"),
+                        new MockSubscriptionConfiguration(),
+                        new MockInteractionConfiguration(),
+                        new MockNodeConnection());
+        Subscriber subscriber = new MockSubscriber();
+        Synchronizer synchronizer = new MockSynchronizer();
+
+        DefaultNodeRunner runner = new DefaultNodeRunner(node, subscriber, synchronizer);
+
+        CompositeDisposable disposable = runner.run();
+
+        assertTrue(disposable.size() > 0, "Disposable should not be empty");
+    }
+
     private static class MockSubscriber implements Subscriber {
         @Override
         public Disposable subscribe() {
@@ -58,24 +77,5 @@ class DefaultNodeRunnerTest {
                     new ConnectionEndpoint("https://test.com"),
                     new RetryConfiguration(1, Duration.ofMinutes(1)));
         }
-    }
-
-    @Test
-    void testRun() throws IOException {
-        Node node =
-                new HederaNode(
-                        UUID.randomUUID(),
-                        new NodeName("test"),
-                        new MockSubscriptionConfiguration(),
-                        new MockInteractionConfiguration(),
-                        new MockNodeConnection());
-        Subscriber subscriber = new MockSubscriber();
-        Synchronizer synchronizer = new MockSynchronizer();
-
-        DefaultNodeRunner runner = new DefaultNodeRunner(node, subscriber, synchronizer);
-
-        CompositeDisposable disposable = runner.run();
-
-        assertTrue(disposable.size() > 0, "Disposable should not be empty");
     }
 }

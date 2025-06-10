@@ -20,6 +20,11 @@ import static io.naryo.application.common.util.EncryptionUtil.hexStringToByteArr
 
 public final class DefaultContractEventParameterDecoder implements ContractEventParameterDecoder {
 
+    private static int asInt(byte[] data, int offset) {
+        byte[] slice = Arrays.copyOfRange(data, offset + 28, offset + 32);
+        return ByteBuffer.wrap(slice).getInt();
+    }
+
     public Set<ContractEventParameter<?>> decode(
             EventFilterSpecification specification, String logData) {
 
@@ -169,10 +174,5 @@ public final class DefaultContractEventParameterDecoder implements ContractEvent
         return new DecodeResult(
                 new StructParameter(definition.isIndexed(), definition.getPosition(), values),
                 current);
-    }
-
-    private static int asInt(byte[] data, int offset) {
-        byte[] slice = Arrays.copyOfRange(data, offset + 28, offset + 32);
-        return ByteBuffer.wrap(slice).getInt();
     }
 }

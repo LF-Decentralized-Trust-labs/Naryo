@@ -48,168 +48,6 @@ class BlockProcessorPermanentTriggerTest {
     private final DefaultContractEventParameterDecoder decoder =
             new DefaultContractEventParameterDecoder();
 
-    private static class MockInteractionConfiguration extends InteractionConfiguration {
-
-        private MockInteractionConfiguration() {
-            super(InteractionStrategy.BLOCK_BASED);
-        }
-    }
-
-    private static class MockNode extends Node {
-
-        public MockNode() {
-            this(BigInteger.ZERO);
-        }
-
-        public MockNode(BigInteger confirmationBlocks) {
-            super(
-                    UUID.randomUUID(),
-                    new NodeName("MockNode"),
-                    NodeType.ETHEREUM,
-                    new BlockSubscriptionConfiguration(
-                            new PubSubBlockSubscriptionMethodConfiguration(),
-                            new NonNegativeBlockNumber(BigInteger.ZERO),
-                            new NonNegativeBlockNumber(BigInteger.ZERO),
-                            new NonNegativeBlockNumber(confirmationBlocks),
-                            new NonNegativeBlockNumber(BigInteger.ZERO),
-                            new NonNegativeBlockNumber(BigInteger.ZERO),
-                            new NonNegativeBlockNumber(BigInteger.ZERO),
-                            new NonNegativeBlockNumber(BigInteger.ZERO)),
-                    new MockInteractionConfiguration(),
-                    new HttpNodeConnection(
-                            new ConnectionEndpoint("http://localhost:8545"),
-                            new RetryConfiguration(1, Duration.ofSeconds(1)),
-                            new MaxIdleConnections(1),
-                            new KeepAliveDuration(Duration.ofSeconds(1)),
-                            new ConnectionTimeout(Duration.ofSeconds(1)),
-                            new ReadTimeout(Duration.ofSeconds(1))));
-        }
-    }
-
-    private static class MockBlockInteractor implements BlockInteractor {
-        private final Log log;
-
-        public MockBlockInteractor() {
-            this.log = null;
-        }
-
-        public MockBlockInteractor(Log log) {
-            this.log = log;
-        }
-
-        @Override
-        public io.reactivex.Flowable<Block> replayPastBlocks(BigInteger startBlock) {
-            return null;
-        }
-
-        @Override
-        public io.reactivex.Flowable<Block> replayPastAndFutureBlocks(BigInteger startBlock) {
-            return null;
-        }
-
-        @Override
-        public io.reactivex.Flowable<Block> replyFutureBlocks() {
-            return null;
-        }
-
-        @Override
-        public Block getCurrentBlock() {
-            return null;
-        }
-
-        @Override
-        public BigInteger getCurrentBlockNumber() {
-            return null;
-        }
-
-        @Override
-        public Block getBlock(BigInteger number) {
-            return null;
-        }
-
-        @Override
-        public Block getBlock(String hash) {
-            return null;
-        }
-
-        @Override
-        public List<Log> getLogs(BigInteger startBlock, BigInteger endBlock) {
-            return List.of();
-        }
-
-        @Override
-        public List<Log> getLogs(BigInteger startBlock, BigInteger endBlock, List<String> topics) {
-            return List.of();
-        }
-
-        @Override
-        public List<Log> getLogs(
-                BigInteger startBlock, BigInteger endBlock, String contractAddress) {
-            return List.of();
-        }
-
-        @Override
-        public List<Log> getLogs(
-                BigInteger startBlock,
-                BigInteger endBlock,
-                String contractAddress,
-                List<String> topics) {
-            return List.of();
-        }
-
-        @Override
-        public List<Log> getLogs(String blockHash) {
-            return log != null ? List.of(log) : List.of();
-        }
-
-        @Override
-        public List<Log> getLogs(String blockHash, String contractAddress) {
-            return List.of();
-        }
-
-        @Override
-        public Transaction getTransactionReceipt(String transactionHash) {
-            return null;
-        }
-    }
-
-    public static class TestDispatcher implements Dispatcher {
-
-        private final AtomicBoolean dispatched = new AtomicBoolean(false);
-
-        @Override
-        public void dispatch(Event event) {
-            dispatched.set(true);
-        }
-
-        @Override
-        public void addTrigger(Trigger<?> trigger) {}
-
-        @Override
-        public void removeTrigger(Trigger<?> trigger) {}
-
-        public boolean isDispatched() {
-            return dispatched.get();
-        }
-    }
-
-    private static class DefaultNodeRepository implements NodeRepository {
-        private final Node node;
-
-        private DefaultNodeRepository() {
-            this.node = null;
-        }
-
-        private DefaultNodeRepository(Node node) {
-            this.node = node;
-        }
-
-        @Override
-        public Optional<Node> findById(UUID id) {
-            return node != null ? Optional.of(node) : Optional.empty();
-        }
-    }
-
     private static BlockEvent createBlockEvent(UUID nodeId) {
         return new BlockEvent(
                 nodeId,
@@ -221,7 +59,13 @@ class BlockProcessorPermanentTriggerTest {
                 BigInteger.ZERO,
                 List.of(
                         new Transaction(
-                                "0x0", BigInteger.ONE, BigInteger.ZERO, "0x0", "0x0", "0x0")));
+                                "0x0",
+                                BigInteger.ONE,
+                                BigInteger.ZERO,
+                                "0x0",
+                                "0x0",
+                                "0x0",
+                                "0x0")));
     }
 
     @Test
@@ -583,5 +427,167 @@ class BlockProcessorPermanentTriggerTest {
                 });
         // Should not propagate exception
         assertDoesNotThrow(() -> trigger.trigger(createBlockEvent(UUID.randomUUID())));
+    }
+
+    private static class MockInteractionConfiguration extends InteractionConfiguration {
+
+        private MockInteractionConfiguration() {
+            super(InteractionStrategy.BLOCK_BASED);
+        }
+    }
+
+    private static class MockNode extends Node {
+
+        public MockNode() {
+            this(BigInteger.ZERO);
+        }
+
+        public MockNode(BigInteger confirmationBlocks) {
+            super(
+                    UUID.randomUUID(),
+                    new NodeName("MockNode"),
+                    NodeType.ETHEREUM,
+                    new BlockSubscriptionConfiguration(
+                            new PubSubBlockSubscriptionMethodConfiguration(),
+                            new NonNegativeBlockNumber(BigInteger.ZERO),
+                            new NonNegativeBlockNumber(BigInteger.ZERO),
+                            new NonNegativeBlockNumber(confirmationBlocks),
+                            new NonNegativeBlockNumber(BigInteger.ZERO),
+                            new NonNegativeBlockNumber(BigInteger.ZERO),
+                            new NonNegativeBlockNumber(BigInteger.ZERO),
+                            new NonNegativeBlockNumber(BigInteger.ZERO)),
+                    new MockInteractionConfiguration(),
+                    new HttpNodeConnection(
+                            new ConnectionEndpoint("http://localhost:8545"),
+                            new RetryConfiguration(1, Duration.ofSeconds(1)),
+                            new MaxIdleConnections(1),
+                            new KeepAliveDuration(Duration.ofSeconds(1)),
+                            new ConnectionTimeout(Duration.ofSeconds(1)),
+                            new ReadTimeout(Duration.ofSeconds(1))));
+        }
+    }
+
+    private static class MockBlockInteractor implements BlockInteractor {
+        private final Log log;
+
+        public MockBlockInteractor() {
+            this.log = null;
+        }
+
+        public MockBlockInteractor(Log log) {
+            this.log = log;
+        }
+
+        @Override
+        public io.reactivex.Flowable<Block> replayPastBlocks(BigInteger startBlock) {
+            return null;
+        }
+
+        @Override
+        public io.reactivex.Flowable<Block> replayPastAndFutureBlocks(BigInteger startBlock) {
+            return null;
+        }
+
+        @Override
+        public io.reactivex.Flowable<Block> replyFutureBlocks() {
+            return null;
+        }
+
+        @Override
+        public Block getCurrentBlock() {
+            return null;
+        }
+
+        @Override
+        public BigInteger getCurrentBlockNumber() {
+            return null;
+        }
+
+        @Override
+        public Block getBlock(BigInteger number) {
+            return null;
+        }
+
+        @Override
+        public Block getBlock(String hash) {
+            return null;
+        }
+
+        @Override
+        public List<Log> getLogs(BigInteger startBlock, BigInteger endBlock) {
+            return List.of();
+        }
+
+        @Override
+        public List<Log> getLogs(BigInteger startBlock, BigInteger endBlock, List<String> topics) {
+            return List.of();
+        }
+
+        @Override
+        public List<Log> getLogs(
+                BigInteger startBlock, BigInteger endBlock, String contractAddress) {
+            return List.of();
+        }
+
+        @Override
+        public List<Log> getLogs(
+                BigInteger startBlock,
+                BigInteger endBlock,
+                String contractAddress,
+                List<String> topics) {
+            return List.of();
+        }
+
+        @Override
+        public List<Log> getLogs(String blockHash) {
+            return log != null ? List.of(log) : List.of();
+        }
+
+        @Override
+        public List<Log> getLogs(String blockHash, String contractAddress) {
+            return List.of();
+        }
+
+        @Override
+        public Transaction getTransactionReceipt(String transactionHash) {
+            return null;
+        }
+    }
+
+    public static class TestDispatcher implements Dispatcher {
+
+        private final AtomicBoolean dispatched = new AtomicBoolean(false);
+
+        @Override
+        public void dispatch(Event event) {
+            dispatched.set(true);
+        }
+
+        @Override
+        public void addTrigger(Trigger<?> trigger) {}
+
+        @Override
+        public void removeTrigger(Trigger<?> trigger) {}
+
+        public boolean isDispatched() {
+            return dispatched.get();
+        }
+    }
+
+    private static class DefaultNodeRepository implements NodeRepository {
+        private final Node node;
+
+        private DefaultNodeRepository() {
+            this.node = null;
+        }
+
+        private DefaultNodeRepository(Node node) {
+            this.node = node;
+        }
+
+        @Override
+        public Optional<Node> findById(UUID id) {
+            return node != null ? Optional.of(node) : Optional.empty();
+        }
     }
 }

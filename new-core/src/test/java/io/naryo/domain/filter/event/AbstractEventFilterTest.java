@@ -12,7 +12,8 @@ import io.naryo.domain.filter.event.parameter.BoolParameterDefinition;
 import io.naryo.domain.filter.event.sync.NoSyncState;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 abstract class AbstractEventFilterTest {
 

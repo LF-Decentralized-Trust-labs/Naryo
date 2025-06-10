@@ -3,7 +3,7 @@ package io.naryo.domain.filter.event.parameter;
 import io.naryo.domain.common.ParameterType;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class StringParameterDefinitionTest {
 
