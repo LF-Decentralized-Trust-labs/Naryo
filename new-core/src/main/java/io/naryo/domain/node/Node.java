@@ -16,28 +16,11 @@ import lombok.ToString;
 public abstract class Node {
 
     protected final UUID id;
+    private final NodeType type;
     protected NodeName name;
     protected SubscriptionConfiguration subscriptionConfiguration;
     protected InteractionConfiguration interactionConfiguration;
     protected NodeConnection connection;
-    private final NodeType type;
-
-    public void reconfigure(
-            NodeName name,
-            SubscriptionConfiguration subscriptionConfiguration,
-            InteractionConfiguration interactionConfiguration,
-            NodeConnection connection) {
-        Objects.requireNonNull(name, "Name cannot be null");
-        Objects.requireNonNull(
-                subscriptionConfiguration, "SubscriptionConfiguration cannot be null");
-        Objects.requireNonNull(interactionConfiguration, "InteractionConfiguration cannot be null");
-        Objects.requireNonNull(connection, "Connection cannot be null");
-
-        this.name = name;
-        this.subscriptionConfiguration = subscriptionConfiguration;
-        this.interactionConfiguration = interactionConfiguration;
-        this.connection = connection;
-    }
 
     protected Node(
             UUID id,
@@ -60,6 +43,23 @@ public abstract class Node {
                 subscriptionConfiguration, "SubscriptionConfiguration cannot be null");
         Objects.requireNonNull(interactionConfiguration, "InteractionConfiguration cannot be null");
         Objects.requireNonNull(connection, "Connection cannot be null");
+    }
+
+    public void reconfigure(
+            NodeName name,
+            SubscriptionConfiguration subscriptionConfiguration,
+            InteractionConfiguration interactionConfiguration,
+            NodeConnection connection) {
+        Objects.requireNonNull(name, "Name cannot be null");
+        Objects.requireNonNull(
+                subscriptionConfiguration, "SubscriptionConfiguration cannot be null");
+        Objects.requireNonNull(interactionConfiguration, "InteractionConfiguration cannot be null");
+        Objects.requireNonNull(connection, "Connection cannot be null");
+
+        this.name = name;
+        this.subscriptionConfiguration = subscriptionConfiguration;
+        this.interactionConfiguration = interactionConfiguration;
+        this.connection = connection;
     }
 
     public Node merge(Node other) {

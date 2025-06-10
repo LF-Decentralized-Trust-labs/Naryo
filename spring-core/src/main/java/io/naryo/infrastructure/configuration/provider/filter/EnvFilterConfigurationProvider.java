@@ -54,7 +54,8 @@ public final class EnvFilterConfigurationProvider implements FilterConfiguration
                                     props.nodeId(),
                                     mapSpecification(config.specification()),
                                     config.statuses(),
-                                    mapSync(config.sync()));
+                                    mapSync(config.sync()),
+                                    EventFilterVisibilityConfiguration.visible());
                     case CONTRACT -> {
                         ContractEventFilterConfigurationAdditionalProperties addProps =
                                 (ContractEventFilterConfigurationAdditionalProperties)
@@ -66,6 +67,7 @@ public final class EnvFilterConfigurationProvider implements FilterConfiguration
                                 mapSpecification(config.specification()),
                                 config.statuses(),
                                 mapSync(config.sync()),
+                                EventFilterVisibilityConfiguration.visible(),
                                 addProps.address());
                     }
                 };

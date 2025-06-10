@@ -14,6 +14,7 @@ public final class TransactionConverter {
                 new BigInteger(model.blockNumber()),
                 model.blockHash(),
                 model.from(),
-                model.to() != null ? model.to() : model.contractId());
+                model.to() != null ? model.to() : model.contractId(),
+                model.bloom());
     }
 }

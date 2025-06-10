@@ -20,7 +20,6 @@ public abstract class TransactionEvent extends Event {
 
     private final String hash;
     private final TransactionType type;
-    @Setter private TransactionStatus status;
     private final NonNegativeBlockNumber nonce;
     private final String blockHash;
     private final NonNegativeBlockNumber blockNumber;
@@ -31,6 +30,7 @@ public abstract class TransactionEvent extends Event {
     private final String value;
     private final String input;
     private final String revertReason;
+    @Setter private TransactionStatus status;
 
     public TransactionEvent(
             UUID nodeId,

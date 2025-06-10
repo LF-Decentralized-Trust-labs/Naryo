@@ -2,7 +2,8 @@ package io.naryo.domain.node.connection.http;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class MaxIdleConnectionsTest {
 

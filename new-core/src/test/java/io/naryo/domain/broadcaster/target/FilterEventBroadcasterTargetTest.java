@@ -7,7 +7,7 @@ import io.naryo.domain.broadcaster.BroadcasterTarget;
 import io.naryo.domain.broadcaster.Destination;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class FilterEventBroadcasterTargetTest extends AbstractBroadcasterTargetTest {
 

@@ -23,10 +23,10 @@ public final class ContractEventConfirmationDisposableTrigger
     private final ContractEvent contractEvent;
     private final BigInteger targetBlock;
     private final Dispatcher dispatcher;
-    private Consumer<BlockEvent> consumer;
     private final BlockInteractor blockInteractor;
     private final NonNegativeBlockNumber missingTxRetryBlocks;
     private final NonNegativeBlockNumber eventInvalidationBlockThreshold;
+    private Consumer<BlockEvent> consumer;
     private NonNegativeBlockNumber missingTxBlockLimit;
     private NonNegativeBlockNumber currentNumBlocksToWaitBeforeInvalidating;
     private boolean isInvalidated;

@@ -8,4 +8,5 @@ public record Transaction(
         BigInteger blockNumber,
         String blockHash,
         String from,
-        String to) {}
+        String to,
+        String logBloom) {}

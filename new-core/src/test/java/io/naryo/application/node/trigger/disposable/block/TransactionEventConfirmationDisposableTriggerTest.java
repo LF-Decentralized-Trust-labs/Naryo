@@ -21,14 +21,11 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class TransactionEventConfirmationDisposableTriggerTest {
 
-    @Mock private TransactionEvent transactionEvent;
-
-    @Mock private Dispatcher dispatcher;
-
-    @Mock private Consumer<BlockEvent> consumer;
-
     private final BigInteger initialBlock = BigInteger.valueOf(100);
     private final BigInteger confirmations = BigInteger.valueOf(5);
+    @Mock private TransactionEvent transactionEvent;
+    @Mock private Dispatcher dispatcher;
+    @Mock private Consumer<BlockEvent> consumer;
     private TransactionEventConfirmationDisposableTrigger trigger;
 
     @BeforeEach

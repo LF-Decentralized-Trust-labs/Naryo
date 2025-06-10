@@ -13,24 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BroadcasterConfigurationTest {
 
-    private static class MockBroadcasterType implements BroadcasterType {
-        @Override
-        public String getName() {
-            return "mock";
-        }
-    }
-
-    private static class MockBroadcasterConfiguration extends BroadcasterConfiguration {
-        protected MockBroadcasterConfiguration(BroadcasterType type, BroadcasterCache cache) {
-            super(UUID.randomUUID(), type, cache);
-        }
-
-        @Override
-        public BroadcasterConfiguration merge(BroadcasterConfiguration other) {
-            return this;
-        }
-    }
-
     @Test
     void testValidConfiguration() {
         MockBroadcasterConfiguration config =
@@ -58,5 +40,23 @@ class BroadcasterConfigurationTest {
                         NullPointerException.class,
                         () -> new MockBroadcasterConfiguration(new MockBroadcasterType(), null));
         assertEquals("cache must not be null", exception.getMessage());
+    }
+
+    private static class MockBroadcasterType implements BroadcasterType {
+        @Override
+        public String getName() {
+            return "mock";
+        }
+    }
+
+    private static class MockBroadcasterConfiguration extends BroadcasterConfiguration {
+        protected MockBroadcasterConfiguration(BroadcasterType type, BroadcasterCache cache) {
+            super(UUID.randomUUID(), type, cache);
+        }
+
+        @Override
+        public BroadcasterConfiguration merge(BroadcasterConfiguration other) {
+            return this;
+        }
     }
 }
