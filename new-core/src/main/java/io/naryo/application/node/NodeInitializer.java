@@ -1,16 +1,17 @@
-package io.naryo.infrastructure;
+package io.naryo.application.node;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import io.naryo.application.broadcaster.BroadcasterProducer;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.filter.block.NodeSynchronizer;
-import io.naryo.application.node.DefaultNodeRunner;
 import io.naryo.application.node.calculator.StartBlockCalculator;
-import io.naryo.application.node.dispatch.block.BlockDispatcher;
+import io.naryo.application.node.dispatch.block.EventDispatcher;
 import io.naryo.application.node.helper.ContractEventDispatcherHelper;
 import io.naryo.application.node.interactor.block.factory.BlockInteractorFactory;
 import io.naryo.application.node.routing.EventRoutingService;
@@ -23,23 +24,19 @@ import io.naryo.domain.filter.Filter;
 import io.naryo.domain.filter.FilterType;
 import io.naryo.domain.filter.event.EventFilter;
 import io.naryo.domain.node.Node;
-import io.naryo.infrastructure.configuration.ConfigurationFacade;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component
-public class NodeInitializer implements InitializingBean {
+public class NodeInitializer {
 
     private final List<Trigger<?>> sharedTriggers;
     private final BlockInteractorFactory interactorFactory;
     private final BlockSubscriberFactory subscriberFactory;
     private final ContractEventParameterDecoder decoder;
-    private final ConfigurationFacade config;
+    private final NodeConfigurationFacade config;
 
     public NodeInitializer(
-            ConfigurationFacade config,
+            NodeConfigurationFacade config,
             BlockInteractorFactory interactorFactory,
             BlockSubscriberFactory subscriberFactory,
             ContractEventParameterDecoder decoder,
@@ -59,28 +56,36 @@ public class NodeInitializer implements InitializingBean {
                         new EventStoreBroadcasterPermanentTrigger(List.of()));
     }
 
-    @Override
-    public void afterPropertiesSet() {
+    public NodeContainer init() {
         var nodes = config.getNodes();
         var filters = config.getFilters();
 
-        for (var node : nodes) {
-            try {
-                initNode(node, filters);
-            } catch (IOException e) {
-                log.info("Failed to initialize node {}: {}", node.getId(), e.getMessage());
-            }
-        }
+        return new NodeContainer(
+                nodes.stream()
+                        .map(
+                                node -> {
+                                    try {
+                                        return initNode(node, filters);
+                                    } catch (IOException e) {
+                                        log.info(
+                                                "Failed to initialize node {}: {}",
+                                                node.getId(),
+                                                e.getMessage());
+                                    }
+                                    return null;
+                                })
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toSet()));
     }
 
-    private void initNode(Node node, List<Filter> allFilters) throws IOException {
+    private NodeRunner initNode(Node node, List<Filter> allFilters) throws IOException {
         var interactor = interactorFactory.create(node);
         var nodeFilters = filterForNode(allFilters, node.getId());
-        var dispatcher = new BlockDispatcher(new HashSet<>(sharedTriggers));
+        var dispatcher = new EventDispatcher(new HashSet<>(sharedTriggers));
         var helper = new ContractEventDispatcherHelper(dispatcher, interactor);
 
         var blockTrigger =
-                new BlockProcessorPermanentTrigger(
+                new BlockProcessorPermanentTrigger<>(
                         node, eventFilters(nodeFilters), interactor, decoder, helper);
         dispatcher.addTrigger(blockTrigger);
 
@@ -93,7 +98,7 @@ public class NodeInitializer implements InitializingBean {
                         nodeFilters,
                         decoder,
                         helper);
-        new DefaultNodeRunner(node, subscriber, synchronizer).run();
+        return new DefaultNodeRunner(node, subscriber, synchronizer);
     }
 
     private List<Filter> filterForNode(List<Filter> filters, UUID id) {
