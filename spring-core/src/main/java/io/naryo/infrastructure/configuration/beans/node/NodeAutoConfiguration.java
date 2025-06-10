@@ -4,9 +4,12 @@ import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.naryo.application.broadcaster.BroadcasterProducer;
 import io.naryo.application.common.Mapper;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.event.decoder.block.DefaultContractEventParameterDecoder;
+import io.naryo.application.node.NodeConfigurationFacade;
+import io.naryo.application.node.NodeInitializer;
 import io.naryo.application.node.configuration.manager.DefaultNodeConfigurationManager;
 import io.naryo.application.node.configuration.manager.NodeConfigurationManager;
 import io.naryo.application.node.configuration.provider.NodeConfigurationProvider;
@@ -61,5 +64,16 @@ public class NodeAutoConfiguration {
     @ConditionalOnMissingBean(ContractEventParameterDecoder.class)
     public ContractEventParameterDecoder contractEventParameterDecoder() {
         return new DefaultContractEventParameterDecoder();
+    }
+
+    @Bean
+    public NodeInitializer nodeInitializer(
+            NodeConfigurationFacade config,
+            BlockInteractorFactory interactorFactory,
+            BlockSubscriberFactory subscriberFactory,
+            ContractEventParameterDecoder decoder,
+            List<BroadcasterProducer> producers) {
+        return new NodeInitializer(
+                config, interactorFactory, subscriberFactory, decoder, producers);
     }
 }

@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class BlockDispatcherTest {
+class EventDispatcherTest {
 
     @Mock private DisposableTrigger<Event> disposableTrigger;
 
@@ -24,7 +24,7 @@ class BlockDispatcherTest {
 
     @Mock private Event event;
 
-    private BlockDispatcher dispatcher;
+    private EventDispatcher dispatcher;
 
     @Test
     @SuppressWarnings("unchecked")
@@ -35,7 +35,7 @@ class BlockDispatcherTest {
         doNothing().when(disposableTrigger).onDispose(onDisposeCaptor.capture());
         doNothing().when(disposableTrigger).trigger(event);
 
-        dispatcher = new BlockDispatcher(Set.of(disposableTrigger));
+        dispatcher = new EventDispatcher(Set.of(disposableTrigger));
         dispatcher.dispatch(event);
 
         // Verify onDispose registration and trigger() call
@@ -58,7 +58,7 @@ class BlockDispatcherTest {
         doNothing().when(permanentTrigger).onExecute(onExecuteCaptor.capture());
         doNothing().when(permanentTrigger).trigger(event);
 
-        dispatcher = new BlockDispatcher(Set.of(permanentTrigger));
+        dispatcher = new EventDispatcher(Set.of(permanentTrigger));
         dispatcher.dispatch(event);
 
         verify(permanentTrigger).onExecute(any());
@@ -77,7 +77,7 @@ class BlockDispatcherTest {
         when(disposableTrigger.supports(event)).thenReturn(false);
         when(permanentTrigger.supports(event)).thenReturn(false);
 
-        dispatcher = new BlockDispatcher(Set.of(disposableTrigger, permanentTrigger));
+        dispatcher = new EventDispatcher(Set.of(disposableTrigger, permanentTrigger));
         dispatcher.dispatch(event);
 
         verify(disposableTrigger, never()).onDispose(any());
@@ -91,7 +91,7 @@ class BlockDispatcherTest {
         when(disposableTrigger.supports(event)).thenReturn(true);
         doThrow(new RuntimeException("onDisposeFail")).when(disposableTrigger).onDispose(any());
 
-        dispatcher = new BlockDispatcher(Set.of(disposableTrigger));
+        dispatcher = new EventDispatcher(Set.of(disposableTrigger));
         assertDoesNotThrow(() -> dispatcher.dispatch(event));
 
         verify(disposableTrigger).onDispose(any());
@@ -103,7 +103,7 @@ class BlockDispatcherTest {
         when(permanentTrigger.supports(event)).thenReturn(true);
         doThrow(new RuntimeException("onExecuteFail")).when(permanentTrigger).onExecute(any());
 
-        dispatcher = new BlockDispatcher(Set.of(permanentTrigger));
+        dispatcher = new EventDispatcher(Set.of(permanentTrigger));
         assertDoesNotThrow(() -> dispatcher.dispatch(event));
 
         verify(permanentTrigger).onExecute(any());
@@ -118,7 +118,7 @@ class BlockDispatcherTest {
         doThrow(new RuntimeException("triggerFail")).when(disposableTrigger).trigger(event);
         doNothing().when(permanentTrigger).trigger(event);
 
-        dispatcher = new BlockDispatcher(Set.of(disposableTrigger, permanentTrigger));
+        dispatcher = new EventDispatcher(Set.of(disposableTrigger, permanentTrigger));
         assertDoesNotThrow(() -> dispatcher.dispatch(event));
 
         verify(disposableTrigger).trigger(event);
@@ -127,7 +127,7 @@ class BlockDispatcherTest {
 
     @Test
     void addRemoveGetTriggers_workAsExpected() {
-        dispatcher = new BlockDispatcher(Set.of());
+        dispatcher = new EventDispatcher(Set.of());
         assertTrue(dispatcher.triggers().isEmpty());
 
         dispatcher.addTrigger(disposableTrigger);
