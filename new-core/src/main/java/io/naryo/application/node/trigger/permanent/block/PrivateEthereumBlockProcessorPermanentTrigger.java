@@ -11,7 +11,7 @@ import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.filter.util.BloomFilterUtil;
 import io.naryo.application.node.helper.ContractEventDispatcherHelper;
 import io.naryo.application.node.interactor.block.dto.Log;
-import io.naryo.application.node.interactor.block.dto.Transaction;
+import io.naryo.application.node.interactor.block.dto.TransactionReceipt;
 import io.naryo.application.node.interactor.block.priv.PrivateBlockInteractor;
 import io.naryo.domain.event.block.BlockEvent;
 import io.naryo.domain.filter.event.ContractEventFilter;
@@ -153,7 +153,7 @@ public final class PrivateEthereumBlockProcessorPermanentTrigger
                             }
                         })
                 .filter(Objects::nonNull)
-                .map(Transaction::logBloom)
+                .map(TransactionReceipt::logsBloom)
                 .toList();
     }
 }

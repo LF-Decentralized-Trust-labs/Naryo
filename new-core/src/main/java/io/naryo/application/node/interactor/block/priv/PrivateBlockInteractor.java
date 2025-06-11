@@ -6,7 +6,7 @@ import java.util.List;
 
 import io.naryo.application.node.interactor.block.BlockInteractor;
 import io.naryo.application.node.interactor.block.dto.Log;
-import io.naryo.application.node.interactor.block.dto.Transaction;
+import io.naryo.application.node.interactor.block.dto.TransactionReceipt;
 
 public interface PrivateBlockInteractor extends BlockInteractor {
 
@@ -37,5 +37,5 @@ public interface PrivateBlockInteractor extends BlockInteractor {
     List<Log> getPrivateLogs(String privacyGroupId, String blockHash, String contractAddress)
             throws IOException;
 
-    Transaction getPrivateTransactionReceipt(String transactionHash) throws IOException;
+    TransactionReceipt getPrivateTransactionReceipt(String transactionHash) throws IOException;
 }

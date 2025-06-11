@@ -17,13 +17,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.naryo.application.node.interactor.block.BlockInteractor;
 import io.naryo.application.node.interactor.block.dto.Block;
 import io.naryo.application.node.interactor.block.dto.Log;
-import io.naryo.application.node.interactor.block.dto.Transaction;
+import io.naryo.application.node.interactor.block.dto.TransactionReceipt;
 import io.naryo.infrastructure.node.interactor.hedera.exception.EmptyResponseException;
 import io.naryo.infrastructure.node.interactor.hedera.exception.UnexpectedResponseException;
 import io.naryo.infrastructure.node.interactor.hedera.http.MirrorNodeHttpClient;
 import io.naryo.infrastructure.node.interactor.hedera.map.BlockConverter;
 import io.naryo.infrastructure.node.interactor.hedera.map.LogConverter;
 import io.naryo.infrastructure.node.interactor.hedera.map.TransactionConverter;
+import io.naryo.infrastructure.node.interactor.hedera.map.TransactionReceiptConverter;
 import io.naryo.infrastructure.node.interactor.hedera.response.*;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -159,9 +160,14 @@ public final class HederaMirrorNodeBlockInteractor implements BlockInteractor {
     }
 
     @Override
-    public Transaction getTransactionReceipt(String transactionHash) throws IOException {
+    public TransactionReceipt getTransactionReceipt(String transactionHash) throws IOException {
         HttpUrl url = client.url(BASE_PATH + CONTRACT_RESULTS + "/" + transactionHash);
-        return TransactionConverter.map(retryableGet(url, new TypeReference<>() {}));
+        return TransactionReceiptConverter.map(retryableGet(url, new TypeReference<>() {}));
+    }
+
+    @Override
+    public String getRevertReason(String transactionHash) throws IOException {
+        return "";
     }
 
     private Flowable<Block> createPublisher(Supplier<BigInteger> startSupplier) {
