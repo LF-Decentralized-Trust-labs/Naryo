@@ -16,10 +16,9 @@ import lombok.ToString;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public abstract class TransactionEvent extends Event {
+public class TransactionEvent extends Event {
 
     private final String hash;
-    private final TransactionType type;
     private final NonNegativeBlockNumber nonce;
     private final String blockHash;
     private final NonNegativeBlockNumber blockNumber;
@@ -29,13 +28,12 @@ public abstract class TransactionEvent extends Event {
     private final String receiver;
     private final String value;
     private final String input;
-    private final String revertReason;
+    @Setter private String revertReason;
     @Setter private TransactionStatus status;
 
     public TransactionEvent(
             UUID nodeId,
             String hash,
-            TransactionType type,
             TransactionStatus status,
             NonNegativeBlockNumber nonce,
             String blockHash,
@@ -49,7 +47,6 @@ public abstract class TransactionEvent extends Event {
             String revertReason) {
         super(EventType.TRANSACTION, nodeId);
         this.hash = hash;
-        this.type = type;
         this.status = status;
         this.nonce = nonce;
         this.blockHash = blockHash;
@@ -63,7 +60,6 @@ public abstract class TransactionEvent extends Event {
         this.revertReason = revertReason;
 
         Objects.requireNonNull(hash, "hash cannot be null");
-        Objects.requireNonNull(type, "type cannot be null");
         Objects.requireNonNull(status, "status cannot be null");
         Objects.requireNonNull(nonce, "nonce cannot be null");
         Objects.requireNonNull(blockHash, "blockHash cannot be null");

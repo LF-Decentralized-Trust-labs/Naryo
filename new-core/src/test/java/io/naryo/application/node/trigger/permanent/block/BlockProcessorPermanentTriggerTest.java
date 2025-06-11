@@ -1,5 +1,6 @@
 package io.naryo.application.node.trigger.permanent.block;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.time.Duration;
 import java.util.List;
@@ -15,6 +16,7 @@ import io.naryo.application.node.interactor.block.BlockInteractor;
 import io.naryo.application.node.interactor.block.dto.Block;
 import io.naryo.application.node.interactor.block.dto.Log;
 import io.naryo.application.node.interactor.block.dto.Transaction;
+import io.naryo.application.node.interactor.block.dto.TransactionReceipt;
 import io.naryo.application.node.trigger.Trigger;
 import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.common.connection.endpoint.ConnectionEndpoint;
@@ -62,6 +64,11 @@ class BlockProcessorPermanentTriggerTest {
                                 "0x0",
                                 BigInteger.ONE,
                                 BigInteger.ZERO,
+                                BigInteger.TEN,
+                                "0x0",
+                                "0x0",
+                                "0x0",
+                                "0x0",
                                 "0x0",
                                 "0x0",
                                 "0x0",
@@ -549,8 +556,13 @@ class BlockProcessorPermanentTriggerTest {
         }
 
         @Override
-        public Transaction getTransactionReceipt(String transactionHash) {
+        public TransactionReceipt getTransactionReceipt(String transactionHash) {
             return null;
+        }
+
+        @Override
+        public String getRevertReason(String transactionHash) throws IOException {
+            return "";
         }
     }
 
