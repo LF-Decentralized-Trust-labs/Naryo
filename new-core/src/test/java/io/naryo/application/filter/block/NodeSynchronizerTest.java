@@ -110,7 +110,7 @@ class NodeSynchronizerTest {
                         UUID.randomUUID(),
                         new FilterName("filter1"),
                         nodeId,
-                        IdentifierType.CONTRACT_ADDRESS,
+                        IdentifierType.HASH,
                         "0x1234567890abcdef1234567890abcdef12345678",
                         List.of(TransactionStatus.FAILED)));
         NodeSynchronizer synchronizer =

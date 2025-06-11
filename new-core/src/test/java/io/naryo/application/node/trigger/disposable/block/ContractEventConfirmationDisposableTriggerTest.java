@@ -80,10 +80,15 @@ class ContractEventConfirmationDisposableTriggerTest {
                                 contractEvent.getTransactionHash(),
                                 BigInteger.ZERO,
                                 BigInteger.ZERO,
+                                BigInteger.TEN,
                                 blockEvent.getHash(),
+                                "0x1",
                                 "0xfrom",
                                 "0xto",
-                                "0xdata"))
+                                "0xdata",
+                                "0xvalue",
+                                "0xLogBloom",
+                                "0xRevertReason"))
                 .when(interactor)
                 .getTransactionReceipt(contractEvent.getTransactionHash());
 

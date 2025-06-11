@@ -17,12 +17,7 @@ class TransactionFilterTest extends AbstractFilterTest {
     @Override
     protected Filter createFilter(UUID id, FilterName name, UUID nodeId) {
         return new TransactionFilter(
-                id,
-                name,
-                nodeId,
-                IdentifierType.CONTRACT_ADDRESS,
-                "0x0",
-                List.of(TransactionStatus.FAILED));
+                id, name, nodeId, IdentifierType.HASH, "0x0", List.of(TransactionStatus.FAILED));
     }
 
     @Test
@@ -48,7 +43,7 @@ class TransactionFilterTest extends AbstractFilterTest {
                                 UUID.randomUUID(),
                                 new FilterName("Test"),
                                 UUID.randomUUID(),
-                                IdentifierType.CONTRACT_ADDRESS,
+                                IdentifierType.HASH,
                                 null,
                                 List.of(TransactionStatus.FAILED)));
     }
@@ -62,7 +57,7 @@ class TransactionFilterTest extends AbstractFilterTest {
                                 UUID.randomUUID(),
                                 new FilterName("Test"),
                                 UUID.randomUUID(),
-                                IdentifierType.CONTRACT_ADDRESS,
+                                IdentifierType.HASH,
                                 "0x0",
                                 null));
     }
@@ -76,7 +71,7 @@ class TransactionFilterTest extends AbstractFilterTest {
                                 UUID.randomUUID(),
                                 new FilterName("Test"),
                                 UUID.randomUUID(),
-                                IdentifierType.CONTRACT_ADDRESS,
+                                IdentifierType.HASH,
                                 "0x0",
                                 List.of()));
     }
@@ -90,7 +85,7 @@ class TransactionFilterTest extends AbstractFilterTest {
                                 UUID.randomUUID(),
                                 new FilterName("Test"),
                                 UUID.randomUUID(),
-                                IdentifierType.CONTRACT_ADDRESS,
+                                IdentifierType.HASH,
                                 "",
                                 List.of(TransactionStatus.FAILED)));
     }
@@ -102,12 +97,12 @@ class TransactionFilterTest extends AbstractFilterTest {
                         DEFAULT_ID,
                         new FilterName(DEFAULT_NAME),
                         DEFAULT_ID,
-                        IdentifierType.CONTRACT_ADDRESS,
+                        IdentifierType.HASH,
                         "0x0",
                         List.of(TransactionStatus.FAILED));
 
         assertEquals("0x0", filter.getValue());
-        assertEquals(IdentifierType.CONTRACT_ADDRESS, filter.getIdentifierType());
+        assertEquals(IdentifierType.HASH, filter.getIdentifierType());
         assertEquals(List.of(TransactionStatus.FAILED), filter.getStatuses());
     }
 }

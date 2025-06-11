@@ -6,7 +6,7 @@ import java.util.Objects;
 
 import io.naryo.application.node.dispatch.Dispatcher;
 import io.naryo.application.node.interactor.block.BlockInteractor;
-import io.naryo.application.node.interactor.block.dto.Transaction;
+import io.naryo.application.node.interactor.block.dto.TransactionReceipt;
 import io.naryo.application.node.trigger.disposable.DisposableTrigger;
 import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.common.event.ContractEventStatus;
@@ -63,7 +63,7 @@ public final class ContractEventConfirmationDisposableTrigger
     @Override
     public void trigger(BlockEvent block) {
         try {
-            final Transaction transaction =
+            final TransactionReceipt transaction =
                     blockInteractor.getTransactionReceipt(contractEvent.getTransactionHash());
 
             if (transaction == null) {
@@ -97,7 +97,7 @@ public final class ContractEventConfirmationDisposableTrigger
         }
     }
 
-    private void checkEventStatus(BlockEvent block, Transaction transaction) {
+    private void checkEventStatus(BlockEvent block, TransactionReceipt transaction) {
         if (isInvalidated) return;
         if (isOrphaned(transaction)) {
             processInvalidatedEvent(block);
@@ -123,7 +123,7 @@ public final class ContractEventConfirmationDisposableTrigger
         }
     }
 
-    private boolean isOrphaned(Transaction transaction) {
+    private boolean isOrphaned(TransactionReceipt transaction) {
         // If block hash is not as expected, this means that the transaction
         // has been included in a block on a different fork of a longer chain
         // and the original transaction is considered orphaned.

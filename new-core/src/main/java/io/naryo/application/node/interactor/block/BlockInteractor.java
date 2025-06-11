@@ -7,7 +7,7 @@ import java.util.List;
 import io.naryo.application.node.interactor.Interactor;
 import io.naryo.application.node.interactor.block.dto.Block;
 import io.naryo.application.node.interactor.block.dto.Log;
-import io.naryo.application.node.interactor.block.dto.Transaction;
+import io.naryo.application.node.interactor.block.dto.TransactionReceipt;
 import io.reactivex.Flowable;
 
 public interface BlockInteractor extends Interactor {
@@ -42,5 +42,7 @@ public interface BlockInteractor extends Interactor {
 
     List<Log> getLogs(String blockHash, String contractAddress) throws IOException;
 
-    Transaction getTransactionReceipt(String transactionHash) throws IOException;
+    TransactionReceipt getTransactionReceipt(String transactionHash) throws IOException;
+
+    String getRevertReason(String transactionHash) throws IOException;
 }

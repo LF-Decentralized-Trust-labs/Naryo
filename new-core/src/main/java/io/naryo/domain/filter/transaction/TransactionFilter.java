@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import io.naryo.application.node.interactor.block.dto.Transaction;
 import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.filter.Filter;
 import io.naryo.domain.filter.FilterName;
@@ -48,5 +49,13 @@ public final class TransactionFilter extends Filter {
         if (value.isEmpty()) {
             throw new IllegalArgumentException("value must not be empty");
         }
+    }
+
+    public boolean matches(Transaction transaction) {
+        return switch (identifierType) {
+            case HASH -> transaction.hash().equals(value);
+            case TO_ADDRESS -> transaction.to().equals(value);
+            case FROM_ADDRESS -> transaction.from().equals(value);
+        };
     }
 }
