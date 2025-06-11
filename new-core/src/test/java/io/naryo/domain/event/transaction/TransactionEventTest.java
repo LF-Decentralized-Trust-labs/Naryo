@@ -1,6 +1,7 @@
 package io.naryo.domain.event.transaction;
 
 import java.math.BigInteger;
+import java.util.UUID;
 
 import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.common.TransactionStatus;
@@ -8,9 +9,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public abstract class AbstractTransactionEventTest {
+public class TransactionEventTest {
 
-    protected abstract TransactionEvent createTransactionEvent(
+    protected TransactionEvent createTransactionEvent(
             String hash,
             TransactionStatus status,
             NonNegativeBlockNumber nonce,
@@ -22,7 +23,22 @@ public abstract class AbstractTransactionEventTest {
             String receiver,
             String value,
             String input,
-            String revertReason);
+            String revertReason) {
+        return new TransactionEvent(
+                UUID.randomUUID(),
+                hash,
+                status,
+                nonce,
+                blockHash,
+                blockNumber,
+                blockTimestamp,
+                transactionIndex,
+                sender,
+                receiver,
+                value,
+                input,
+                revertReason);
+    }
 
     @Test
     void testConstructorWithNullHash() {
