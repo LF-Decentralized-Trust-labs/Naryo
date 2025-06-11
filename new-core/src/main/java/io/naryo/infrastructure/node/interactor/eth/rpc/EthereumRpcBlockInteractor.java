@@ -9,13 +9,13 @@ import io.naryo.application.node.interactor.block.BlockInteractor;
 import io.naryo.application.node.interactor.block.dto.Block;
 import io.naryo.application.node.interactor.block.dto.Log;
 import io.naryo.application.node.interactor.block.dto.Transaction;
+import io.naryo.application.node.interactor.block.dto.TransactionReceipt;
 import io.reactivex.Flowable;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.methods.request.EthFilter;
 import org.web3j.protocol.core.methods.response.EthBlock;
 import org.web3j.protocol.core.methods.response.EthLog;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 public class EthereumRpcBlockInteractor implements BlockInteractor {
 
@@ -109,8 +109,13 @@ public class EthereumRpcBlockInteractor implements BlockInteractor {
     }
 
     @Override
-    public Transaction getTransactionReceipt(String transactionHash) throws IOException {
+    public TransactionReceipt getTransactionReceipt(String transactionHash) throws IOException {
         return mapToTransaction(web3j.ethGetTransactionReceipt(transactionHash).send().getResult());
+    }
+
+    @Override
+    public String getRevertReason(String transactionHash) throws IOException {
+        return null;
     }
 
     protected List<Log> getLogs(
@@ -141,11 +146,16 @@ public class EthereumRpcBlockInteractor implements BlockInteractor {
                                     var tx = (EthBlock.TransactionObject) transactionResult;
                                     return new Transaction(
                                             tx.getHash(),
+                                            tx.getTransactionIndex(),
                                             tx.getNonce(),
                                             tx.getBlockNumber(),
                                             tx.getBlockHash(),
+                                            null,
                                             tx.getFrom(),
                                             tx.getTo(),
+                                            tx.getValueRaw(),
+                                            tx.getInput(),
+                                            null,
                                             null);
                                 })
                         .toList());
@@ -165,14 +175,35 @@ public class EthereumRpcBlockInteractor implements BlockInteractor {
                 log.getTopics().stream().map(Object::toString).toList());
     }
 
-    protected Transaction mapToTransaction(TransactionReceipt result) {
-        return new Transaction(
+    protected Log mapToLog(org.web3j.protocol.core.methods.response.Log result) {
+        return new Log(
+                result.getLogIndex(),
+                result.getTransactionIndex(),
                 result.getTransactionHash(),
-                null,
-                result.getBlockNumber(),
                 result.getBlockHash(),
+                result.getBlockNumber(),
+                result.getAddress(),
+                result.getData(),
+                result.getType(),
+                result.getTopics().stream().map(Object::toString).toList());
+    }
+
+    protected TransactionReceipt mapToTransaction(
+            org.web3j.protocol.core.methods.response.TransactionReceipt result) {
+        return new TransactionReceipt(
+                result.getTransactionHash(),
+                result.getTransactionIndex(),
+                result.getBlockHash(),
+                result.getBlockNumber(),
+                result.getCumulativeGasUsed(),
+                result.getGasUsed(),
+                result.getContractAddress(),
+                result.getRoot(),
                 result.getFrom(),
                 result.getTo(),
-                result.getLogsBloom());
+                result.getLogs().stream().map(this::mapToLog).toList(),
+                result.getLogsBloom(),
+                result.getStatus(),
+                result.getRevertReason());
     }
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 import io.naryo.application.node.interactor.block.dto.Log;
-import io.naryo.application.node.interactor.block.dto.Transaction;
+import io.naryo.application.node.interactor.block.dto.TransactionReceipt;
 import io.naryo.application.node.interactor.block.priv.PrivateBlockInteractor;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.besu.Besu;
@@ -80,7 +80,8 @@ public final class PrivateEthereumRpcBlockInteractor extends EthereumRpcBlockInt
     }
 
     @Override
-    public Transaction getPrivateTransactionReceipt(String transactionHash) throws IOException {
+    public TransactionReceipt getPrivateTransactionReceipt(String transactionHash)
+            throws IOException {
         return besu.privGetTransactionReceipt(transactionHash)
                 .send()
                 .getTransactionReceipt()

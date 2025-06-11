@@ -14,12 +14,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.naryo.application.node.interactor.block.dto.Block;
-import io.naryo.application.node.interactor.block.dto.Transaction;
+import io.naryo.application.node.interactor.block.dto.TransactionReceipt;
 import io.naryo.infrastructure.node.interactor.hedera.exception.EmptyResponseException;
 import io.naryo.infrastructure.node.interactor.hedera.exception.UnexpectedResponseException;
 import io.naryo.infrastructure.node.interactor.hedera.http.MirrorNodeHttpClient;
 import io.naryo.infrastructure.node.interactor.hedera.map.BlockConverter;
-import io.naryo.infrastructure.node.interactor.hedera.map.TransactionConverter;
+import io.naryo.infrastructure.node.interactor.hedera.map.TransactionReceiptConverter;
 import io.naryo.infrastructure.node.interactor.hedera.response.*;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -306,11 +306,11 @@ class HederaMirrorNodeBlockInteractorTest {
         ContractResultResponseModel resp = mock(ContractResultResponseModel.class);
 
         when(client.get(any(HttpUrl.class), any())).thenReturn(resp);
-        Transaction expectedTx = mock(Transaction.class);
-        try (MockedStatic<TransactionConverter> tconv =
-                Mockito.mockStatic(TransactionConverter.class)) {
-            tconv.when(() -> TransactionConverter.map(resp)).thenReturn(expectedTx);
-            Transaction result = interactor.getTransactionReceipt(tx);
+        TransactionReceipt expectedTx = mock(TransactionReceipt.class);
+        try (MockedStatic<TransactionReceiptConverter> tconv =
+                Mockito.mockStatic(TransactionReceiptConverter.class)) {
+            tconv.when(() -> TransactionReceiptConverter.map(resp)).thenReturn(expectedTx);
+            TransactionReceipt result = interactor.getTransactionReceipt(tx);
             assertSame(expectedTx, result);
         }
 

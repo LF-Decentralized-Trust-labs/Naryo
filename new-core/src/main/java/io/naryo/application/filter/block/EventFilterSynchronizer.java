@@ -14,7 +14,7 @@ import io.naryo.application.node.helper.ContractEventDispatcherHelper;
 import io.naryo.application.node.interactor.block.BlockInteractor;
 import io.naryo.application.node.interactor.block.dto.Block;
 import io.naryo.application.node.interactor.block.dto.Log;
-import io.naryo.application.node.interactor.block.dto.Transaction;
+import io.naryo.application.node.interactor.block.dto.TransactionReceipt;
 import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.event.contract.ContractEvent;
 import io.naryo.domain.filter.event.ContractEventFilter;
@@ -36,7 +36,7 @@ public final class EventFilterSynchronizer implements Synchronizer {
     private final ContractEventParameterDecoder decoder;
     private final ContractEventDispatcherHelper helper;
     private final List<Block> cachedBlocks = new ArrayList<>();
-    private final List<Transaction> cachedTransactions = new ArrayList<>();
+    private final List<TransactionReceipt> cachedTransactions = new ArrayList<>();
 
     public EventFilterSynchronizer(
             Node node,
@@ -67,7 +67,8 @@ public final class EventFilterSynchronizer implements Synchronizer {
                 .subscribe(
                         value -> {
                             Block block = getBlock(value.blockNumber());
-                            Transaction transaction = getTransaction(value.transactionHash());
+                            TransactionReceipt transaction =
+                                    getTransactionReceipt(value.transactionHash());
 
                             ContractEvent contractEvent =
                                     new ContractEvent(
@@ -113,13 +114,13 @@ public final class EventFilterSynchronizer implements Synchronizer {
         return block;
     }
 
-    private Transaction getTransaction(String transactionHash) throws IOException {
-        for (Transaction transaction : cachedTransactions) {
-            if (transaction.hash().equals(transactionHash)) {
-                return transaction;
+    private TransactionReceipt getTransactionReceipt(String transactionHash) throws IOException {
+        for (TransactionReceipt transactionReceipt : cachedTransactions) {
+            if (transactionReceipt.hash().equals(transactionHash)) {
+                return transactionReceipt;
             }
         }
-        Transaction transaction = interactor.getTransactionReceipt(transactionHash);
+        TransactionReceipt transaction = interactor.getTransactionReceipt(transactionHash);
         cachedTransactions.add(transaction);
         return transaction;
     }
