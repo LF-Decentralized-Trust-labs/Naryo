@@ -21,6 +21,7 @@ import io.naryo.application.node.interactor.block.factory.hedera.HederaMirrorNod
 import io.naryo.application.node.interactor.block.mapper.BlockToBlockEventMapper;
 import io.naryo.application.node.subscription.block.factory.BlockSubscriberFactory;
 import io.naryo.application.node.subscription.block.factory.DefaultBlockSubscriberFactory;
+import io.naryo.application.node.trigger.permanent.block.ProcessorTriggerFactory;
 import io.naryo.domain.event.block.BlockEvent;
 import okhttp3.OkHttpClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -67,13 +68,20 @@ public class NodeAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(ProcessorTriggerFactory.class)
+    public ProcessorTriggerFactory processorTriggerFactory(ContractEventParameterDecoder decoder) {
+        return new ProcessorTriggerFactory(decoder);
+    }
+
+    @Bean
     public NodeInitializer nodeInitializer(
             NodeConfigurationFacade config,
             BlockInteractorFactory interactorFactory,
             BlockSubscriberFactory subscriberFactory,
+            ProcessorTriggerFactory processorFactory,
             ContractEventParameterDecoder decoder,
             List<BroadcasterProducer> producers) {
         return new NodeInitializer(
-                config, interactorFactory, subscriberFactory, decoder, producers);
+                config, interactorFactory, subscriberFactory, processorFactory, decoder, producers);
     }
 }
