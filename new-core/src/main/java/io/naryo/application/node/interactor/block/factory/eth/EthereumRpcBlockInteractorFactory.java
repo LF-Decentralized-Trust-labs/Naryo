@@ -7,12 +7,15 @@ import io.naryo.domain.node.Node;
 import io.naryo.domain.node.connection.NodeConnection;
 import io.naryo.domain.node.connection.http.HttpNodeConnection;
 import io.naryo.domain.node.connection.ws.WsNodeConnection;
+import io.naryo.domain.node.ethereum.priv.PrivateEthereumNode;
 import io.naryo.infrastructure.node.interactor.eth.rpc.EthereumRpcBlockInteractor;
+import io.naryo.infrastructure.node.interactor.eth.rpc.PrivateEthereumRpcBlockInteractor;
 import okhttp3.ConnectionPool;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jService;
+import org.web3j.protocol.besu.Besu;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.protocol.websocket.WebSocketClient;
 import org.web3j.protocol.websocket.WebSocketService;
@@ -26,7 +29,14 @@ public final class EthereumRpcBlockInteractorFactory {
     }
 
     public EthereumRpcBlockInteractor create(Node node) {
-        return new EthereumRpcBlockInteractor(Web3j.build(getWeb3jService(node.getConnection())));
+        Web3jService web3jService = getWeb3jService(node.getConnection());
+        Web3j web3j = Web3j.build(web3jService);
+        Besu besu = Besu.build(web3jService);
+
+        if (node instanceof PrivateEthereumNode) {
+            return new PrivateEthereumRpcBlockInteractor(web3j, besu);
+        }
+        return new EthereumRpcBlockInteractor(web3j);
     }
 
     private Web3jService getWeb3jService(NodeConnection connection) {
