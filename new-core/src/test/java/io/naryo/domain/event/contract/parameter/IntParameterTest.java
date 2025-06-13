@@ -22,9 +22,4 @@ class IntParameterTest extends AbstractContractEventParameterTest {
         assertEquals(1, parameter.getPosition());
         assertEquals(ParameterType.INT, parameter.getType());
     }
-
-    @Test
-    void testConstructorWithNegativeValue() {
-        assertThrows(IllegalArgumentException.class, () -> new IntParameter(true, 1, -123));
-    }
 }

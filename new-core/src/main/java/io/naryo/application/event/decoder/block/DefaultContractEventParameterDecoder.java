@@ -15,8 +15,8 @@ import io.naryo.domain.filter.event.parameter.ArrayParameterDefinition;
 import io.naryo.domain.filter.event.parameter.BytesFixedParameterDefinition;
 import io.naryo.domain.filter.event.parameter.StructParameterDefinition;
 
-import static io.naryo.application.common.util.EncryptionUtil.bytesToHex;
-import static io.naryo.application.common.util.EncryptionUtil.hexStringToByteArray;
+import static io.naryo.application.common.util.EncryptionUtil.arrayify;
+import static io.naryo.application.common.util.EncryptionUtil.hexlify;
 
 public final class DefaultContractEventParameterDecoder implements ContractEventParameterDecoder {
 
@@ -28,7 +28,7 @@ public final class DefaultContractEventParameterDecoder implements ContractEvent
     public Set<ContractEventParameter<?>> decode(
             EventFilterSpecification specification, String logData) {
 
-        byte[] data = hexStringToByteArray(logData);
+        byte[] data = arrayify(logData);
         int offset = 0;
 
         Set<ParameterDefinition> ordered =
@@ -63,7 +63,7 @@ public final class DefaultContractEventParameterDecoder implements ContractEvent
 
     private DecodeResult decodeAddress(byte[] data, int offset, ParameterDefinition definition) {
         byte[] slice = Arrays.copyOfRange(data, offset + 12, offset + 32);
-        String address = "0x" + bytesToHex(slice);
+        String address = hexlify(slice);
         return new DecodeResult(
                 new AddressParameter(definition.isIndexed(), definition.getPosition(), address),
                 offset + 32);

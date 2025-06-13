@@ -90,7 +90,7 @@ public final class EnvFilterConfigurationProvider implements FilterConfiguration
 
     private SyncState mapSync(SyncConfigurationProperties sync) {
         SyncState syncState = new NoSyncState();
-        if (sync.type() == SyncType.BLOCK_BASED) {
+        if (sync != null && sync.type() == SyncType.BLOCK_BASED) {
             BlockSyncConfigurationAdditionalProperties props =
                     (BlockSyncConfigurationAdditionalProperties) sync.configuration();
             syncState =
@@ -103,6 +103,9 @@ public final class EnvFilterConfigurationProvider implements FilterConfiguration
 
     private EventFilterSpecification mapSpecification(EventSpecification configSpec) {
         return new EventFilterSpecification(
-                configSpec.signature(), new CorrelationId(configSpec.correlationId().position()));
+                configSpec.signature(),
+                configSpec.correlationId() == null
+                        ? null
+                        : new CorrelationId(configSpec.correlationId().position()));
     }
 }

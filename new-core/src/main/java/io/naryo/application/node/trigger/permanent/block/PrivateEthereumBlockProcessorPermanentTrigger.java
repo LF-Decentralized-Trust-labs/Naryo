@@ -110,12 +110,9 @@ public final class PrivateEthereumBlockProcessorPermanentTrigger
                                                 logBloom ->
                                                         BloomFilterUtil.bloomFilterMatch(
                                                                 logBloom,
-                                                                BloomFilterUtil
-                                                                        .getBloomBitsForFilter(
-                                                                                contractFilter
-                                                                                        .getContractAddress(),
-                                                                                filter.getSpecification()
-                                                                                        .getEventSignature())));
+                                                                contractFilter.getContractAddress(),
+                                                                filter.getSpecification()
+                                                                        .getEventSignature()));
                             }
 
                             if (filter instanceof GlobalEventFilter) {

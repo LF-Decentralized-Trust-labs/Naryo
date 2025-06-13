@@ -100,7 +100,7 @@ public final class EnvNodeConfigurationProvider implements NodeConfigurationProv
     }
 
     private CommonParams buildCommon(NodeProperties props) {
-        UUID id = UUID.randomUUID();
+        UUID id = props.id();
         NodeName name = new NodeName(props.name());
         var subscription = buildSubscription(props.subscription().configuration());
         var interaction = buildInteraction(props.interaction().configuration());
@@ -123,7 +123,7 @@ public final class EnvNodeConfigurationProvider implements NodeConfigurationProv
                 };
         return new BlockSubscriptionConfiguration(
                 method,
-                new NonNegativeBlockNumber(props.initialBlock()),
+                props.initialBlock(),
                 new NonNegativeBlockNumber(BigInteger.ZERO),
                 new NonNegativeBlockNumber(props.confirmationBlocks()),
                 new NonNegativeBlockNumber(props.missingTxRetryBlocks()),
