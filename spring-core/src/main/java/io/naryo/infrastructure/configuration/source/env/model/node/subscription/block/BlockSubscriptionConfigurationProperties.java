@@ -17,7 +17,7 @@ public record BlockSubscriptionConfigurationProperties(
         @NotNull BigInteger syncBlockLimit)
         implements SubscriptionConfigurationProperties {
 
-    private static final BigInteger DEFAULT_INITIAL_BLOCK = BigInteger.ZERO;
+    private static final BigInteger DEFAULT_INITIAL_BLOCK = BigInteger.valueOf(-1);
     private static final BigInteger DEFAULT_CONFIRMATION_BLOCKS = BigInteger.valueOf(12);
     private static final BigInteger DEFAULT_MISSING_TX_RETRY_BLOCKS = BigInteger.valueOf(200);
     private static final BigInteger DEFAULT_EVENT_INVALIDATION_BLOCK_THRESHOLD = BigInteger.TWO;

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import io.naryo.application.common.util.EncryptionUtil;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.filter.util.BloomFilterUtil;
 import io.naryo.application.node.helper.ContractEventDispatcherHelper;
@@ -23,6 +22,8 @@ import io.naryo.domain.filter.event.GlobalEventFilter;
 import io.naryo.domain.node.Node;
 import io.reactivex.functions.Consumer;
 import lombok.extern.slf4j.Slf4j;
+
+import static io.naryo.application.common.util.EncryptionUtil.sha3String;
 
 @Slf4j
 public class BlockProcessorPermanentTrigger<N extends Node, I extends BlockInteractor>
@@ -59,14 +60,11 @@ public class BlockProcessorPermanentTrigger<N extends Node, I extends BlockInter
                     log.address().equals(contractFilter.getContractAddress())
                             && log.topics()
                                     .contains(
-                                            EncryptionUtil.keccak256Hex(
+                                            sha3String(
                                                     filter.getSpecification().getEventSignature()));
         }
         return log ->
-                log.topics()
-                        .contains(
-                                EncryptionUtil.keccak256Hex(
-                                        filter.getSpecification().getEventSignature()));
+                log.topics().contains(sha3String(filter.getSpecification().getEventSignature()));
     }
 
     @Override
@@ -108,10 +106,18 @@ public class BlockProcessorPermanentTrigger<N extends Node, I extends BlockInter
         }
         log.debug("Found {} logs for block event {}", logs.size(), event);
 
+        int filterCount = 0;
         for (EventFilter filter : foundFilters) {
             Predicate<Log> predicate = getLogPredicate(filter);
-            logs.stream().filter(predicate).forEach(value -> processLog(event, filter, value));
+            List<Log> foundLogs = logs.stream().filter(predicate).toList();
+            foundLogs.forEach(value -> processLog(event, filter, value));
+            filterCount += foundLogs.size();
         }
+        log.info(
+                "Processed {} logs for {} filters for block event {}",
+                filterCount,
+                foundFilters.size(),
+                event.getNumber().value());
     }
 
     protected void processLog(BlockEvent event, EventFilter filter, Log value) {
@@ -163,9 +169,8 @@ public class BlockProcessorPermanentTrigger<N extends Node, I extends BlockInter
                             if (filter instanceof ContractEventFilter contractFilter) {
                                 return BloomFilterUtil.bloomFilterMatch(
                                         event.getLogsBloom(),
-                                        BloomFilterUtil.getBloomBitsForFilter(
-                                                contractFilter.getContractAddress(),
-                                                filter.getSpecification().getEventSignature()));
+                                        filter.getSpecification().getEventSignature(),
+                                        contractFilter.getContractAddress());
                             }
 
                             if (filter instanceof GlobalEventFilter) {

@@ -4,12 +4,13 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.time.Duration;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import io.naryo.application.common.util.EncryptionUtil;
 import io.naryo.application.event.decoder.block.DefaultContractEventParameterDecoder;
+import io.naryo.application.filter.util.BloomFilterUtil;
 import io.naryo.application.node.dispatch.Dispatcher;
 import io.naryo.application.node.helper.ContractEventDispatcherHelper;
 import io.naryo.application.node.interactor.block.BlockInteractor;
@@ -33,7 +34,6 @@ import io.naryo.domain.filter.event.parameter.AddressParameterDefinition;
 import io.naryo.domain.filter.event.sync.NoSyncState;
 import io.naryo.domain.node.Node;
 import io.naryo.domain.node.NodeName;
-import io.naryo.domain.node.NodeRepository;
 import io.naryo.domain.node.NodeType;
 import io.naryo.domain.node.connection.RetryConfiguration;
 import io.naryo.domain.node.connection.http.*;
@@ -51,11 +51,15 @@ class BlockProcessorPermanentTriggerTest {
             new DefaultContractEventParameterDecoder();
 
     private static BlockEvent createBlockEvent(UUID nodeId) {
+        return createBlockEvent(nodeId, "0x0");
+    }
+
+    private static BlockEvent createBlockEvent(UUID nodeId, String logBloom) {
         return new BlockEvent(
                 nodeId,
                 new NonNegativeBlockNumber(BigInteger.ZERO),
                 "0x0",
-                "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000100000000000000000002000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                logBloom,
                 BigInteger.ZERO,
                 BigInteger.ZERO,
                 BigInteger.ZERO,
@@ -201,7 +205,7 @@ class BlockProcessorPermanentTriggerTest {
     @Test
     void testOnExecuteDoesNotThrow() {
         BlockInteractor interactor = new MockBlockInteractor();
-        BlockProcessorPermanentTrigger trigger =
+        BlockProcessorPermanentTrigger<MockNode, BlockInteractor> trigger =
                 new BlockProcessorPermanentTrigger<>(
                         new MockNode(),
                         List.of(),
@@ -216,7 +220,7 @@ class BlockProcessorPermanentTriggerTest {
         MockNode node = new MockNode();
         TestDispatcher dispatcher = new TestDispatcher();
         BlockInteractor interactor = new MockBlockInteractor();
-        BlockProcessorPermanentTrigger trigger =
+        BlockProcessorPermanentTrigger<MockNode, BlockInteractor> trigger =
                 new BlockProcessorPermanentTrigger<>(
                         node,
                         List.of(),
@@ -232,7 +236,7 @@ class BlockProcessorPermanentTriggerTest {
         MockNode node = new MockNode();
         TestDispatcher dispatcher = new TestDispatcher();
         BlockInteractor interactor = new MockBlockInteractor();
-        BlockProcessorPermanentTrigger trigger =
+        BlockProcessorPermanentTrigger<MockNode, BlockInteractor> trigger =
                 new BlockProcessorPermanentTrigger<>(
                         node,
                         List.of(
@@ -259,7 +263,7 @@ class BlockProcessorPermanentTriggerTest {
         Node node = new MockNode();
         TestDispatcher dispatcher = new TestDispatcher();
         BlockInteractor interactor = new MockBlockInteractor();
-        BlockProcessorPermanentTrigger trigger =
+        BlockProcessorPermanentTrigger<Node, MockBlockInteractor> trigger =
                 new BlockProcessorPermanentTrigger<>(
                         node,
                         List.of(
@@ -298,27 +302,33 @@ class BlockProcessorPermanentTriggerTest {
                         List.of(
                                 "0xaa9449f2bca09a7b28319d46fd3f3b58a1bb7d94039fc4b69b7bfe5d8535d527"));
         BlockInteractor interactor = new MockBlockInteractor(log);
-        BlockProcessorPermanentTrigger trigger =
+        var filter =
+                new GlobalEventFilter(
+                        node.getId(),
+                        new FilterName("test"),
+                        node.getId(),
+                        new EventFilterSpecification(
+                                new EventName("Test"),
+                                null,
+                                Set.of(new AddressParameterDefinition(0, false))),
+                        List.of(ContractEventStatus.UNCONFIRMED, ContractEventStatus.CONFIRMED),
+                        new NoSyncState());
+        BlockProcessorPermanentTrigger<Node, BlockInteractor> trigger =
                 new BlockProcessorPermanentTrigger<>(
                         node,
-                        List.of(
-                                new ContractEventFilter(
-                                        node.getId(),
-                                        new FilterName("test"),
-                                        node.getId(),
-                                        new EventFilterSpecification(
-                                                new EventName("Test"),
-                                                null,
-                                                Set.of(new AddressParameterDefinition(0, false))),
-                                        List.of(
-                                                ContractEventStatus.UNCONFIRMED,
-                                                ContractEventStatus.CONFIRMED),
-                                        new NoSyncState(),
-                                        "0xa6c9f780caeafc2b8e83469a8b6422c22fa39ba1")),
+                        List.of(filter),
                         interactor,
                         decoder,
                         new ContractEventDispatcherHelper(dispatcher, interactor));
-        assertDoesNotThrow(() -> trigger.trigger(createBlockEvent(node.getId())));
+        assertDoesNotThrow(
+                () ->
+                        trigger.trigger(
+                                createBlockEvent(
+                                        node.getId(),
+                                        EncryptionUtil.hexlify(
+                                                BloomFilterUtil.buildBloom(
+                                                        filter.getSpecification()
+                                                                .getEventSignature())))));
         assertTrue(dispatcher.isDispatched());
     }
 
@@ -339,26 +349,33 @@ class BlockProcessorPermanentTriggerTest {
                         List.of(
                                 "0xaa9449f2bca09a7b28319d46fd3f3b58a1bb7d94039fc4b69b7bfe5d8535d527"));
         BlockInteractor interactor = new MockBlockInteractor(log);
-        BlockProcessorPermanentTrigger trigger =
+        var filter =
+                new GlobalEventFilter(
+                        node.getId(),
+                        new FilterName("test"),
+                        node.getId(),
+                        new EventFilterSpecification(
+                                new EventName("Test"),
+                                null,
+                                Set.of(new AddressParameterDefinition(0, false))),
+                        List.of(ContractEventStatus.UNCONFIRMED, ContractEventStatus.CONFIRMED),
+                        new NoSyncState());
+        BlockProcessorPermanentTrigger<Node, BlockInteractor> trigger =
                 new BlockProcessorPermanentTrigger<>(
                         node,
-                        List.of(
-                                new GlobalEventFilter(
-                                        node.getId(),
-                                        new FilterName("test"),
-                                        node.getId(),
-                                        new EventFilterSpecification(
-                                                new EventName("Test"),
-                                                null,
-                                                Set.of(new AddressParameterDefinition(0, false))),
-                                        List.of(
-                                                ContractEventStatus.UNCONFIRMED,
-                                                ContractEventStatus.CONFIRMED),
-                                        new NoSyncState())),
+                        List.of(filter),
                         interactor,
                         decoder,
                         new ContractEventDispatcherHelper(dispatcher, interactor));
-        assertDoesNotThrow(() -> trigger.trigger(createBlockEvent(node.getId())));
+        assertDoesNotThrow(
+                () ->
+                        trigger.trigger(
+                                createBlockEvent(
+                                        node.getId(),
+                                        EncryptionUtil.hexlify(
+                                                BloomFilterUtil.buildBloom(
+                                                        filter.getSpecification()
+                                                                .getEventSignature())))));
         assertTrue(dispatcher.isDispatched());
     }
 
@@ -379,33 +396,40 @@ class BlockProcessorPermanentTriggerTest {
                         List.of(
                                 "0xaa9449f2bca09a7b28319d46fd3f3b58a1bb7d94039fc4b69b7bfe5d8535d527"));
         BlockInteractor interactor = new MockBlockInteractor(log);
-        BlockProcessorPermanentTrigger trigger =
+        var filter =
+                new GlobalEventFilter(
+                        node.getId(),
+                        new FilterName("test"),
+                        node.getId(),
+                        new EventFilterSpecification(
+                                new EventName("Test"),
+                                null,
+                                Set.of(new AddressParameterDefinition(0, false))),
+                        List.of(ContractEventStatus.UNCONFIRMED, ContractEventStatus.CONFIRMED),
+                        new NoSyncState());
+        BlockProcessorPermanentTrigger<Node, BlockInteractor> trigger =
                 new BlockProcessorPermanentTrigger<>(
                         node,
-                        List.of(
-                                new GlobalEventFilter(
-                                        node.getId(),
-                                        new FilterName("test"),
-                                        node.getId(),
-                                        new EventFilterSpecification(
-                                                new EventName("Test"),
-                                                null,
-                                                Set.of(new AddressParameterDefinition(0, false))),
-                                        List.of(
-                                                ContractEventStatus.UNCONFIRMED,
-                                                ContractEventStatus.CONFIRMED),
-                                        new NoSyncState())),
+                        List.of(filter),
                         interactor,
                         decoder,
                         new ContractEventDispatcherHelper(dispatcher, interactor));
-        assertDoesNotThrow(() -> trigger.trigger(createBlockEvent(node.getId())));
+        assertDoesNotThrow(
+                () ->
+                        trigger.trigger(
+                                createBlockEvent(
+                                        node.getId(),
+                                        EncryptionUtil.hexlify(
+                                                BloomFilterUtil.buildBloom(
+                                                        filter.getSpecification()
+                                                                .getEventSignature())))));
         assertTrue(dispatcher.isDispatched());
     }
 
     @Test
     void testCallbackInvocation() {
         BlockInteractor interactor = new MockBlockInteractor();
-        BlockProcessorPermanentTrigger trigger =
+        BlockProcessorPermanentTrigger<MockNode, BlockInteractor> trigger =
                 new BlockProcessorPermanentTrigger<>(
                         new MockNode(),
                         List.of(),
@@ -456,7 +480,7 @@ class BlockProcessorPermanentTriggerTest {
                     NodeType.ETHEREUM,
                     new BlockSubscriptionConfiguration(
                             new PubSubBlockSubscriptionMethodConfiguration(),
-                            new NonNegativeBlockNumber(BigInteger.ZERO),
+                            BigInteger.ZERO,
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(confirmationBlocks),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
@@ -583,23 +607,6 @@ class BlockProcessorPermanentTriggerTest {
 
         public boolean isDispatched() {
             return dispatched.get();
-        }
-    }
-
-    private static class DefaultNodeRepository implements NodeRepository {
-        private final Node node;
-
-        private DefaultNodeRepository() {
-            this.node = null;
-        }
-
-        private DefaultNodeRepository(Node node) {
-            this.node = node;
-        }
-
-        @Override
-        public Optional<Node> findById(UUID id) {
-            return node != null ? Optional.of(node) : Optional.empty();
         }
     }
 }

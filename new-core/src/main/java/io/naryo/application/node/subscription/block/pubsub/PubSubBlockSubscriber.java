@@ -42,6 +42,7 @@ public final class PubSubBlockSubscriber extends BlockSubscriber {
 
     @Override
     public Disposable subscribe() throws IOException {
+        log.info("Subscribing to block for node {}", node.getId());
         CompositeDisposable compositeDisposable = new CompositeDisposable();
         compositeDisposable.add(
                 interactor

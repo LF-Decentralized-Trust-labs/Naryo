@@ -4,8 +4,7 @@ import io.naryo.domain.common.ParameterType;
 import io.naryo.domain.event.contract.AbstractContractEventParameterTest;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class UintParameterTest extends AbstractContractEventParameterTest {
 
@@ -22,5 +21,10 @@ class UintParameterTest extends AbstractContractEventParameterTest {
         assertTrue(parameter.isIndexed());
         assertEquals(1, parameter.getPosition());
         assertEquals(ParameterType.UINT, parameter.getType());
+    }
+
+    @Test
+    void testConstructorWithNegativeValue() {
+        assertThrows(IllegalArgumentException.class, () -> new UintParameter(true, 1, -123));
     }
 }

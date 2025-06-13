@@ -28,6 +28,7 @@ public final class PollBlockSubscriber extends BlockSubscriber {
 
     @Override
     public Disposable subscribe() throws IOException {
+        log.info("Subscribing to block for node {}", node.getId());
         return interactor
                 .replayPastAndFutureBlocks(calculator.getStartBlock())
                 .subscribe(
