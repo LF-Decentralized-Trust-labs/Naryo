@@ -1,5 +1,6 @@
 package io.naryo.domain.node.subscription.block;
 
+import java.math.BigInteger;
 import java.util.Objects;
 
 import io.naryo.domain.common.NonNegativeBlockNumber;
@@ -16,7 +17,7 @@ import lombok.ToString;
 public final class BlockSubscriptionConfiguration extends SubscriptionConfiguration {
 
     private final BlockSubscriptionMethodConfiguration methodConfiguration;
-    private final NonNegativeBlockNumber initialBlock;
+    private final BigInteger initialBlock;
     private final NonNegativeBlockNumber latestBlock;
     private final NonNegativeBlockNumber confirmationBlocks;
     private final NonNegativeBlockNumber missingTxRetryBlocks;
@@ -26,7 +27,7 @@ public final class BlockSubscriptionConfiguration extends SubscriptionConfigurat
 
     public BlockSubscriptionConfiguration(
             BlockSubscriptionMethodConfiguration methodConfiguration,
-            NonNegativeBlockNumber initialBlock,
+            BigInteger initialBlock,
             NonNegativeBlockNumber latestBlock,
             NonNegativeBlockNumber confirmationBlocks,
             NonNegativeBlockNumber missingTxRetryBlocks,

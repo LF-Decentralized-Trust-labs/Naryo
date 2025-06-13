@@ -14,6 +14,8 @@ import io.naryo.infrastructure.broadcaster.http.configuration.HttpBroadcasterCon
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 
+import static io.naryo.domain.common.connection.endpoint.ConnectionEndpoint.cleanPath;
+
 @Slf4j
 public final class HttpBroadcasterProducer implements BroadcasterProducer {
 
@@ -33,7 +35,7 @@ public final class HttpBroadcasterProducer implements BroadcasterProducer {
         final ConnectionEndpoint endpoint =
                 ((HttpBroadcasterConfiguration) configuration).getEndpoint();
         var unparsedUrl =
-                endpoint.getUrl() + "/" + broadcaster.getTarget().getDestination().value();
+                endpoint.getUrl() + cleanPath(broadcaster.getTarget().getDestination().value());
         var url = HttpUrl.parse(unparsedUrl);
         if (url == null) {
             throw new IllegalArgumentException("Invalid URL: " + unparsedUrl);

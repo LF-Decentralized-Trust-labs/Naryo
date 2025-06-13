@@ -45,8 +45,7 @@ class StartBlockCalculatorTest {
         when(node.getSubscriptionConfiguration()).thenReturn(configuration);
         when(configuration.getLatestBlock())
                 .thenReturn(new NonNegativeBlockNumber(BigInteger.ZERO));
-        when(configuration.getInitialBlock())
-                .thenReturn(new NonNegativeBlockNumber(BigInteger.TEN));
+        when(configuration.getInitialBlock()).thenReturn(BigInteger.TEN);
         StartBlockCalculator calculator = new StartBlockCalculator(node, interactor);
         BigInteger startBlock = calculator.getStartBlock();
         assertEquals(BigInteger.TEN, startBlock);
@@ -57,8 +56,7 @@ class StartBlockCalculatorTest {
         when(node.getSubscriptionConfiguration()).thenReturn(configuration);
         when(configuration.getLatestBlock())
                 .thenReturn(new NonNegativeBlockNumber(BigInteger.ZERO));
-        when(configuration.getInitialBlock())
-                .thenReturn(new NonNegativeBlockNumber(BigInteger.ZERO));
+        when(configuration.getInitialBlock()).thenReturn(BigInteger.valueOf(-1));
         when(interactor.getCurrentBlockNumber()).thenReturn(BigInteger.TWO);
         StartBlockCalculator calculator = new StartBlockCalculator(node, interactor);
         BigInteger startBlock = calculator.getStartBlock();

@@ -2,68 +2,93 @@ package io.naryo.application.common.util;
 
 import java.nio.charset.StandardCharsets;
 
-import org.bouncycastle.crypto.digests.KeccakDigest;
+import org.bouncycastle.jcajce.provider.digest.Keccak;
+import org.web3j.utils.Strings;
 
 public final class EncryptionUtil {
 
-    public static byte[] keccak256(byte[] input) {
-        KeccakDigest keccak = new KeccakDigest(256);
-        keccak.update(input, 0, input.length);
-        byte[] out = new byte[32];
-        keccak.doFinal(out, 0);
-        return out;
+    private static final String HEX_PREFIX = "0x";
+    private static final char[] HEX_CHAR_MAP = "0123456789abcdef".toCharArray();
+
+    public static byte[] sha3(byte[] input) {
+        Keccak.DigestKeccak kecc = new Keccak.Digest256();
+        kecc.update(input, 0, input.length);
+        return kecc.digest();
     }
 
-    public static String keccak256Hex(String text) {
-        byte[] h = keccak256(text.getBytes(StandardCharsets.UTF_8));
-        StringBuilder sb = new StringBuilder("0x");
-        for (byte b : h) {
-            sb.append(String.format("%02x", b & 0xFF));
-        }
-        return sb.toString();
+    public static byte[] sha3(String input) {
+        return sha3(
+                containsHexPrefix(input)
+                        ? arrayify(input)
+                        : input.getBytes(StandardCharsets.UTF_8));
     }
 
-    public static byte[] hexStringToByteArray(String hex) {
-        if (hex == null) {
-            throw new IllegalArgumentException("Input hex string is null");
-        }
-        String s = hex.trim();
-        if (s.startsWith("0x") || s.startsWith("0X")) {
-            s = s.substring(2);
-        }
+    public static String sha3String(String input) {
+        return hexlify(sha3(input));
+    }
 
-        s = s.replaceAll("[^0-9A-Fa-f]", "");
+    public static String hexlify(byte[] data) {
+        final String output = new String(toHexCharArray(data, data.length));
+        return HEX_PREFIX + output;
+    }
 
-        if ((s.length() & 1) == 1) {
-            s = "0" + s;
-        }
+    /**
+     * This method assumes the input is a valid hex string
+     *
+     * @param input Hex string
+     * @return Byte array
+     */
+    public static byte[] arrayify(String input) {
+        String cleanInput = cleanHexPrefix(input);
 
-        int len = s.length();
-        byte[] data = new byte[len / 2];
+        int len = cleanInput.length();
 
-        for (int i = 0; i < len; i += 2) {
-            int hi = Character.digit(s.charAt(i), 16);
-            int lo = Character.digit(s.charAt(i + 1), 16);
-            if (hi < 0 || lo < 0) {
-                throw new IllegalArgumentException(
-                        "Invalid hex digit at pos "
-                                + i
-                                + ": '"
-                                + s.charAt(i)
-                                + s.charAt(i + 1)
-                                + "'");
-            }
-            data[i / 2] = (byte) ((hi << 4) + lo);
+        if (len == 0) {
+            return new byte[] {};
         }
 
+        byte[] data;
+        int startIdx;
+        if (len % 2 != 0) {
+            data = new byte[(len / 2) + 1];
+            data[0] = (byte) Character.digit(cleanInput.charAt(0), 16);
+            startIdx = 1;
+        } else {
+            data = new byte[len / 2];
+            startIdx = 0;
+        }
+
+        for (int i = startIdx; i < len; i += 2) {
+            data[(i + 1) / 2] =
+                    (byte)
+                            ((Character.digit(cleanInput.charAt(i), 16) << 4)
+                                    + Character.digit(cleanInput.charAt(i + 1), 16));
+        }
         return data;
     }
 
-    public static String bytesToHex(byte[] bytes) {
-        StringBuilder sb = new StringBuilder();
-        for (byte b : bytes) {
-            sb.append(String.format("%02x", b));
+    public static String cleanHexPrefix(String input) {
+        if (containsHexPrefix(input)) {
+            return input.substring(2);
+        } else {
+            return input;
         }
-        return sb.toString();
+    }
+
+    public static boolean containsHexPrefix(String input) {
+        return !Strings.isEmpty(input)
+                && input.length() > 1
+                && input.charAt(0) == '0'
+                && input.charAt(1) == 'x';
+    }
+
+    private static char[] toHexCharArray(byte[] input, int length) {
+        final char[] output = new char[length << 1];
+        for (int i = 0, j = 0; i < length; i++, j++) {
+            final int v = input[i] & 0xFF;
+            output[j++] = HEX_CHAR_MAP[v >>> 4];
+            output[j] = HEX_CHAR_MAP[v & 0x0F];
+        }
+        return output;
     }
 }

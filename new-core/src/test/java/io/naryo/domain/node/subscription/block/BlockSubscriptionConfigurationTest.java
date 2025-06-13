@@ -17,7 +17,7 @@ final class BlockSubscriptionConfigurationTest {
         BlockSubscriptionConfiguration config =
                 new BlockSubscriptionConfiguration(
                         new MockBlockSubscriptionMethodConfiguration(),
-                        new NonNegativeBlockNumber(BigInteger.ZERO),
+                        BigInteger.ZERO,
                         new NonNegativeBlockNumber(BigInteger.ZERO),
                         new NonNegativeBlockNumber(BigInteger.ZERO),
                         new NonNegativeBlockNumber(BigInteger.ZERO),
@@ -34,7 +34,7 @@ final class BlockSubscriptionConfigurationTest {
                 () -> {
                     new BlockSubscriptionConfiguration(
                             null,
-                            new NonNegativeBlockNumber(BigInteger.ZERO),
+                            BigInteger.ZERO,
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
@@ -68,7 +68,7 @@ final class BlockSubscriptionConfigurationTest {
                 () -> {
                     new BlockSubscriptionConfiguration(
                             new MockBlockSubscriptionMethodConfiguration(),
-                            new NonNegativeBlockNumber(BigInteger.ZERO),
+                            BigInteger.ZERO,
                             null,
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
@@ -85,7 +85,7 @@ final class BlockSubscriptionConfigurationTest {
                 () -> {
                     new BlockSubscriptionConfiguration(
                             new MockBlockSubscriptionMethodConfiguration(),
-                            new NonNegativeBlockNumber(BigInteger.ZERO),
+                            BigInteger.ZERO,
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             null,
                             new NonNegativeBlockNumber(BigInteger.ZERO),
@@ -102,7 +102,7 @@ final class BlockSubscriptionConfigurationTest {
                 () -> {
                     new BlockSubscriptionConfiguration(
                             new MockBlockSubscriptionMethodConfiguration(),
-                            new NonNegativeBlockNumber(BigInteger.ZERO),
+                            BigInteger.ZERO,
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             null,
@@ -119,7 +119,7 @@ final class BlockSubscriptionConfigurationTest {
                 () -> {
                     new BlockSubscriptionConfiguration(
                             new MockBlockSubscriptionMethodConfiguration(),
-                            new NonNegativeBlockNumber(BigInteger.ZERO),
+                            BigInteger.ZERO,
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
@@ -136,7 +136,7 @@ final class BlockSubscriptionConfigurationTest {
                 () -> {
                     new BlockSubscriptionConfiguration(
                             new MockBlockSubscriptionMethodConfiguration(),
-                            new NonNegativeBlockNumber(BigInteger.ZERO),
+                            BigInteger.ZERO,
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
@@ -153,7 +153,7 @@ final class BlockSubscriptionConfigurationTest {
                 () -> {
                     new BlockSubscriptionConfiguration(
                             new MockBlockSubscriptionMethodConfiguration(),
-                            new NonNegativeBlockNumber(BigInteger.ZERO),
+                            BigInteger.ZERO,
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),

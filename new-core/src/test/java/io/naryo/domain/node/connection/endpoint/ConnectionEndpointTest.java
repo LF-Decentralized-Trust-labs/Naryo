@@ -13,7 +13,7 @@ class ConnectionEndpointTest {
     @Test
     void testConnectionEndpointCreation() {
         ConnectionEndpoint endpoint = new ConnectionEndpoint("http://example.com");
-        assertEquals("http://example.com:80/", endpoint.getUrl());
+        assertEquals("http://example.com", endpoint.getUrl());
     }
 
     @Test

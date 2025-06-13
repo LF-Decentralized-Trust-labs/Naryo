@@ -7,6 +7,7 @@ import io.naryo.domain.filter.event.EventFilterScope;
 import io.naryo.infrastructure.configuration.source.env.model.filter.FilterConfigurationProperties;
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.SyncConfigurationProperties;
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.visibility.EventFilterVisibilityConfigurationProperties;
+import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -15,7 +16,7 @@ public record EventFilterConfigurationProperties(
         @NotNull EventFilterScope scope,
         @Valid @NotNull EventSpecification specification,
         @NotEmpty List<ContractEventStatus> statuses,
-        @Valid @NotNull SyncConfigurationProperties sync,
+        @Valid @Nullable SyncConfigurationProperties sync,
         @Valid @NotNull EventFilterVisibilityConfigurationProperties visibilityConfiguration,
         @Valid @NotNull EventFilterConfigurationAdditionalProperties configuration)
         implements FilterConfigurationProperties {
