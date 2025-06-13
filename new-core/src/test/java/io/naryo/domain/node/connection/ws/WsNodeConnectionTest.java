@@ -18,7 +18,7 @@ class WsNodeConnectionTest {
                         new RetryConfiguration(3, Duration.ofSeconds(5)));
 
         assertNotNull(connection);
-        assertEquals("wss://example.com:443/", connection.getEndpoint().getUrl());
+        assertEquals("wss://example.com", connection.getEndpoint().getUrl());
         assertEquals(3, connection.getRetryConfiguration().times());
         assertEquals(Duration.ofSeconds(5), connection.getRetryConfiguration().backoff());
     }

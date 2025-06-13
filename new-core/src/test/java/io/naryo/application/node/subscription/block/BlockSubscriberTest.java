@@ -95,7 +95,7 @@ public abstract class BlockSubscriberTest {
                 new NodeName("MockNode"),
                 new BlockSubscriptionConfiguration(
                         new PubSubBlockSubscriptionMethodConfiguration(),
-                        new NonNegativeBlockNumber(BigInteger.valueOf(start)),
+                        BigInteger.valueOf(start),
                         new NonNegativeBlockNumber(BigInteger.ZERO),
                         new NonNegativeBlockNumber(BigInteger.ZERO),
                         new NonNegativeBlockNumber(BigInteger.ZERO),

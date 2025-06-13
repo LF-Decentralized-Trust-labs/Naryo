@@ -22,7 +22,7 @@ class HttpNodeConnectionTest {
                         new ReadTimeout(Duration.ofSeconds(1)));
 
         assertNotNull(connection);
-        assertEquals("http://example.com:80/", connection.getEndpoint().getUrl());
+        assertEquals("http://example.com", connection.getEndpoint().getUrl());
         assertEquals(3, connection.getRetryConfiguration().times());
         assertEquals(Duration.ofSeconds(5), connection.getRetryConfiguration().backoff());
         assertEquals(5, connection.getMaxIdleConnections().value());

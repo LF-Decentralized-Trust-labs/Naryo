@@ -2,11 +2,12 @@ package io.naryo.application.node.trigger.disposable.block;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.List;
 import java.util.Set;
 
 import io.naryo.application.node.dispatch.Dispatcher;
 import io.naryo.application.node.interactor.block.BlockInteractor;
-import io.naryo.application.node.interactor.block.dto.Transaction;
+import io.naryo.application.node.interactor.block.dto.TransactionReceipt;
 import io.naryo.application.node.trigger.Trigger;
 import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.common.event.ContractEventStatus;
@@ -76,19 +77,21 @@ class ContractEventConfirmationDisposableTriggerTest {
                         java.util.Collections.emptyList());
 
         doReturn(
-                        new Transaction(
+                        new TransactionReceipt(
                                 contractEvent.getTransactionHash(),
-                                BigInteger.ZERO,
-                                BigInteger.ZERO,
-                                BigInteger.TEN,
+                                BigInteger.ONE,
                                 blockEvent.getHash(),
-                                "0x1",
-                                "0xfrom",
-                                "0xto",
-                                "0xdata",
-                                "0xvalue",
-                                "0xLogBloom",
-                                "0xRevertReason"))
+                                BigInteger.TEN,
+                                BigInteger.ONE,
+                                BigInteger.ONE,
+                                "0xabcdef1234567890",
+                                "0x0",
+                                "0xabcdef1234567890",
+                                "0xabcdef1234567890",
+                                List.of(),
+                                "0x0",
+                                "0x0",
+                                "0x0"))
                 .when(interactor)
                 .getTransactionReceipt(contractEvent.getTransactionHash());
 

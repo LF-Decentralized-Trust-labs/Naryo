@@ -45,9 +45,9 @@ class DefaultContractEventParameterDecoderTest {
                         + "0000000000000000000000000000000000000000000000000000000000000000" // param2: bool(false)
                         + "deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef" // param3: bytes32
                         + "0000000000000000000000000000000000000000000000000000000000000160" // param4: offset → 0x160
-                        + "00000000000000000000000000000000000000000000000000000000000004d2" // param7: int256(1234)
+                        + "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" // param5: int256(-1)
                         + "00000000000000000000000000000000000000000000000000000000000001a0" // param6: offset → 0x1a0
-                        + "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff" // param5: uint256(-1)
+                        + "00000000000000000000000000000000000000000000000000000000000004d2" // param7: uint256(1234)
 
                         // ──────────────────────────────── tail @ 0x100 (array)
                         // ────────────────────────────────

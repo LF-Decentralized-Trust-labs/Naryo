@@ -5,9 +5,12 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.naryo.application.broadcaster.BroadcasterProducer;
+import io.naryo.application.broadcaster.configuration.manager.BroadcasterConfigurationConfigurationManager;
+import io.naryo.application.broadcaster.configuration.manager.BroadcasterConfigurationManager;
 import io.naryo.application.common.Mapper;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.event.decoder.block.DefaultContractEventParameterDecoder;
+import io.naryo.application.filter.configuration.manager.FilterConfigurationManager;
 import io.naryo.application.node.NodeConfigurationFacade;
 import io.naryo.application.node.NodeInitializer;
 import io.naryo.application.node.configuration.manager.DefaultNodeConfigurationManager;
@@ -71,6 +74,21 @@ public class NodeAutoConfiguration {
     @ConditionalOnMissingBean(ProcessorTriggerFactory.class)
     public ProcessorTriggerFactory processorTriggerFactory(ContractEventParameterDecoder decoder) {
         return new ProcessorTriggerFactory(decoder);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(NodeConfigurationFacade.class)
+    public NodeConfigurationFacade nodeConfigurationFacade(
+            BroadcasterConfigurationConfigurationManager
+                    broadcasterConfigurationConfigurationManager,
+            BroadcasterConfigurationManager broadcasterConfigurationManager,
+            FilterConfigurationManager filterConfigurationManager,
+            NodeConfigurationManager nodeConfigurationManager) {
+        return new NodeConfigurationFacade(
+                broadcasterConfigurationConfigurationManager,
+                broadcasterConfigurationManager,
+                filterConfigurationManager,
+                nodeConfigurationManager);
     }
 
     @Bean
