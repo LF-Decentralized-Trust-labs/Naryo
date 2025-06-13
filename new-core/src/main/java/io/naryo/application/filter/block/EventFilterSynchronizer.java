@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import io.naryo.application.common.util.EncryptionUtil;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.filter.Synchronizer;
 import io.naryo.application.node.calculator.StartBlockCalculator;
@@ -25,6 +24,8 @@ import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+
+import static io.naryo.application.common.util.EncryptionUtil.sha3String;
 
 @Slf4j
 public final class EventFilterSynchronizer implements Synchronizer {
@@ -61,7 +62,7 @@ public final class EventFilterSynchronizer implements Synchronizer {
 
     @Override
     public Disposable synchronize() throws IOException {
-        String topic = EncryptionUtil.keccak256Hex(filter.getSpecification().getEventSignature());
+        String topic = sha3String(filter.getSpecification().getEventSignature());
 
         return Flowable.fromIterable(extractLogsFromFilter(topic))
                 .subscribe(

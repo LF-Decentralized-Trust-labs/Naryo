@@ -42,6 +42,28 @@ public final class ConnectionEndpoint {
     }
 
     public String getUrl() {
-        return protocol + "://" + host + ":" + port + "/" + path;
+        StringBuilder url = new StringBuilder();
+        url.append(protocol.toString().toLowerCase()).append("://").append(host);
+
+        if (port != getDefaultPort(protocol)) {
+            url.append(":").append(port);
+        }
+
+        if (path != null && !path.isEmpty()) {
+            url.append(cleanPath(path));
+        }
+
+        return url.toString();
+    }
+
+    public static String cleanPath(String path) {
+        if (path == null || path.isEmpty()) {
+            return "/";
+        }
+        String cleaned = path.replaceAll("/{2,}", "/");
+        if (!cleaned.startsWith("/")) {
+            cleaned = "/" + cleaned;
+        }
+        return cleaned;
     }
 }

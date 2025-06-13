@@ -24,8 +24,8 @@ public final class StartBlockCalculator {
         BlockSubscriptionConfiguration configuration =
                 (BlockSubscriptionConfiguration) node.getSubscriptionConfiguration();
         if (configuration.getLatestBlock().value().equals(BigInteger.ZERO)) {
-            return !configuration.getInitialBlock().isZero()
-                    ? configuration.getInitialBlock().value()
+            return configuration.getInitialBlock().signum() >= 0
+                    ? configuration.getInitialBlock()
                     : interactor.getCurrentBlockNumber();
         }
 
