@@ -321,14 +321,7 @@ class BlockProcessorPermanentTriggerTest {
                         decoder,
                         new ContractEventDispatcherHelper(dispatcher, interactor));
         assertDoesNotThrow(
-                () ->
-                        trigger.trigger(
-                                createBlockEvent(
-                                        node.getId(),
-                                        EncryptionUtil.hexlify(
-                                                BloomFilterUtil.buildBloom(
-                                                        filter.getSpecification()
-                                                                .getEventSignature())))));
+                () -> trigger.trigger(createBlockEvent(node.getId(), generateBloom(filter))));
         assertTrue(dispatcher.isDispatched());
     }
 
@@ -368,14 +361,7 @@ class BlockProcessorPermanentTriggerTest {
                         decoder,
                         new ContractEventDispatcherHelper(dispatcher, interactor));
         assertDoesNotThrow(
-                () ->
-                        trigger.trigger(
-                                createBlockEvent(
-                                        node.getId(),
-                                        EncryptionUtil.hexlify(
-                                                BloomFilterUtil.buildBloom(
-                                                        filter.getSpecification()
-                                                                .getEventSignature())))));
+                () -> trigger.trigger(createBlockEvent(node.getId(), generateBloom(filter))));
         assertTrue(dispatcher.isDispatched());
     }
 
@@ -415,14 +401,7 @@ class BlockProcessorPermanentTriggerTest {
                         decoder,
                         new ContractEventDispatcherHelper(dispatcher, interactor));
         assertDoesNotThrow(
-                () ->
-                        trigger.trigger(
-                                createBlockEvent(
-                                        node.getId(),
-                                        EncryptionUtil.hexlify(
-                                                BloomFilterUtil.buildBloom(
-                                                        filter.getSpecification()
-                                                                .getEventSignature())))));
+                () -> trigger.trigger(createBlockEvent(node.getId(), generateBloom(filter))));
         assertTrue(dispatcher.isDispatched());
     }
 
@@ -495,6 +474,11 @@ class BlockProcessorPermanentTriggerTest {
                             new KeepAliveDuration(Duration.ofSeconds(1)),
                             new ConnectionTimeout(Duration.ofSeconds(1)),
                             new ReadTimeout(Duration.ofSeconds(1))));
+        }
+
+        @Override
+        public boolean supportsContractAddressInBloom() {
+            return false;
         }
     }
 
@@ -608,5 +592,11 @@ class BlockProcessorPermanentTriggerTest {
         public boolean isDispatched() {
             return dispatched.get();
         }
+    }
+
+    private String generateBloom(GlobalEventFilter filter) {
+        return EncryptionUtil.hexlify(
+                BloomFilterUtil.buildBloom(
+                        EncryptionUtil.sha3String(filter.getSpecification().getEventSignature())));
     }
 }
