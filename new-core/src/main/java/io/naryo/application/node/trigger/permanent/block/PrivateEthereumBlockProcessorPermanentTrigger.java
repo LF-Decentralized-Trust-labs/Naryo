@@ -108,7 +108,7 @@ public final class PrivateEthereumBlockProcessorPermanentTrigger
                                 return privateLogBlooms.stream()
                                         .anyMatch(
                                                 logBloom ->
-                                                        BloomFilterUtil.bloomFilterMatch(
+                                                        BloomFilterUtil.match(
                                                                 logBloom,
                                                                 contractFilter.getContractAddress(),
                                                                 filter.getSpecification()
@@ -119,7 +119,7 @@ public final class PrivateEthereumBlockProcessorPermanentTrigger
                                 return privateLogBlooms.stream()
                                         .anyMatch(
                                                 logBloom ->
-                                                        BloomFilterUtil.bloomFilterMatch(
+                                                        BloomFilterUtil.match(
                                                                 logBloom,
                                                                 filter.getSpecification()
                                                                         .getEventSignature()));

@@ -35,4 +35,9 @@ public abstract class EthereumNode extends Node {
                 connection);
         this.visibility = visibility;
     }
+
+    @Override
+    public boolean supportsContractAddressInBloom() {
+        return true;
+    }
 }

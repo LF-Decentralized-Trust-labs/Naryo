@@ -45,6 +45,8 @@ public abstract class Node {
         Objects.requireNonNull(connection, "Connection cannot be null");
     }
 
+    public abstract boolean supportsContractAddressInBloom();
+
     public void reconfigure(
             NodeName name,
             SubscriptionConfiguration subscriptionConfiguration,
