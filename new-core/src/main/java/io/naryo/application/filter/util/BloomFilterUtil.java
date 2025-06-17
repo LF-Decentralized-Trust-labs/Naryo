@@ -1,63 +1,56 @@
 package io.naryo.application.filter.util;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
 import static io.naryo.application.common.util.EncryptionUtil.*;
 
 public final class BloomFilterUtil {
 
-    public static boolean bloomFilterMatch(String bloomHex, String eventSignature) {
-        return checkBitsInBloom(arrayify(bloomHex), sha3(eventSignature));
-    }
+    private static final int BYTES_LENGTH = 256;
 
-    public static boolean bloomFilterMatch(
-            String bloomHex, String eventSignature, String contractAddress) {
-        return bloomFilterMatch(bloomHex, eventSignature)
-                && checkBitsInBloom(arrayify(bloomHex), sha3(contractAddress));
-    }
-
-    public static boolean checkBitsInBloom(byte[] bloom, byte[] hash) {
-        int[] bits = getBloomBits(hash);
-        boolean result = true;
-
-        for (int bit : bits) {
-            int bytePos = bloom.length - 1 - (bit / 8);
-            int offset = 1 << (bit % 8);
-            int value = bloom[bytePos] & 0xFF;
-
-            System.out.printf(
-                    "Bit %d (byte %d, bit %d): byte=0x%02x (%8s), required=0x%02x -> %s\n",
-                    bit,
-                    bytePos,
-                    (bit % 8),
-                    value,
-                    String.format("%8s", Integer.toBinaryString(value)).replace(' ', '0'),
-                    offset,
-                    ((value & offset) == offset ? "ACTIVE" : "NOT SET"));
-
-            if ((value & offset) != offset) {
-                result = false;
+    public static boolean match(String bloomBytes, String... topics) {
+        byte[] bytes = arrayify(bloomBytes);
+        if (topics == null) {
+            throw new IllegalArgumentException("topics can not be null");
+        }
+        for (String topic : topics) {
+            if (!match(bytes, topic)) {
+                return false;
             }
         }
-        return result;
+        return true;
     }
 
-    public static byte[] buildBloom(String input) {
+    public static byte[] buildBloom(String... topics) {
         byte[] bloom = new byte[256];
-        int[] bits = getBloomBits(sha3(input));
-        for (int bitpos : bits) {
-            int bytePos = bloom.length - 1 - (bitpos / 8);
-            int offset = 1 << (bitpos % 8);
-            bloom[bytePos] |= (byte) offset;
+        for (String topic : topics) {
+            BloomValues values = getBloomValues(arrayify(topic));
+            for (int i = 0; i < 3; i++) {
+                bloom[values.index[i]] |= values.value[i];
+            }
         }
         return bloom;
     }
 
-    public static int[] getBloomBits(byte[] hash) {
-        int[] bits = new int[3];
-        for (int i = 0; i < 3; i++) {
-            int hi = hash[i * 2] & 0xFF;
-            int lo = hash[i * 2 + 1] & 0xFF;
-            bits[i] = ((hi << 8) | lo) & 2047;
-        }
-        return bits;
+    private static boolean match(byte[] bytes, String topic) {
+        BloomValues b = getBloomValues(arrayify(topic));
+        return b.value[0] == (b.value[0] & bytes[b.index[0]])
+                && b.value[1] == (b.value[1] & bytes[b.index[1]])
+                && b.value[2] == (b.value[2] & bytes[b.index[2]]);
     }
+
+    private static BloomValues getBloomValues(byte[] item) {
+        byte[] hash = sha3(item);
+        byte v1 = (byte) (1 << (hash[1] & 0x7));
+        byte v2 = (byte) (1 << (hash[3] & 0x7));
+        byte v3 = (byte) (1 << (hash[5] & 0x7));
+        ByteBuffer byteBuffer = ByteBuffer.wrap(hash).order(ByteOrder.BIG_ENDIAN);
+        int i1 = BYTES_LENGTH - ((byteBuffer.getShort(0) & 0x7ff) >> 3) - 1;
+        int i2 = BYTES_LENGTH - ((byteBuffer.getShort(2) & 0x7ff) >> 3) - 1;
+        int i3 = BYTES_LENGTH - ((byteBuffer.getShort(4) & 0x7ff) >> 3) - 1;
+        return new BloomValues(new byte[] {v1, v2, v3}, new int[] {i1, i2, i3});
+    }
+
+    private record BloomValues(byte[] value, int[] index) {}
 }

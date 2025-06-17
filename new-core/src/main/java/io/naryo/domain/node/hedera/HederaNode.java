@@ -24,4 +24,9 @@ public final class HederaNode extends Node {
                 interactionConfiguration,
                 connection);
     }
+
+    @Override
+    public boolean supportsContractAddressInBloom() {
+        return false;
+    }
 }
