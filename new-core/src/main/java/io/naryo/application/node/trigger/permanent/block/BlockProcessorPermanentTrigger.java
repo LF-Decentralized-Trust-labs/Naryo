@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import io.naryo.application.common.util.EncryptionUtil;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.filter.util.BloomFilterUtil;
 import io.naryo.application.node.helper.ContractEventDispatcherHelper;
@@ -166,17 +167,20 @@ public class BlockProcessorPermanentTrigger<N extends Node, I extends BlockInter
                                 return false;
                             }
 
-                            if (filter instanceof ContractEventFilter contractFilter) {
-                                return BloomFilterUtil.bloomFilterMatch(
+                            String topic0 =
+                                    EncryptionUtil.sha3String(
+                                            filter.getSpecification().getEventSignature());
+                            if (filter instanceof ContractEventFilter contractFilter
+                                    && node.supportsContractAddressInBloom()) {
+                                return BloomFilterUtil.match(
                                         event.getLogsBloom(),
-                                        filter.getSpecification().getEventSignature(),
+                                        topic0,
                                         contractFilter.getContractAddress());
                             }
 
-                            if (filter instanceof GlobalEventFilter) {
-                                return BloomFilterUtil.bloomFilterMatch(
-                                        event.getLogsBloom(),
-                                        filter.getSpecification().getEventSignature());
+                            if (filter instanceof GlobalEventFilter
+                                    || !node.supportsContractAddressInBloom()) {
+                                return BloomFilterUtil.match(event.getLogsBloom(), topic0);
                             }
 
                             return false;
