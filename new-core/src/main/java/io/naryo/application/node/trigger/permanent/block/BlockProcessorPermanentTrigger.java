@@ -58,7 +58,7 @@ public class BlockProcessorPermanentTrigger<N extends Node, I extends BlockInter
     protected static Predicate<Log> getLogPredicate(EventFilter filter) {
         if (filter instanceof ContractEventFilter contractFilter) {
             return log ->
-                    log.address().equals(contractFilter.getContractAddress())
+                    log.address().equalsIgnoreCase(contractFilter.getContractAddress())
                             && log.topics()
                                     .contains(
                                             sha3String(
