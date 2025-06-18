@@ -4,11 +4,13 @@ import java.net.*;
 import java.util.concurrent.TimeUnit;
 
 import io.naryo.domain.node.Node;
+import io.naryo.domain.node.NodeType;
 import io.naryo.domain.node.connection.NodeConnection;
 import io.naryo.domain.node.connection.http.HttpNodeConnection;
 import io.naryo.domain.node.connection.ws.WsNodeConnection;
 import io.naryo.domain.node.ethereum.priv.PrivateEthereumNode;
 import io.naryo.infrastructure.node.interactor.eth.rpc.EthereumRpcBlockInteractor;
+import io.naryo.infrastructure.node.interactor.eth.rpc.HederaRpcBlockInteractor;
 import io.naryo.infrastructure.node.interactor.eth.rpc.PrivateEthereumRpcBlockInteractor;
 import okhttp3.ConnectionPool;
 import okhttp3.JavaNetCookieJar;
@@ -31,10 +33,12 @@ public final class EthereumRpcBlockInteractorFactory {
     public EthereumRpcBlockInteractor create(Node node) {
         Web3jService web3jService = getWeb3jService(node.getConnection());
         Web3j web3j = Web3j.build(web3jService);
-        Besu besu = Besu.build(web3jService);
 
         if (node instanceof PrivateEthereumNode) {
+            Besu besu = Besu.build(web3jService);
             return new PrivateEthereumRpcBlockInteractor(web3j, besu);
+        } else if (node.getType().equals(NodeType.HEDERA)) {
+            return new HederaRpcBlockInteractor(web3j);
         }
         return new EthereumRpcBlockInteractor(web3j);
     }

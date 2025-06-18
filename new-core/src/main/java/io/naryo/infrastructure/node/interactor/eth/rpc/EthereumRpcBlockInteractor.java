@@ -19,7 +19,7 @@ import org.web3j.protocol.core.methods.response.EthLog;
 
 public class EthereumRpcBlockInteractor implements BlockInteractor {
 
-    private final Web3j web3j;
+    protected final Web3j web3j;
 
     public EthereumRpcBlockInteractor(Web3j web3j) {
         Objects.requireNonNull(web3j, "web3j cannot be null");
