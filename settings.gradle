@@ -8,6 +8,8 @@ include 'core'
 include 'server'
 include 'privacy'
 include 'integration-tests'
+include 'new-core'
+include 'spring-core'
 
 develocity {
     buildScan {
