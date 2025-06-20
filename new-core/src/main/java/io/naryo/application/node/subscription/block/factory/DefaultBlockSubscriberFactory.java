@@ -1,6 +1,9 @@
 package io.naryo.application.node.subscription.block.factory;
 
+import io.github.resilience4j.circuitbreaker.CircuitBreaker;
+import io.github.resilience4j.retry.Retry;
 import io.naryo.application.common.Mapper;
+import io.naryo.application.configuration.resilence.ResilienceRegistry;
 import io.naryo.application.node.calculator.StartBlockCalculator;
 import io.naryo.application.node.dispatch.Dispatcher;
 import io.naryo.application.node.interactor.block.BlockInteractor;
@@ -16,9 +19,12 @@ import io.naryo.domain.node.subscription.block.BlockSubscriptionConfiguration;
 public final class DefaultBlockSubscriberFactory implements BlockSubscriberFactory {
 
     private final Mapper<Block, BlockEvent> blockMapper;
+    private final ResilienceRegistry resilienceRegistry;
 
-    public DefaultBlockSubscriberFactory(Mapper<Block, BlockEvent> blockMapper) {
+    public DefaultBlockSubscriberFactory(
+            Mapper<Block, BlockEvent> blockMapper, ResilienceRegistry resilienceRegistry) {
         this.blockMapper = blockMapper;
+        this.resilienceRegistry = resilienceRegistry;
     }
 
     @Override
@@ -35,14 +41,20 @@ public final class DefaultBlockSubscriberFactory implements BlockSubscriberFacto
                                 dispatcher,
                                 node,
                                 blockMapper,
-                                new StartBlockCalculator(node, interactor));
+                                new StartBlockCalculator(node, interactor),
+                                resilienceRegistry.getOrDefault(
+                                        "subscription-cb", CircuitBreaker.class),
+                                resilienceRegistry.getOrDefault("subscription-retry", Retry.class));
                 case PUBSUB ->
                         new PubSubBlockSubscriber(
                                 interactor,
                                 dispatcher,
                                 node,
                                 blockMapper,
-                                new StartBlockCalculator(node, interactor));
+                                new StartBlockCalculator(node, interactor),
+                                resilienceRegistry.getOrDefault(
+                                        "subscription-cb", CircuitBreaker.class),
+                                resilienceRegistry.getOrDefault("subscription-retry", Retry.class));
             };
         } else {
             throw new IllegalArgumentException(

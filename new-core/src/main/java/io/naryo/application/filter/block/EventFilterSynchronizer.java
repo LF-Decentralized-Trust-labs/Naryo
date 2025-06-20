@@ -5,7 +5,11 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Callable;
 
+import io.github.resilience4j.circuitbreaker.CircuitBreaker;
+import io.github.resilience4j.decorators.Decorators;
+import io.github.resilience4j.retry.Retry;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.filter.Synchronizer;
 import io.naryo.application.node.calculator.StartBlockCalculator;
@@ -38,6 +42,8 @@ public final class EventFilterSynchronizer implements Synchronizer {
     private final ContractEventDispatcherHelper helper;
     private final List<Block> cachedBlocks = new ArrayList<>();
     private final List<TransactionReceipt> cachedTransactions = new ArrayList<>();
+    private final CircuitBreaker circuitBreaker;
+    private final Retry retry;
 
     public EventFilterSynchronizer(
             Node node,
@@ -45,19 +51,25 @@ public final class EventFilterSynchronizer implements Synchronizer {
             BlockInteractor interactor,
             StartBlockCalculator calculator,
             ContractEventParameterDecoder decoder,
-            ContractEventDispatcherHelper helper) {
+            ContractEventDispatcherHelper helper,
+            CircuitBreaker circuitBreaker,
+            Retry retry) {
         Objects.requireNonNull(node, "node cannot be null");
         Objects.requireNonNull(filter, "filter cannot be null");
         Objects.requireNonNull(interactor, "interactor cannot be null");
         Objects.requireNonNull(calculator, "calculator cannot be null");
         Objects.requireNonNull(decoder, "decoder cannot be null");
         Objects.requireNonNull(helper, "helper cannot be null");
+        Objects.requireNonNull(circuitBreaker, "circuitBreaker cannot be null");
+        Objects.requireNonNull(retry, "retry cannot be null");
         this.node = node;
         this.filter = filter;
         this.interactor = interactor;
         this.calculator = calculator;
         this.decoder = decoder;
         this.helper = helper;
+        this.circuitBreaker = circuitBreaker;
+        this.retry = retry;
     }
 
     @Override
@@ -124,5 +136,30 @@ public final class EventFilterSynchronizer implements Synchronizer {
         TransactionReceipt transaction = interactor.getTransactionReceipt(transactionHash);
         cachedTransactions.add(transaction);
         return transaction;
+    }
+
+    public Disposable applyCircuitBreaker(Callable<Disposable> callable) {
+        var decorated =
+                Decorators.ofSupplier(
+                                () -> {
+                                    try {
+                                        return callable.call();
+                                    } catch (Exception e) {
+                                        log.warn(
+                                                "Block subscription failed, will be retried if policy allows. Reason: {}",
+                                                e.getMessage());
+                                        throw new RuntimeException(e);
+                                    }
+                                })
+                        .withCircuitBreaker(circuitBreaker)
+                        .withRetry(retry)
+                        .decorate();
+
+        try {
+            return decorated.get();
+        } catch (Exception e) {
+            log.error("Subscription for block {} failed after retries", node.getId(), e);
+            throw new RuntimeException("Could not subscribe to block stream", e);
+        }
     }
 }
