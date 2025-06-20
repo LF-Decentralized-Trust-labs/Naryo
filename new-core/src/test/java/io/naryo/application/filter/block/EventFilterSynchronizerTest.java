@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import io.github.resilience4j.circuitbreaker.CircuitBreaker;
+import io.github.resilience4j.retry.Retry;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.node.calculator.StartBlockCalculator;
 import io.naryo.application.node.helper.ContractEventDispatcherHelper;
@@ -40,6 +42,8 @@ class EventFilterSynchronizerTest {
     private @Mock StartBlockCalculator startBlockCalculator;
     private @Mock ContractEventParameterDecoder contractEventParameterDecoder;
     private @Mock ContractEventDispatcherHelper contractEventDispatcherHelper;
+    private CircuitBreaker circuitBreaker = CircuitBreaker.ofDefaults("test");
+    private Retry retry = Retry.ofDefaults("test");
 
     @Test
     void testConstructor_nullValues() {
@@ -52,7 +56,9 @@ class EventFilterSynchronizerTest {
                             blockInteractor,
                             startBlockCalculator,
                             contractEventParameterDecoder,
-                            contractEventDispatcherHelper);
+                            contractEventDispatcherHelper,
+                            circuitBreaker,
+                            retry);
                 });
 
         assertThrows(
@@ -64,7 +70,9 @@ class EventFilterSynchronizerTest {
                             blockInteractor,
                             startBlockCalculator,
                             contractEventParameterDecoder,
-                            contractEventDispatcherHelper);
+                            contractEventDispatcherHelper,
+                            circuitBreaker,
+                            retry);
                 });
 
         assertThrows(
@@ -76,7 +84,9 @@ class EventFilterSynchronizerTest {
                             null,
                             startBlockCalculator,
                             contractEventParameterDecoder,
-                            contractEventDispatcherHelper);
+                            contractEventDispatcherHelper,
+                            circuitBreaker,
+                            retry);
                 });
 
         assertThrows(
@@ -88,7 +98,9 @@ class EventFilterSynchronizerTest {
                             blockInteractor,
                             null,
                             contractEventParameterDecoder,
-                            contractEventDispatcherHelper);
+                            contractEventDispatcherHelper,
+                            circuitBreaker,
+                            retry);
                 });
 
         assertThrows(
@@ -100,7 +112,9 @@ class EventFilterSynchronizerTest {
                             blockInteractor,
                             startBlockCalculator,
                             null,
-                            contractEventDispatcherHelper);
+                            contractEventDispatcherHelper,
+                            circuitBreaker,
+                            retry);
                 });
 
         assertThrows(
@@ -112,6 +126,36 @@ class EventFilterSynchronizerTest {
                             blockInteractor,
                             startBlockCalculator,
                             contractEventParameterDecoder,
+                            null,
+                            circuitBreaker,
+                            retry);
+                });
+
+        assertThrows(
+                NullPointerException.class,
+                () -> {
+                    new EventFilterSynchronizer(
+                            node,
+                            eventFilter,
+                            blockInteractor,
+                            startBlockCalculator,
+                            contractEventParameterDecoder,
+                            contractEventDispatcherHelper,
+                            null,
+                            retry);
+                });
+
+        assertThrows(
+                NullPointerException.class,
+                () -> {
+                    new EventFilterSynchronizer(
+                            node,
+                            eventFilter,
+                            blockInteractor,
+                            startBlockCalculator,
+                            contractEventParameterDecoder,
+                            contractEventDispatcherHelper,
+                            circuitBreaker,
                             null);
                 });
     }
@@ -179,7 +223,9 @@ class EventFilterSynchronizerTest {
                         blockInteractor,
                         startBlockCalculator,
                         contractEventParameterDecoder,
-                        contractEventDispatcherHelper);
+                        contractEventDispatcherHelper,
+                        circuitBreaker,
+                        retry);
         assertDoesNotThrow(synchronizer::synchronize);
     }
 }

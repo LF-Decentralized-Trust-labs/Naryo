@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 
+import io.github.resilience4j.circuitbreaker.CircuitBreaker;
+import io.github.resilience4j.retry.Retry;
 import io.naryo.application.node.calculator.StartBlockCalculator;
 import io.naryo.application.node.dispatch.Dispatcher;
 import io.naryo.application.node.interactor.block.BlockInteractor;
@@ -28,8 +30,11 @@ class PubSubBlockSubscriberTest extends BlockSubscriberTest {
             Dispatcher dispatcher,
             Node node,
             BlockToBlockEventMapper blockMapper,
-            StartBlockCalculator calculator) {
-        return new PubSubBlockSubscriber(interactor, dispatcher, node, blockMapper, calculator);
+            StartBlockCalculator calculator,
+            CircuitBreaker circuitBreaker,
+            Retry retry) {
+        return new PubSubBlockSubscriber(
+                interactor, dispatcher, node, blockMapper, calculator, circuitBreaker, retry);
     }
 
     @Test
@@ -53,7 +58,9 @@ class PubSubBlockSubscriberTest extends BlockSubscriberTest {
                                     dispatcher,
                                     newNode(10, 1, 1),
                                     new BlockToBlockEventMapper(),
-                                    calculator);
+                                    calculator,
+                                    circuitBreaker,
+                                    retry);
 
                     Disposable disposable = subscriber.subscribe();
                     assertNotNull(disposable);

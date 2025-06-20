@@ -3,6 +3,9 @@ package io.naryo.application.filter.block;
 import java.util.List;
 import java.util.Objects;
 
+import io.github.resilience4j.circuitbreaker.CircuitBreaker;
+import io.github.resilience4j.retry.Retry;
+import io.naryo.application.configuration.resilence.ResilienceRegistry;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.filter.Synchronizer;
 import io.naryo.application.node.calculator.StartBlockCalculator;
@@ -27,6 +30,7 @@ public final class NodeSynchronizer implements Synchronizer {
     private final ContractEventParameterDecoder decoder;
     private final ContractEventDispatcherHelper helper;
     private final List<Filter> filters;
+    private final ResilienceRegistry resilienceRegistry;
 
     public NodeSynchronizer(
             Node node,
@@ -34,19 +38,22 @@ public final class NodeSynchronizer implements Synchronizer {
             BlockInteractor blockInteractor,
             List<Filter> filters,
             ContractEventParameterDecoder decoder,
-            ContractEventDispatcherHelper helper) {
+            ContractEventDispatcherHelper helper,
+            ResilienceRegistry resilienceRegistry) {
         Objects.requireNonNull(node, "node must not be null");
         Objects.requireNonNull(calculator, "calculator must not be null");
         Objects.requireNonNull(blockInteractor, "blockInteractor must not be null");
         Objects.requireNonNull(filters, "filters must not be null");
         Objects.requireNonNull(decoder, "decoder must not be null");
         Objects.requireNonNull(helper, "helper must not be null");
+        Objects.requireNonNull(resilienceRegistry, "resilienceRegistry must not be null");
         this.node = node;
         this.calculator = calculator;
         this.blockInteractor = blockInteractor;
         this.filters = filters;
         this.decoder = decoder;
         this.helper = helper;
+        this.resilienceRegistry = resilienceRegistry;
     }
 
     @Override
@@ -72,7 +79,11 @@ public final class NodeSynchronizer implements Synchronizer {
                                         blockInteractor,
                                         calculator,
                                         decoder,
-                                        helper))
+                                        helper,
+                                        resilienceRegistry.getOrDefault(
+                                                "event-filter-synchronizer", CircuitBreaker.class),
+                                        resilienceRegistry.getOrDefault(
+                                                "event-filter-synchronizer", Retry.class)))
                 .forEach(
                         synchronizer -> {
                             try {
