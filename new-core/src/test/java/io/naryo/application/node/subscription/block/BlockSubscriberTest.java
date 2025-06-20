@@ -4,6 +4,8 @@ import java.math.BigInteger;
 import java.time.Duration;
 import java.util.UUID;
 
+import io.github.resilience4j.circuitbreaker.CircuitBreaker;
+import io.github.resilience4j.retry.Retry;
 import io.naryo.application.node.calculator.StartBlockCalculator;
 import io.naryo.application.node.dispatch.Dispatcher;
 import io.naryo.application.node.interactor.block.BlockInteractor;
@@ -37,12 +39,18 @@ public abstract class BlockSubscriberTest {
 
     @Mock protected StartBlockCalculator calculator;
 
+    protected CircuitBreaker circuitBreaker = CircuitBreaker.ofDefaults("test");
+
+    protected Retry retry = Retry.ofDefaults("test");
+
     protected abstract BlockSubscriber createBlockSubscriber(
             BlockInteractor interactor,
             Dispatcher dispatcher,
             Node node,
             BlockToBlockEventMapper blockMapper,
-            StartBlockCalculator calculator);
+            StartBlockCalculator calculator,
+            CircuitBreaker circuitBreaker,
+            Retry retry);
 
     @Test
     void testConstructorWithNullInteractor() {
@@ -55,7 +63,9 @@ public abstract class BlockSubscriberTest {
                                         dispatcher,
                                         newNode(0, 0, 0),
                                         blockMapper,
-                                        calculator));
+                                        calculator,
+                                        circuitBreaker,
+                                        retry));
         assertEquals("interactor cannot be null", ex.getMessage());
     }
 
@@ -70,7 +80,9 @@ public abstract class BlockSubscriberTest {
                                         null,
                                         newNode(0, 0, 0),
                                         blockMapper,
-                                        calculator));
+                                        calculator,
+                                        circuitBreaker,
+                                        retry));
         assertEquals("dispatcher cannot be null", ex.getMessage());
     }
 
@@ -85,7 +97,9 @@ public abstract class BlockSubscriberTest {
                                         dispatcher,
                                         newNode(0, 0, 0),
                                         null,
-                                        calculator));
+                                        calculator,
+                                        circuitBreaker,
+                                        retry));
         assertEquals("blockMapper cannot be null", ex.getMessage());
     }
 

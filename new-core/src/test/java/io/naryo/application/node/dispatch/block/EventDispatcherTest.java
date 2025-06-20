@@ -2,6 +2,7 @@ package io.naryo.application.node.dispatch.block;
 
 import java.util.Set;
 
+import io.naryo.application.configuration.resilence.ResilienceRegistry;
 import io.naryo.application.node.trigger.disposable.DisposableTrigger;
 import io.naryo.application.node.trigger.permanent.PermanentTrigger;
 import io.naryo.domain.event.Event;
@@ -17,6 +18,8 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class EventDispatcherTest {
+
+    private final ResilienceRegistry resilienceRegistry = new ResilienceRegistry();
 
     @Mock private DisposableTrigger<Event> disposableTrigger;
 
@@ -35,7 +38,7 @@ class EventDispatcherTest {
         doNothing().when(disposableTrigger).onDispose(onDisposeCaptor.capture());
         doNothing().when(disposableTrigger).trigger(event);
 
-        dispatcher = new EventDispatcher(Set.of(disposableTrigger));
+        dispatcher = new EventDispatcher(resilienceRegistry, Set.of(disposableTrigger));
         dispatcher.dispatch(event);
 
         // Verify onDispose registration and trigger() call
@@ -58,7 +61,7 @@ class EventDispatcherTest {
         doNothing().when(permanentTrigger).onExecute(onExecuteCaptor.capture());
         doNothing().when(permanentTrigger).trigger(event);
 
-        dispatcher = new EventDispatcher(Set.of(permanentTrigger));
+        dispatcher = new EventDispatcher(resilienceRegistry, Set.of(permanentTrigger));
         dispatcher.dispatch(event);
 
         verify(permanentTrigger).onExecute(any());
@@ -77,7 +80,9 @@ class EventDispatcherTest {
         when(disposableTrigger.supports(event)).thenReturn(false);
         when(permanentTrigger.supports(event)).thenReturn(false);
 
-        dispatcher = new EventDispatcher(Set.of(disposableTrigger, permanentTrigger));
+        dispatcher =
+                new EventDispatcher(
+                        resilienceRegistry, Set.of(disposableTrigger, permanentTrigger));
         dispatcher.dispatch(event);
 
         verify(disposableTrigger, never()).onDispose(any());
@@ -91,10 +96,10 @@ class EventDispatcherTest {
         when(disposableTrigger.supports(event)).thenReturn(true);
         doThrow(new RuntimeException("onDisposeFail")).when(disposableTrigger).onDispose(any());
 
-        dispatcher = new EventDispatcher(Set.of(disposableTrigger));
+        dispatcher = new EventDispatcher(resilienceRegistry, Set.of(disposableTrigger));
         assertDoesNotThrow(() -> dispatcher.dispatch(event));
 
-        verify(disposableTrigger).onDispose(any());
+        verify(disposableTrigger, atLeastOnce()).onDispose(any());
         verify(disposableTrigger, never()).trigger(event);
     }
 
@@ -103,10 +108,10 @@ class EventDispatcherTest {
         when(permanentTrigger.supports(event)).thenReturn(true);
         doThrow(new RuntimeException("onExecuteFail")).when(permanentTrigger).onExecute(any());
 
-        dispatcher = new EventDispatcher(Set.of(permanentTrigger));
+        dispatcher = new EventDispatcher(resilienceRegistry, Set.of(permanentTrigger));
         assertDoesNotThrow(() -> dispatcher.dispatch(event));
 
-        verify(permanentTrigger).onExecute(any());
+        verify(permanentTrigger, atLeastOnce()).onExecute(any());
         verify(permanentTrigger, never()).trigger(event);
     }
 
@@ -118,16 +123,18 @@ class EventDispatcherTest {
         doThrow(new RuntimeException("triggerFail")).when(disposableTrigger).trigger(event);
         doNothing().when(permanentTrigger).trigger(event);
 
-        dispatcher = new EventDispatcher(Set.of(disposableTrigger, permanentTrigger));
+        dispatcher =
+                new EventDispatcher(
+                        resilienceRegistry, Set.of(disposableTrigger, permanentTrigger));
         assertDoesNotThrow(() -> dispatcher.dispatch(event));
 
-        verify(disposableTrigger).trigger(event);
-        verify(permanentTrigger).trigger(event);
+        verify(disposableTrigger, atLeastOnce()).trigger(event);
+        verify(permanentTrigger, atLeastOnce()).trigger(event);
     }
 
     @Test
     void addRemoveGetTriggers_workAsExpected() {
-        dispatcher = new EventDispatcher(Set.of());
+        dispatcher = new EventDispatcher(resilienceRegistry, Set.of());
         assertTrue(dispatcher.triggers().isEmpty());
 
         dispatcher.addTrigger(disposableTrigger);
