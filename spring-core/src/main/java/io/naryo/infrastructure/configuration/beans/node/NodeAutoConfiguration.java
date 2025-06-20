@@ -8,6 +8,7 @@ import io.naryo.application.broadcaster.BroadcasterProducer;
 import io.naryo.application.broadcaster.configuration.manager.BroadcasterConfigurationConfigurationManager;
 import io.naryo.application.broadcaster.configuration.manager.BroadcasterConfigurationManager;
 import io.naryo.application.common.Mapper;
+import io.naryo.application.configuration.resilence.ResilienceRegistry;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.event.decoder.block.DefaultContractEventParameterDecoder;
 import io.naryo.application.filter.configuration.manager.FilterConfigurationManager;
@@ -59,9 +60,16 @@ public class NodeAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(ResilienceRegistry.class)
+    public ResilienceRegistry resilienceRegistry() {
+        return new ResilienceRegistry();
+    }
+
+    @Bean
     @ConditionalOnMissingBean(BlockSubscriberFactory.class)
-    public BlockSubscriberFactory blockSubscriberFactory(Mapper<Block, BlockEvent> blockMapper) {
-        return new DefaultBlockSubscriberFactory(blockMapper);
+    public BlockSubscriberFactory blockSubscriberFactory(
+            Mapper<Block, BlockEvent> blockMapper, ResilienceRegistry registry) {
+        return new DefaultBlockSubscriberFactory(blockMapper, registry);
     }
 
     @Bean
@@ -94,12 +102,19 @@ public class NodeAutoConfiguration {
     @Bean
     public NodeInitializer nodeInitializer(
             NodeConfigurationFacade config,
+            ResilienceRegistry resilienceRegistry,
             BlockInteractorFactory interactorFactory,
             BlockSubscriberFactory subscriberFactory,
             ProcessorTriggerFactory processorFactory,
             ContractEventParameterDecoder decoder,
             List<BroadcasterProducer> producers) {
         return new NodeInitializer(
-                config, interactorFactory, subscriberFactory, processorFactory, decoder, producers);
+                config,
+                resilienceRegistry,
+                interactorFactory,
+                subscriberFactory,
+                processorFactory,
+                decoder,
+                producers);
     }
 }
