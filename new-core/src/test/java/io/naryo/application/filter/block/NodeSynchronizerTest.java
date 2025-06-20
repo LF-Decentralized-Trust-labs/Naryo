@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import io.naryo.application.configuration.resilence.ResilienceRegistry;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.node.calculator.StartBlockCalculator;
 import io.naryo.application.node.helper.ContractEventDispatcherHelper;
@@ -36,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class NodeSynchronizerTest {
 
     private final List<Filter> filters = new ArrayList<>();
+    private final ResilienceRegistry resilienceRegistry = new ResilienceRegistry();
     @Mock private Node node;
     @Mock private StartBlockCalculator calculator;
     @Mock private BlockInteractor blockInteractor;
@@ -53,28 +55,74 @@ class NodeSynchronizerTest {
                 NullPointerException.class,
                 () ->
                         new NodeSynchronizer(
-                                null, calculator, blockInteractor, filters, decoder, helper));
-        assertThrows(
-                NullPointerException.class,
-                () -> new NodeSynchronizer(node, null, blockInteractor, filters, decoder, helper));
-        assertThrows(
-                NullPointerException.class,
-                () -> new NodeSynchronizer(node, calculator, null, filters, decoder, helper));
-        assertThrows(
-                NullPointerException.class,
-                () ->
-                        new NodeSynchronizer(
-                                node, calculator, blockInteractor, null, decoder, helper));
+                                null,
+                                calculator,
+                                blockInteractor,
+                                filters,
+                                decoder,
+                                helper,
+                                resilienceRegistry));
         assertThrows(
                 NullPointerException.class,
                 () ->
                         new NodeSynchronizer(
-                                node, calculator, blockInteractor, filters, null, helper));
+                                node,
+                                null,
+                                blockInteractor,
+                                filters,
+                                decoder,
+                                helper,
+                                resilienceRegistry));
         assertThrows(
                 NullPointerException.class,
                 () ->
                         new NodeSynchronizer(
-                                node, calculator, blockInteractor, filters, decoder, null));
+                                node,
+                                calculator,
+                                null,
+                                filters,
+                                decoder,
+                                helper,
+                                resilienceRegistry));
+        assertThrows(
+                NullPointerException.class,
+                () ->
+                        new NodeSynchronizer(
+                                node,
+                                calculator,
+                                blockInteractor,
+                                null,
+                                decoder,
+                                helper,
+                                resilienceRegistry));
+        assertThrows(
+                NullPointerException.class,
+                () ->
+                        new NodeSynchronizer(
+                                node,
+                                calculator,
+                                blockInteractor,
+                                filters,
+                                null,
+                                helper,
+                                resilienceRegistry));
+        assertThrows(
+                NullPointerException.class,
+                () ->
+                        new NodeSynchronizer(
+                                node,
+                                calculator,
+                                blockInteractor,
+                                filters,
+                                decoder,
+                                null,
+                                resilienceRegistry));
+
+        assertThrows(
+                NullPointerException.class,
+                () ->
+                        new NodeSynchronizer(
+                                node, calculator, blockInteractor, filters, decoder, helper, null));
     }
 
     @Test
@@ -95,7 +143,14 @@ class NodeSynchronizerTest {
                                 new NonNegativeBlockNumber(BigInteger.ZERO)),
                         "0x1234567890abcdef1234567890abcdef12345678"));
         NodeSynchronizer synchronizer =
-                new NodeSynchronizer(node, calculator, blockInteractor, filters, decoder, helper);
+                new NodeSynchronizer(
+                        node,
+                        calculator,
+                        blockInteractor,
+                        filters,
+                        decoder,
+                        helper,
+                        resilienceRegistry);
         assertDoesNotThrow(
                 () -> {
                     synchronizer.synchronize();
@@ -114,7 +169,14 @@ class NodeSynchronizerTest {
                         "0x1234567890abcdef1234567890abcdef12345678",
                         List.of(TransactionStatus.FAILED)));
         NodeSynchronizer synchronizer =
-                new NodeSynchronizer(node, calculator, blockInteractor, filters, decoder, helper);
+                new NodeSynchronizer(
+                        node,
+                        calculator,
+                        blockInteractor,
+                        filters,
+                        decoder,
+                        helper,
+                        resilienceRegistry);
         assertDoesNotThrow(
                 () -> {
                     synchronizer.synchronize();
@@ -142,7 +204,14 @@ class NodeSynchronizerTest {
                         syncState,
                         "0x1234567890abcdef1234567890abcdef12345678"));
         NodeSynchronizer synchronizer =
-                new NodeSynchronizer(node, calculator, blockInteractor, filters, decoder, helper);
+                new NodeSynchronizer(
+                        node,
+                        calculator,
+                        blockInteractor,
+                        filters,
+                        decoder,
+                        helper,
+                        resilienceRegistry);
         assertDoesNotThrow(
                 () -> {
                     synchronizer.synchronize();

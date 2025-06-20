@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import io.naryo.application.broadcaster.BroadcasterProducer;
+import io.naryo.application.configuration.resilence.ResilienceRegistry;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.filter.block.NodeSynchronizer;
 import io.naryo.application.node.calculator.StartBlockCalculator;
@@ -33,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 public class NodeInitializer {
 
     private final List<Trigger<?>> sharedTriggers;
+    private final ResilienceRegistry resilienceRegistry;
     private final BlockInteractorFactory interactorFactory;
     private final BlockSubscriberFactory subscriberFactory;
     private final ProcessorTriggerFactory processorFactory;
@@ -41,12 +43,14 @@ public class NodeInitializer {
 
     public NodeInitializer(
             NodeConfigurationFacade config,
+            ResilienceRegistry resilienceRegistry,
             BlockInteractorFactory interactorFactory,
             BlockSubscriberFactory subscriberFactory,
             ProcessorTriggerFactory processorFactory,
             ContractEventParameterDecoder decoder,
             List<BroadcasterProducer> producers) {
         this.config = config;
+        this.resilienceRegistry = resilienceRegistry;
         this.interactorFactory = interactorFactory;
         this.subscriberFactory = subscriberFactory;
         this.processorFactory = processorFactory;
@@ -87,7 +91,7 @@ public class NodeInitializer {
     private NodeRunner initNode(Node node, List<Filter> allFilters) throws IOException {
         var interactor = interactorFactory.create(node);
         var nodeFilters = filterForNode(allFilters, node.getId());
-        var dispatcher = new EventDispatcher(new HashSet<>(sharedTriggers));
+        var dispatcher = new EventDispatcher(resilienceRegistry, new HashSet<>(sharedTriggers));
         var contractEventHelper = new ContractEventDispatcherHelper(dispatcher, interactor);
         var transactionEventHelper = new TransactionEventDispatcherHelper(dispatcher, interactor);
 
@@ -112,7 +116,8 @@ public class NodeInitializer {
                         interactor,
                         nodeFilters,
                         decoder,
-                        contractEventHelper);
+                        contractEventHelper,
+                        resilienceRegistry);
         return new DefaultNodeRunner(node, subscriber, synchronizer);
     }
 
