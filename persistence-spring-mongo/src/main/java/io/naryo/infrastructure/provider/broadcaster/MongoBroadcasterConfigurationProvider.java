@@ -1,13 +1,13 @@
-package io.naryo.infrastructure.provider;
+package io.naryo.infrastructure.provider.broadcaster;
 
 import io.naryo.application.broadcaster.configuration.provider.BroadcasterConfigurationProvider;
 import io.naryo.domain.broadcaster.Broadcaster;
 import io.naryo.domain.broadcaster.BroadcasterTargetType;
 import io.naryo.domain.broadcaster.Destination;
 import io.naryo.domain.broadcaster.target.*;
-import io.naryo.infrastructure.broadcaster.BroadcasterDocument;
-import io.naryo.infrastructure.broadcaster.BroadcasterTargetDocument;
-import io.naryo.infrastructure.broadcaster.SpringDataBroadcasterRepository;
+import io.naryo.infrastructure.persistance.document.broadcaster.BroadcasterDocument;
+import io.naryo.infrastructure.persistance.document.broadcaster.BroadcasterTargetDocument;
+import io.naryo.infrastructure.persistance.repository.broadcaster.BroadcasterDocumentRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
 @Component
 public final class MongoBroadcasterConfigurationProvider implements BroadcasterConfigurationProvider {
 
-    private final SpringDataBroadcasterRepository repository;
+    private final BroadcasterDocumentRepository repository;
 
-    public MongoBroadcasterConfigurationProvider(SpringDataBroadcasterRepository repository) {
+    public MongoBroadcasterConfigurationProvider(BroadcasterDocumentRepository repository) {
         this.repository = repository;
     }
 

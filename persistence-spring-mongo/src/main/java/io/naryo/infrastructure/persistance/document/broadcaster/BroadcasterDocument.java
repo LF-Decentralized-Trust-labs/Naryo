@@ -1,4 +1,4 @@
-package io.naryo.infrastructure.broadcaster;
+package io.naryo.infrastructure.persistance.document.broadcaster;
 
 import lombok.Getter;
 import org.springframework.data.mongodb.core.mapping.Document;
