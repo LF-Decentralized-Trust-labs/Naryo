@@ -1,0 +1,20 @@
+{
+  "modules": [
+    {
+      "id": "core",
+      "groupId": "io.naryo",
+      "artifactId": "new-core",
+      "version": "0.1.0",
+      "description": "Naryo core support",
+      "required": true
+    },
+    {
+      "id": "spring",
+      "groupId": "io.naryo",
+      "artifactId": "spring-core",
+      "version": "0.1.0",
+      "description": "Naryo spring core support",
+      "required": true
+    }
+  ]
+}
