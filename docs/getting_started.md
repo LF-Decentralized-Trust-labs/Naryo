@@ -1,93 +1,153 @@
-# Getting Started
+## 🚀 Getting Started
 
-This guide will help you set up **Naryo** on your local machine for development and testing.
+To start using **Naryo**, you need to embed and instantiate it manually inside your project. There are **two
+main ways** to use this library:
 
-## Prerequisites
+* ✅ **Spring Boot integration (recommended)** — Simplifies setup using Spring context and YAML configuration.
+* ⚙️ **Core module (framework-agnostic)** — Gives you full control but requires manual instantiation and wiring.
 
-Before running Naryo, ensure you have the following installed:
+> 📦 This library is not yet published to any public registry, so you will need to build and publish it locally first.
 
-- **Java 21**
-- **Maven**
-- **Docker & Docker Compose** (for containerized deployment)
+---
 
-## Building the Project
+### 1. Build & Publish Locally
 
-1. Clone the repository and navigate to the project directory:
+Before adding the dependency, publish the library to your local Maven repository:
 
-    ```sh
-    git clone https://github.com/LF-Decentralized-Trust-labs/naryo
-    cd naryo
-    ```
-
-2. Compile, test, and package the project using Maven:
-
-    ```sh
-    mvn clean package
-    ```
-
-## Running Naryo
-
-### Running with Docker Compose (Recommended)
-
-Naryo provides a **docker-compose** setup that includes all required dependencies. There are two ways to run it:
-
-#### Option 1: Using the setup script
-
-1. Navigate to the `server` directory:
-
-    ```sh
-    cd server
-    ```
-
-2. Make the setup script executable and run it with the desired configurations:
-
-    ```sh
-    chmod +x setup_env.sh
-    ./setup_env.sh <broker> <database> <blockchain>
-    ```
-
-   This script automatically configures and starts the required services without needing to run `docker-compose` manually.
-
-#### Option 2: Manually building Naryo and running Docker Compose
-
-1. Navigate to the `server` directory:
-
-    ```sh
-    cd server
-    ```
-
-2. Build Naryo's Docker image and start it using `docker-compose` with the desired profiles:
-
-    ```sh
-    docker-compose --profile <profile-name> --profile <profile-name> up --build
-    ```
-
-   Replace `<profile-name>` with the desired profile:
-
-    - `kafka` → Uses Kafka for messaging
-    - `rabbitmq` → Uses RabbitMQ for messaging
-    - `mongodb` → Uses Mongo for database
-    - `postgresql` → Uses Postgres for database
-    - `naryo` → Use Naryo as a Docker service with a pre-built image
-
-3. To stop the services, use:
-
-    ```sh
-    docker-compose down
-    ```
-
-### Running as a JAR File (Alternative)
-
-If you prefer to run Naryo manually and have an existing instance of **MongoDB, Kafka, Zookeeper, and an Ethereum node**, you can start it as a JAR file:
-
-```sh
-cd server
-SPRING_PROFILES_ACTIVE=kafka,mongodb,ethereum java -jar target/naryo-server.jar
+```bash
+  ./gradlew publishToMavenLocal
 ```
 
-## Next Steps
+> This will install the library to your local Maven repository (`~/.m2/repository`).
 
-- [Configuration](configuration.md)
-- [Usage](usage.md)
-- [Metrics](metrics.md)
-- [Known Caveats / Issues](issues.md)
+---
+
+### 2. Add the Dependency to Your Project
+
+<details>
+<summary>Gradle</summary>
+
+```groovy
+dependencyResolutionManagement {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+ext {
+    naryoVersion = "0.0.1" // Replace with the actual version
+}
+
+dependencies {
+    // Core module
+    implementation("io.naryo:new-core:${naryoVersion}")
+
+    // Spring Boot integration
+    implementation("io.naryo:core-spring:${naryoVersion}")
+}
+```
+
+</details>
+
+<details>
+<summary>Maven</summary>
+
+```xml
+
+<repositories>
+    <repository>
+        <id>local</id>
+        <url>file://${user.home}/.m2/repository</url>
+    </repository>
+</repositories>
+
+<variables>
+<naryoVersion>0.0.1</naryoVersion>
+</variables>
+
+<dependencies>
+<!-- Core module -->
+<dependency>
+    <groupId>io.naryo</groupId>
+    <artifactId>new-core</artifactId>
+    <version>${naryoVersion}</version>
+</dependency>
+
+<!-- Spring Boot integration -->
+<dependency>
+    <groupId>io.naryo</groupId>
+    <artifactId>core-spring</artifactId>
+    <version>${naryoVersion}</version>
+</dependency>
+</dependencies>
+```
+
+</details>
+
+---
+
+### 3. Usage Options
+
+#### ✅ Using Spring Boot (recommended)
+
+1. Add the Spring Boot starter dependency (see above).
+2. Define your configuration in `application.yml`:
+
+    ```yaml
+    naryo:
+      nodes:
+        - name: default
+    ...
+    ```
+
+   Please refer to the [Configuration Documentation](./configuration.md) for more details.
+
+3. Start naryo when your application starts:
+
+```java
+
+@SpringBootApplication
+public class Application implements InitializingBean {
+
+    private final NodeInitializer nodeInitializer;
+
+    public Application(NodeInitializer nodeInitializer) {
+        this.nodeInitializer = nodeInitializer;
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        NodeContainer container = nodeInitializer.init();
+        container.start();
+    }
+}
+```
+
+> Spring will automatically parse the YAML and inject dependencies.
+
+#### ⚙️ Using the Core Library (manual setup)
+
+1. Instantiate all required components manually and start them:
+
+    ```java
+    NodeRunner nodeRunner = new NodeRunner(...);
+    NodeContainer container = new NodeContainer(List.of(nodeRunner));
+
+    container.start();
+    ```
+
+2. You are responsible for building and wiring all components. No YAML parsing is provided out-of-the-box.
+
+---
+
+Need help setting it up in your use case? Let us know or check out the [tutorials](./tutorials/index.md).
+
+## 👉 Next Steps
+
+1. [Configuration Documentation](./configuration.md)
+2. [Tutorials](./tutorials/index.md)
