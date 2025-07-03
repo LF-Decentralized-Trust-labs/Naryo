@@ -3,6 +3,6 @@ package io.naryo.infrastructure.configuration.source.env.model.filter.event.visi
 public record EventFilterVisibilityConfigurationProperties(boolean visible, String privacyGroupId) {
 
     public EventFilterVisibilityConfigurationProperties() {
-        this(false, null);
+        this(true, null);
     }
 }
