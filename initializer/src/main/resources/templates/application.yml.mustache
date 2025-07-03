@@ -1,0 +1,29 @@
+naryo:
+    nodes:
+        - id: {{nodeId}}
+          name: {{nodeName}}
+          type: ETHEREUM
+          connection:
+              type: HTTP
+              endpoint:
+                  url: http://localhost:8545
+    broadcasting:
+        configuration:
+            - id: {{broadcasterId}}
+              type: HTTP
+              configuration:
+                  endpoint:
+                      url: http://localhost:8080
+        broadcasters:
+            - configurationId: {{broadcasterId}}
+              type: ALL
+              destination: /events
+    filters:
+        - id: {{filterId}}
+          name: my-transfer-filter
+          type: EVENT
+          nodeId: {{nodeId}}
+          configuration:
+              scope: GLOBAL
+              specification:
+                  signature: Transfer(address indexed, address indexed, uint256)
