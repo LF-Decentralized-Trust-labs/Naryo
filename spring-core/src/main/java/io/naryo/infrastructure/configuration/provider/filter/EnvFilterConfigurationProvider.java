@@ -19,6 +19,7 @@ import io.naryo.infrastructure.configuration.source.env.model.filter.event.contr
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.SyncConfigurationProperties;
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.SyncType;
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.block.BlockSyncConfigurationAdditionalProperties;
+import io.naryo.infrastructure.configuration.source.env.model.filter.event.visibility.EventFilterVisibilityConfigurationProperties;
 import io.naryo.infrastructure.configuration.source.env.model.filter.transaction.TransactionFilterConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -55,7 +56,7 @@ public final class EnvFilterConfigurationProvider implements FilterConfiguration
                                     mapSpecification(config.specification()),
                                     config.statuses(),
                                     mapSync(config.sync()),
-                                    EventFilterVisibilityConfiguration.visible());
+                                    mapVisibility(config.visibilityConfiguration()));
                     case CONTRACT -> {
                         ContractEventFilterConfigurationAdditionalProperties addProps =
                                 (ContractEventFilterConfigurationAdditionalProperties)
@@ -67,7 +68,7 @@ public final class EnvFilterConfigurationProvider implements FilterConfiguration
                                 mapSpecification(config.specification()),
                                 config.statuses(),
                                 mapSync(config.sync()),
-                                EventFilterVisibilityConfiguration.visible(),
+                                mapVisibility(config.visibilityConfiguration()),
                                 addProps.address());
                     }
                 };
@@ -107,5 +108,12 @@ public final class EnvFilterConfigurationProvider implements FilterConfiguration
                 configSpec.correlationId() == null
                         ? null
                         : new CorrelationId(configSpec.correlationId().position()));
+    }
+
+    private EventFilterVisibilityConfiguration mapVisibility(
+            EventFilterVisibilityConfigurationProperties config) {
+        return config.visible()
+                ? EventFilterVisibilityConfiguration.visible()
+                : EventFilterVisibilityConfiguration.invisible(config.privacyGroupId());
     }
 }

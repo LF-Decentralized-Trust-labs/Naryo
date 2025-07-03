@@ -10,6 +10,7 @@ include 'privacy'
 include 'integration-tests'
 include 'new-core'
 include 'spring-core'
+include 'initializer'
 
 develocity {
     buildScan {
