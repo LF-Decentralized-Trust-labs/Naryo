@@ -2,10 +2,12 @@ plugins {
     id 'java'
     id 'idea'
     id 'jacoco'
+    id 'application'
     id 'com.diffplug.spotless' version '7.0.2'
     id 'org.springframework.boot' version '3.3.1'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'io.freefair.lombok' version '8.12.1'
+    id 'com.gradle.plugin-publish' version '1.2.1'
 }
 
 description = 'Naryo base project'
