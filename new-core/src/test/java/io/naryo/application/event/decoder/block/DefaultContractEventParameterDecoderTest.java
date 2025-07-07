@@ -1,10 +1,12 @@
 package io.naryo.application.event.decoder.block;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
+import io.naryo.application.node.interactor.block.dto.Log;
 import io.naryo.domain.common.event.EventName;
 import io.naryo.domain.event.contract.ContractEventParameter;
 import io.naryo.domain.event.contract.parameter.*;
@@ -69,7 +71,19 @@ class DefaultContractEventParameterDecoderTest {
                 ;
         // @formatter:on
 
-        Set<ContractEventParameter<?>> parameters = DECODER.decode(spec, logData);
+        Log log =
+                new Log(
+                        BigInteger.ZERO,
+                        BigInteger.ZERO,
+                        "transactionHash",
+                        "transactionIndex",
+                        BigInteger.ZERO,
+                        "topics",
+                        logData,
+                        "type",
+                        List.of(
+                                "0x1111111111111111111111111111111111111111111111111111111111111111"));
+        Set<ContractEventParameter<?>> parameters = DECODER.decode(spec, log);
         assert parameters.size() == 8;
 
         List<ContractEventParameter<?>> list = new ArrayList<>(parameters);
