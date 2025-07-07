@@ -87,7 +87,7 @@ public final class EventFilterSynchronizer implements Synchronizer {
                                     new ContractEvent(
                                             filter.getNodeId(),
                                             filter.getSpecification().eventName(),
-                                            decoder.decode(filter.getSpecification(), value.data()),
+                                            decoder.decode(filter.getSpecification(), value),
                                             value.transactionHash(),
                                             value.index(),
                                             value.blockNumber(),

@@ -136,7 +136,7 @@ public class BlockProcessorPermanentTrigger<N extends Node, I extends BlockInter
         return new ContractEvent(
                 event.getNodeId(),
                 filter.getSpecification().eventName(),
-                decoder.decode(filter.getSpecification(), value.data()),
+                decoder.decode(filter.getSpecification(), value),
                 value.transactionHash(),
                 value.index(),
                 event.getNumber().value(),
