@@ -8,4 +8,11 @@ import jakarta.validation.constraints.NotNull;
 public record BlockInteractionConfigurationProperties(
         @NotNull InteractionMode mode,
         @Valid @NotNull BlockInteractionModeConfigurationProperties configuration)
-        implements InteractionConfigurationProperties {}
+        implements InteractionConfigurationProperties {
+
+    public BlockInteractionConfigurationProperties() {
+        this(
+                InteractionMode.ETHEREUM_RPC,
+                new EthereumRpcBlockInteractionModeConfigurationProperties());
+    }
+}
