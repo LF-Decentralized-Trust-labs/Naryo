@@ -174,8 +174,8 @@ public final class Initializer implements Callable<Integer> {
 
         String gradleCommand =
                 System.getProperty("os.name").toLowerCase().contains("win")
-                        ? "gradlew.bat"
-                        : "./gradlew";
+                    ? root.resolve("gradlew.bat").toAbsolutePath().toString()
+                    : root.resolve("gradlew").toAbsolutePath().toString();
 
         System.out.println("🔧 Running gradlew wrapper from: " + root);
 
