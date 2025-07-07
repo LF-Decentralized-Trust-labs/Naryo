@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
+import io.naryo.application.node.interactor.block.dto.Log;
 import io.naryo.domain.event.contract.ContractEventParameter;
 import io.naryo.domain.event.contract.parameter.*;
 import io.naryo.domain.filter.event.EventFilterSpecification;
@@ -25,10 +26,9 @@ public final class DefaultContractEventParameterDecoder implements ContractEvent
         return ByteBuffer.wrap(slice).getInt();
     }
 
-    public Set<ContractEventParameter<?>> decode(
-            EventFilterSpecification specification, String logData) {
+    public Set<ContractEventParameter<?>> decode(EventFilterSpecification specification, Log log) {
 
-        byte[] data = arrayify(logData);
+        byte[] data = arrayify(log.data());
         int offset = 0;
 
         Set<ParameterDefinition> ordered =
@@ -38,7 +38,30 @@ public final class DefaultContractEventParameterDecoder implements ContractEvent
 
         Set<ContractEventParameter<?>> result = new LinkedHashSet<>();
 
+        int topicCount = 0;
         for (ParameterDefinition def : ordered) {
+            if (def.isIndexed()) {
+                int topicPosition = topicCount++;
+                ContractEventParameter<?> value =
+                        switch (def.getType()) {
+                            case ADDRESS ->
+                                    new AddressParameter(
+                                            true,
+                                            def.getPosition(),
+                                            log.topics().get(topicPosition));
+                            case STRING, BYTES, BYTES_FIXED ->
+                                    new StringParameter(
+                                            true,
+                                            def.getPosition(),
+                                            log.topics().get(topicPosition));
+                            case UINT, INT, BOOL -> decodeParameter(def, data, 0).parameter();
+                            default ->
+                                    throw new IllegalStateException(
+                                            "Unexpected value: " + def.getType());
+                        };
+                result.add(value);
+                continue;
+            }
             DecodeResult decoded = decodeParameter(def, data, offset);
             result.add(decoded.parameter());
             offset = decoded.newOffset();
