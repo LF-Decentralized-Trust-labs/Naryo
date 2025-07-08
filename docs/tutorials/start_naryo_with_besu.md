@@ -3,8 +3,6 @@
 This guide explains how to deploy a local [Hyperledger Besu](https://besu.hyperledger.org/) node and a smart contract
 that emits events, allowing you to test event consumption in **Naryo**.
 
----
-
 ## 🧰 Requirements
 
 Ensure you have the following installed:
@@ -15,11 +13,10 @@ Ensure you have the following installed:
 * [Hardhat](https://hardhat.org/)
 * Git
 
----
-
 ## 🎉 Step 0: Prepare your environment
 
 Create a directory for the tutorial, for example: `naryo-besu-tutorial` and run the following command:
+
 ```bash
   mkdir naryo-besu-tutorial # or whatever name you like
   cd naryo-besu-tutorial
@@ -62,8 +59,6 @@ minimal setup.
     ```
 
    > ⚠️ Only use this key for local testing. Never use it in production environments.
-
----
 
 ## 📦 Step 2: Deploy an ERC-20 Contract that Emits Events
 
@@ -159,8 +154,6 @@ MyToken#MyToken - <YOUR_CONTRACT_ADDRESS>
 
 Save the contract address, you will need it later.
 
----
-
 ## 🏗️ Step 3: Publish Naryo Modules Locally
 
 > Make sure you are in the tutorial directory before following the steps below.
@@ -174,8 +167,6 @@ cd naryo
 ```
 
 > This is required so that your new project can resolve the Naryo dependencies.
-
----
 
 ## 🧬 Step 4: Generate a Naryo Project
 
@@ -195,8 +186,6 @@ This will generate a folder `test-naryo/` in your tutorial directory with:
 * `application.yml` with prefilled node and broadcaster config
 
 > ℹ️ You can modify the YAML to use your deployed contract address and filters.
-
----
 
 ## 🔧 Step 5: Configure `application.yml`
 
@@ -235,8 +224,6 @@ naryo:
         specification:
           signature: Transfer(address indexed, address indexed, uint256)
 ```
-
----
 
 ## 📁 Step 6: Expose Event Notifications via HTTP
 
@@ -285,8 +272,6 @@ Now every received event will be forwarded and printed in your local Node.js ser
 
 > You can check the logs using the command `tail -f event-receiver.log`.
 
----
-
 ## 🥪 Step 7: Run the Naryo Application
 
 1. Go to your generated project folder:
@@ -302,8 +287,6 @@ Now every received event will be forwarded and printed in your local Node.js ser
     ```
 
 > Naryo will start and listen to the configured event (`Transfer`) using polling from your Besu node.
-
----
 
 ## ✅ Verify
 
@@ -330,8 +313,6 @@ await token.transfer("0x9ba8c0dF156194706942a86f49081542F13EbF42", 1);
 > You can run the above commands multiple times to trigger the event.
 
 You should see the output in the Node.js event listener server.
-
----
 
 ## 📚 Resources
 
