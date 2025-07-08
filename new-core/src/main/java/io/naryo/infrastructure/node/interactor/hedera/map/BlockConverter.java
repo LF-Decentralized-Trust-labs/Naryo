@@ -9,16 +9,26 @@ import io.naryo.infrastructure.node.interactor.hedera.response.BlockResponseMode
 
 public final class BlockConverter {
 
+    private static final String EMPTY_LOGS_BLOOM = "0x";
+    private static final String ZERO_LOGS_BLOOM = "0x" + "0".repeat(512);
+
     public static Block map(BlockResponseModel response, List<Transaction> transactions) {
         String ethTimestamp =
                 response.timestamp().from().substring(0, response.timestamp().from().indexOf("."));
         return new Block(
                 response.number(),
                 response.hash(),
-                response.logsBloom(),
+                sanitizeLogsBloom(response.logsBloom()),
                 response.size(),
                 response.gasUsed(),
                 new BigInteger(ethTimestamp),
                 transactions);
+    }
+
+    private static String sanitizeLogsBloom(String logsBloom) {
+        if (logsBloom == null || logsBloom.equalsIgnoreCase(EMPTY_LOGS_BLOOM)) {
+            return ZERO_LOGS_BLOOM;
+        }
+        return logsBloom;
     }
 }
