@@ -11,7 +11,7 @@ public abstract class GlobalEventFilterDocumentMapper {
 
     public static GlobalEventFilter fromDocument(GlobalEventFilterPropertiesDocument props) {
         return new GlobalEventFilter(
-            UUID.fromString(props.getUuid()),
+            UUID.fromString(props.getId()),
             new FilterName(props.getName()),
             UUID.fromString(props.getNodeId()),
             EventFilterSpecificationDocumentMapper.fromDocument(props.getSpecification()),
