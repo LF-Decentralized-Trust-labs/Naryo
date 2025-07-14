@@ -4,20 +4,26 @@ import java.util.List;
 import java.util.function.BinaryOperator;
 
 import io.naryo.application.configuration.manager.BaseConfigurationManager;
-import io.naryo.application.configuration.provider.ConfigurationProvider;
+import io.naryo.application.configuration.provider.SourceProvider;
+import io.naryo.application.configuration.source.model.event.EventStoreDescriptor;
 import io.naryo.domain.configuration.eventstore.EventStoreConfiguration;
 
 public final class DefaultEventStoreConfigurationManager
-        extends BaseConfigurationManager<EventStoreConfiguration>
+        extends BaseConfigurationManager<EventStoreConfiguration, EventStoreDescriptor>
         implements EventStoreConfigurationManager {
 
     DefaultEventStoreConfigurationManager(
-            List<ConfigurationProvider<EventStoreConfiguration>> configurationProviders) {
-        super(configurationProviders);
+            List<SourceProvider<EventStoreDescriptor>> sourceProviders) {
+        super(sourceProviders);
     }
 
     @Override
-    protected BinaryOperator<EventStoreConfiguration> mergeFunction() {
-        return EventStoreConfiguration::merge;
+    protected BinaryOperator<EventStoreDescriptor> mergeFunction() {
+        return EventStoreDescriptor::merge;
+    }
+
+    @Override
+    protected EventStoreConfiguration map(EventStoreDescriptor source) {
+        return null;
     }
 }

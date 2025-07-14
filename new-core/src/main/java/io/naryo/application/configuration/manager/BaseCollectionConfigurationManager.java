@@ -5,28 +5,34 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
-import io.naryo.application.configuration.provider.CollectionConfigurationProvider;
-import io.naryo.application.configuration.provider.ConfigurationProvider;
+import io.naryo.application.configuration.provider.CollectionSourceProvider;
+import io.naryo.application.configuration.provider.SourceProvider;
+import io.naryo.application.configuration.source.model.Descriptor;
 
-public abstract class BaseCollectionConfigurationManager<T, K>
+public abstract class BaseCollectionConfigurationManager<T, S extends Descriptor, K>
         implements CollectionConfigurationManager<T> {
 
-    protected final List<? extends CollectionConfigurationProvider<T>> providers;
+    protected final List<? extends CollectionSourceProvider<S>> providers;
 
     protected BaseCollectionConfigurationManager(
-            List<? extends CollectionConfigurationProvider<T>> providers) {
+            List<? extends CollectionSourceProvider<S>> providers) {
         this.providers = providers;
     }
 
     @Override
     public Collection<T> load() {
         return providers.stream()
-                .sorted(Comparator.comparingInt(ConfigurationProvider::priority))
+                .sorted(Comparator.comparingInt(SourceProvider::priority))
                 .flatMap(provider -> provider.load().stream())
-                .collect(getCollector())
-                .values();
+                .collect(
+                        Collectors.collectingAndThen(
+                                getCollector(),
+                                map -> map.values().stream().map(this::map).toList()));
     }
 
-    protected abstract Collector<T, ?, Map<K, T>> getCollector();
+    protected abstract Collector<S, ?, Map<K, S>> getCollector();
+
+    protected abstract T map(S source);
 }
