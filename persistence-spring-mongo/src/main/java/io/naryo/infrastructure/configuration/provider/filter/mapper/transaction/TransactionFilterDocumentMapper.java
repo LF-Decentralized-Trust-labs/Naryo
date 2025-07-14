@@ -10,7 +10,7 @@ public abstract class TransactionFilterDocumentMapper {
 
     public static TransactionFilter fromDocument(TransactionFilterPropertiesDocument props) {
         return new TransactionFilter(
-            UUID.fromString(props.getUuid()),
+            UUID.fromString(props.getId()),
             new FilterName(props.getName()),
             UUID.fromString(props.getNodeId()),
             props.getIdentifierType(),

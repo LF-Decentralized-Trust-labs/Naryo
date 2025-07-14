@@ -14,9 +14,6 @@ public abstract class FilterPropertiesDocument {
     private String id;
 
     @NotNull
-    private String uuid;
-
-    @NotNull
     private String name;
 
     @NotNull

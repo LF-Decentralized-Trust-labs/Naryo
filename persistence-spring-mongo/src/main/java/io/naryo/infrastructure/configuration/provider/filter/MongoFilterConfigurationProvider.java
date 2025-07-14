@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -25,11 +24,9 @@ public final class MongoFilterConfigurationProvider implements FilterConfigurati
     public Collection<Filter> load() {
         List<FilterPropertiesDocument> filters = this.repository.findAll();
 
-        Set<Filter> filterDocuments = filters.stream()
+        return filters.stream()
             .map(FilterDocumentMapper::fromDocument)
             .collect(Collectors.toSet());
-
-        return filterDocuments;
     }
 
     @Override

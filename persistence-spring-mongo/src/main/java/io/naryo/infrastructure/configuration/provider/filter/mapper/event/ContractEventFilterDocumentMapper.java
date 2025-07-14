@@ -11,7 +11,7 @@ public abstract class ContractEventFilterDocumentMapper {
 
     public static ContractEventFilter fromDocument(ContractEventFilterPropertiesDocument props) {
         return new ContractEventFilter(
-            UUID.fromString(props.getUuid()),
+            UUID.fromString(props.getId()),
             new FilterName(props.getName()),
             UUID.fromString(props.getNodeId()),
             EventFilterSpecificationDocumentMapper.fromDocument(props.getSpecification()),

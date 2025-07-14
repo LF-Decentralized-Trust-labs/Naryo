@@ -12,6 +12,7 @@ import java.util.List;
 @TypeAlias("transaction_filter")
 @Getter
 public class TransactionFilterPropertiesDocument extends FilterPropertiesDocument {
+
     @NotNull
     private IdentifierType identifierType;
 
