@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.naryo.infrastructure.configuration.source.env.model.broadcaster.BroadcastingProperties;
 import io.naryo.infrastructure.configuration.source.env.model.broadcaster.configuration.BroadcasterConfigurationEntryProperties;
-import io.naryo.infrastructure.configuration.source.env.model.broadcaster.target.BroadcasterTargetEntryProperties;
+import io.naryo.infrastructure.configuration.source.env.model.broadcaster.target.BroadcasterEntryProperties;
 import io.naryo.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import org.springframework.stereotype.Component;
 
@@ -29,8 +29,8 @@ public final class BroadcastingPropertiesDeserializer
                         "configuration",
                         codec,
                         BroadcasterConfigurationEntryProperties.class);
-        List<BroadcasterTargetEntryProperties> broadcasters =
-                safeTreeToList(root, "broadcasters", codec, BroadcasterTargetEntryProperties.class);
+        List<BroadcasterEntryProperties> broadcasters =
+                safeTreeToList(root, "broadcasters", codec, BroadcasterEntryProperties.class);
 
         return new BroadcastingProperties(configurations, broadcasters);
     }
