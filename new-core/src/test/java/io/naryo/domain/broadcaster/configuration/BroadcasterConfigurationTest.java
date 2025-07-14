@@ -53,10 +53,5 @@ class BroadcasterConfigurationTest {
         protected MockBroadcasterConfiguration(BroadcasterType type, BroadcasterCache cache) {
             super(UUID.randomUUID(), type, cache);
         }
-
-        @Override
-        public BroadcasterConfiguration merge(BroadcasterConfiguration other) {
-            return this;
-        }
     }
 }

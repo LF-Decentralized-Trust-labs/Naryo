@@ -1,0 +1,19 @@
+package io.naryo.application.configuration.source.model.node;
+
+import io.naryo.domain.node.ethereum.EthereumNodeVisibility;
+
+public interface EthereumNodeDescriptor extends NodeDescriptor {
+
+    EthereumNodeVisibility getVisibility();
+
+    @Override
+    default NodeDescriptor merge(NodeDescriptor descriptor) {
+        var result = NodeDescriptor.super.merge(descriptor);
+        if (descriptor instanceof EthereumNodeDescriptor other) {
+            if (!this.getVisibility().equals(other.getVisibility())) {
+                return other;
+            }
+        }
+        return result;
+    }
+}

@@ -16,7 +16,7 @@ import io.naryo.application.node.NodeConfigurationFacade;
 import io.naryo.application.node.NodeInitializer;
 import io.naryo.application.node.configuration.manager.DefaultNodeConfigurationManager;
 import io.naryo.application.node.configuration.manager.NodeConfigurationManager;
-import io.naryo.application.node.configuration.provider.NodeConfigurationProvider;
+import io.naryo.application.node.configuration.provider.NodeSourceProvider;
 import io.naryo.application.node.interactor.block.dto.Block;
 import io.naryo.application.node.interactor.block.factory.BlockInteractorFactory;
 import io.naryo.application.node.interactor.block.factory.DefaultBlockInteractorFactory;
@@ -42,8 +42,7 @@ public class NodeAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(NodeConfigurationManager.class)
-    public NodeConfigurationManager nodeConfigurationManager(
-            List<NodeConfigurationProvider> providers) {
+    public NodeConfigurationManager nodeConfigurationManager(List<NodeSourceProvider> providers) {
         return new DefaultNodeConfigurationManager(providers);
     }
 
