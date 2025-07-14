@@ -19,6 +19,4 @@ public abstract class EventStoreConfiguration implements Configuration {
     public ConfigurationType getType() {
         return type;
     }
-
-    public abstract EventStoreConfiguration merge(EventStoreConfiguration other);
 }

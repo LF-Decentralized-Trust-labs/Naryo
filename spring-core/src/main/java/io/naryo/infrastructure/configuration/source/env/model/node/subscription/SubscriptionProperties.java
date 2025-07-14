@@ -1,15 +1,14 @@
 package io.naryo.infrastructure.configuration.source.env.model.node.subscription;
 
 import io.naryo.domain.node.subscription.SubscriptionStrategy;
-import io.naryo.infrastructure.configuration.source.env.model.node.subscription.block.BlockSubscriptionConfigurationProperties;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 
-public record SubscriptionProperties(
-        @NotNull SubscriptionStrategy strategy,
-        @Valid @NotNull SubscriptionConfigurationProperties configuration) {
+public abstract class SubscriptionProperties {
 
-    public SubscriptionProperties() {
-        this(SubscriptionStrategy.BLOCK_BASED, new BlockSubscriptionConfigurationProperties());
+    private final @Getter @NotNull SubscriptionStrategy strategy;
+
+    public SubscriptionProperties(SubscriptionStrategy strategy) {
+        this.strategy = strategy;
     }
 }

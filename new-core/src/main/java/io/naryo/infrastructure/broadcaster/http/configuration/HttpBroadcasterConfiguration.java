@@ -12,7 +12,7 @@ import lombok.Getter;
 @Getter
 public final class HttpBroadcasterConfiguration extends BroadcasterConfiguration {
 
-    private ConnectionEndpoint endpoint;
+    private final ConnectionEndpoint endpoint;
 
     public HttpBroadcasterConfiguration(
             UUID id, BroadcasterCache cache, ConnectionEndpoint endpoint) {
@@ -24,26 +24,5 @@ public final class HttpBroadcasterConfiguration extends BroadcasterConfiguration
     @Override
     public BroadcasterType getType() {
         return super.getType();
-    }
-
-    @Override
-    public BroadcasterConfiguration merge(BroadcasterConfiguration other) {
-        if (!this.getId().equals(other.getId())) {
-            throw new IllegalArgumentException("Cannot merge configurations with different IDs");
-        }
-
-        if (other.getCache() != null
-                && !other.getCache().expirationTime().equals(this.cache.expirationTime())) {
-            this.cache = other.getCache();
-        }
-
-        if (other instanceof HttpBroadcasterConfiguration httpConfig) {
-            if (httpConfig.getEndpoint() != null
-                    && !this.endpoint.equals(httpConfig.getEndpoint())) {
-                this.endpoint = httpConfig.getEndpoint();
-            }
-        }
-
-        return this;
     }
 }

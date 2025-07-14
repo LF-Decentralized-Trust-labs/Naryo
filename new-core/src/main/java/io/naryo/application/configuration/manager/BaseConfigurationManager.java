@@ -4,24 +4,29 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.BinaryOperator;
 
-import io.naryo.application.configuration.provider.ConfigurationProvider;
+import io.naryo.application.configuration.provider.SourceProvider;
+import io.naryo.application.configuration.source.model.Descriptor;
 
-public abstract class BaseConfigurationManager<T> implements ConfigurationManager<T> {
+public abstract class BaseConfigurationManager<T, S extends Descriptor>
+        implements ConfigurationManager<T> {
 
-    protected final List<ConfigurationProvider<T>> providers;
+    protected final List<SourceProvider<S>> providers;
 
-    protected BaseConfigurationManager(List<ConfigurationProvider<T>> providers) {
+    protected BaseConfigurationManager(List<SourceProvider<S>> providers) {
         this.providers = providers;
     }
 
     @Override
     public T load() {
         return providers.stream()
-                .sorted(Comparator.comparingInt(ConfigurationProvider::priority))
-                .map(ConfigurationProvider::load)
+                .sorted(Comparator.comparingInt(SourceProvider::priority))
+                .map(SourceProvider::load)
                 .reduce(mergeFunction())
+                .map(this::map)
                 .orElseThrow(() -> new IllegalStateException("No configuration available"));
     }
 
-    protected abstract BinaryOperator<T> mergeFunction();
+    protected abstract BinaryOperator<S> mergeFunction();
+
+    protected abstract T map(S source);
 }

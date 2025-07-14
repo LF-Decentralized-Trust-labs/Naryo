@@ -1,24 +1,24 @@
 package io.naryo.infrastructure.configuration.source.env.serialization.filter.event.configuration;
 
 import java.io.IOException;
+import java.math.BigInteger;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
-import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.SyncConfigurationAdditionalProperties;
-import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.SyncConfigurationProperties;
+import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.FilterSyncProperties;
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.SyncType;
-import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.block.BlockSyncConfigurationAdditionalProperties;
+import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.block.BlockFilterSyncProperties;
 import io.naryo.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class SyncConfigurationPropertiesDeserializer
-        extends EnvironmentDeserializer<SyncConfigurationProperties> {
+        extends EnvironmentDeserializer<FilterSyncProperties> {
 
     @Override
-    public SyncConfigurationProperties deserialize(JsonParser p, DeserializationContext context)
+    public FilterSyncProperties deserialize(JsonParser p, DeserializationContext context)
             throws IOException {
         ObjectCodec codec = p.getCodec();
         JsonNode root = codec.readTree(p);
@@ -28,14 +28,13 @@ public final class SyncConfigurationPropertiesDeserializer
                 typeStr != null && !typeStr.isBlank()
                         ? SyncType.valueOf(typeStr)
                         : SyncType.BLOCK_BASED;
-        SyncConfigurationAdditionalProperties configuration =
-                safeTreeToValue(
-                        root,
-                        "configuration",
-                        codec,
-                        BlockSyncConfigurationAdditionalProperties
-                                .class); // Default cause BLOCK_BASED is the only one we support now
 
-        return new SyncConfigurationProperties(type, configuration);
+        return switch (type) {
+            case BLOCK_BASED -> {
+                BigInteger initialBlock =
+                        safeTreeToValue(root, "initialBlock", codec, BigInteger.class);
+                yield new BlockFilterSyncProperties(initialBlock);
+            }
+        };
     }
 }
