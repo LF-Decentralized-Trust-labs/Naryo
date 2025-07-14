@@ -1,15 +1,14 @@
 package io.naryo.infrastructure.configuration.source.env.model.node.interaction;
 
 import io.naryo.domain.node.interaction.InteractionStrategy;
-import io.naryo.infrastructure.configuration.source.env.model.node.interaction.block.BlockInteractionConfigurationProperties;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 
-public record InteractionProperties(
-        @NotNull InteractionStrategy strategy,
-        @Valid @NotNull InteractionConfigurationProperties configuration) {
+public abstract class InteractionProperties {
 
-    public InteractionProperties() {
-        this(InteractionStrategy.BLOCK_BASED, new BlockInteractionConfigurationProperties());
+    private final @Getter @NotNull InteractionStrategy strategy;
+
+    public InteractionProperties(InteractionStrategy strategy) {
+        this.strategy = strategy;
     }
 }

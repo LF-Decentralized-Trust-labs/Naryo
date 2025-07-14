@@ -26,6 +26,4 @@ public abstract class BroadcasterConfiguration implements Configuration {
         this.type = type;
         this.cache = cache;
     }
-
-    public abstract BroadcasterConfiguration merge(BroadcasterConfiguration other);
 }

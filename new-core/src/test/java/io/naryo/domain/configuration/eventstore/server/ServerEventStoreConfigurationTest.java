@@ -1,6 +1,5 @@
 package io.naryo.domain.configuration.eventstore.server;
 
-import io.naryo.domain.configuration.eventstore.EventStoreConfiguration;
 import io.naryo.domain.configuration.eventstore.EventStoreType;
 import org.junit.jupiter.api.Test;
 
@@ -26,11 +25,6 @@ class ServerEventStoreConfigurationTest {
     private static class MockServerEventStoreConfiguration extends ServerEventStoreConfiguration {
         protected MockServerEventStoreConfiguration(ServerType serverType) {
             super(serverType);
-        }
-
-        @Override
-        public EventStoreConfiguration merge(EventStoreConfiguration other) {
-            return this;
         }
     }
 }

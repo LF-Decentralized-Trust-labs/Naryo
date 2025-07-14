@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
+import io.naryo.application.configuration.source.model.broadcaster.target.BroadcasterTargetDescriptor;
 import io.naryo.domain.broadcaster.BroadcasterTargetType;
 import io.naryo.infrastructure.configuration.source.env.model.broadcaster.target.*;
 import io.naryo.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
@@ -13,37 +14,37 @@ import org.springframework.stereotype.Component;
 
 @Component
 public final class BroadcasterTargetEntryPropertiesDeserializer
-        extends EnvironmentDeserializer<BroadcasterTargetEntryProperties> {
+        extends EnvironmentDeserializer<BroadcasterEntryProperties> {
 
     @Override
-    public BroadcasterTargetEntryProperties deserialize(
-            JsonParser p, DeserializationContext context) throws IOException {
+    public BroadcasterEntryProperties deserialize(JsonParser p, DeserializationContext context)
+            throws IOException {
         ObjectCodec codec = p.getCodec();
         JsonNode root = codec.readTree(p);
 
+        String id = getTextOrNull(root.get("id"));
         String configurationId = getTextOrNull(root.get("configurationId"));
-        String typeString = getTextOrNull(root.get("type"));
+        JsonNode targetNode = root.get("target");
+        String typeString = getTextOrNull(targetNode != null ? targetNode.get("type") : null);
         BroadcasterTargetType type =
                 typeString != null && !typeString.isBlank()
                         ? BroadcasterTargetType.valueOf(typeString.toUpperCase())
                         : BroadcasterTargetType.ALL;
-        String destination = getTextOrNull(root.get("destination"));
-        BroadcasterTargetAdditionalProperties configuration =
+        BroadcasterTargetDescriptor target =
                 safeTreeToValue(
                         root,
-                        "configuration",
+                        "target",
                         codec,
                         switch (type) {
-                            case ALL -> AllBroadcasterTargetConfigurationProperties.class;
+                            case ALL -> AllBroadcasterTargetProperties.class;
                             case TRANSACTION ->
                                     TransactionBroadcasterTargetConfigurationProperties.class;
-                            case CONTRACT_EVENT ->
-                                    ContractEventBroadcasterTargetConfigurationProperties.class;
-                            case FILTER -> FilterBroadcasterTargetConfigurationProperties.class;
-                            case BLOCK -> BlockBroadcasterTargetConfigurationProperties.class;
+                            case CONTRACT_EVENT -> ContractEventBroadcasterTargetProperties.class;
+                            case FILTER -> FilterBroadcasterTargetProperties.class;
+                            case BLOCK -> BlockBroadcasterTargetProperties.class;
                         });
 
-        return new BroadcasterTargetEntryProperties(
-                getUuidOrNull(configurationId), type, destination, configuration);
+        return new BroadcasterEntryProperties(
+                getUuidOrNull(id), getUuidOrNull(configurationId), target);
     }
 }
