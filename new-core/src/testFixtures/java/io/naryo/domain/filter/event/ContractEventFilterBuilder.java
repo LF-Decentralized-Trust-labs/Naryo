@@ -19,7 +19,7 @@ public class ContractEventFilterBuilder
     public ContractEventFilter build() {
         InstancioApi<ContractEventFilter> builder = Instancio.of(ContractEventFilter.class);
 
-        return super.buildBase(builder)
+        return super.buildBase(builder, EventFilterScope.CONTRACT)
             .set(field(ContractEventFilter::getContractAddress), this.getContractAddress())
             .create();
     }

@@ -1,16 +1,15 @@
 package io.naryo.domain.filter.event;
 
+import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.filter.event.sync.block.BlockActiveSyncState;
 import org.instancio.Instancio;
-
-import java.math.BigInteger;
 
 import static org.instancio.Select.field;
 
 public class BlockActiveSyncStateBuilder {
 
-    private BigInteger initialBlock;
-    private BigInteger lastBlockProcessed;
+    private NonNegativeBlockNumber initialBlock;
+    private NonNegativeBlockNumber lastBlockProcessed;
 
     public BlockActiveSyncState build() {
         return Instancio.of(BlockActiveSyncState.class)
@@ -19,25 +18,25 @@ public class BlockActiveSyncStateBuilder {
             .create();
     }
 
-    public BlockActiveSyncStateBuilder withInitialBlock(BigInteger initialBlock) {
+    public BlockActiveSyncStateBuilder withInitialBlock(NonNegativeBlockNumber initialBlock) {
         this.initialBlock = initialBlock;
         return this;
     }
 
-    public BlockActiveSyncStateBuilder withLastBlockProcessed(BigInteger lastBlockProcessed) {
+    public BlockActiveSyncStateBuilder withLastBlockProcessed(NonNegativeBlockNumber lastBlockProcessed) {
         this.lastBlockProcessed = lastBlockProcessed;
         return this;
     }
 
-    private BigInteger getInitialBlock() {
+    private NonNegativeBlockNumber getInitialBlock() {
         return this.initialBlock == null
-            ? Instancio.create(BigInteger.class)
+            ? Instancio.create(NonNegativeBlockNumber.class)
             : this.initialBlock;
     }
 
-    private BigInteger getLastBlockProcessed() {
+    private NonNegativeBlockNumber getLastBlockProcessed() {
         return this.lastBlockProcessed == null
-            ? Instancio.create(BigInteger.class)
+            ? Instancio.create(NonNegativeBlockNumber.class)
             : this.lastBlockProcessed;
     }
 }

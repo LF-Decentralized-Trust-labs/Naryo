@@ -15,6 +15,6 @@ public class GlobalEventFilterBuilder
     public GlobalEventFilter build() {
         InstancioApi<GlobalEventFilter> builder = Instancio.of(GlobalEventFilter.class);
 
-        return super.buildBase(builder).create();
+        return super.buildBase(builder, EventFilterScope.GLOBAL).create();
     }
 }

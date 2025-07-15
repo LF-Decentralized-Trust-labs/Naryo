@@ -13,16 +13,10 @@ import static org.instancio.Select.field;
 public abstract class EventFilterBuilder<T, Y extends EventFilter>
     extends FilterBuilder<T, Y> {
 
-    private EventFilterScope scope;
     private EventFilterSpecification specification;
     private List<ContractEventStatus> statuses;
     private SyncState syncState;
     private EventFilterVisibilityConfiguration visibilityConfiguration;
-
-    public T withScope(EventFilterScope scope) {
-        this.scope = scope;
-        return this.self();
-    }
 
     public T withSpecification(EventFilterSpecification specification) {
         this.specification = specification;
@@ -44,19 +38,13 @@ public abstract class EventFilterBuilder<T, Y extends EventFilter>
         return this.self();
     }
 
-    protected InstancioApi<Y> buildBase(InstancioApi<Y> builder) {
+    protected InstancioApi<Y> buildBase(InstancioApi<Y> builder, EventFilterScope scope) {
         return super.buildBase(builder, FilterType.EVENT)
-            .set(field(EventFilter::getScope), this.getScope())
+            .set(field(EventFilter::getScope), scope)
             .set(field(EventFilter::getSpecification), this.getSpecification())
             .set(field(EventFilter::getStatuses), this.getStatuses())
             .set(field(EventFilter::getSyncState), this.getSyncState())
             .set(field(EventFilter::getVisibilityConfiguration), this.getVisibilityConfiguration());
-    }
-
-    private EventFilterScope getScope() {
-        return this.scope == null
-            ? Instancio.create(EventFilterScope.class)
-            : this.scope;
     }
 
     private EventFilterSpecification getSpecification() {

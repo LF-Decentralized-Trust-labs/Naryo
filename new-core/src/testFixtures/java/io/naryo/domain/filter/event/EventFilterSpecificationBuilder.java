@@ -3,15 +3,15 @@ package io.naryo.domain.filter.event;
 import io.naryo.domain.filter.event.parameterdefinition.AddressParameterDefinitionBuilder;
 import org.instancio.Instancio;
 
-import java.util.List;
+import java.util.Set;
 
 import static org.instancio.Select.field;
 
 public class EventFilterSpecificationBuilder {
 
     private String eventName;
-    private Integer correlationId;
-    private List<ParameterDefinition> parameters;
+    private CorrelationId correlationId;
+    private Set<ParameterDefinition> parameters;
 
     public EventFilterSpecification build() {
         return Instancio.of(EventFilterSpecification.class)
@@ -26,12 +26,12 @@ public class EventFilterSpecificationBuilder {
         return this;
     }
 
-    public EventFilterSpecificationBuilder withCorrelationId(int correlationId) {
+    public EventFilterSpecificationBuilder withCorrelationId(CorrelationId correlationId) {
         this.correlationId = correlationId;
         return this;
     }
 
-    public EventFilterSpecificationBuilder withParameters(List<ParameterDefinition> parameters) {
+    public EventFilterSpecificationBuilder withParameters(Set<ParameterDefinition> parameters) {
         this.parameters = parameters;
         return this;
     }
@@ -42,15 +42,15 @@ public class EventFilterSpecificationBuilder {
             : this.eventName;
     }
 
-    private int getCorrelationId() {
+    private CorrelationId getCorrelationId() {
         return this.correlationId == null
-            ? Instancio.create(Integer.class)
+            ? Instancio.create(CorrelationId.class)
             : this.correlationId;
     }
 
-    private List<ParameterDefinition> getParameters() {
+    private Set<ParameterDefinition> getParameters() {
         return this.parameters == null
-            ? List.of(new AddressParameterDefinitionBuilder().build())
+            ? Set.of(new AddressParameterDefinitionBuilder().build())
             : this.parameters;
     }
 }

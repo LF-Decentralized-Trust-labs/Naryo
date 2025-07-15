@@ -9,25 +9,25 @@ import static org.instancio.Select.field;
 
 public abstract class FilterBuilder<T, Y extends Filter> {
 
-    private String id;
-    private String name;
-    private String nodeId;
+    private UUID id;
+    private FilterName name;
+    private UUID nodeId;
 
     public abstract T self();
 
     public abstract Y build();
 
     public T withId(UUID id) {
-        this.id = id.toString();
+        this.id = id;
         return self();
     }
 
-    public T withName(String name) {
+    public T withName(FilterName name) {
         this.name = name;
         return self();
     }
 
-    public T withNodeId(String nodeId) {
+    public T withNodeId(UUID nodeId) {
         this.nodeId = nodeId;
         return self();
     }
@@ -40,21 +40,21 @@ public abstract class FilterBuilder<T, Y extends Filter> {
             .set(field(Filter::getType), type);
     }
 
-    private String getId() {
+    private UUID getId() {
         return this.id == null
-            ? UUID.randomUUID().toString()
+            ? UUID.randomUUID()
             : this.id;
     }
 
-    private String getName() {
+    private FilterName getName() {
         return this.name == null
-            ? Instancio.create(String.class)
+            ? Instancio.create(FilterName.class)
             : this.name;
     }
 
-    private String getNodeId() {
+    private UUID getNodeId() {
         return this.nodeId == null
-            ? UUID.randomUUID().toString()
+            ? UUID.randomUUID()
             : this.nodeId;
     }
 }
