@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 
 @Document(collection = "filters")
 @Getter
-public abstract class FilterPropertiesDocument {
+public abstract class FilterDocument {
 
     @MongoId
     private String id;

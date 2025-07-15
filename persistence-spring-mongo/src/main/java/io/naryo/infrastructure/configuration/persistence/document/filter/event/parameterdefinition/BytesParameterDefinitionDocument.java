@@ -3,8 +3,8 @@ package io.naryo.infrastructure.configuration.persistence.document.filter.event.
 import lombok.Getter;
 import org.springframework.data.annotation.TypeAlias;
 
-@TypeAlias("bool_parameter_definition")
+@TypeAlias("bytes_parameter_definition")
 @Getter
-public class BoolParameterDefinitionPropertiesDocument extends IndexedParameterDefinitionPropertiesDocument {
+public class BytesParameterDefinitionDocument extends ParameterDefinitionDocument {
 
 }

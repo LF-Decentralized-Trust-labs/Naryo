@@ -3,8 +3,8 @@ package io.naryo.infrastructure.configuration.persistence.document.filter.event.
 import lombok.Getter;
 import org.springframework.data.annotation.TypeAlias;
 
-@TypeAlias("string_parameter_definition")
+@TypeAlias("address_parameter_definition")
 @Getter
-public class StringParameterDefinitionPropertiesDocument extends ParameterDefinitionPropertiesDocument {
+public class AddressParameterDefinitionDocument extends IndexedParameterDefinitionDocument {
 
 }

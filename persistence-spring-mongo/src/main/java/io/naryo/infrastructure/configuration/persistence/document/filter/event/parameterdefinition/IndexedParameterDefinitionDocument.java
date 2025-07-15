@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
-public abstract class IndexedParameterDefinitionPropertiesDocument extends ParameterDefinitionPropertiesDocument {
+public abstract class IndexedParameterDefinitionDocument extends ParameterDefinitionDocument {
 
     @NotNull
     private boolean indexed;

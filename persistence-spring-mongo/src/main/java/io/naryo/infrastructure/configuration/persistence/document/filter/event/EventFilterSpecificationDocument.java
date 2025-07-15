@@ -1,13 +1,13 @@
 package io.naryo.infrastructure.configuration.persistence.document.filter.event;
 
-import io.naryo.infrastructure.configuration.persistence.document.filter.event.parameterdefinition.ParameterDefinitionPropertiesDocument;
+import io.naryo.infrastructure.configuration.persistence.document.filter.event.parameterdefinition.ParameterDefinitionDocument;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 import java.util.List;
 
 @Getter
-public class EventFilterSpecificationPropertiesDocument {
+public class EventFilterSpecificationDocument {
     @NotNull
     private String eventName;
 
@@ -15,6 +15,6 @@ public class EventFilterSpecificationPropertiesDocument {
     private int correlationId;
 
     @NotNull
-    private List<ParameterDefinitionPropertiesDocument> parameters;
+    private List<ParameterDefinitionDocument> parameters;
 
 }

@@ -5,5 +5,5 @@ import org.springframework.data.annotation.TypeAlias;
 
 @TypeAlias("global_event_filter")
 @Getter
-public class GlobalEventFilterPropertiesDocument extends EventFilterPropertiesDocument {
+public class GlobalEventFilterDocument extends EventFilterDocument {
 }

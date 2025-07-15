@@ -6,7 +6,7 @@ import org.springframework.data.annotation.TypeAlias;
 
 @TypeAlias("contract_event_filter")
 @Getter
-public class ContractEventFilterPropertiesDocument extends EventFilterPropertiesDocument {
+public class ContractEventFilterDocument extends EventFilterDocument {
     @NotNull
     private String contractAddress;
 

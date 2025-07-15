@@ -4,13 +4,11 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import org.springframework.data.annotation.TypeAlias;
 
-import java.util.Set;
-
-@TypeAlias("struct_parameter_definition")
+@TypeAlias("bytes_fixed_parameter_definition")
 @Getter
-public class StructParameterDefinitionPropertiesDocument extends ParameterDefinitionPropertiesDocument {
+public class BytesFixedParameterDefinitionDocument extends IndexedParameterDefinitionDocument {
 
     @NotNull
-    private Set<ParameterDefinitionPropertiesDocument> parameterDefinitions;
+    private int byteLength;
 
 }
