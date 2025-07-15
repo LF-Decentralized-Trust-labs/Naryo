@@ -1,17 +1,17 @@
 package io.naryo.infrastructure.configuration.provider.filter.mapper.event;
 
 import io.naryo.domain.filter.event.EventFilter;
-import io.naryo.infrastructure.configuration.persistence.document.filter.event.ContractEventFilterPropertiesDocument;
-import io.naryo.infrastructure.configuration.persistence.document.filter.event.EventFilterPropertiesDocument;
-import io.naryo.infrastructure.configuration.persistence.document.filter.event.GlobalEventFilterPropertiesDocument;
+import io.naryo.infrastructure.configuration.persistence.document.filter.event.ContractEventFilterDocument;
+import io.naryo.infrastructure.configuration.persistence.document.filter.event.EventFilterDocument;
+import io.naryo.infrastructure.configuration.persistence.document.filter.event.GlobalEventFilterDocument;
 
 public abstract class EventFilterDocumentMapper {
 
-    public static EventFilter fromDocument(EventFilterPropertiesDocument props) {
+    public static EventFilter fromDocument(EventFilterDocument props) {
         return switch (props) {
-            case GlobalEventFilterPropertiesDocument globalEventFilterProps ->
+            case GlobalEventFilterDocument globalEventFilterProps ->
                 GlobalEventFilterDocumentMapper.fromDocument(globalEventFilterProps);
-            case ContractEventFilterPropertiesDocument contractEventFilterProps ->
+            case ContractEventFilterDocument contractEventFilterProps ->
                 ContractEventFilterDocumentMapper.fromDocument(contractEventFilterProps);
             default ->
                 throw new IllegalArgumentException("Unknown event filter scope: " + props.getScope());

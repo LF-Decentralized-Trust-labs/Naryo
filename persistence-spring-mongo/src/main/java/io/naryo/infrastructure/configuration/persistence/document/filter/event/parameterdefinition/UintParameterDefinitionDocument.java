@@ -6,7 +6,7 @@ import org.springframework.data.annotation.TypeAlias;
 
 @TypeAlias("uint_parameter_definition")
 @Getter
-public class UintParameterDefinitionPropertiesDocument extends IndexedParameterDefinitionPropertiesDocument {
+public class UintParameterDefinitionDocument extends IndexedParameterDefinitionDocument {
 
     @NotNull
     private int bitSize;

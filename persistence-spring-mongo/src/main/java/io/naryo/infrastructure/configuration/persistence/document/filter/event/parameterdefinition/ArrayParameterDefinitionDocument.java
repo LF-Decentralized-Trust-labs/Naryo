@@ -4,11 +4,14 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import org.springframework.data.annotation.TypeAlias;
 
-@TypeAlias("bytes_fixed_parameter_definition")
+@TypeAlias("array_parameter_definition")
 @Getter
-public class BytesFixedParameterDefinitionPropertiesDocument extends IndexedParameterDefinitionPropertiesDocument {
+public class ArrayParameterDefinitionDocument extends ParameterDefinitionDocument {
 
     @NotNull
-    private int byteLength;
+    private ParameterDefinitionDocument elementType;
+
+    @NotNull
+    private int fixedLength;
 
 }

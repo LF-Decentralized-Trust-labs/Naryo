@@ -2,7 +2,7 @@ package io.naryo.infrastructure.configuration.provider.filter;
 
 import io.naryo.application.filter.configuration.provider.FilterConfigurationProvider;
 import io.naryo.domain.filter.Filter;
-import io.naryo.infrastructure.configuration.persistence.document.filter.FilterPropertiesDocument;
+import io.naryo.infrastructure.configuration.persistence.document.filter.FilterDocument;
 import io.naryo.infrastructure.configuration.persistence.repository.filter.FilterDocumentRepository;
 import io.naryo.infrastructure.configuration.provider.filter.mapper.FilterDocumentMapper;
 import org.springframework.stereotype.Component;
@@ -22,7 +22,7 @@ public final class MongoFilterConfigurationProvider implements FilterConfigurati
 
     @Override
     public Collection<Filter> load() {
-        List<FilterPropertiesDocument> filters = this.repository.findAll();
+        List<FilterDocument> filters = this.repository.findAll();
 
         return filters.stream()
             .map(FilterDocumentMapper::fromDocument)

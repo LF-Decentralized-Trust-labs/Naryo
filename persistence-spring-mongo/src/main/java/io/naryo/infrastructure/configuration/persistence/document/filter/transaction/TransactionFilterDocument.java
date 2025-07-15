@@ -2,7 +2,7 @@ package io.naryo.infrastructure.configuration.persistence.document.filter.transa
 
 import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.filter.transaction.IdentifierType;
-import io.naryo.infrastructure.configuration.persistence.document.filter.FilterPropertiesDocument;
+import io.naryo.infrastructure.configuration.persistence.document.filter.FilterDocument;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import org.springframework.data.annotation.TypeAlias;
@@ -11,7 +11,7 @@ import java.util.List;
 
 @TypeAlias("transaction_filter")
 @Getter
-public class TransactionFilterPropertiesDocument extends FilterPropertiesDocument {
+public class TransactionFilterDocument extends FilterDocument {
 
     @NotNull
     private IdentifierType identifierType;

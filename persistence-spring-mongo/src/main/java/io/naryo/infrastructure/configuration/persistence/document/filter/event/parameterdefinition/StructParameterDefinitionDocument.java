@@ -4,11 +4,13 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import org.springframework.data.annotation.TypeAlias;
 
-@TypeAlias("int_parameter_definition")
+import java.util.Set;
+
+@TypeAlias("struct_parameter_definition")
 @Getter
-public class IntParameterDefinitionPropertiesDocument extends IndexedParameterDefinitionPropertiesDocument {
+public class StructParameterDefinitionDocument extends ParameterDefinitionDocument {
 
     @NotNull
-    private int bitSize;
+    private Set<ParameterDefinitionDocument> parameterDefinitions;
 
 }

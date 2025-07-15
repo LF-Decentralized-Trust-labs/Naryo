@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 @Getter
-public abstract class ParameterDefinitionPropertiesDocument {
+public abstract class ParameterDefinitionDocument {
 
     @NotNull
     private ParameterType parameterType;
