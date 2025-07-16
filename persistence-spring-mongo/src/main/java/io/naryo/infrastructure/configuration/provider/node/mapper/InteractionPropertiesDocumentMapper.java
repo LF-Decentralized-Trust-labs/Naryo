@@ -20,24 +20,33 @@ public abstract class InteractionPropertiesDocumentMapper {
         return createDefaultInteractionConfiguration();
     }
 
-    private static BlockInteractionConfiguration mapBlockInteraction(BlockInteractionPropertiesDocument document) {
-        if (document.getConfiguration() instanceof EthereumRpcBlockInteractionModePropertiesDocument) {
-            return mapEthereumRpcBlockInteraction((EthereumRpcBlockInteractionModePropertiesDocument) document.getConfiguration());
-        } else if (document.getConfiguration() instanceof HederaMirrorNodeBlockInteractionModePropertiesDocument) {
-            return mapHederaMirrorNodeBlockInteraction((HederaMirrorNodeBlockInteractionModePropertiesDocument) document.getConfiguration());
+    private static BlockInteractionConfiguration mapBlockInteraction(
+            BlockInteractionPropertiesDocument document) {
+        if (document.getConfiguration()
+                instanceof EthereumRpcBlockInteractionModePropertiesDocument) {
+            return mapEthereumRpcBlockInteraction(
+                    (EthereumRpcBlockInteractionModePropertiesDocument)
+                            document.getConfiguration());
+        } else if (document.getConfiguration()
+                instanceof HederaMirrorNodeBlockInteractionModePropertiesDocument) {
+            return mapHederaMirrorNodeBlockInteraction(
+                    (HederaMirrorNodeBlockInteractionModePropertiesDocument)
+                            document.getConfiguration());
         }
         throw new IllegalArgumentException("Unsupported document type: " + document.getClass());
     }
 
-    private static EthereumRpcBlockInteractionConfiguration mapEthereumRpcBlockInteraction(EthereumRpcBlockInteractionModePropertiesDocument document) {
+    private static EthereumRpcBlockInteractionConfiguration mapEthereumRpcBlockInteraction(
+            EthereumRpcBlockInteractionModePropertiesDocument document) {
         return new EthereumRpcBlockInteractionConfiguration();
     }
 
-    private static HederaMirrorNodeBlockInteractionConfiguration mapHederaMirrorNodeBlockInteraction(HederaMirrorNodeBlockInteractionModePropertiesDocument document) {
+    private static HederaMirrorNodeBlockInteractionConfiguration
+            mapHederaMirrorNodeBlockInteraction(
+                    HederaMirrorNodeBlockInteractionModePropertiesDocument document) {
         return new HederaMirrorNodeBlockInteractionConfiguration(
-            new LimitPerRequest(document.getLimitPerRequest()),
-            new RetriesPerRequest(document.getRetriesPerRequest())
-        );
+                new LimitPerRequest(document.getLimitPerRequest()),
+                new RetriesPerRequest(document.getRetriesPerRequest()));
     }
 
     private static InteractionConfiguration createDefaultInteractionConfiguration() {

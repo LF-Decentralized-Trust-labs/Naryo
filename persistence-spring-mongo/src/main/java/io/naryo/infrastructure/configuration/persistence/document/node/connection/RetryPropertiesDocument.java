@@ -1,10 +1,9 @@
 package io.naryo.infrastructure.configuration.persistence.document.node.connection;
 
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import org.springframework.data.annotation.TypeAlias;
-
 import java.time.Duration;
+
+import jakarta.validation.constraints.NotNull;
+import org.springframework.data.annotation.TypeAlias;
 
 @TypeAlias("connection")
 public class RetryPropertiesDocument {

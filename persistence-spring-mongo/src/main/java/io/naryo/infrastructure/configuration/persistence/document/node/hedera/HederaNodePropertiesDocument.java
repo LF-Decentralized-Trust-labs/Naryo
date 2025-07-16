@@ -4,5 +4,4 @@ import io.naryo.infrastructure.configuration.persistence.document.node.NodePrope
 import org.springframework.data.annotation.TypeAlias;
 
 @TypeAlias("hedera_node")
-public class HederaNodePropertiesDocument extends NodePropertiesDocument {
-}
+public class HederaNodePropertiesDocument extends NodePropertiesDocument {}

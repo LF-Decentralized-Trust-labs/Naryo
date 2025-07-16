@@ -5,7 +5,8 @@ import org.springframework.data.annotation.TypeAlias;
 
 @TypeAlias("hedera_mirror_node_block_interaction_mode")
 @Getter
-public class HederaMirrorNodeBlockInteractionModePropertiesDocument implements BlockInteractionModePropertiesDocument {
+public class HederaMirrorNodeBlockInteractionModePropertiesDocument
+        implements BlockInteractionModePropertiesDocument {
 
     private Integer limitPerRequest;
     private Integer retriesPerRequest;

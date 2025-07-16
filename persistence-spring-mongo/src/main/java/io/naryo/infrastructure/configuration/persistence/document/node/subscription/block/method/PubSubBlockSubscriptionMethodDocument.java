@@ -5,5 +5,4 @@ import org.springframework.data.annotation.TypeAlias;
 
 @Getter
 @TypeAlias("pub_sub_block_subscription_method")
-public class PubSubBlockSubscriptionMethodDocument extends BlockSubscriptionMethodDocument {
-}
+public class PubSubBlockSubscriptionMethodDocument extends BlockSubscriptionMethodDocument {}

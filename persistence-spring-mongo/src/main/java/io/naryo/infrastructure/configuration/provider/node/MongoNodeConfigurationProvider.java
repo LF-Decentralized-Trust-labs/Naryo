@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import io.naryo.application.node.configuration.provider.NodeConfigurationProvider;
 import io.naryo.domain.node.Node;
-import io.naryo.infrastructure.configuration.persistence.document.node.NodePropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.NodePropertiesDocumentRepository;
 import io.naryo.infrastructure.configuration.provider.node.mapper.NodePropertiesDocumentMapper;
 import org.springframework.stereotype.Component;
@@ -21,7 +20,9 @@ public final class MongoNodeConfigurationProvider implements NodeConfigurationPr
 
     @Override
     public Collection<Node> load() {
-        return this.repository.findAll().stream().map(NodePropertiesDocumentMapper::fromDocument).collect(Collectors.toSet());
+        return this.repository.findAll().stream()
+                .map(NodePropertiesDocumentMapper::fromDocument)
+                .collect(Collectors.toSet());
     }
 
     @Override
