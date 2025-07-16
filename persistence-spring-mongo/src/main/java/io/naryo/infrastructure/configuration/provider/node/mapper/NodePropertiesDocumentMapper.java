@@ -1,5 +1,7 @@
 package io.naryo.infrastructure.configuration.provider.node.mapper;
 
+import java.util.Optional;
+
 import io.naryo.domain.node.Node;
 import io.naryo.domain.node.NodeName;
 import io.naryo.domain.node.ethereum.EthereumNodeVisibility;
@@ -14,8 +16,6 @@ import io.naryo.infrastructure.configuration.persistence.document.node.eth.Ether
 import io.naryo.infrastructure.configuration.persistence.document.node.eth.PrivateEthereumNodeVisibilityDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.hedera.HederaNodePropertiesDocument;
 
-import java.util.Optional;
-
 public abstract class NodePropertiesDocumentMapper {
 
     public static Node fromDocument(NodePropertiesDocument document) {
@@ -28,9 +28,10 @@ public abstract class NodePropertiesDocumentMapper {
     }
 
     private static Node mapEthereumNode(EthereumNodePropertiesDocument document) {
-        var visibility = Optional.ofNullable(document.getConfiguration())
-            .map(EthereumNodeVisibilityConfigurationDocument::getVisibility)
-            .orElse(EthereumNodeVisibility.PUBLIC);
+        var visibility =
+                Optional.ofNullable(document.getConfiguration())
+                        .map(EthereumNodeVisibilityConfigurationDocument::getVisibility)
+                        .orElse(EthereumNodeVisibility.PUBLIC);
 
         return switch (visibility) {
             case PRIVATE -> mapPrivateEthereumNode(document);
@@ -38,36 +39,41 @@ public abstract class NodePropertiesDocumentMapper {
         };
     }
 
-    private static PrivateEthereumNode mapPrivateEthereumNode(EthereumNodePropertiesDocument document) {
+    private static PrivateEthereumNode mapPrivateEthereumNode(
+            EthereumNodePropertiesDocument document) {
         var privateCfg = (PrivateEthereumNodeVisibilityDocument) document.getConfiguration();
         return new PrivateEthereumNode(
-            document.getId(),
-            new NodeName(document.getName()),
-            SubscriptionPropertiesDocumentMapper.fromDocument(document.getSubscription()),
-            InteractionPropertiesDocumentMapper.fromDocument(document.getInteraction()),
-            ConnectionPropertiesDocumentMapper.fromDocument(document.getConnection()),
-            new GroupId(Optional.ofNullable(privateCfg).map(PrivateEthereumNodeVisibilityDocument::getGroupId).orElse("default")),
-            new PrecompiledAddress(Optional.ofNullable(privateCfg).map(PrivateEthereumNodeVisibilityDocument::getPrecompiledAddress).orElse("0x0"))
-        );
+                document.getId(),
+                new NodeName(document.getName()),
+                SubscriptionPropertiesDocumentMapper.fromDocument(document.getSubscription()),
+                InteractionPropertiesDocumentMapper.fromDocument(document.getInteraction()),
+                ConnectionPropertiesDocumentMapper.fromDocument(document.getConnection()),
+                new GroupId(
+                        Optional.ofNullable(privateCfg)
+                                .map(PrivateEthereumNodeVisibilityDocument::getGroupId)
+                                .orElse("default")),
+                new PrecompiledAddress(
+                        Optional.ofNullable(privateCfg)
+                                .map(PrivateEthereumNodeVisibilityDocument::getPrecompiledAddress)
+                                .orElse("0x0")));
     }
 
-    private static PublicEthereumNode mapPublicEthereumNode(EthereumNodePropertiesDocument document) {
+    private static PublicEthereumNode mapPublicEthereumNode(
+            EthereumNodePropertiesDocument document) {
         return new PublicEthereumNode(
-            document.getId(),
-            new NodeName(document.getName()),
-            SubscriptionPropertiesDocumentMapper.fromDocument(document.getSubscription()),
-            InteractionPropertiesDocumentMapper.fromDocument(document.getInteraction()),
-            ConnectionPropertiesDocumentMapper.fromDocument(document.getConnection())
-        );
+                document.getId(),
+                new NodeName(document.getName()),
+                SubscriptionPropertiesDocumentMapper.fromDocument(document.getSubscription()),
+                InteractionPropertiesDocumentMapper.fromDocument(document.getInteraction()),
+                ConnectionPropertiesDocumentMapper.fromDocument(document.getConnection()));
     }
 
     private static Node mapHederaNode(HederaNodePropertiesDocument document) {
         return new HederaNode(
-            document.getId(),
-            new NodeName(document.getName()),
-            SubscriptionPropertiesDocumentMapper.fromDocument(document.getSubscription()),
-            InteractionPropertiesDocumentMapper.fromDocument(document.getInteraction()),
-            ConnectionPropertiesDocumentMapper.fromDocument(document.getConnection())
-        );
+                document.getId(),
+                new NodeName(document.getName()),
+                SubscriptionPropertiesDocumentMapper.fromDocument(document.getSubscription()),
+                InteractionPropertiesDocumentMapper.fromDocument(document.getInteraction()),
+                ConnectionPropertiesDocumentMapper.fromDocument(document.getConnection()));
     }
 }

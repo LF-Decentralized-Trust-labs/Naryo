@@ -3,5 +3,5 @@ package io.naryo.infrastructure.configuration.persistence.document.node.interact
 import org.springframework.data.annotation.TypeAlias;
 
 @TypeAlias("ethereum_rpc_block_interaction_mode")
-public class EthereumRpcBlockInteractionModePropertiesDocument implements BlockInteractionModePropertiesDocument {
-}
+public class EthereumRpcBlockInteractionModePropertiesDocument
+        implements BlockInteractionModePropertiesDocument {}

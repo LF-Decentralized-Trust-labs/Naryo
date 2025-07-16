@@ -1,12 +1,12 @@
 package io.naryo.infrastructure.configuration.persistence.document.node.subscription.block;
 
+import java.math.BigInteger;
+
 import io.naryo.infrastructure.configuration.persistence.document.node.subscription.SubscriptionPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.subscription.block.method.BlockSubscriptionMethodDocument;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import org.springframework.data.annotation.TypeAlias;
-
-import java.math.BigInteger;
 
 @TypeAlias("block_subscription_properties")
 public class BlockSubscriptionPropertiesDocument extends SubscriptionPropertiesDocument {
@@ -31,19 +31,27 @@ public class BlockSubscriptionPropertiesDocument extends SubscriptionPropertiesD
     }
 
     public BigInteger getConfirmationBlocks() {
-        return this.confirmationBlocks != null ? this.confirmationBlocks : DEFAULT_CONFIRMATION_BLOCKS;
+        return this.confirmationBlocks != null
+                ? this.confirmationBlocks
+                : DEFAULT_CONFIRMATION_BLOCKS;
     }
 
     public BigInteger getMissingTxRetryBlocks() {
-        return this.missingTxRetryBlocks != null ? this.missingTxRetryBlocks : DEFAULT_MISSING_TX_RETRY_BLOCKS;
+        return this.missingTxRetryBlocks != null
+                ? this.missingTxRetryBlocks
+                : DEFAULT_MISSING_TX_RETRY_BLOCKS;
     }
 
     public BigInteger getEventInvalidationBlockThreshold() {
-        return this.eventInvalidationBlockThreshold != null ? this.eventInvalidationBlockThreshold : DEFAULT_EVENT_INVALIDATION_BLOCK_THRESHOLD;
+        return this.eventInvalidationBlockThreshold != null
+                ? this.eventInvalidationBlockThreshold
+                : DEFAULT_EVENT_INVALIDATION_BLOCK_THRESHOLD;
     }
 
     public BigInteger getReplayBlockOffset() {
-        return this.replayBlockOffset != null ? this.replayBlockOffset : DEFAULT_REPLAY_BLOCK_OFFSET;
+        return this.replayBlockOffset != null
+                ? this.replayBlockOffset
+                : DEFAULT_REPLAY_BLOCK_OFFSET;
     }
 
     public BigInteger getSyncBlockLimit() {

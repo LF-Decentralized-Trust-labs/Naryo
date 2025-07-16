@@ -1,9 +1,9 @@
 package io.naryo.infrastructure.configuration.persistence.document.node.connection.http;
 
+import java.time.Duration;
+
 import io.naryo.infrastructure.configuration.persistence.document.node.connection.ConnectionPropertiesDocument;
 import org.springframework.data.annotation.TypeAlias;
-
-import java.time.Duration;
 
 @TypeAlias("http_connection")
 public class HttpConnectionConfigurationPropertiesDocument extends ConnectionPropertiesDocument {
@@ -19,18 +19,22 @@ public class HttpConnectionConfigurationPropertiesDocument extends ConnectionPro
     private Duration readTimeout;
 
     public int getMaxIdleConnections() {
-        return this.maxIdleConnections != 0? this.maxIdleConnections : DEFAULT_MAX_IDLE_CONNECTIONS;
+        return this.maxIdleConnections != 0
+                ? this.maxIdleConnections
+                : DEFAULT_MAX_IDLE_CONNECTIONS;
     }
 
     public Duration getKeepAliveDuration() {
-        return this.keepAliveDuration!= null? this.keepAliveDuration : DEFAULT_KEEP_ALIVE_DURATION;
+        return this.keepAliveDuration != null
+                ? this.keepAliveDuration
+                : DEFAULT_KEEP_ALIVE_DURATION;
     }
 
     public Duration getConnectionTimeout() {
-        return this.connectionTimeout!= null? this.connectionTimeout : DEFAULT_CONNECTION_TIMEOUT;
+        return this.connectionTimeout != null ? this.connectionTimeout : DEFAULT_CONNECTION_TIMEOUT;
     }
 
     public Duration getReadTimeout() {
-        return this.readTimeout!= null? this.readTimeout : DEFAULT_READ_TIMEOUT;
+        return this.readTimeout != null ? this.readTimeout : DEFAULT_READ_TIMEOUT;
     }
 }

@@ -20,21 +20,23 @@ public abstract class ConnectionPropertiesDocumentMapper {
         throw new IllegalArgumentException("Unsupported document type: " + document.getClass());
     }
 
-    private static NodeConnection mapHttpConnection(HttpConnectionConfigurationPropertiesDocument document) {
+    private static NodeConnection mapHttpConnection(
+            HttpConnectionConfigurationPropertiesDocument document) {
         return new HttpNodeConnection(
-            new ConnectionEndpoint(document.getEndpoint().getUrl()),
-            new RetryConfiguration(document.getRetry().getTimes(), document.getRetry().getBackoff()),
-            new MaxIdleConnections(document.getMaxIdleConnections()),
-            new KeepAliveDuration(document.getKeepAliveDuration()),
-            new ConnectionTimeout(document.getConnectionTimeout()),
-            new ReadTimeout(document.getReadTimeout())
-        );
+                new ConnectionEndpoint(document.getEndpoint().getUrl()),
+                new RetryConfiguration(
+                        document.getRetry().getTimes(), document.getRetry().getBackoff()),
+                new MaxIdleConnections(document.getMaxIdleConnections()),
+                new KeepAliveDuration(document.getKeepAliveDuration()),
+                new ConnectionTimeout(document.getConnectionTimeout()),
+                new ReadTimeout(document.getReadTimeout()));
     }
 
-    private static NodeConnection mapWsConnection(WsConnectionConfigurationPropertiesDocument document) {
+    private static NodeConnection mapWsConnection(
+            WsConnectionConfigurationPropertiesDocument document) {
         return new WsNodeConnection(
-            new ConnectionEndpoint(document.getEndpoint().getUrl()),
-            new RetryConfiguration(document.getRetry().getTimes(), document.getRetry().getBackoff())
-        );
+                new ConnectionEndpoint(document.getEndpoint().getUrl()),
+                new RetryConfiguration(
+                        document.getRetry().getTimes(), document.getRetry().getBackoff()));
     }
 }

@@ -4,5 +4,4 @@ import io.naryo.infrastructure.configuration.persistence.document.node.connectio
 import org.springframework.data.annotation.TypeAlias;
 
 @TypeAlias("ws_connection")
-public class WsConnectionConfigurationPropertiesDocument extends ConnectionPropertiesDocument {
-}
+public class WsConnectionConfigurationPropertiesDocument extends ConnectionPropertiesDocument {}
