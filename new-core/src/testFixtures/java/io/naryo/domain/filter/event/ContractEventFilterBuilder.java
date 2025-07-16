@@ -1,9 +1,6 @@
 package io.naryo.domain.filter.event;
 
 import org.instancio.Instancio;
-import org.instancio.InstancioApi;
-
-import static org.instancio.Select.field;
 
 public class ContractEventFilterBuilder
     extends EventFilterBuilder<ContractEventFilterBuilder, ContractEventFilter> {
@@ -17,11 +14,16 @@ public class ContractEventFilterBuilder
 
     @Override
     public ContractEventFilter build() {
-        InstancioApi<ContractEventFilter> builder = Instancio.of(ContractEventFilter.class);
-
-        return super.buildBase(builder, EventFilterScope.CONTRACT)
-            .set(field(ContractEventFilter::getContractAddress), this.getContractAddress())
-            .create();
+        return new ContractEventFilter(
+            this.getId(),
+            this.getName(),
+            this.getNodeId(),
+            this.getSpecification(),
+            this.getStatuses(),
+            this.getSyncState(),
+            this.getVisibilityConfiguration(),
+            this.getContractAddress()
+        );
     }
 
     public ContractEventFilterBuilder withContractAddress(String contractAddress) {

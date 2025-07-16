@@ -1,11 +1,6 @@
 package io.naryo.domain.filter.event.parameterdefinition;
 
-import io.naryo.domain.common.ParameterType;
 import io.naryo.domain.filter.event.parameter.IntParameterDefinition;
-import org.instancio.Instancio;
-import org.instancio.InstancioApi;
-
-import static org.instancio.Select.field;
 
 public class IntParameterDefinitionBuilder
     extends ParameterDefinitionBuilder<IntParameterDefinitionBuilder, IntParameterDefinition> {
@@ -21,11 +16,7 @@ public class IntParameterDefinitionBuilder
 
     @Override
     public IntParameterDefinition build() {
-        InstancioApi<IntParameterDefinition> builder = Instancio.of(IntParameterDefinition.class);
-
-        return super.buildBase(builder, ParameterType.INT)
-            .set(field(IntParameterDefinition::getBitSize), this.getBitSize())
-            .create();
+        return new IntParameterDefinition(this.getBitSize(), this.getPosition(), this.isIndexed());
     }
 
     public IntParameterDefinitionBuilder withBitSize(int bitSize) {

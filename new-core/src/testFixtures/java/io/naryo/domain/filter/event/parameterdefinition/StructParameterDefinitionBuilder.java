@@ -1,14 +1,9 @@
 package io.naryo.domain.filter.event.parameterdefinition;
 
-import io.naryo.domain.common.ParameterType;
 import io.naryo.domain.filter.event.ParameterDefinition;
 import io.naryo.domain.filter.event.parameter.StructParameterDefinition;
-import org.instancio.Instancio;
-import org.instancio.InstancioApi;
 
 import java.util.Set;
-
-import static org.instancio.Select.field;
 
 public class StructParameterDefinitionBuilder
     extends ParameterDefinitionBuilder<StructParameterDefinitionBuilder, StructParameterDefinition> {
@@ -22,11 +17,7 @@ public class StructParameterDefinitionBuilder
 
     @Override
     public StructParameterDefinition build() {
-        InstancioApi<StructParameterDefinition> builder = Instancio.of(StructParameterDefinition.class);
-
-        return super.buildBase(builder, ParameterType.STRUCT)
-            .set(field(StructParameterDefinition::getParameterDefinitions), this.getParameterDefinitions())
-            .create();
+        return new StructParameterDefinition(this.getPosition(), this.getParameterDefinitions());
     }
 
     public StructParameterDefinitionBuilder withParameterDefinitions(Set<ParameterDefinition> parameterDefinitions) {

@@ -1,8 +1,10 @@
 package io.naryo.domain.filter.event;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
+@EqualsAndHashCode
 public class EventFilterVisibilityConfiguration {
 
     private final boolean visible;
