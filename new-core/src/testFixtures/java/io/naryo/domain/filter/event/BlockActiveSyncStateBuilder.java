@@ -4,18 +4,13 @@ import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.filter.event.sync.block.BlockActiveSyncState;
 import org.instancio.Instancio;
 
-import static org.instancio.Select.field;
-
 public class BlockActiveSyncStateBuilder {
 
     private NonNegativeBlockNumber initialBlock;
     private NonNegativeBlockNumber lastBlockProcessed;
 
     public BlockActiveSyncState build() {
-        return Instancio.of(BlockActiveSyncState.class)
-            .set(field(BlockActiveSyncState::getInitialBlock), this.getInitialBlock())
-            .set(field(BlockActiveSyncState::getLastBlockProcessed), this.getLastBlockProcessed())
-            .create();
+        return new BlockActiveSyncState(this.getInitialBlock(), this.getLastBlockProcessed());
     }
 
     public BlockActiveSyncStateBuilder withInitialBlock(NonNegativeBlockNumber initialBlock) {

@@ -1,27 +1,26 @@
 package io.naryo.domain.filter.event;
 
+import io.naryo.domain.common.event.EventName;
 import io.naryo.domain.filter.event.parameterdefinition.AddressParameterDefinitionBuilder;
 import org.instancio.Instancio;
 
 import java.util.Set;
 
-import static org.instancio.Select.field;
-
 public class EventFilterSpecificationBuilder {
 
-    private String eventName;
+    private EventName eventName;
     private CorrelationId correlationId;
     private Set<ParameterDefinition> parameters;
 
     public EventFilterSpecification build() {
-        return Instancio.of(EventFilterSpecification.class)
-            .set(field(EventFilterSpecification::eventName), this.getEventName())
-            .set(field(EventFilterSpecification::correlationId), this.getCorrelationId())
-            .set(field(EventFilterSpecification::parameters), this.getParameters())
-            .create();
+        return new EventFilterSpecification(
+                this.getEventName(),
+                this.getCorrelationId(),
+                this.getParameters()
+        );
     }
 
-    public EventFilterSpecificationBuilder withEventName(String eventName) {
+    public EventFilterSpecificationBuilder withEventName(EventName eventName) {
         this.eventName = eventName;
         return this;
     }
@@ -36,9 +35,9 @@ public class EventFilterSpecificationBuilder {
         return this;
     }
 
-    private String getEventName() {
+    private EventName getEventName() {
         return this.eventName == null
-            ? Instancio.create(String.class)
+            ? Instancio.create(EventName.class)
             : this.eventName;
     }
 

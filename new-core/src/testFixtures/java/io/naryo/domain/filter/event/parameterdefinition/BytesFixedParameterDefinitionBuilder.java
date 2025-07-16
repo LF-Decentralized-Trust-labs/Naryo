@@ -1,11 +1,6 @@
 package io.naryo.domain.filter.event.parameterdefinition;
 
-import io.naryo.domain.common.ParameterType;
 import io.naryo.domain.filter.event.parameter.BytesFixedParameterDefinition;
-import org.instancio.Instancio;
-import org.instancio.InstancioApi;
-
-import static org.instancio.Select.field;
 
 public class BytesFixedParameterDefinitionBuilder
     extends ParameterDefinitionBuilder<BytesFixedParameterDefinitionBuilder, BytesFixedParameterDefinition> {
@@ -21,11 +16,7 @@ public class BytesFixedParameterDefinitionBuilder
 
     @Override
     public BytesFixedParameterDefinition build() {
-        InstancioApi<BytesFixedParameterDefinition> builder = Instancio.of(BytesFixedParameterDefinition.class);
-
-        return super.buildBase(builder, ParameterType.BYTES_FIXED)
-            .set(field(BytesFixedParameterDefinition::getByteLength), this.getByteLength())
-            .create();
+        return new BytesFixedParameterDefinition(this.getByteLength(), this.getPosition(), this.isIndexed());
     }
 
     public BytesFixedParameterDefinitionBuilder withByteLength(int byteLength) {
