@@ -207,22 +207,22 @@ naryo:
     configuration:
       - id: cd1bec0d-2998-46bc-828f-94459d42c17a
         type: HTTP
-        configuration:
-          endpoint:
-            url: http://localhost:8080
+        endpoint:
+          url: http://localhost:8080
     broadcasters:
-      - configurationId: cd1bec0d-2998-46bc-828f-94459d42c17a
-        type: ALL
-        destination: /events
+      - id: cd1bec0d-2998-46bc-828f-94459d43c17b
+        configurationId: cd1bec0d-2998-46bc-828f-94459d42c17a
+        target:
+          type: ALL
+          destination: /events
   filters:
     - id: a5605668-7a88-4e5c-b4ee-4a8417b7184d
       name: my-transfer-filter
       type: EVENT
       nodeId: eadc75b2-4217-4018-95af-f67c13058976
-      configuration:
-        scope: GLOBAL
-        specification:
-          signature: Transfer(address indexed, address indexed, uint256)
+      scope: GLOBAL
+      specification:
+        signature: Transfer(address indexed, address indexed, uint256)
 ```
 
 ## 📁 Step 6: Expose Event Notifications via HTTP

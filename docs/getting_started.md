@@ -98,7 +98,7 @@ dependencies {
     naryo:
       nodes:
         - name: default
-    ...
+    #...
     ```
 
    Please refer to the [Configuration Documentation](./configuration.md) for more details.
