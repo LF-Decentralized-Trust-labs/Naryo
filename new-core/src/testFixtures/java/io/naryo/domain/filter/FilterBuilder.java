@@ -40,19 +40,19 @@ public abstract class FilterBuilder<T, Y extends Filter> {
             .set(field(Filter::getType), type);
     }
 
-    private UUID getId() {
+    protected UUID getId() {
         return this.id == null
             ? UUID.randomUUID()
             : this.id;
     }
 
-    private FilterName getName() {
+    protected FilterName getName() {
         return this.name == null
             ? Instancio.create(FilterName.class)
             : this.name;
     }
 
-    private UUID getNodeId() {
+    protected UUID getNodeId() {
         return this.nodeId == null
             ? UUID.randomUUID()
             : this.nodeId;

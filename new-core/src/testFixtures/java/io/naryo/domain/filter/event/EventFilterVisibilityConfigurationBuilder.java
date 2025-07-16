@@ -2,18 +2,15 @@ package io.naryo.domain.filter.event;
 
 import org.instancio.Instancio;
 
-import static org.instancio.Select.field;
-
 public class EventFilterVisibilityConfigurationBuilder {
 
     private Boolean visible;
     private String privacyGroupId;
 
     public EventFilterVisibilityConfiguration build() {
-        return Instancio.of(EventFilterVisibilityConfiguration.class)
-            .set(field(EventFilterVisibilityConfiguration::isVisible), this.isVisible())
-            .set(field(EventFilterVisibilityConfiguration::getPrivacyGroupId), this.getPrivacyGroupId())
-            .create();
+        return this.isVisible()
+                ? EventFilterVisibilityConfiguration.visible()
+                : EventFilterVisibilityConfiguration.invisible(this.getPrivacyGroupId());
     }
 
     public EventFilterVisibilityConfigurationBuilder withVisible(boolean visible) {

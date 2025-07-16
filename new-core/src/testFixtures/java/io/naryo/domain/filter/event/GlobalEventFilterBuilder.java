@@ -1,8 +1,5 @@
 package io.naryo.domain.filter.event;
 
-import org.instancio.Instancio;
-import org.instancio.InstancioApi;
-
 public class GlobalEventFilterBuilder
     extends EventFilterBuilder<GlobalEventFilterBuilder, GlobalEventFilter> {
 
@@ -13,8 +10,14 @@ public class GlobalEventFilterBuilder
 
     @Override
     public GlobalEventFilter build() {
-        InstancioApi<GlobalEventFilter> builder = Instancio.of(GlobalEventFilter.class);
-
-        return super.buildBase(builder, EventFilterScope.GLOBAL).create();
+        return new GlobalEventFilter(
+                this.getId(),
+                this.getName(),
+                this.getNodeId(),
+                this.getSpecification(),
+                this.getStatuses(),
+                this.getSyncState(),
+                this.getVisibilityConfiguration()
+        );
     }
 }

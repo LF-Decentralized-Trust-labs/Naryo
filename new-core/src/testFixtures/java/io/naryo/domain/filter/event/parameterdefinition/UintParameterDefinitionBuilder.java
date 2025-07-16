@@ -1,11 +1,6 @@
 package io.naryo.domain.filter.event.parameterdefinition;
 
-import io.naryo.domain.common.ParameterType;
 import io.naryo.domain.filter.event.parameter.UintParameterDefinition;
-import org.instancio.Instancio;
-import org.instancio.InstancioApi;
-
-import static org.instancio.Select.field;
 
 public class UintParameterDefinitionBuilder
     extends ParameterDefinitionBuilder<UintParameterDefinitionBuilder, UintParameterDefinition> {
@@ -21,11 +16,7 @@ public class UintParameterDefinitionBuilder
 
     @Override
     public UintParameterDefinition build() {
-        InstancioApi<UintParameterDefinition> builder = Instancio.of(UintParameterDefinition.class);
-
-        return super.buildBase(builder, ParameterType.UINT)
-            .set(field(UintParameterDefinition::getBitSize), this.getBitSize())
-            .create();
+        return new UintParameterDefinition(this.getBitSize(), this.getPosition(), this.isIndexed());
     }
 
     public UintParameterDefinitionBuilder withBitSize(int bitSize) {
