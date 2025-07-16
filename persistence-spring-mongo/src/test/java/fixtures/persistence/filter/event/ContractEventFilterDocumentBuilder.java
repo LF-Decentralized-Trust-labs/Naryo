@@ -6,7 +6,7 @@ import org.instancio.Instancio;
 public class ContractEventFilterDocumentBuilder
     extends EventFilterDocumentBuilder<ContractEventFilterDocumentBuilder, ContractEventFilterDocument> {
 
-    private String contractAddress;
+    private String address;
 
     @Override
     public ContractEventFilterDocumentBuilder self() {
@@ -22,20 +22,21 @@ public class ContractEventFilterDocumentBuilder
             this.getScope(),
             this.getSpecification(),
             this.getStatuses(),
-            this.getSyncState(),
+            this.getSync(),
             this.getVisibilityConfiguration(),
-            this.getContractAddress()
+            this.getAddress()
         );
     }
 
-    public ContractEventFilterDocumentBuilder withContractAddress(String contractAddress) {
-        this.contractAddress = contractAddress;
+    public ContractEventFilterDocumentBuilder withAddress(String contractAddress) {
+        this.address = contractAddress;
         return this.self();
     }
 
-    private String getContractAddress() {
-        return this.contractAddress == null
+    private String getAddress() {
+        return this.address == null
             ? Instancio.create(String.class)
-            : this.contractAddress;
+            : this.address;
     }
+
 }

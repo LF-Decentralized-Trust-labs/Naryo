@@ -6,7 +6,7 @@ import io.naryo.domain.filter.event.EventFilterScope;
 import io.naryo.infrastructure.configuration.persistence.document.filter.event.EventFilterDocument;
 import io.naryo.infrastructure.configuration.persistence.document.filter.event.EventFilterSpecificationDocument;
 import io.naryo.infrastructure.configuration.persistence.document.filter.event.EventFilterVisibilityConfigurationDocument;
-import io.naryo.infrastructure.configuration.persistence.document.filter.event.syncstate.SyncStateDocument;
+import io.naryo.infrastructure.configuration.persistence.document.filter.event.sync.FilterSyncDocument;
 import org.instancio.Instancio;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public abstract class EventFilterDocumentBuilder<T, Y extends EventFilterDocumen
     private EventFilterScope scope;
     private EventFilterSpecificationDocument specification;
     private List<ContractEventStatus> statuses;
-    private SyncStateDocument syncState;
+    private FilterSyncDocument sync;
     private EventFilterVisibilityConfigurationDocument visibilityConfiguration;
 
     public T withScope(EventFilterScope scope) {
@@ -35,8 +35,8 @@ public abstract class EventFilterDocumentBuilder<T, Y extends EventFilterDocumen
         return this.self();
     }
 
-    public T withSyncState(SyncStateDocument syncState) {
-        this.syncState = syncState;
+    public T withSync(FilterSyncDocument sync) {
+        this.sync = sync;
         return this.self();
     }
 
@@ -63,10 +63,10 @@ public abstract class EventFilterDocumentBuilder<T, Y extends EventFilterDocumen
             : this.statuses;
     }
 
-    protected SyncStateDocument getSyncState() {
-        return this.syncState == null
-            ? new BlockActiveSyncStateDocumentBuilder().build()
-            : this.syncState;
+    protected FilterSyncDocument getSync() {
+        return this.sync == null
+            ? new BlockSyncDocumentBuilder().build()
+            : this.sync;
     }
 
     protected EventFilterVisibilityConfigurationDocument getVisibilityConfiguration() {
@@ -74,4 +74,5 @@ public abstract class EventFilterDocumentBuilder<T, Y extends EventFilterDocumen
             ? new EventFilterVisibilityConfigurationDocumentBuilder().build()
             : this.visibilityConfiguration;
     }
+
 }

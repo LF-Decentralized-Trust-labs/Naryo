@@ -1,10 +1,12 @@
 package io.naryo.infrastructure.configuration.persistence.document.filter.event;
 
+import io.naryo.application.configuration.source.model.filter.event.contract.ContractEventFilterDescriptor;
 import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.filter.event.EventFilterScope;
-import io.naryo.infrastructure.configuration.persistence.document.filter.event.syncstate.SyncStateDocument;
+import io.naryo.infrastructure.configuration.persistence.document.filter.event.sync.FilterSyncDocument;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.annotation.TypeAlias;
 
@@ -12,10 +14,11 @@ import java.util.List;
 
 @TypeAlias("contract_event_filter")
 @Getter
-public class ContractEventFilterDocument extends EventFilterDocument {
+@Setter
+public class ContractEventFilterDocument extends EventFilterDocument implements ContractEventFilterDescriptor {
 
     @NotNull
-    private String contractAddress;
+    private String address;
 
     public ContractEventFilterDocument(String id,
                                        String name,
@@ -23,10 +26,11 @@ public class ContractEventFilterDocument extends EventFilterDocument {
                                        EventFilterScope scope,
                                        EventFilterSpecificationDocument specification,
                                        List<ContractEventStatus> statuses,
-                                       @Nullable SyncStateDocument syncState,
+                                       @Nullable FilterSyncDocument sync,
                                        EventFilterVisibilityConfigurationDocument visibilityConfiguration,
-                                       String contractAddress) {
-        super(id, name, nodeId, scope, specification, statuses, syncState, visibilityConfiguration);
-        this.contractAddress = contractAddress;
+                                       String address) {
+        super(id, name, nodeId, scope, specification, statuses, sync, visibilityConfiguration);
+        this.address = address;
     }
+
 }

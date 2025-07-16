@@ -1,14 +1,17 @@
 package io.naryo.infrastructure.configuration.persistence.document.filter;
 
+import io.naryo.application.configuration.source.model.filter.FilterDescriptor;
 import io.naryo.domain.filter.FilterType;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import java.util.UUID;
+
 @Document(collection = "filters")
 @Getter
-public abstract class FilterDocument {
+public abstract class FilterDocument implements FilterDescriptor {
 
     @MongoId
     private String id;
@@ -28,4 +31,25 @@ public abstract class FilterDocument {
         this.type = type;
         this.nodeId = nodeId;
     }
+
+    @Override
+    public UUID getId() {
+        return UUID.fromString(this.id);
+    }
+
+    @Override
+    public UUID getNodeId() {
+        return UUID.fromString(this.nodeId);
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void setNodeId(UUID nodeId) {
+        this.nodeId = nodeId.toString();
+    }
+
 }

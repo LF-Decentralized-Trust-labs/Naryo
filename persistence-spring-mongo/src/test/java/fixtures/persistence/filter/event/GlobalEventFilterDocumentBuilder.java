@@ -19,8 +19,9 @@ public class GlobalEventFilterDocumentBuilder
             this.getScope(),
             this.getSpecification(),
             this.getStatuses(),
-            this.getSyncState(),
+            this.getSync(),
             this.getVisibilityConfiguration()
         );
     }
+
 }

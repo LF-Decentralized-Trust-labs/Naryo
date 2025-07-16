@@ -1,28 +1,23 @@
 package io.naryo.infrastructure.configuration.persistence.document.filter.event;
 
-import io.naryo.infrastructure.configuration.persistence.document.filter.event.parameterdefinition.ParameterDefinitionDocument;
+import io.naryo.application.configuration.source.model.filter.event.EventSpecificationDescriptor;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-
-import java.util.List;
+import lombok.Setter;
 
 @Getter
-public class EventFilterSpecificationDocument {
+@Setter
+public class EventFilterSpecificationDocument implements EventSpecificationDescriptor {
 
     @NotNull
-    private String eventName;
+    private String signature;
 
     @NotNull
-    private int correlationId;
+    private Integer correlationId;
 
-    @NotNull
-    private List<ParameterDefinitionDocument> parameters;
-
-    public EventFilterSpecificationDocument(String eventName,
-                                            int correlationId,
-                                            List<ParameterDefinitionDocument> parameters) {
-        this.eventName = eventName;
+    public EventFilterSpecificationDocument(String signature, Integer correlationId) {
+        this.signature = signature;
         this.correlationId = correlationId;
-        this.parameters = parameters;
     }
+
 }
