@@ -5,6 +5,10 @@ plugins {
     id 'com.gradle.plugin-publish'
 }
 
+ext {
+    mockitoVersion = '5.17.0'
+}
+
 group = 'io.naryo'
 version = '0.1.0'
 
@@ -24,8 +28,12 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
+    testImplementation testFixtures(project(':new-core'))
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
+    testImplementation 'org.instancio:instancio-junit:5.4.0'
 }
 
 test {
