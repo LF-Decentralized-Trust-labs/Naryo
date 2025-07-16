@@ -1,12 +1,7 @@
 package io.naryo.domain.filter.event.parameterdefinition;
 
-import io.naryo.domain.common.ParameterType;
 import io.naryo.domain.filter.event.ParameterDefinition;
 import io.naryo.domain.filter.event.parameter.ArrayParameterDefinition;
-import org.instancio.Instancio;
-import org.instancio.InstancioApi;
-
-import static org.instancio.Select.field;
 
 public class ArrayParameterDefinitionBuilder
     extends ParameterDefinitionBuilder<ArrayParameterDefinitionBuilder, ArrayParameterDefinition> {
@@ -21,12 +16,17 @@ public class ArrayParameterDefinitionBuilder
 
     @Override
     public ArrayParameterDefinition build() {
-        InstancioApi<ArrayParameterDefinition> builder = Instancio.of(ArrayParameterDefinition.class);
+        return new ArrayParameterDefinition(this.getPosition(), this.getElementType(), this.getFixedLength());
+    }
 
-        return super.buildBase(builder, ParameterType.ARRAY)
-            .set(field(ArrayParameterDefinition::getElementType), this.getElementType())
-            .set(field(ArrayParameterDefinition::getFixedLength), this.getFixedLength())
-            .create();
+    public ArrayParameterDefinitionBuilder withElementType(ParameterDefinition elementType) {
+        this.elementType = elementType;
+        return this.self();
+    }
+
+    public ArrayParameterDefinitionBuilder withFixedLength(Integer fixedLength) {
+        this.fixedLength = fixedLength;
+        return this.self();
     }
 
     private ParameterDefinition getElementType() {

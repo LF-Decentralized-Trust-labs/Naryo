@@ -1,11 +1,7 @@
 package io.naryo.domain.filter.event.parameterdefinition;
 
-import io.naryo.domain.common.ParameterType;
 import io.naryo.domain.filter.event.ParameterDefinition;
 import org.instancio.Instancio;
-import org.instancio.InstancioApi;
-
-import static org.instancio.Select.field;
 
 public abstract class ParameterDefinitionBuilder<T, Y extends ParameterDefinition> {
 
@@ -26,20 +22,13 @@ public abstract class ParameterDefinitionBuilder<T, Y extends ParameterDefinitio
         return this.self();
     }
 
-    protected InstancioApi<Y> buildBase(InstancioApi<Y> builder, ParameterType parameterType) {
-        return builder
-            .set(field(ParameterDefinition::getPosition), this.getPosition())
-            .set(field(ParameterDefinition::isIndexed), this.isIndexed())
-            .set(field(ParameterDefinition::getType), parameterType);
-    }
-
-    private int getPosition() {
+    protected int getPosition() {
         return this.position == null
             ? Instancio.create(Integer.class)
             : this.position;
     }
 
-    private boolean isIndexed() {
+    protected boolean isIndexed() {
         return this.indexed == null
             ? Instancio.create(Boolean.class)
             : this.indexed;
