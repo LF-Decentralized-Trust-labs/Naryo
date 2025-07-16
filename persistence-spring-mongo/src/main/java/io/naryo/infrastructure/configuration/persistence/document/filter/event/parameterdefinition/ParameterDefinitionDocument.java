@@ -15,4 +15,8 @@ public abstract class ParameterDefinitionDocument {
     @NotNull
     private int position;
 
+    public ParameterDefinitionDocument(ParameterType parameterType, int position) {
+        this.parameterType = parameterType;
+        this.position = position;
+    }
 }

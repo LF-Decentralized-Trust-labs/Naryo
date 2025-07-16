@@ -8,6 +8,7 @@ import java.util.List;
 
 @Getter
 public class EventFilterSpecificationDocument {
+
     @NotNull
     private String eventName;
 
@@ -17,4 +18,11 @@ public class EventFilterSpecificationDocument {
     @NotNull
     private List<ParameterDefinitionDocument> parameters;
 
+    public EventFilterSpecificationDocument(String eventName,
+                                            int correlationId,
+                                            List<ParameterDefinitionDocument> parameters) {
+        this.eventName = eventName;
+        this.correlationId = correlationId;
+        this.parameters = parameters;
+    }
 }

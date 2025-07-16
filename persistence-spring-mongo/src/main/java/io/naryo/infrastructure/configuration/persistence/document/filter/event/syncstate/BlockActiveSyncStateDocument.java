@@ -8,7 +8,7 @@ import java.math.BigInteger;
 
 @TypeAlias("block_active_sync_state")
 @Getter
-public class BlockActiveSyncStatePropertiesDocument extends SyncStatePropertiesDocument {
+public class BlockActiveSyncStateDocument extends SyncStateDocument {
 
     @NotNull
     private BigInteger initialBlock;
@@ -16,4 +16,8 @@ public class BlockActiveSyncStatePropertiesDocument extends SyncStatePropertiesD
     @NotNull
     private BigInteger lastBlockProcessed;
 
+    public BlockActiveSyncStateDocument(BigInteger initialBlock, BigInteger lastBlockProcessed) {
+        this.initialBlock = initialBlock;
+        this.lastBlockProcessed = lastBlockProcessed;
+    }
 }

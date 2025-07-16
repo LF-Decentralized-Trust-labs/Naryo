@@ -1,13 +1,32 @@
 package io.naryo.infrastructure.configuration.persistence.document.filter.event;
 
+import io.naryo.domain.common.event.ContractEventStatus;
+import io.naryo.domain.filter.event.EventFilterScope;
+import io.naryo.infrastructure.configuration.persistence.document.filter.event.syncstate.SyncStateDocument;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.data.annotation.TypeAlias;
+
+import java.util.List;
 
 @TypeAlias("contract_event_filter")
 @Getter
 public class ContractEventFilterDocument extends EventFilterDocument {
+
     @NotNull
     private String contractAddress;
 
+    public ContractEventFilterDocument(String id,
+                                       String name,
+                                       String nodeId,
+                                       EventFilterScope scope,
+                                       EventFilterSpecificationDocument specification,
+                                       List<ContractEventStatus> statuses,
+                                       @Nullable SyncStateDocument syncState,
+                                       EventFilterVisibilityConfigurationDocument visibilityConfiguration,
+                                       String contractAddress) {
+        super(id, name, nodeId, scope, specification, statuses, syncState, visibilityConfiguration);
+        this.contractAddress = contractAddress;
+    }
 }

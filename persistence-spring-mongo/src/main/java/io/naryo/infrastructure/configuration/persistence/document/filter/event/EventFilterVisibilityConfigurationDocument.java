@@ -12,4 +12,8 @@ public class EventFilterVisibilityConfigurationDocument {
     @NotNull
     private String privacyGroupId;
 
+    public EventFilterVisibilityConfigurationDocument(boolean visible, String privacyGroupId) {
+        this.visible = visible;
+        this.privacyGroupId = privacyGroupId;
+    }
 }

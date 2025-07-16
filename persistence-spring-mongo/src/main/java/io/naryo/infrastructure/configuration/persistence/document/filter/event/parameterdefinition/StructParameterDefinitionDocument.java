@@ -1,5 +1,6 @@
 package io.naryo.infrastructure.configuration.persistence.document.filter.event.parameterdefinition;
 
+import io.naryo.domain.common.ParameterType;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import org.springframework.data.annotation.TypeAlias;
@@ -13,4 +14,8 @@ public class StructParameterDefinitionDocument extends ParameterDefinitionDocume
     @NotNull
     private Set<ParameterDefinitionDocument> parameterDefinitions;
 
+    public StructParameterDefinitionDocument(int position, Set<ParameterDefinitionDocument> parameterDefinitions) {
+        super(ParameterType.STRUCT, position);
+        this.parameterDefinitions = parameterDefinitions;
+    }
 }

@@ -22,4 +22,10 @@ public abstract class FilterDocument {
     @NotNull
     private String nodeId;
 
+    public FilterDocument(String id, String name, FilterType type, String nodeId) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.nodeId = nodeId;
+    }
 }

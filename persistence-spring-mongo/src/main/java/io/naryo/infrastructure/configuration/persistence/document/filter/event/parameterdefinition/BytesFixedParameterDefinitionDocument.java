@@ -1,5 +1,6 @@
 package io.naryo.infrastructure.configuration.persistence.document.filter.event.parameterdefinition;
 
+import io.naryo.domain.common.ParameterType;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import org.springframework.data.annotation.TypeAlias;
@@ -11,4 +12,8 @@ public class BytesFixedParameterDefinitionDocument extends IndexedParameterDefin
     @NotNull
     private int byteLength;
 
+    public BytesFixedParameterDefinitionDocument(int position, boolean indexed, int byteLength) {
+        super(ParameterType.BYTES_FIXED, position, indexed);
+        this.byteLength = byteLength;
+    }
 }

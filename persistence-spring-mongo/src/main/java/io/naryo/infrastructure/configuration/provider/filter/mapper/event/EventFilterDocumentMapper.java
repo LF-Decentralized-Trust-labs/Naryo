@@ -14,7 +14,7 @@ public abstract class EventFilterDocumentMapper {
             case ContractEventFilterDocument contractEventFilterProps ->
                 ContractEventFilterDocumentMapper.fromDocument(contractEventFilterProps);
             default ->
-                throw new IllegalArgumentException("Unknown event filter scope: " + props.getScope());
+                throw new IllegalArgumentException("Unknown event filter with scope: " + props.getScope());
         };
     }
 }
