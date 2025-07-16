@@ -44,33 +44,32 @@ broadcasting:
       type: HTTP # By default, only HTTP is supported
       cache:
         expirationTime: 5m
-      configuration:
-        endpoint:
-          url: "https://example.com/broadcast"
+      endpoint:
+        url: "https://example.com/broadcast"
   broadcasters:
-    - configurationId: "550e8400-e29b-41d4-a716-446655440000"
-      type: FILTER # Also supports BLOCK, TRANSACTION, CONTRACT_EVENT or ALL
-      destination: "/block" # depends on the type of broadcaster
-      configuration:
+    - id: "cad022c2-3e41-426f-bb82-c0b86d58d675"
+      configurationId: "550e8400-e29b-41d4-a716-446655440000"
+      target:
+        type: FILTER # Also supports BLOCK, TRANSACTION, CONTRACT_EVENT or ALL
+        destination: "/block" # depends on the type of broadcaster
         filterId: "550e8400-e29b-41d4-a716-446655440001"
 ```
 
-| Parameter                                  | Description                                           | Value Type | Default Value |
-|--------------------------------------------|-------------------------------------------------------|------------|---------------|
-| `configuration`                            | List of broadcasting configurations.                  | List       |               |
-| `configuration.id`                         | Unique identifier for the broadcasting configuration. | UUID       |               |
-| `configuration.type`                       | Type of broadcasting.                                 | String     |               |
-| `configuration.cache`                      | Cache configuration.                                  | Object     |               |
-| `configuration.cache.expirationTime`       | Expiration time for the cache.                        | Duration   | 5m            |
-| `configuration.configuration`              | Configuration for the broadcasting.                   | Object     |               |
-| `configuration.configuration.endpoint`     | Endpoint configuration.                               | Object     |               |
-| `configuration.configuration.endpoint.url` | URL of the endpoint.                                  | String     |               |
-| `broadcasters`                             | List of broadcasters.                                 | List       |               |
-| `broadcasters.configurationId`             | ID of the broadcasting configuration to use.          | UUID       |               |
-| `broadcasters.type`                        | Type of broadcaster.                                  | String     |               |
-| `broadcasters.destination`                 | Destination of the broadcaster.                       | String     |               |
-| `broadcasters.configuration`               | Configuration for the broadcaster.                    | Object     |               |
-| `broadcasters.configuration.filterId`      | ID of the filter to broadcast.                        | UUID       |               |
+| Parameter                            | Description                                           | Value Type | Supported by | Values                                          | Default Value  |
+|--------------------------------------|-------------------------------------------------------|------------|--------------|-------------------------------------------------|----------------|
+| `configuration`                      | List of broadcasting configurations.                  | List       | ALL          | Any                                             | Not applicable |
+| `configuration.id`                   | Unique identifier for the broadcasting configuration. | UUID       | ALL          | Any                                             | Not applicable |
+| `configuration.type`                 | Type of broadcasting.                                 | String     | ALL          | HTTP, KAFKA, RABBITMQ, etc.                     | Not applicable |
+| `configuration.cache`                | Cache configuration.                                  | Object     | ALL          | Any                                             | Not applicable |
+| `configuration.cache.expirationTime` | Expiration time for the cache.                        | Duration   | ALL          | Any                                             | 5m             |
+| `configuration.endpoint`             | Endpoint configuration.                               | Object     | HTTP         | Any                                             | Not applicable |
+| `configuration.endpoint.url`         | URL of the endpoint.                                  | String     | HTTP         | Any                                             | Not applicable |
+| `broadcasters`                       | List of broadcasters.                                 | List       | ALL          | Any                                             | Not applicable |
+| `broadcasters.id`                    | ID of the broadcasting to use.                        | UUID       | ALL          | Any                                             | Not applicable |
+| `broadcasters.configurationId`       | ID of the broadcasting configuration to use.          | UUID       | ALL          | Any                                             | Not applicable |
+| `broadcasters.target.type`           | Type of broadcaster.                                  | String     | ALL          | FILTER, CONTRACT_EVENT, BLOCK, TRANSACTION, ALL | Not applicable |
+| `broadcasters.target.destination`    | Destination of the broadcaster.                       | String     | ALL          | Any                                             | Not applicable |
+| `broadcasters.filterId`              | ID of the filter to broadcast.                        | UUID       | FILTER       | Any                                             | Not applicable |
 
 > **Note**: The broadcaster configuration type only supports `HTTP` by default, but depending on the modules you use, it
 > could be extended to support other broadcasting configuration types. Also, the broadcaster type can be set to the
@@ -90,24 +89,20 @@ nodes:
     type: HEDERA # Also supports ETHEREUM
     subscription:
       strategy: BLOCK_BASED # Only supports BLOCK_BASED
-      configuration:
-        method:
-          type: POLL # Also supports PUBSUB
-          configuration:
-            interval: 1s
-        initialBlock: 1
-        confirmationBlocks: 12
-        missingTxBlocks: 200
-        eventInvalidationBlockThreshold: 2
-        replayBlockOffset: 12
-        syncBlockLimit: 20000
+      method:
+        type: POLL # Also supports PUBSUB
+        interval: 1s
+      initialBlock: 1
+      confirmationBlocks: 12
+      missingTxBlocks: 200
+      eventInvalidationBlockThreshold: 2
+      replayBlockOffset: 12
+      syncBlockLimit: 20000
     interaction:
       strategy: BLOCK_BASED
-      configuration:
-        mode: HEDERA_MIRROR_NODE
-        configuration:
-          limitPerRequest: 100 # Only necessary for HEDERA_MIRROR_NODE
-          retriesPerRequest: 3 # Only necessary for HEDERA_MIRROR_NODE
+      mode: HEDERA_MIRROR_NODE
+      limitPerRequest: 100 # Only necessary for HEDERA_MIRROR_NODE
+      retriesPerRequest: 3 # Only necessary for HEDERA_MIRROR_NODE
     connection:
       type: HTTP # Also supports WS
       retry:
@@ -115,51 +110,47 @@ nodes:
         backoff: 1s
       endpoint:
         url: "https://mainnet.hashio.io/api"
-      configuration: # Only necessary for HTTP
-        maxIdleConnections: 5
-        keepAliveDuration: 5m
-        connectionTimeout: 10s
-        readTimeout: 30s
+      maxIdleConnections: 5
+      keepAliveDuration: 5m
+      connectionTimeout: 10s
+      readTimeout: 30s
 ```
 
-| Parameter                                                          | Description                                                 | Value Type | Default Value |
-|--------------------------------------------------------------------|-------------------------------------------------------------|------------|---------------|
-| `nodes`                                                            | List of nodes.                                              | List       |               |
-| `nodes.id`                                                         | Unique identifier for the node.                             | UUID       |               |
-| `nodes.name`                                                       | Name of the node.                                           | String     |               |
-| `nodes.type`                                                       | Type of node.                                               | String     | ETHEREUM      |
-| `nodes.subscription`                                               | Subscription configuration.                                 | Object     |               |
-| `nodes.subscription.strategy`                                      | Subscription strategy.                                      | String     | BLOCK_BASED   |
-| `nodes.subscription.configuration`                                 | Subscription configuration.                                 | Object     |               |
-| `nodes.subscription.configuration.method`                          | Method configuration.                                       | Object     |               |
-| `nodes.subscription.configuration.method.type`                     | Type of method.                                             | String     | POLL          |
-| `nodes.subscription.configuration.method.configuration`            | Method configuration.                                       | Object     |               |
-| `nodes.subscription.configuration.method.configuration.interval`   | Interval for polling.                                       | Duration   | 1s            |
-| `nodes.subscription.configuration.initialBlock`                    | Initial block.                                              | Integer    | -1 (Latest)   |
-| `nodes.subscription.configuration.confirmationBlocks`              | Confirmation blocks.                                        | Integer    | 12            |
-| `nodes.subscription.configuration.missingTxBlocks`                 | Missing transaction blocks.                                 | Integer    | 200           |
-| `nodes.subscription.configuration.eventInvalidationBlockThreshold` | Event invalidation block threshold.                         | Integer    | 2             |
-| `nodes.subscription.configuration.replayBlockOffset`               | Replay block offset.                                        | Integer    | 12            |
-| `nodes.subscription.configuration.syncBlockLimit`                  | Sync block limit.                                           | Integer    | 20000         |
-| `nodes.interaction`                                                | Interaction configuration.                                  | Object     |               |
-| `nodes.interaction.strategy`                                       | Interaction strategy.                                       | String     | BLOCK_BASED   |
-| `nodes.interaction.configuration`                                  | Interaction configuration.                                  | Object     |               |
-| `nodes.interaction.configuration.mode`                             | Interaction mode.                                           | String     | ETHEREUM_RPC  |
-| `nodes.interaction.configuration.configuration`                    | Interaction configuration.                                  | Object     |               |
-| `nodes.interaction.configuration.configuration.limitPerRequest`    | Limit per request. Only necessary for HEDERA_MIRROR_NODE.   | Integer    | 100           |
-| `nodes.interaction.configuration.configuration.retriesPerRequest`  | Retries per request. Only necessary for HEDERA_MIRROR_NODE. | Integer    | 3             |
-| `nodes.connection`                                                 | Connection configuration.                                   | Object     |               |
-| `nodes.connection.type`                                            | Type of connection.                                         | String     |               |
-| `nodes.connection.retry`                                           | Retry configuration.                                        | Object     |               |
-| `nodes.connection.retry.times`                                     | Number of times to retry.                                   | Integer    | 3             |
-| `nodes.connection.retry.backoff`                                   | Backoff duration.                                           | Duration   | 1s            |
-| `nodes.connection.endpoint`                                        | Endpoint configuration.                                     | Object     |               |
-| `nodes.connection.endpoint.url`                                    | URL of the endpoint.                                        | String     |               |
-| `nodes.connection.configuration`                                   | Connection configuration.                                   | Object     |               |
-| `nodes.connection.configuration.maxIdleConnections`                | Maximum idle connections. Only necessary for HTTP.          | Integer    | 5             |
-| `nodes.connection.configuration.keepAliveDuration`                 | Keep-alive duration. Only necessary for HTTP.               | Duration   | 5m            |
-| `nodes.connection.configuration.connectionTimeout`                 | Connection timeout. Only necessary for HTTP.                | Duration   | 10s           |
-| `nodes.connection.configuration.readTimeout`                       | Read timeout. Only necessary for HTTP.                      | Duration   | 30s           |
+| Parameter                                            | Description                         | Value Type | Supported by            | Values                           | Default Value  |
+|------------------------------------------------------|-------------------------------------|------------|-------------------------|----------------------------------|----------------|
+| `nodes`                                              | List of nodes.                      | List       | ALL                     | Any                              | Not applicable |
+| `nodes.id`                                           | Unique identifier for the node.     | UUID       | ALL                     | Any                              | Not applicable |
+| `nodes.name`                                         | Name of the node.                   | String     | ALL                     | Any                              | Not applicable |
+| `nodes.type`                                         | Type of node.                       | String     | ALL                     | ETHEREUM, HEDERA                 | ETHEREUM       |
+| `nodes.subscription`                                 | Subscription configuration.         | Object     | ALL                     | Any                              | Not applicable |
+| `nodes.subscription.strategy`                        | Subscription strategy.              | String     | ALL                     | BLOCK_BASED                      | BLOCK_BASED    |
+| `nodes.subscription.method`                          | Method configuration.               | Object     | ALL                     | Any                              | Not applicable |
+| `nodes.subscription.method.type`                     | Type of method.                     | String     | ALL                     | POLL                             | POLL           |
+| `nodes.subscription.method.interval`                 | Interval for polling.               | Duration   | POLL method             | Any                              | 5s             |
+| `nodes.subscription.initialBlock`                    | Initial block.                      | Integer    | BLOCK_BASED strategy    | Any                              | -1 (Latest)    |
+| `nodes.subscription.confirmationBlocks`              | Confirmation blocks.                | Integer    | BLOCK_BASED strategy    | Any                              | 12             |
+| `nodes.subscription.missingTxBlocks`                 | Missing transaction blocks.         | Integer    | BLOCK_BASED strategy    | Any                              | 200            |
+| `nodes.subscription.eventInvalidationBlockThreshold` | Event invalidation block threshold. | Integer    | BLOCK_BASED strategy    | Any                              | 2              |
+| `nodes.subscription.replayBlockOffset`               | Replay block offset.                | Integer    | BLOCK_BASED strategy    | Any                              | 12             |
+| `nodes.subscription.syncBlockLimit`                  | Sync block limit.                   | Integer    | BLOCK_BASED strategy    | Any                              | 20000          |
+| `nodes.interaction`                                  | Interaction configuration.          | Object     | ALL                     | Any                              | Not applicable |
+| `nodes.interaction.strategy`                         | Interaction strategy.               | String     | ALL                     | BLOCK_BASED                      | BLOCK_BASED    |
+| `nodes.interaction.mode`                             | Interaction mode.                   | String     | ALL                     | ETHEREUM_RPC, HEDERA_MIRROR_NODE | ETHEREUM_RPC   |
+| `nodes.interaction.limitPerRequest`                  | Limit per request.                  | Integer    | HEDERA_MIRROR_NODE mode | Any                              | 100            |
+| `nodes.interaction.retriesPerRequest`                | Retries per request.                | Integer    | HEDERA_MIRROR_NODE mode | Any                              | 3              |
+| `nodes.connection`                                   | Connection configuration.           | Object     | ALL                     | Any                              | Not applicable |
+| `nodes.connection.type`                              | Type of connection.                 | String     | ALL                     | HTTP, WS                         | Not applicable |
+| `nodes.connection.retry`                             | Retry configuration.                | Object     | ALL                     | Any                              | Not applicable |
+| `nodes.connection.retry.times`                       | Number of times to retry.           | Integer    | ALL                     | Any                              | 3              |
+| `nodes.connection.retry.backoff`                     | Backoff duration.                   | Duration   | ALL                     | Any                              | 1s             |
+| `nodes.connection.endpoint`                          | Endpoint configuration.             | Object     | ALL                     | Any                              | Not applicable |
+| `nodes.connection.endpoint.url`                      | URL of the endpoint.                | String     | ALL                     | Any                              | Not applicable |
+| `nodes.connection.maxIdleConnections`                | Maximum idle connections.           | Integer    | HTTP                    | Any                              | 5              |
+| `nodes.connection.keepAliveDuration`                 | Keep-alive duration.                | Duration   | HTTP                    | Any                              | 5m             |
+| `nodes.connection.connectionTimeout`                 | Connection timeout.                 | Duration   | HTTP                    | Any                              | 10s            |
+| `nodes.connection.readTimeout`                       | Read timeout.                       | Duration   | HTTP                    | Any                              | 30s            |
+
+
 
 > **Note**: The configuration may vary depending on the selected options:
 > - **Connection types**: e.g., `HTTP`, `WS`
@@ -177,61 +168,53 @@ filters:
     name: "my-first-filter"
     type: EVENT
     nodeId: "550e8400-e29b-41d4-a716-446655440000"
-    configuration:
-      scope: CONTRACT # Also supports GLOBAL
-      specification:
-        signature: Transfer(address,address,uint256)
-        correlationId: 0
-      statuses:
-        - CONFIRMED
-        - UNCONFIRMED
-        - INVALIDATED
-      sync:
-        type: BLOCK_BASED
-        configuration:
-          initialBlock: 1
-      visibilityConfiguration: # Only necessary for ETHEREUM private network
-        visible: false
-        privacyGroupId: "550e8400-e29b-41d4-a716-446655440000"
-      configuration: # Only necessary for CONTRACT type
-        address: "0x68002107b36a11aa8661319449f5cd64fe0d3ecf"
+    scope: CONTRACT # Also supports GLOBAL
+    specification:
+      signature: Transfer(address,address,uint256)
+      correlationId: 0
+    statuses:
+      - CONFIRMED
+      - UNCONFIRMED
+      - INVALIDATED
+    sync:
+      type: BLOCK_BASED
+      initialBlock: 1
+    visibility: # Only necessary for ETHEREUM private network
+      visible: false
+      privacyGroupId: "550e8400-e29b-41d4-a716-446655440000"
+    address: "0x68002107b36a11aa8661319449f5cd64fe0d3ecf"
   - id: "550e8400-e29b-41d4-a716-446655440002"
     name: "my-second-filter"
     type: TRANSACTION
     nodeId: "550e8400-e29b-41d4-a716-446655440000"
-    configuration:
-      identifierType: FROM_ADDRESS
-      value: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
-      statuses:
-        - FAILED
-        - CONFIRMED
-        - UNCONFIRMED
+    identifierType: FROM_ADDRESS
+    value: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+    statuses:
+      - FAILED
+      - CONFIRMED
+      - UNCONFIRMED
 ```
 
-| Parameter                                                      | Description                       | Value Type | Default Value |
-|----------------------------------------------------------------|-----------------------------------|------------|---------------|
-| `filters`                                                      | List of filters.                  | List       |               |
-| `filters.id`                                                   | Unique identifier for the filter. | UUID       |               |
-| `filters.name`                                                 | Name of the filter.               | String     |               |
-| `filters.type`                                                 | Type of filter.                   | String     |               |
-| `filters.nodeId`                                               | Node ID.                          | UUID       |               |
-| `filters.configuration`                                        | Filter configuration.             | Object     |               |
-| `filters.configuration.scope`                                  | Scope of the filter.              | String     |               |
-| `filters.configuration.specification`                          | Specification of the filter.      | Object     |               |
-| `filters.configuration.specification.signature`                | Signature of the filter.          | String     |               |
-| `filters.configuration.specification.correlationId`            | Correlation ID of the filter.     | Integer    |               |
-| `filters.configuration.statuses`                               | Statuses of the filter.           | List       | All statuses  |
-| `filters.configuration.sync`                                   | Sync configuration.               | Object     |               |
-| `filters.configuration.sync.type`                              | Type of sync.                     | String     | BLOCK_BASED   |
-| `filters.configuration.sync.configuration`                     | Sync configuration.               | Object     |               |
-| `filters.configuration.sync.configuration.initialBlock`        | Initial block.                    | Integer    |               |
-| `filters.configuration.visibilityConfiguration`                | Visibility configuration.         | Object     |               |
-| `filters.configuration.visibilityConfiguration.visible`        | Visibility of the filter.         | Boolean    | true          |
-| `filters.configuration.visibilityConfiguration.privacyGroupId` | Privacy group ID of the filter.   | UUID       |               |
-| `filters.configuration.configuration`                          | Configuration of the filter.      | Object     |               |
-| `filters.configuration.configuration.address`                  | Address of the filter.            | String     |               |
-| `filters.configuration.configuration.identifierType`           | Identifier type of the filter.    | String     |               |
-| `filters.configuration.configuration.value`                    | Value of the filter.              | String     |               |
+| Parameter                             | Description                       | Value Type | Supported by                | Values                              | Default Value  |
+|---------------------------------------|-----------------------------------|------------|-----------------------------|-------------------------------------|----------------|
+| `filters`                             | List of filters.                  | List       | ALL                         | Any                                 | Not applicable |
+| `filters.id`                          | Unique identifier for the filter. | UUID       | ALL                         | Any                                 | Not applicable |
+| `filters.name`                        | Name of the filter.               | String     | ALL                         | Any                                 | Not applicable |
+| `filters.type`                        | Type of filter.                   | String     | ALL                         | EVENT, TRANSACTION                  | Not applicable |
+| `filters.nodeId`                      | Node ID.                          | UUID       | ALL                         | Any                                 | Not applicable |
+| `filters.scope`                       | Scope of the filter.              | String     | EVENT type                  | CONTRACT, GLOBAL                    | Not applicable |
+| `filters.specification`               | Specification of the filter.      | Object     | EVENT type                  | Any                                 | Not applicable |
+| `filters.specification.signature`     | Signature of the filter.          | String     | EVENT type                  | Any                                 | Not applicable |
+| `filters.specification.correlationId` | Correlation ID of the filter.     | Integer    | EVENT type                  | Any                                 | Not applicable |
+| `filters.statuses` (event)            | Statuses of the filter.           | List       | EVENT type                  | CONFIRMED, UNCONFIRMED, UNVALIDATED | All statuses   |
+| `filters.sync.type`                   | Type of sync.                     | String     | EVENT type                  | BLOCK_BASED                         | BLOCK_BASED    |
+| `filters.sync.initialBlock`           | Initial block.                    | Integer    | EVENT type                  | Any                                 | Not applicable |
+| `filters.visibility.visible`          | Visibility of the filter.         | Boolean    | EVENT type                  | Any                                 | true           |
+| `filters.visibility.privacyGroupId`   | Privacy group ID of the filter.   | UUID       | EVENT type                  | Any                                 | Not applicable |
+| `filters.address`                     | Address of the filter.            | String     | EVENT type & CONTRACT scope | Any                                 | Not applicable |
+| `filters.statuses` (transaction)      | Statuses of the filter.           | List       | TRANSACTION type            | FAILED, CONFIRMED, UNCONFIRMED      | All statuses   |
+| `filters.identifierType`              | Identifier type of the filter.    | String     | TRANSACTION type            | Any                                 | Not applicable |
+| `filters.value`                       | Value of the filter.              | String     | TRANSACTION type            | Any                                 | Not applicable |
 
 > **Note**: Keep in mind that there are multiple filter types, such as EVENT and TRANSACTION. Also, there are
 > multiple node types, such as ETHEREUM and HEDERA.

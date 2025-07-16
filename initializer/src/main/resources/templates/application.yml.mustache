@@ -6,24 +6,24 @@ naryo:
           connection:
               type: HTTP
               endpoint:
-                  url: http://localhost:8545
+                url: http://localhost:8545
     broadcasting:
         configuration:
             - id: {{broadcasterId}}
               type: HTTP
-              configuration:
-                  endpoint:
-                      url: http://localhost:8080
+              endpoint:
+                url: http://localhost:8080
         broadcasters:
-            - configurationId: {{broadcasterId}}
-              type: ALL
-              destination: /events
+            - id: {{broadcasterId}}
+              configurationId: {{broadcasterId}}
+              target:
+                type: ALL
+                destination: /events
     filters:
         - id: {{filterId}}
           name: my-transfer-filter
           type: EVENT
           nodeId: {{nodeId}}
-          configuration:
-              scope: GLOBAL
-              specification:
-                  signature: Transfer(address indexed, address indexed, uint256)
+          scope: GLOBAL
+          specification:
+              signature: Transfer(address indexed, address indexed, uint256)
