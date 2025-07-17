@@ -1,17 +1,18 @@
 package io.naryo.infrastructure.configuration.beans.serialization;
 
-import java.time.Duration;
-import java.util.List;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import io.naryo.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import io.naryo.infrastructure.util.reflection.TypeResolver;
 import io.naryo.infrastructure.util.serialization.DurationDeserializer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.time.Duration;
+import java.util.List;
 
 @Configuration
 public class ModelMapperAutoConfiguration {
@@ -30,6 +31,7 @@ public class ModelMapperAutoConfiguration {
         mapper.setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE);
         mapper.findAndRegisterModules();
         mapper.registerModule(module);
+        mapper.registerModule(new Jdk8Module());
         return mapper;
     }
 }

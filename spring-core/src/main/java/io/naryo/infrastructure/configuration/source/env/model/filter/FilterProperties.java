@@ -1,25 +1,27 @@
 package io.naryo.infrastructure.configuration.source.env.model.filter;
 
-import java.util.UUID;
-
 import io.naryo.application.configuration.source.model.filter.FilterDescriptor;
 import io.naryo.domain.filter.FilterType;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Optional;
+import java.util.UUID;
+
+@Getter
 public abstract class FilterProperties implements FilterDescriptor {
 
-    private final @Getter @NotNull UUID id;
-    private @Getter @Setter @NotBlank String name;
-    private final @Getter @NotNull FilterType type;
-    private @Getter @Setter @NotNull UUID nodeId;
+    private final @NotNull UUID id;
+    private @Setter Optional<String> name;
+    private @Setter Optional<FilterType> type;
+    private @Setter Optional<UUID> nodeId;
 
     public FilterProperties(UUID id, String name, FilterType type, UUID nodeId) {
         this.id = id;
-        this.name = name;
-        this.type = type;
-        this.nodeId = nodeId;
+        this.name = Optional.ofNullable(name);
+        this.type = Optional.ofNullable(type);
+        this.nodeId = Optional.ofNullable(nodeId);
     }
+
 }

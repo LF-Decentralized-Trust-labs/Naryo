@@ -1,56 +1,47 @@
 package io.naryo.application.configuration.source.model.filter.event;
 
-import java.util.List;
-
 import io.naryo.application.configuration.source.model.filter.FilterDescriptor;
 import io.naryo.application.configuration.source.model.filter.event.sync.FilterSyncDescriptor;
 import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.filter.event.EventFilterScope;
 
+import java.util.List;
+import java.util.Optional;
+
+import static io.naryo.application.common.util.MergeUtil.*;
+
 public interface EventFilterDescriptor extends FilterDescriptor {
 
-    EventFilterScope getScope();
-
-    EventSpecificationDescriptor getSpecification();
+    Optional<EventFilterScope> getScope();
 
     List<ContractEventStatus> getStatuses();
 
-    FilterSyncDescriptor getSync();
+    <T extends EventSpecificationDescriptor> Optional<T> getSpecification();
 
-    FilterVisibilityDescriptor getVisibility();
+    <T extends FilterSyncDescriptor> Optional<T> getSync();
 
-    void setSpecification(EventSpecificationDescriptor specification);
+    <T extends FilterVisibilityDescriptor> Optional<T> getVisibility();
+
+    void setScope(Optional<EventFilterScope> scope);
 
     void setStatuses(List<ContractEventStatus> statuses);
 
-    void setSync(FilterSyncDescriptor sync);
+    void setSpecification(Optional<EventSpecificationDescriptor> specification);
 
-    void setVisibility(FilterVisibilityDescriptor visibility);
+    void setSync(Optional<FilterSyncDescriptor> sync);
+
+    void setVisibility(Optional<FilterVisibilityDescriptor> visibility);
 
     @Override
     default FilterDescriptor merge(FilterDescriptor descriptor) {
         var filter = FilterDescriptor.super.merge(descriptor);
 
         if (filter instanceof EventFilterDescriptor other) {
-            if (!this.getScope().equals(other.getScope())) {
-                return filter;
-            }
-
-            if (!this.getSpecification().equals(other.getSpecification())) {
-                this.setSpecification(other.getSpecification());
-            }
-
-            if (!this.getStatuses().equals(other.getStatuses())) {
-                this.setStatuses(other.getStatuses());
-            }
-
-            if (!this.getSync().equals(other.getSync())) {
-                this.setSync(other.getSync());
-            }
-
-            if (!this.getVisibility().equals(other.getVisibility())) {
-                this.setVisibility(other.getVisibility());
-            }
+            mergeOptionals(this::setScope, this.getScope(), other.getScope());
+            mergeLists(this::setStatuses, this.getStatuses(), other.getStatuses());
+            mergeDescriptors(this::setSpecification, this.getSpecification(), other.getSpecification());
+            mergeDescriptors(this::setSync, this.getSync(), other.getSync());
+            mergeDescriptors(this::setVisibility, this.getVisibility(), other.getVisibility());
         }
 
         return filter;

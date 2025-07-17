@@ -1,22 +1,26 @@
 package io.naryo.application.configuration.source.model.filter.transaction;
 
-import java.util.List;
-
 import io.naryo.application.configuration.source.model.filter.FilterDescriptor;
 import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.filter.transaction.IdentifierType;
 
+import java.util.List;
+import java.util.Optional;
+
+import static io.naryo.application.common.util.MergeUtil.mergeLists;
+import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
+
 public interface TransactionFilterDescriptor extends FilterDescriptor {
 
-    IdentifierType getIdentifierType();
+    Optional<IdentifierType> getIdentifierType();
 
-    String getValue();
+    Optional<String> getValue();
 
     List<TransactionStatus> getStatuses();
 
-    void setIdentifierType(IdentifierType identifierType);
+    void setIdentifierType(Optional<IdentifierType> identifierType);
 
-    void setValue(String value);
+    void setValue(Optional<String> value);
 
     void setStatuses(List<TransactionStatus> statuses);
 
@@ -25,17 +29,9 @@ public interface TransactionFilterDescriptor extends FilterDescriptor {
         var filter = FilterDescriptor.super.merge(descriptor);
 
         if (filter instanceof TransactionFilterDescriptor other) {
-            if (!this.getIdentifierType().equals(other.getIdentifierType())) {
-                this.setIdentifierType(other.getIdentifierType());
-            }
-
-            if (!this.getValue().equals(other.getValue())) {
-                this.setValue(other.getValue());
-            }
-
-            if (!this.getStatuses().equals(other.getStatuses())) {
-                this.setStatuses(other.getStatuses());
-            }
+            mergeOptionals(this::setIdentifierType, this.getIdentifierType(), other.getIdentifierType());
+            mergeOptionals(this::setValue, this.getValue(), other.getValue());
+            mergeLists(this::setStatuses, this.getStatuses(), other.getStatuses());
         }
 
         return filter;

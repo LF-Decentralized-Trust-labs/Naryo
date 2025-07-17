@@ -1,23 +1,28 @@
 package io.naryo.application.configuration.source.model.filter;
 
-import java.util.UUID;
-
 import io.naryo.application.configuration.source.model.MergeableDescriptor;
 import io.naryo.domain.filter.FilterType;
+
+import java.util.Optional;
+import java.util.UUID;
+
+import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
 
 public interface FilterDescriptor extends MergeableDescriptor<FilterDescriptor> {
 
     UUID getId();
 
-    String getName();
+    Optional<String> getName();
 
-    FilterType getType();
+    Optional<FilterType> getType();
 
-    UUID getNodeId();
+    Optional<UUID> getNodeId();
 
-    void setName(String name);
+    void setName(Optional<String> name);
 
-    void setNodeId(UUID nodeId);
+    void setType(Optional<FilterType> filterType);
+
+    void setNodeId(Optional<UUID> nodeId);
 
     @Override
     default FilterDescriptor merge(FilterDescriptor descriptor) {
@@ -25,14 +30,12 @@ public interface FilterDescriptor extends MergeableDescriptor<FilterDescriptor> 
             return this;
         }
 
-        if (!this.getName().equals(descriptor.getName())) {
-            this.setName(descriptor.getName());
-        }
-
-        if (!this.getNodeId().equals(descriptor.getNodeId())) {
-            this.setNodeId(descriptor.getNodeId());
-        }
+        mergeOptionals(this::setName, this.getName(), descriptor.getName());
+        mergeOptionals(this::setType, this.getType(), descriptor.getType());
+        mergeOptionals(this::setNodeId, this.getNodeId(), descriptor.getNodeId());
 
         return this;
     }
+
+
 }
