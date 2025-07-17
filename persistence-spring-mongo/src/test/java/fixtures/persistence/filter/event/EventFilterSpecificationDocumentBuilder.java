@@ -5,18 +5,18 @@ import org.instancio.Instancio;
 
 public class EventFilterSpecificationDocumentBuilder {
 
-    private String eventName;
+    private String signature;
     private Integer correlationId;
 
     public EventFilterSpecificationDocument build() {
         return new EventFilterSpecificationDocument(
-            this.getEventName(),
+            this.getSignature(),
             this.getCorrelationId()
         );
     }
 
-    public EventFilterSpecificationDocumentBuilder withEventName(String eventName) {
-        this.eventName = eventName;
+    public EventFilterSpecificationDocumentBuilder withSignature(String signature) {
+        this.signature = signature;
         return this;
     }
 
@@ -25,10 +25,10 @@ public class EventFilterSpecificationDocumentBuilder {
         return this;
     }
 
-    private String getEventName() {
-        return this.eventName == null
+    private String getSignature() {
+        return this.signature == null
             ? Instancio.create(String.class)
-            : this.eventName;
+            : this.signature;
     }
 
     private int getCorrelationId() {
