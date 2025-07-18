@@ -1,16 +1,15 @@
 package io.naryo.infrastructure.configuration.provider.node;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.HashSet;
 
-import io.naryo.application.node.configuration.provider.NodeConfigurationProvider;
-import io.naryo.domain.node.Node;
+import io.naryo.application.configuration.source.model.node.NodeDescriptor;
+import io.naryo.application.node.configuration.provider.NodeSourceProvider;
 import io.naryo.infrastructure.configuration.persistence.document.node.NodePropertiesDocumentRepository;
-import io.naryo.infrastructure.configuration.provider.node.mapper.NodePropertiesDocumentMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class MongoNodeConfigurationProvider implements NodeConfigurationProvider {
+public final class MongoNodeConfigurationProvider implements NodeSourceProvider {
 
     private final NodePropertiesDocumentRepository repository;
 
@@ -19,10 +18,8 @@ public final class MongoNodeConfigurationProvider implements NodeConfigurationPr
     }
 
     @Override
-    public Collection<Node> load() {
-        return this.repository.findAll().stream()
-                .map(NodePropertiesDocumentMapper::fromDocument)
-                .collect(Collectors.toSet());
+    public Collection<NodeDescriptor> load() {
+        return new HashSet<>(this.repository.findAll());
     }
 
     @Override

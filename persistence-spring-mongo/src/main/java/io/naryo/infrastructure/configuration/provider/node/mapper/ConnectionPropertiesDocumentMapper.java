@@ -5,13 +5,13 @@ import io.naryo.domain.node.connection.NodeConnection;
 import io.naryo.domain.node.connection.RetryConfiguration;
 import io.naryo.domain.node.connection.http.*;
 import io.naryo.domain.node.connection.ws.WsNodeConnection;
-import io.naryo.infrastructure.configuration.persistence.document.node.connection.ConnectionPropertiesDocument;
+import io.naryo.infrastructure.configuration.persistence.document.node.connection.NodeConnectionPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.connection.http.HttpConnectionConfigurationPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.connection.ws.WsConnectionConfigurationPropertiesDocument;
 
 public abstract class ConnectionPropertiesDocumentMapper {
 
-    public static NodeConnection fromDocument(ConnectionPropertiesDocument document) {
+    public static NodeConnection fromDocument(NodeConnectionPropertiesDocument document) {
         if (document instanceof HttpConnectionConfigurationPropertiesDocument) {
             return mapHttpConnection((HttpConnectionConfigurationPropertiesDocument) document);
         } else if (document instanceof WsConnectionConfigurationPropertiesDocument) {
