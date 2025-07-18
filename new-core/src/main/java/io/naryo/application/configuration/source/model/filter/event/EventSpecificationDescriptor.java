@@ -2,12 +2,16 @@ package io.naryo.application.configuration.source.model.filter.event;
 
 import io.naryo.application.configuration.source.model.MergeableDescriptor;
 
+import java.util.Optional;
+
+import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
+
 public interface EventSpecificationDescriptor
         extends MergeableDescriptor<EventSpecificationDescriptor> {
 
-    String getSignature();
+    Optional<String> getSignature();
 
-    Integer getCorrelationId();
+    Optional<Integer> getCorrelationId();
 
     void setSignature(String signature);
 
@@ -19,13 +23,8 @@ public interface EventSpecificationDescriptor
             return this;
         }
 
-        if (!this.getSignature().equals(other.getSignature())) {
-            this.setSignature(other.getSignature());
-        }
-
-        if (!this.getCorrelationId().equals(other.getCorrelationId())) {
-            this.setCorrelationId(other.getCorrelationId());
-        }
+        mergeOptionals(this::setSignature, this.getSignature(), other.getSignature());
+        mergeOptionals(this::setCorrelationId, this.getCorrelationId(), other.getCorrelationId());
 
         return this;
     }

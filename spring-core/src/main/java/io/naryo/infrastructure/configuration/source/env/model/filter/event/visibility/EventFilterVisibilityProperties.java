@@ -1,29 +1,31 @@
 package io.naryo.infrastructure.configuration.source.env.model.filter.event.visibility;
 
 import io.naryo.application.configuration.source.model.filter.event.FilterVisibilityDescriptor;
-import lombok.Getter;
+import jakarta.annotation.Nullable;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Optional;
+
+@NoArgsConstructor
+@Setter
 public final class EventFilterVisibilityProperties implements FilterVisibilityDescriptor {
 
-    private @Setter boolean visible;
-    private @Getter @Setter String privacyGroupId;
+    private @Nullable Boolean visible;
+    private @Nullable String privacyGroupId;
 
-    private EventFilterVisibilityProperties(boolean visible, String privacyGroupId) {
+    public EventFilterVisibilityProperties(Boolean visible, String privacyGroupId) {
         this.visible = visible;
         this.privacyGroupId = privacyGroupId;
     }
 
-    public EventFilterVisibilityProperties(String privacyGroupId) {
-        this(false, privacyGroupId);
-    }
-
-    public EventFilterVisibilityProperties() {
-        this(true, null);
+    @Override
+    public Optional<Boolean> getVisible() {
+        return Optional.ofNullable(visible);
     }
 
     @Override
-    public boolean getVisible() {
-        return visible;
+    public Optional<String> getPrivacyGroupId() {
+        return Optional.ofNullable(privacyGroupId);
     }
 }

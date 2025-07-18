@@ -1,25 +1,27 @@
 package io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.block;
 
-import java.math.BigInteger;
-
 import io.naryo.application.configuration.source.model.filter.event.sync.BlockFilterSyncDescriptor;
+import io.naryo.domain.filter.event.sync.SyncStrategy;
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.FilterSyncProperties;
-import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.SyncType;
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
+import jakarta.annotation.Nullable;
 import lombok.Setter;
 
+import java.math.BigInteger;
+import java.util.Optional;
+
+@Setter
 public final class BlockFilterSyncProperties extends FilterSyncProperties
         implements BlockFilterSyncDescriptor {
 
-    private @Getter @Setter @NotNull BigInteger initialBlock;
-
-    public BlockFilterSyncProperties() {
-        super(SyncType.BLOCK_BASED);
-    }
+    private @Nullable BigInteger initialBlock;
 
     public BlockFilterSyncProperties(BigInteger initialBlock) {
-        this();
+        super(SyncStrategy.BLOCK_BASED);
         this.initialBlock = initialBlock;
+    }
+
+    @Override
+    public Optional<BigInteger> getInitialBlock() {
+        return Optional.ofNullable(initialBlock);
     }
 }
