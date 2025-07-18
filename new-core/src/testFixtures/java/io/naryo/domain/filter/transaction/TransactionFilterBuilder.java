@@ -4,14 +4,14 @@ import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.filter.FilterBuilder;
 import org.instancio.Instancio;
 
-import java.util.List;
+import java.util.Set;
 
 public class TransactionFilterBuilder
     extends FilterBuilder<TransactionFilterBuilder, TransactionFilter> {
 
     private IdentifierType identifierType;
     private String value;
-    private List<TransactionStatus> statuses;
+    private Set<TransactionStatus> statuses;
 
     @Override
     public TransactionFilterBuilder self() {
@@ -34,7 +34,7 @@ public class TransactionFilterBuilder
         return self();
     }
 
-    public TransactionFilterBuilder withStatuses(List<TransactionStatus> statuses) {
+    public TransactionFilterBuilder withStatuses(Set<TransactionStatus> statuses) {
         this.statuses = statuses;
         return self();
     }
@@ -50,9 +50,9 @@ public class TransactionFilterBuilder
             : this.identifierType;
     }
 
-    private List<TransactionStatus> getStatuses() {
+    private Set<TransactionStatus> getStatuses() {
         return this.statuses == null || this.statuses.isEmpty()
-            ? List.of(Instancio.create(TransactionStatus.class))
+            ? Set.of(Instancio.create(TransactionStatus.class))
             : this.statuses;
     }
 

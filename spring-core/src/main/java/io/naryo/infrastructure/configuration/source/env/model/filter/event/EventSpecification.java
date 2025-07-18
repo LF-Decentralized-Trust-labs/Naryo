@@ -2,12 +2,30 @@ package io.naryo.infrastructure.configuration.source.env.model.filter.event;
 
 import io.naryo.application.configuration.source.model.filter.event.EventSpecificationDescriptor;
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Optional;
+
+@NoArgsConstructor
+@Setter
 public final class EventSpecification implements EventSpecificationDescriptor {
 
-    private @Getter @Setter @NotBlank String signature;
-    private @Getter @Setter @Nullable Integer correlationId;
+    private @Nullable String signature;
+    private @Nullable Integer correlationId;
+
+    public EventSpecification(String signature, Integer correlationId) {
+        this.signature = signature;
+        this.correlationId = correlationId;
+    }
+
+    @Override
+    public Optional<String> getSignature() {
+        return Optional.ofNullable(signature);
+    }
+
+    @Override
+    public Optional<Integer> getCorrelationId() {
+        return Optional.ofNullable(correlationId);
+    }
 }

@@ -1,12 +1,5 @@
 package io.naryo.infrastructure.configuration.source.env.serialization.filter;
 
-import java.io.IOException;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Spliterator;
-import java.util.Spliterators;
-import java.util.stream.StreamSupport;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -29,6 +22,10 @@ import io.naryo.infrastructure.configuration.source.env.model.filter.event.visib
 import io.naryo.infrastructure.configuration.source.env.model.filter.transaction.TransactionFilterProperties;
 import io.naryo.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.StreamSupport;
 
 @Component
 public final class FilterPropertiesDeserializer extends EnvironmentDeserializer<FilterProperties> {
@@ -54,7 +51,7 @@ public final class FilterPropertiesDeserializer extends EnvironmentDeserializer<
                         safeTreeToValue(root, "scope", codec, EventFilterScope.class);
                 EventSpecification specification =
                         safeTreeToValue(root, "specification", codec, EventSpecification.class);
-                List<ContractEventStatus> statuses = getStatuses(root, codec);
+                Set<ContractEventStatus> statuses = getStatuses(root, codec);
                 FilterSyncProperties sync =
                         safeTreeToValue(root, "sync", codec, FilterSyncProperties.class);
                 EventFilterVisibilityProperties visibility =
@@ -88,7 +85,7 @@ public final class FilterPropertiesDeserializer extends EnvironmentDeserializer<
                 IdentifierType identifierType =
                         safeTreeToValue(root, "identifierType", codec, IdentifierType.class);
                 String value = getTextOrNull(root.get("value"));
-                List<TransactionStatus> statuses = getStatuses(root, codec);
+                Set<TransactionStatus> statuses = getStatuses(root, codec);
                 yield new TransactionFilterProperties(
                         getUuidOrNull(id),
                         name,
@@ -100,7 +97,7 @@ public final class FilterPropertiesDeserializer extends EnvironmentDeserializer<
         };
     }
 
-    private <T> List<T> getStatuses(JsonNode root, ObjectCodec codec) {
+    private <T> Set<T> getStatuses(JsonNode root, ObjectCodec codec) {
         ObjectMapper mapper = (ObjectMapper) codec;
         JsonNode statusesNode = root.get("statuses");
         ArrayNode arrayNode;
