@@ -4,13 +4,13 @@ import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.filter.FilterBuilder;
 import org.instancio.Instancio;
 
-import java.util.List;
+import java.util.Set;
 
 public abstract class EventFilterBuilder<T, Y extends EventFilter>
     extends FilterBuilder<T, Y> {
 
     private EventFilterSpecification specification;
-    private List<ContractEventStatus> statuses;
+    private Set<ContractEventStatus> statuses;
     private SyncState syncState;
     private EventFilterVisibilityConfiguration visibilityConfiguration;
 
@@ -19,7 +19,7 @@ public abstract class EventFilterBuilder<T, Y extends EventFilter>
         return this.self();
     }
 
-    public T withStatuses(List<ContractEventStatus> statuses) {
+    public T withStatuses(Set<ContractEventStatus> statuses) {
         this.statuses = statuses;
         return this.self();
     }
@@ -40,9 +40,9 @@ public abstract class EventFilterBuilder<T, Y extends EventFilter>
             : this.specification;
     }
 
-    protected List<ContractEventStatus> getStatuses() {
+    protected Set<ContractEventStatus> getStatuses() {
         return this.statuses == null
-            ? Instancio.createList(ContractEventStatus.class)
+            ? Instancio.createSet(ContractEventStatus.class)
             : this.statuses;
     }
 

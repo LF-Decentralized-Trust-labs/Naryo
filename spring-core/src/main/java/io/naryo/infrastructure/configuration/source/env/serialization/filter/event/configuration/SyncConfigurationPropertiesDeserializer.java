@@ -1,17 +1,17 @@
 package io.naryo.infrastructure.configuration.source.env.serialization.filter.event.configuration;
 
-import java.io.IOException;
-import java.math.BigInteger;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
+import io.naryo.domain.filter.event.sync.SyncStrategy;
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.FilterSyncProperties;
-import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.SyncType;
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.block.BlockFilterSyncProperties;
 import io.naryo.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.math.BigInteger;
 
 @Component
 public final class SyncConfigurationPropertiesDeserializer
@@ -24,10 +24,10 @@ public final class SyncConfigurationPropertiesDeserializer
         JsonNode root = codec.readTree(p);
 
         String typeStr = getTextOrNull(root.get("type"));
-        SyncType type =
+        SyncStrategy type =
                 typeStr != null && !typeStr.isBlank()
-                        ? SyncType.valueOf(typeStr)
-                        : SyncType.BLOCK_BASED;
+                        ? SyncStrategy.valueOf(typeStr)
+                        : SyncStrategy.BLOCK_BASED;
 
         return switch (type) {
             case BLOCK_BASED -> {

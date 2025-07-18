@@ -1,9 +1,5 @@
 package io.naryo.domain.filter.transaction;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-
 import io.naryo.application.node.interactor.block.dto.Transaction;
 import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.filter.Filter;
@@ -13,6 +9,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
@@ -20,7 +20,7 @@ public final class TransactionFilter extends Filter {
 
     private final IdentifierType identifierType;
     private final String value;
-    private final List<TransactionStatus> statuses;
+    private final Set<TransactionStatus> statuses;
 
     public TransactionFilter(
             UUID id,
@@ -28,7 +28,7 @@ public final class TransactionFilter extends Filter {
             UUID nodeId,
             IdentifierType identifierType,
             String value,
-            List<TransactionStatus> statuses) {
+            Set<TransactionStatus> statuses) {
         super(id, name, FilterType.TRANSACTION, nodeId);
         this.identifierType = identifierType;
         this.value = value;
