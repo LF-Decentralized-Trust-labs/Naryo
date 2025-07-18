@@ -61,6 +61,8 @@ tasks.named('test', Test) {
     }
 }
 
+tasks.named('bootJar') { enabled = false }
+
 tasks.named("spotlessJava").configure {
     dependsOn("spotlessGroovyGradle", "compileJava", "compileTestJava", "javadoc")
 }
