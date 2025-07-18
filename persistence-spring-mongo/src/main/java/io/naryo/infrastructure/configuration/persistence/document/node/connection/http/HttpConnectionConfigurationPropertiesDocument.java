@@ -2,11 +2,15 @@ package io.naryo.infrastructure.configuration.persistence.document.node.connecti
 
 import java.time.Duration;
 
-import io.naryo.infrastructure.configuration.persistence.document.node.connection.ConnectionPropertiesDocument;
+import io.naryo.application.configuration.source.model.node.connection.HttpNodeConnectionDescriptor;
+import io.naryo.infrastructure.configuration.persistence.document.node.connection.NodeConnectionPropertiesDocument;
+import lombok.Setter;
 import org.springframework.data.annotation.TypeAlias;
 
 @TypeAlias("http_connection")
-public class HttpConnectionConfigurationPropertiesDocument extends ConnectionPropertiesDocument {
+@Setter
+public final class HttpConnectionConfigurationPropertiesDocument
+        extends NodeConnectionPropertiesDocument implements HttpNodeConnectionDescriptor {
 
     private static final int DEFAULT_MAX_IDLE_CONNECTIONS = 5;
     private static final Duration DEFAULT_KEEP_ALIVE_DURATION = Duration.ofMinutes(5);
@@ -18,22 +22,26 @@ public class HttpConnectionConfigurationPropertiesDocument extends ConnectionPro
     private Duration connectionTimeout;
     private Duration readTimeout;
 
+    @Override
     public int getMaxIdleConnections() {
         return this.maxIdleConnections != 0
                 ? this.maxIdleConnections
                 : DEFAULT_MAX_IDLE_CONNECTIONS;
     }
 
+    @Override
     public Duration getKeepAliveDuration() {
         return this.keepAliveDuration != null
                 ? this.keepAliveDuration
                 : DEFAULT_KEEP_ALIVE_DURATION;
     }
 
+    @Override
     public Duration getConnectionTimeout() {
         return this.connectionTimeout != null ? this.connectionTimeout : DEFAULT_CONNECTION_TIMEOUT;
     }
 
+    @Override
     public Duration getReadTimeout() {
         return this.readTimeout != null ? this.readTimeout : DEFAULT_READ_TIMEOUT;
     }

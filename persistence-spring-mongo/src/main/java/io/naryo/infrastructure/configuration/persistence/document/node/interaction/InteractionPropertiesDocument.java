@@ -1,9 +1,10 @@
 package io.naryo.infrastructure.configuration.persistence.document.node.interaction;
 
+import io.naryo.application.configuration.source.model.node.interaction.InteractionDescriptor;
 import io.naryo.domain.node.interaction.InteractionStrategy;
 import lombok.Getter;
 
 @Getter
-public abstract class InteractionPropertiesDocument {
+public abstract class InteractionPropertiesDocument implements InteractionDescriptor {
     private InteractionStrategy strategy;
 }

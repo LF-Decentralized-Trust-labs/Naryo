@@ -11,7 +11,7 @@ import io.naryo.domain.node.subscription.block.method.poll.PollBlockSubscription
 import io.naryo.domain.node.subscription.block.method.pubsub.PubSubBlockSubscriptionMethodConfiguration;
 import io.naryo.infrastructure.configuration.persistence.document.node.subscription.SubscriptionPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.subscription.block.BlockSubscriptionPropertiesDocument;
-import io.naryo.infrastructure.configuration.persistence.document.node.subscription.block.method.PollBlockSubscriptionMethodDocument;
+import io.naryo.infrastructure.configuration.persistence.document.node.subscription.block.PollBlockSubscriptionDocument;
 
 public class SubscriptionPropertiesDocumentMapper {
 
@@ -25,12 +25,11 @@ public class SubscriptionPropertiesDocumentMapper {
     private static BlockSubscriptionConfiguration mapBlockSubscription(
             BlockSubscriptionPropertiesDocument document) {
         var method =
-                switch (document.getMethod().getMethod()) {
+                switch (document.getMethod()) {
                     case POLL ->
                             new PollBlockSubscriptionMethodConfiguration(
                                     new Interval(
-                                            ((PollBlockSubscriptionMethodDocument)
-                                                            document.getMethod())
+                                            ((PollBlockSubscriptionDocument) document)
                                                     .getInterval()));
                     case PUBSUB -> new PubSubBlockSubscriptionMethodConfiguration();
                 };

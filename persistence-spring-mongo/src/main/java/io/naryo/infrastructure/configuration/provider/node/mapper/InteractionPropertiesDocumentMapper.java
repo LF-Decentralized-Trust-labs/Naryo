@@ -8,8 +8,8 @@ import io.naryo.domain.node.interaction.block.hedera.LimitPerRequest;
 import io.naryo.domain.node.interaction.block.hedera.RetriesPerRequest;
 import io.naryo.infrastructure.configuration.persistence.document.node.interaction.InteractionPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.interaction.block.BlockInteractionPropertiesDocument;
-import io.naryo.infrastructure.configuration.persistence.document.node.interaction.block.EthereumRpcBlockInteractionModePropertiesDocument;
-import io.naryo.infrastructure.configuration.persistence.document.node.interaction.block.HederaMirrorNodeBlockInteractionModePropertiesDocument;
+import io.naryo.infrastructure.configuration.persistence.document.node.interaction.block.EthereumRpcBlockInteractionPropertiesDocument;
+import io.naryo.infrastructure.configuration.persistence.document.node.interaction.block.HederaMirrorNodeBlockInteractionPropertiesDocument;
 
 public abstract class InteractionPropertiesDocumentMapper {
 
@@ -22,28 +22,24 @@ public abstract class InteractionPropertiesDocumentMapper {
 
     private static BlockInteractionConfiguration mapBlockInteraction(
             BlockInteractionPropertiesDocument document) {
-        if (document.getConfiguration()
-                instanceof EthereumRpcBlockInteractionModePropertiesDocument) {
+        if (document instanceof EthereumRpcBlockInteractionPropertiesDocument) {
             return mapEthereumRpcBlockInteraction(
-                    (EthereumRpcBlockInteractionModePropertiesDocument)
-                            document.getConfiguration());
-        } else if (document.getConfiguration()
-                instanceof HederaMirrorNodeBlockInteractionModePropertiesDocument) {
+                    (EthereumRpcBlockInteractionPropertiesDocument) document);
+        } else if (document instanceof HederaMirrorNodeBlockInteractionPropertiesDocument) {
             return mapHederaMirrorNodeBlockInteraction(
-                    (HederaMirrorNodeBlockInteractionModePropertiesDocument)
-                            document.getConfiguration());
+                    (HederaMirrorNodeBlockInteractionPropertiesDocument) document);
         }
         throw new IllegalArgumentException("Unsupported document type: " + document.getClass());
     }
 
     private static EthereumRpcBlockInteractionConfiguration mapEthereumRpcBlockInteraction(
-            EthereumRpcBlockInteractionModePropertiesDocument document) {
+            EthereumRpcBlockInteractionPropertiesDocument document) {
         return new EthereumRpcBlockInteractionConfiguration();
     }
 
     private static HederaMirrorNodeBlockInteractionConfiguration
             mapHederaMirrorNodeBlockInteraction(
-                    HederaMirrorNodeBlockInteractionModePropertiesDocument document) {
+                    HederaMirrorNodeBlockInteractionPropertiesDocument document) {
         return new HederaMirrorNodeBlockInteractionConfiguration(
                 new LimitPerRequest(document.getLimitPerRequest()),
                 new RetriesPerRequest(document.getRetriesPerRequest()));

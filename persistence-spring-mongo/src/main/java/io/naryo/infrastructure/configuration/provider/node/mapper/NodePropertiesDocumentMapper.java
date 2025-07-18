@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import io.naryo.domain.node.Node;
 import io.naryo.domain.node.NodeName;
-import io.naryo.domain.node.ethereum.EthereumNodeVisibility;
 import io.naryo.domain.node.ethereum.priv.GroupId;
 import io.naryo.domain.node.ethereum.priv.PrecompiledAddress;
 import io.naryo.domain.node.ethereum.priv.PrivateEthereumNode;
@@ -12,8 +11,7 @@ import io.naryo.domain.node.ethereum.pub.PublicEthereumNode;
 import io.naryo.domain.node.hedera.HederaNode;
 import io.naryo.infrastructure.configuration.persistence.document.node.NodePropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.eth.EthereumNodePropertiesDocument;
-import io.naryo.infrastructure.configuration.persistence.document.node.eth.EthereumNodeVisibilityConfigurationDocument;
-import io.naryo.infrastructure.configuration.persistence.document.node.eth.PrivateEthereumNodeVisibilityDocument;
+import io.naryo.infrastructure.configuration.persistence.document.node.eth.PrivateEthereumNodePropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.hedera.HederaNodePropertiesDocument;
 
 public abstract class NodePropertiesDocumentMapper {
@@ -28,12 +26,7 @@ public abstract class NodePropertiesDocumentMapper {
     }
 
     private static Node mapEthereumNode(EthereumNodePropertiesDocument document) {
-        var visibility =
-                Optional.ofNullable(document.getConfiguration())
-                        .map(EthereumNodeVisibilityConfigurationDocument::getVisibility)
-                        .orElse(EthereumNodeVisibility.PUBLIC);
-
-        return switch (visibility) {
+        return switch (document.getVisibility()) {
             case PRIVATE -> mapPrivateEthereumNode(document);
             case PUBLIC -> mapPublicEthereumNode(document);
         };
@@ -41,7 +34,7 @@ public abstract class NodePropertiesDocumentMapper {
 
     private static PrivateEthereumNode mapPrivateEthereumNode(
             EthereumNodePropertiesDocument document) {
-        var privateCfg = (PrivateEthereumNodeVisibilityDocument) document.getConfiguration();
+        var privateCfg = (PrivateEthereumNodePropertiesDocument) document;
         return new PrivateEthereumNode(
                 document.getId(),
                 new NodeName(document.getName()),
@@ -49,12 +42,12 @@ public abstract class NodePropertiesDocumentMapper {
                 InteractionPropertiesDocumentMapper.fromDocument(document.getInteraction()),
                 ConnectionPropertiesDocumentMapper.fromDocument(document.getConnection()),
                 new GroupId(
-                        Optional.ofNullable(privateCfg)
-                                .map(PrivateEthereumNodeVisibilityDocument::getGroupId)
+                        Optional.of(privateCfg)
+                                .map(PrivateEthereumNodePropertiesDocument::getGroupId)
                                 .orElse("default")),
                 new PrecompiledAddress(
-                        Optional.ofNullable(privateCfg)
-                                .map(PrivateEthereumNodeVisibilityDocument::getPrecompiledAddress)
+                        Optional.of(privateCfg)
+                                .map(PrivateEthereumNodePropertiesDocument::getPrecompiledAddress)
                                 .orElse("0x0")));
     }
 
