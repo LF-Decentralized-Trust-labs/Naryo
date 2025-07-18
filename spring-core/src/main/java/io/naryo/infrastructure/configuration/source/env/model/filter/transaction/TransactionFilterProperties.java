@@ -8,8 +8,8 @@ import io.naryo.infrastructure.configuration.source.env.model.filter.FilterPrope
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Setter
@@ -19,7 +19,7 @@ public final class TransactionFilterProperties extends FilterProperties
 
     private Optional<IdentifierType> identifierType;
     private Optional<String> value;
-    private List<TransactionStatus> statuses;
+    private Set<TransactionStatus> statuses;
 
     public TransactionFilterProperties(
             UUID id,
@@ -27,7 +27,7 @@ public final class TransactionFilterProperties extends FilterProperties
             UUID nodeId,
             IdentifierType identifierType,
             String value,
-            List<TransactionStatus> statuses) {
+            Set<TransactionStatus> statuses) {
         super(id, name, FilterType.TRANSACTION, nodeId);
         this.identifierType = Optional.of(identifierType);
         this.value = Optional.of(value);

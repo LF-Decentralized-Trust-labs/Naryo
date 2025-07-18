@@ -15,8 +15,8 @@ import io.naryo.infrastructure.configuration.source.env.model.filter.event.visib
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -26,7 +26,7 @@ public abstract class EventFilterProperties extends FilterProperties
 
     protected Optional<EventFilterScope> scope;
     private Optional<EventSpecification> specification;
-    private List<ContractEventStatus> statuses;
+    private Set<ContractEventStatus> statuses;
     protected Optional<FilterSyncProperties> sync;
     private Optional<EventFilterVisibilityProperties> visibility;
 
@@ -36,7 +36,7 @@ public abstract class EventFilterProperties extends FilterProperties
         UUID nodeId,
         EventFilterScope scope,
         EventSpecification specification,
-        List<ContractEventStatus> statuses,
+        Set<ContractEventStatus> statuses,
         FilterSyncProperties sync,
         EventFilterVisibilityProperties visibility) {
         super(id, name, FilterType.EVENT, nodeId);

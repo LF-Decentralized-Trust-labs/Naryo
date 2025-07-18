@@ -4,10 +4,10 @@ import io.naryo.application.configuration.source.model.filter.FilterDescriptor;
 import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.filter.transaction.IdentifierType;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
-import static io.naryo.application.common.util.MergeUtil.mergeLists;
+import static io.naryo.application.common.util.MergeUtil.mergeCollections;
 import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
 
 public interface TransactionFilterDescriptor extends FilterDescriptor {
@@ -16,13 +16,13 @@ public interface TransactionFilterDescriptor extends FilterDescriptor {
 
     Optional<String> getValue();
 
-    List<TransactionStatus> getStatuses();
+    Set<TransactionStatus> getStatuses();
 
     void setIdentifierType(Optional<IdentifierType> identifierType);
 
     void setValue(Optional<String> value);
 
-    void setStatuses(List<TransactionStatus> statuses);
+    void setStatuses(Set<TransactionStatus> statuses);
 
     @Override
     default FilterDescriptor merge(FilterDescriptor descriptor) {
@@ -31,7 +31,7 @@ public interface TransactionFilterDescriptor extends FilterDescriptor {
         if (filter instanceof TransactionFilterDescriptor other) {
             mergeOptionals(this::setIdentifierType, this.getIdentifierType(), other.getIdentifierType());
             mergeOptionals(this::setValue, this.getValue(), other.getValue());
-            mergeLists(this::setStatuses, this.getStatuses(), other.getStatuses());
+            mergeCollections(this::setStatuses, this.getStatuses(), other.getStatuses());
         }
 
         return filter;

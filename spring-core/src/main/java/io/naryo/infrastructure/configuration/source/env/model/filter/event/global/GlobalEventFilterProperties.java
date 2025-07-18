@@ -8,7 +8,7 @@ import io.naryo.infrastructure.configuration.source.env.model.filter.event.Event
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.FilterSyncProperties;
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.visibility.EventFilterVisibilityProperties;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public final class GlobalEventFilterProperties extends EventFilterProperties
@@ -19,7 +19,7 @@ public final class GlobalEventFilterProperties extends EventFilterProperties
             String name,
             UUID nodeId,
             EventSpecification specification,
-            List<ContractEventStatus> statuses,
+            Set<ContractEventStatus> statuses,
             FilterSyncProperties sync,
             EventFilterVisibilityProperties visibility) {
         super(id, name, nodeId, EventFilterScope.GLOBAL, specification, statuses, sync, visibility);

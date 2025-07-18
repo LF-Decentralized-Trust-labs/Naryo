@@ -23,10 +23,7 @@ import io.naryo.domain.filter.transaction.TransactionFilter;
 
 import javax.annotation.Nullable;
 import java.math.BigInteger;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collector;
 
@@ -68,7 +65,7 @@ public final class DefaultFilterConfigurationManager
         UUID nodeId = valueOrNull(FilterDescriptor::getNodeId, descriptor);
         IdentifierType identifierType = valueOrNull(TransactionFilterDescriptor::getIdentifierType, descriptor);
         String value = valueOrNull(TransactionFilterDescriptor::getValue, descriptor);
-        List<TransactionStatus> statuses = descriptor.getStatuses();
+        Set<TransactionStatus> statuses = descriptor.getStatuses();
 
         return new TransactionFilter(
             descriptor.getId(),
