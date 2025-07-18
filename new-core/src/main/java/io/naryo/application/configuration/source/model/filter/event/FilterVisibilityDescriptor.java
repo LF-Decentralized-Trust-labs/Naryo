@@ -13,9 +13,9 @@ public interface FilterVisibilityDescriptor
 
     Optional<String> getPrivacyGroupId();
 
-    void setVisible(Optional<Boolean> visible);
+    void setVisible(Boolean visible);
 
-    void setPrivacyGroupId(Optional<String> privacyGroupId);
+    void setPrivacyGroupId(String privacyGroupId);
 
     @Override
     default FilterVisibilityDescriptor merge(FilterVisibilityDescriptor other) {

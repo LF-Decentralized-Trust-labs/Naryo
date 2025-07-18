@@ -118,7 +118,7 @@ public final class DefaultFilterConfigurationManager
 
     private EventFilterSpecification getFilterSpecificationFromDescriptor(EventSpecificationDescriptor descriptor) {
         String signature = valueOrNull(EventSpecificationDescriptor::getSignature, descriptor);
-        CorrelationId correlationId = new CorrelationId(valueOrNull(EventSpecificationDescriptor::getCorrelationId, descriptor));
+        CorrelationId correlationId = descriptor.getCorrelationId().map(CorrelationId::new).orElse(null);
 
         return new EventFilterSpecification(signature, correlationId);
     }

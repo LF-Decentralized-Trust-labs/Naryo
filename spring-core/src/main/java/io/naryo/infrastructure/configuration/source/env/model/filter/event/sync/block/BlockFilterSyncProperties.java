@@ -3,22 +3,25 @@ package io.naryo.infrastructure.configuration.source.env.model.filter.event.sync
 import io.naryo.application.configuration.source.model.filter.event.sync.BlockFilterSyncDescriptor;
 import io.naryo.domain.filter.event.sync.SyncStrategy;
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.FilterSyncProperties;
-import lombok.Getter;
+import jakarta.annotation.Nullable;
 import lombok.Setter;
 
 import java.math.BigInteger;
 import java.util.Optional;
 
 @Setter
-@Getter
 public final class BlockFilterSyncProperties extends FilterSyncProperties
         implements BlockFilterSyncDescriptor {
 
-    private Optional<BigInteger> initialBlock;
+    private @Nullable BigInteger initialBlock;
 
-    public BlockFilterSyncProperties(Optional<BigInteger> initialBlock) {
+    public BlockFilterSyncProperties(BigInteger initialBlock) {
         super(SyncStrategy.BLOCK_BASED);
         this.initialBlock = initialBlock;
     }
 
+    @Override
+    public Optional<BigInteger> getInitialBlock() {
+        return Optional.ofNullable(initialBlock);
+    }
 }

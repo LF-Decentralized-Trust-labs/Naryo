@@ -7,19 +7,18 @@ import io.naryo.infrastructure.configuration.source.env.model.filter.event.Event
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.EventSpecification;
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.FilterSyncProperties;
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.visibility.EventFilterVisibilityProperties;
-import lombok.Getter;
+import jakarta.annotation.Nullable;
 import lombok.Setter;
 
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-@Getter
 @Setter
 public final class ContractEventFilterProperties extends EventFilterProperties
         implements ContractEventFilterDescriptor {
 
-    private Optional<String> address;
+    private @Nullable String address;
 
     public ContractEventFilterProperties(
             UUID id,
@@ -39,7 +38,11 @@ public final class ContractEventFilterProperties extends EventFilterProperties
                 statuses,
                 sync,
                 visibility);
-        this.address = Optional.ofNullable(address);
+        this.address = address;
     }
 
+    @Override
+    public Optional<String> getAddress() {
+        return Optional.ofNullable(address);
+    }
 }

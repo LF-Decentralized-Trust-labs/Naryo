@@ -18,9 +18,9 @@ public interface TransactionFilterDescriptor extends FilterDescriptor {
 
     Set<TransactionStatus> getStatuses();
 
-    void setIdentifierType(Optional<IdentifierType> identifierType);
+    void setIdentifierType(IdentifierType identifierType);
 
-    void setValue(Optional<String> value);
+    void setValue(String value);
 
     void setStatuses(Set<TransactionStatus> statuses);
 

@@ -12,6 +12,7 @@ import io.naryo.infrastructure.configuration.source.env.model.filter.FilterPrope
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.FilterSyncProperties;
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.block.BlockFilterSyncProperties;
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.visibility.EventFilterVisibilityProperties;
+import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,16 +20,18 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
+
 @Getter
 @Setter
 public abstract class EventFilterProperties extends FilterProperties
     implements EventFilterDescriptor {
 
-    protected Optional<EventFilterScope> scope;
-    private Optional<EventSpecification> specification;
+    private @Nullable EventFilterScope scope;
+    private @Nullable EventSpecification specification;
     private Set<ContractEventStatus> statuses;
-    protected Optional<FilterSyncProperties> sync;
-    private Optional<EventFilterVisibilityProperties> visibility;
+    private @Nullable FilterSyncProperties sync;
+    private @Nullable EventFilterVisibilityProperties visibility;
 
     public EventFilterProperties(
         UUID id,
@@ -40,40 +43,57 @@ public abstract class EventFilterProperties extends FilterProperties
         FilterSyncProperties sync,
         EventFilterVisibilityProperties visibility) {
         super(id, name, FilterType.EVENT, nodeId);
-        this.scope = Optional.ofNullable(scope);
-        this.specification = Optional.ofNullable(specification);
+        this.scope = scope;
+        this.specification = specification;
         this.statuses = statuses;
-        this.sync = Optional.ofNullable(sync);
-        this.visibility = Optional.ofNullable(visibility);
+        this.sync = sync;
+        this.visibility = visibility;
     }
 
     @Override
-    public void setSpecification(Optional<EventSpecificationDescriptor> specification) {
-        this.specification = specification.map(specificationDescriptor -> new EventSpecification(
-            specificationDescriptor.getSignature(),
-            specificationDescriptor.getCorrelationId()
-        ));
-
+    public Optional<EventFilterScope> getScope() {
+        return Optional.ofNullable(scope);
     }
 
     @Override
-    public void setSync(Optional<FilterSyncDescriptor> sync) {
-        this.sync = sync.map(syncDescriptor -> {
-            if (syncDescriptor instanceof BlockFilterSyncDescriptor blockFilterSyncDescriptor) {
-                return new BlockFilterSyncProperties(blockFilterSyncDescriptor.getInitialBlock());
-            } else {
-                throw new IllegalArgumentException("Unknown sync strategy: " + syncDescriptor.getStrategy());
-            }
-        });
+    public Optional<EventSpecification> getSpecification() {
+        return Optional.ofNullable(specification);
     }
 
     @Override
-    public void setVisibility(Optional<FilterVisibilityDescriptor> visibility) {
-        this.visibility = visibility.map(visibilityDescriptor ->
-            new EventFilterVisibilityProperties(
-                visibilityDescriptor.getVisible(),
-                visibilityDescriptor.getPrivacyGroupId()
-            )
+    public void setSpecification(EventSpecificationDescriptor specification) {
+        this.specification = new EventSpecification(
+            valueOrNull(specification.getSignature()),
+            valueOrNull(specification.getCorrelationId())
+        );
+    }
+
+    @Override
+    public Optional<FilterSyncProperties> getSync() {
+        return Optional.ofNullable(sync);
+    }
+
+    @Override
+    public void setSync(FilterSyncDescriptor sync) {
+        if (sync instanceof BlockFilterSyncDescriptor blockFilterSyncDescriptor) {
+            this.sync = new BlockFilterSyncProperties(
+                valueOrNull(blockFilterSyncDescriptor.getInitialBlock())
+            );
+        } else {
+            throw new IllegalArgumentException("Unknown sync strategy: " + sync.getStrategy());
+        }
+    }
+
+    @Override
+    public Optional<EventFilterVisibilityProperties> getVisibility() {
+        return Optional.ofNullable(visibility);
+    }
+
+    @Override
+    public void setVisibility(FilterVisibilityDescriptor visibility) {
+        this.visibility = new EventFilterVisibilityProperties(
+            valueOrNull(visibility.getVisible()),
+            valueOrNull(visibility.getPrivacyGroupId())
         );
     }
 

@@ -11,7 +11,7 @@ public interface ContractEventFilterDescriptor extends EventFilterDescriptor {
 
     Optional<String> getAddress();
 
-    void setAddress(Optional<String> address);
+    void setAddress(String address);
 
     @Override
     default FilterDescriptor merge(FilterDescriptor descriptor) {

@@ -22,15 +22,15 @@ public interface EventFilterDescriptor extends FilterDescriptor {
 
     <T extends FilterVisibilityDescriptor> Optional<T> getVisibility();
 
-    void setScope(Optional<EventFilterScope> scope);
+    void setScope(EventFilterScope scope);
 
     void setStatuses(Set<ContractEventStatus> statuses);
 
-    void setSpecification(Optional<EventSpecificationDescriptor> specification);
+    void setSpecification(EventSpecificationDescriptor specification);
 
-    void setSync(Optional<FilterSyncDescriptor> sync);
+    void setSync(FilterSyncDescriptor sync);
 
-    void setVisibility(Optional<FilterVisibilityDescriptor> visibility);
+    void setVisibility(FilterVisibilityDescriptor visibility);
 
     @Override
     default FilterDescriptor merge(FilterDescriptor descriptor) {

@@ -18,11 +18,11 @@ public interface FilterDescriptor extends MergeableDescriptor<FilterDescriptor> 
 
     Optional<UUID> getNodeId();
 
-    void setName(Optional<String> name);
+    void setName(String name);
 
-    void setType(Optional<FilterType> filterType);
+    void setType(FilterType type);
 
-    void setNodeId(Optional<UUID> nodeId);
+    void setNodeId(UUID nodeId);
 
     @Override
     default FilterDescriptor merge(FilterDescriptor descriptor) {

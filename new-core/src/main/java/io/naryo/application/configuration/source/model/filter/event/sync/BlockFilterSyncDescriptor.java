@@ -11,7 +11,7 @@ public interface BlockFilterSyncDescriptor extends FilterSyncDescriptor {
 
     Optional<BigInteger> getInitialBlock();
 
-    void setInitialBlock(Optional<BigInteger> initialBlock);
+    void setInitialBlock(BigInteger initialBlock);
 
     @Override
     default SyncStrategy getStrategy() {

@@ -13,9 +13,9 @@ public interface EventSpecificationDescriptor
 
     Optional<Integer> getCorrelationId();
 
-    void setSignature(Optional<String> signature);
+    void setSignature(String signature);
 
-    void setCorrelationId(Optional<Integer> correlationId);
+    void setCorrelationId(Integer correlationId);
 
     @Override
     default EventSpecificationDescriptor merge(EventSpecificationDescriptor other) {

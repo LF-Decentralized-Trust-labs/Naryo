@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.Optional;
 
 @Component
 public final class SyncConfigurationPropertiesDeserializer
@@ -34,7 +33,7 @@ public final class SyncConfigurationPropertiesDeserializer
             case BLOCK_BASED -> {
                 BigInteger initialBlock =
                         safeTreeToValue(root, "initialBlock", codec, BigInteger.class);
-                yield new BlockFilterSyncProperties(Optional.ofNullable(initialBlock));
+                yield new BlockFilterSyncProperties(initialBlock);
             }
         };
     }
