@@ -44,37 +44,49 @@ public interface NodeDescriptor extends MergeableDescriptor<NodeDescriptor> {
         mergeOptionals(this::setName, this.getName(), descriptor.getName());
         mergeOptionals(this::setType, this.getType(), descriptor.getType());
 
-        descriptor.getSubscription().ifPresent(newSubscription -> {
-            this.getSubscription().ifPresentOrElse(
-                currentSubscription -> {
-                    if (!newSubscription.getClass().equals(currentSubscription.getClass())) {
-                        this.setSubscription(newSubscription);
-                    } else {
-                        this.setSubscription(currentSubscription.merge(newSubscription));
-                    }
-                },
-                () -> this.setSubscription(newSubscription)
-            );
-        });
+        descriptor
+                .getSubscription()
+                .ifPresent(
+                        newSubscription -> {
+                            this.getSubscription()
+                                    .ifPresentOrElse(
+                                            currentSubscription -> {
+                                                if (!newSubscription
+                                                        .getClass()
+                                                        .equals(currentSubscription.getClass())) {
+                                                    this.setSubscription(newSubscription);
+                                                } else {
+                                                    this.setSubscription(
+                                                            currentSubscription.merge(
+                                                                    newSubscription));
+                                                }
+                                            },
+                                            () -> this.setSubscription(newSubscription));
+                        });
 
+        descriptor
+                .getInteraction()
+                .ifPresent(
+                        newInteraction -> {
+                            this.getInteraction()
+                                    .ifPresentOrElse(
+                                            currentInteraction -> {
+                                                currentInteraction.merge(newInteraction);
+                                            },
+                                            () -> this.setInteraction(newInteraction));
+                        });
 
-        descriptor.getInteraction().ifPresent(newInteraction -> {
-            this.getInteraction().ifPresentOrElse(
-                currentInteraction -> {
-                    currentInteraction.merge(newInteraction);
-                },
-                () -> this.setInteraction(newInteraction)
-            );
-        });
-
-        descriptor.getConnection().ifPresent(newConnection -> {
-            this.getConnection().ifPresentOrElse(
-                currentConnection -> {
-                    currentConnection.merge(newConnection);
-                },
-                () -> this.setConnection(newConnection)
-            );
-        });
+        descriptor
+                .getConnection()
+                .ifPresent(
+                        newConnection -> {
+                            this.getConnection()
+                                    .ifPresentOrElse(
+                                            currentConnection -> {
+                                                currentConnection.merge(newConnection);
+                                            },
+                                            () -> this.setConnection(newConnection));
+                        });
 
         return this;
     }
