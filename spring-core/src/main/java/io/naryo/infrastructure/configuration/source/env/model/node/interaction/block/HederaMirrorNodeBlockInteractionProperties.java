@@ -1,11 +1,11 @@
 package io.naryo.infrastructure.configuration.source.env.model.node.interaction.block;
 
+import java.util.Optional;
+
 import io.naryo.application.configuration.source.model.node.interaction.HederaMirrorNodeBlockInteractionDescriptor;
 import io.naryo.domain.node.interaction.block.InteractionMode;
 import jakarta.annotation.Nullable;
 import lombok.Setter;
-
-import java.util.Optional;
 
 public class HederaMirrorNodeBlockInteractionProperties extends BlockInteractionProperties
         implements HederaMirrorNodeBlockInteractionDescriptor {

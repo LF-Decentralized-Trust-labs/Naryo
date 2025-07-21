@@ -12,7 +12,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-public abstract class BlockSubscriptionProperties extends SubscriptionProperties implements BlockSubscriptionDescriptor {
+public abstract class BlockSubscriptionProperties extends SubscriptionProperties
+        implements BlockSubscriptionDescriptor {
 
     private static final BigInteger DEFAULT_INITIAL_BLOCK = BigInteger.valueOf(-1);
     private static final BigInteger DEFAULT_CONFIRMATION_BLOCKS = BigInteger.valueOf(12);

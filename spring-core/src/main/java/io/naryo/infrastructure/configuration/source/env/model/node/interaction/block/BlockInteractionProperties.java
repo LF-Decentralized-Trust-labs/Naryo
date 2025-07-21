@@ -7,7 +7,8 @@ import io.naryo.infrastructure.configuration.source.env.model.node.interaction.I
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
-public abstract class BlockInteractionProperties extends InteractionProperties implements BlockInteractionDescriptor {
+public abstract class BlockInteractionProperties extends InteractionProperties
+        implements BlockInteractionDescriptor {
 
     private final @Getter @NotNull InteractionMode mode;
 

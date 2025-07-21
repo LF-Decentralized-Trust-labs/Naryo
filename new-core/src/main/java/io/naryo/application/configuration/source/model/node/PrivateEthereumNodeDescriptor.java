@@ -20,7 +20,10 @@ public interface PrivateEthereumNodeDescriptor extends EthereumNodeDescriptor {
 
         if (descriptor instanceof PrivateEthereumNodeDescriptor other) {
             mergeOptionals(this::setGroupId, this.getGroupId(), other.getGroupId());
-            mergeOptionals(this::setPrecompiledAddress, this.getPrecompiledAddress(), other.getPrecompiledAddress());
+            mergeOptionals(
+                    this::setPrecompiledAddress,
+                    this.getPrecompiledAddress(),
+                    other.getPrecompiledAddress());
         }
 
         return result;

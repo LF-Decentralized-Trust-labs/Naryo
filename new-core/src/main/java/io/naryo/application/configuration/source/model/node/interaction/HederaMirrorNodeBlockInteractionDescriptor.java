@@ -19,8 +19,14 @@ public interface HederaMirrorNodeBlockInteractionDescriptor extends BlockInterac
         BlockInteractionDescriptor.super.merge(other);
 
         if (other instanceof HederaMirrorNodeBlockInteractionDescriptor otherDescriptor) {
-            mergeOptionals(this::setLimitPerRequest, this.getLimitPerRequest(), otherDescriptor.getLimitPerRequest());
-            mergeOptionals(this::setRetriesPerRequest, this.getRetriesPerRequest(), otherDescriptor.getRetriesPerRequest());
+            mergeOptionals(
+                    this::setLimitPerRequest,
+                    this.getLimitPerRequest(),
+                    otherDescriptor.getLimitPerRequest());
+            mergeOptionals(
+                    this::setRetriesPerRequest,
+                    this.getRetriesPerRequest(),
+                    otherDescriptor.getRetriesPerRequest());
         }
 
         return this;
