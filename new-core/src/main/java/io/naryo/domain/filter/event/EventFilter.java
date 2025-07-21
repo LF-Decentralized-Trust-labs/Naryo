@@ -37,12 +37,9 @@ public abstract class EventFilter extends Filter {
         Objects.requireNonNull(statuses, "Statuses cannot be null");
         Objects.requireNonNull(syncState, "SyncState cannot be null");
         Objects.requireNonNull(visibilityConfiguration, "VisibilityConfiguration cannot be null");
-        if (statuses.isEmpty()) {
-            throw new IllegalArgumentException("Statuses cannot be empty");
-        }
         this.scope = scope;
         this.specification = specification;
-        this.statuses = statuses;
+        this.statuses = statuses.isEmpty() ? Set.of(ContractEventStatus.values()) : statuses;
         this.syncState = syncState;
         this.visibilityConfiguration = visibilityConfiguration;
     }
