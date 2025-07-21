@@ -7,7 +7,7 @@ import io.naryo.application.configuration.source.model.filter.event.contract.Con
 import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.filter.event.EventFilterScope;
 import io.naryo.infrastructure.configuration.persistence.document.filter.event.sync.FilterSyncDocument;
-import jakarta.validation.constraints.NotNull;
+import jakarta.annotation.Nullable;
 import lombok.Setter;
 import org.springframework.data.annotation.TypeAlias;
 
@@ -16,7 +16,7 @@ import org.springframework.data.annotation.TypeAlias;
 public class ContractEventFilterDocument extends EventFilterDocument
         implements ContractEventFilterDescriptor {
 
-    @NotNull private String address;
+    @Nullable private String address;
 
     public ContractEventFilterDocument(
             String id,
