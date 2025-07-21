@@ -1,6 +1,7 @@
 package io.naryo.infrastructure.configuration.beans.broadcaster.http;
 
 import java.util.List;
+import java.util.Map;
 
 import io.naryo.application.broadcaster.configuration.mapper.BroadcasterConfigurationMapperRegistry;
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
@@ -34,9 +35,18 @@ public final class BroadcasterInitializer implements EnvironmentInitializer {
                 HTTP_BROADCASTER_TYPE,
                 BroadcasterConfigurationDescriptor.class,
                 properties -> {
-                    HttpBroadcasterEndpoint endpoint =
-                            (HttpBroadcasterEndpoint)
-                                    properties.getAdditionalProperties().get("endpoint");
+                    Object raw = properties.getAdditionalProperties().get("endpoint");
+
+                    HttpBroadcasterEndpoint endpoint;
+
+                    if (raw instanceof HttpBroadcasterEndpoint typed) {
+                        endpoint = typed;
+                    } else if (raw instanceof Map map) {
+                        endpoint = new HttpBroadcasterEndpoint((String) map.get("url"));
+                    } else {
+                        return null;
+                    }
+
                     return new HttpBroadcasterConfiguration(
                             properties.getId(),
                             new BroadcasterCache(properties.getCache().getExpirationTime()),
