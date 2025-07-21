@@ -103,7 +103,7 @@ class EventRoutingServiceTest {
         ParameterDefinition pd = new IntParameterDefinition(256);
         when(spec.parameters()).thenReturn(Set.of(pd));
         when(evtFilter.getSpecification()).thenReturn(spec);
-        when(evtFilter.getStatuses()).thenReturn(List.of(ContractEventStatus.CONFIRMED));
+        when(evtFilter.getStatuses()).thenReturn(Set.of(ContractEventStatus.CONFIRMED));
 
         filters.add(evtFilter);
 

@@ -23,14 +23,10 @@ public abstract class ParameterDefinitionBuilder<T, Y extends ParameterDefinitio
     }
 
     protected int getPosition() {
-        return this.position == null
-            ? Instancio.create(Integer.class)
-            : this.position;
+        return this.position == null ? Instancio.create(Integer.class) : this.position;
     }
 
     protected boolean isIndexed() {
-        return this.indexed == null
-            ? Instancio.create(Boolean.class)
-            : this.indexed;
+        return this.indexed == null ? Instancio.create(Boolean.class) : this.indexed;
     }
 }

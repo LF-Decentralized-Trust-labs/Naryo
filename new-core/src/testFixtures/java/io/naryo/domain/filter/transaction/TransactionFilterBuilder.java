@@ -1,13 +1,13 @@
 package io.naryo.domain.filter.transaction;
 
+import java.util.Set;
+
 import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.filter.FilterBuilder;
 import org.instancio.Instancio;
 
-import java.util.Set;
-
 public class TransactionFilterBuilder
-    extends FilterBuilder<TransactionFilterBuilder, TransactionFilter> {
+        extends FilterBuilder<TransactionFilterBuilder, TransactionFilter> {
 
     private IdentifierType identifierType;
     private String value;
@@ -25,8 +25,7 @@ public class TransactionFilterBuilder
                 this.getNodeId(),
                 this.getIdentifierType(),
                 this.getValue(),
-                this.getStatuses()
-        );
+                this.getStatuses());
     }
 
     public TransactionFilterBuilder withIdentifierType(IdentifierType identifierType) {
@@ -46,19 +45,17 @@ public class TransactionFilterBuilder
 
     private IdentifierType getIdentifierType() {
         return this.identifierType == null
-            ? Instancio.create(IdentifierType.class)
-            : this.identifierType;
+                ? Instancio.create(IdentifierType.class)
+                : this.identifierType;
     }
 
     private Set<TransactionStatus> getStatuses() {
         return this.statuses == null || this.statuses.isEmpty()
-            ? Set.of(Instancio.create(TransactionStatus.class))
-            : this.statuses;
+                ? Set.of(Instancio.create(TransactionStatus.class))
+                : this.statuses;
     }
 
     private String getValue() {
-        return this.value == null
-            ? Instancio.create(String.class)
-            : this.value;
+        return this.value == null ? Instancio.create(String.class) : this.value;
     }
 }

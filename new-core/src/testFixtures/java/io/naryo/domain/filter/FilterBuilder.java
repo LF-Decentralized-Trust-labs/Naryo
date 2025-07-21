@@ -1,9 +1,9 @@
 package io.naryo.domain.filter;
 
+import java.util.UUID;
+
 import org.instancio.Instancio;
 import org.instancio.InstancioApi;
-
-import java.util.UUID;
 
 import static org.instancio.Select.field;
 
@@ -33,28 +33,21 @@ public abstract class FilterBuilder<T, Y extends Filter> {
     }
 
     protected InstancioApi<Y> buildBase(InstancioApi<Y> builder, FilterType type) {
-        return builder
-            .set(field(Filter::getId), this.getId())
-            .set(field(Filter::getName), this.getName())
-            .set(field(Filter::getNodeId), this.getNodeId())
-            .set(field(Filter::getType), type);
+        return builder.set(field(Filter::getId), this.getId())
+                .set(field(Filter::getName), this.getName())
+                .set(field(Filter::getNodeId), this.getNodeId())
+                .set(field(Filter::getType), type);
     }
 
     protected UUID getId() {
-        return this.id == null
-            ? UUID.randomUUID()
-            : this.id;
+        return this.id == null ? UUID.randomUUID() : this.id;
     }
 
     protected FilterName getName() {
-        return this.name == null
-            ? Instancio.create(FilterName.class)
-            : this.name;
+        return this.name == null ? Instancio.create(FilterName.class) : this.name;
     }
 
     protected UUID getNodeId() {
-        return this.nodeId == null
-            ? UUID.randomUUID()
-            : this.nodeId;
+        return this.nodeId == null ? UUID.randomUUID() : this.nodeId;
     }
 }

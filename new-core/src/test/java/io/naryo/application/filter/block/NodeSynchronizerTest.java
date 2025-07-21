@@ -137,7 +137,7 @@ class NodeSynchronizerTest {
                                 new EventName("event1"),
                                 null,
                                 Set.of(new AddressParameterDefinition())),
-                        List.of(ContractEventStatus.CONFIRMED, ContractEventStatus.UNCONFIRMED),
+                        Set.of(ContractEventStatus.CONFIRMED, ContractEventStatus.UNCONFIRMED),
                         new BlockActiveSyncState(
                                 new NonNegativeBlockNumber(BigInteger.ZERO),
                                 new NonNegativeBlockNumber(BigInteger.ZERO)),
@@ -167,7 +167,7 @@ class NodeSynchronizerTest {
                         nodeId,
                         IdentifierType.HASH,
                         "0x1234567890abcdef1234567890abcdef12345678",
-                        List.of(TransactionStatus.FAILED)));
+                        Set.of(TransactionStatus.FAILED)));
         NodeSynchronizer synchronizer =
                 new NodeSynchronizer(
                         node,
@@ -200,7 +200,7 @@ class NodeSynchronizerTest {
                                 new EventName("event1"),
                                 null,
                                 Set.of(new AddressParameterDefinition())),
-                        List.of(ContractEventStatus.CONFIRMED, ContractEventStatus.UNCONFIRMED),
+                        Set.of(ContractEventStatus.CONFIRMED, ContractEventStatus.UNCONFIRMED),
                         syncState,
                         "0x1234567890abcdef1234567890abcdef12345678"));
         NodeSynchronizer synchronizer =

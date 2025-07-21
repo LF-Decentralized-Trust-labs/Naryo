@@ -1,6 +1,6 @@
 package io.naryo.domain.filter.event;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import io.naryo.domain.common.event.ContractEventStatus;
@@ -14,7 +14,7 @@ class GlobalEventFilterTest extends AbstractEventFilterTest {
             FilterName name,
             UUID nodeId,
             EventFilterSpecification specification,
-            List<ContractEventStatus> statuses,
+            Set<ContractEventStatus> statuses,
             SyncState syncState) {
         return new GlobalEventFilter(id, name, nodeId, specification, statuses, syncState);
     }

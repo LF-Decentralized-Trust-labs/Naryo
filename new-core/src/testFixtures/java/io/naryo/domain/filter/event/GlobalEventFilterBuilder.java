@@ -1,7 +1,7 @@
 package io.naryo.domain.filter.event;
 
 public class GlobalEventFilterBuilder
-    extends EventFilterBuilder<GlobalEventFilterBuilder, GlobalEventFilter> {
+        extends EventFilterBuilder<GlobalEventFilterBuilder, GlobalEventFilter> {
 
     @Override
     public GlobalEventFilterBuilder self() {
@@ -17,7 +17,6 @@ public class GlobalEventFilterBuilder
                 this.getSpecification(),
                 this.getStatuses(),
                 this.getSyncState(),
-                this.getVisibilityConfiguration()
-        );
+                this.getVisibilityConfiguration());
     }
 }

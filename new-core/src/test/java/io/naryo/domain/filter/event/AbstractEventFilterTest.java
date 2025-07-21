@@ -1,9 +1,6 @@
 package io.naryo.domain.filter.event;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.common.event.EventName;
@@ -22,7 +19,7 @@ abstract class AbstractEventFilterTest {
             FilterName name,
             UUID nodeId,
             EventFilterSpecification specification,
-            List<ContractEventStatus> statuses,
+            Set<ContractEventStatus> statuses,
             SyncState syncState);
 
     @Test
@@ -34,7 +31,7 @@ abstract class AbstractEventFilterTest {
         EventFilterSpecification specification =
                 new EventFilterSpecification(
                         new EventName("Test"), new CorrelationId(0), parameters);
-        List<ContractEventStatus> statuses = List.of(ContractEventStatus.CONFIRMED);
+        Set<ContractEventStatus> statuses = Set.of(ContractEventStatus.CONFIRMED);
         SyncState syncState = new NoSyncState();
 
         EventFilter eventFilter =
@@ -53,7 +50,7 @@ abstract class AbstractEventFilterTest {
         UUID id = UUID.randomUUID();
         FilterName name = new FilterName("Test Filter");
         UUID nodeId = UUID.randomUUID();
-        List<ContractEventStatus> statuses = List.of(ContractEventStatus.CONFIRMED);
+        Set<ContractEventStatus> statuses = Set.of(ContractEventStatus.CONFIRMED);
         SyncState syncState = new NoSyncState();
 
         assertThrows(
@@ -72,7 +69,7 @@ abstract class AbstractEventFilterTest {
         EventFilterSpecification specification =
                 new EventFilterSpecification(
                         new EventName("Test"), new CorrelationId(0), parameters);
-        List<ContractEventStatus> statuses = new ArrayList<>();
+        Set<ContractEventStatus> statuses = new HashSet<>();
         SyncState syncState = new NoSyncState();
 
         assertThrows(
@@ -109,7 +106,7 @@ abstract class AbstractEventFilterTest {
         EventFilterSpecification specification =
                 new EventFilterSpecification(
                         new EventName("Test"), new CorrelationId(0), parameters);
-        List<ContractEventStatus> statuses = List.of(ContractEventStatus.CONFIRMED);
+        Set<ContractEventStatus> statuses = Set.of(ContractEventStatus.CONFIRMED);
 
         assertThrows(
                 NullPointerException.class,

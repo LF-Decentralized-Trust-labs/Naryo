@@ -3,7 +3,8 @@ package io.naryo.domain.filter.event.parameterdefinition;
 import io.naryo.domain.filter.event.parameter.BytesParameterDefinition;
 
 public class BytesParameterDefinitionBuilder
-    extends ParameterDefinitionBuilder<BytesParameterDefinitionBuilder, BytesParameterDefinition> {
+        extends ParameterDefinitionBuilder<
+                BytesParameterDefinitionBuilder, BytesParameterDefinition> {
 
     @Override
     public BytesParameterDefinitionBuilder self() {

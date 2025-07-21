@@ -1,5 +1,9 @@
 package io.naryo.domain.filter.transaction;
 
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+
 import io.naryo.application.node.interactor.block.dto.Transaction;
 import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.filter.Filter;
@@ -8,10 +12,6 @@ import io.naryo.domain.filter.FilterType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
 
 @Getter
 @ToString(callSuper = true)
