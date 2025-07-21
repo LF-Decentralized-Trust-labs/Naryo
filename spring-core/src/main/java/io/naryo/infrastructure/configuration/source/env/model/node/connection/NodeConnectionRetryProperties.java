@@ -5,8 +5,6 @@ import java.util.Optional;
 
 import io.naryo.application.configuration.source.model.node.connection.retry.NodeConnectionRetryDescriptor;
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
 import lombok.Setter;
 
 public final class NodeConnectionRetryProperties implements NodeConnectionRetryDescriptor {

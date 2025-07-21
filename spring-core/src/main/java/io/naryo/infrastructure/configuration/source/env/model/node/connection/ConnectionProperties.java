@@ -1,5 +1,7 @@
 package io.naryo.infrastructure.configuration.source.env.model.node.connection;
 
+import java.util.Optional;
+
 import io.naryo.application.configuration.source.model.node.connection.NodeConnectionDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.endpoint.ConnectionEndpointDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.retry.NodeConnectionRetryDescriptor;
@@ -9,8 +11,6 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-
-import java.util.Optional;
 
 import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 
@@ -36,9 +36,9 @@ public abstract class ConnectionProperties implements NodeConnectionDescriptor {
 
     @Override
     public void setRetry(NodeConnectionRetryDescriptor retry) {
-        this.retry = new NodeConnectionRetryProperties(
-            valueOrNull(retry.getTimes()), valueOrNull(retry.getBackoff())
-        );
+        this.retry =
+                new NodeConnectionRetryProperties(
+                        valueOrNull(retry.getTimes()), valueOrNull(retry.getBackoff()));
     }
 
     @Override
