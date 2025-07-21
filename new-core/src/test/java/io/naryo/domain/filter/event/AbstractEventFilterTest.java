@@ -72,11 +72,15 @@ abstract class AbstractEventFilterTest {
         Set<ContractEventStatus> statuses = new HashSet<>();
         SyncState syncState = new NoSyncState();
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> {
-                    createEventFilter(id, name, nodeId, specification, statuses, syncState);
-                });
+        EventFilter eventFilter =
+            createEventFilter(id, name, nodeId, specification, statuses, syncState);
+
+        assertEquals(id, eventFilter.getId());
+        assertEquals(name, eventFilter.getName());
+        assertEquals(nodeId, eventFilter.getNodeId());
+        assertEquals(specification, eventFilter.getSpecification());
+        assertEquals(Set.of(ContractEventStatus.values()), eventFilter.getStatuses());
+        assertEquals(syncState, eventFilter.getSyncState());
     }
 
     @Test
