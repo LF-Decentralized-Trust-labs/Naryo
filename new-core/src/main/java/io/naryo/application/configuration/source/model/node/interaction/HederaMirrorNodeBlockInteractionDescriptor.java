@@ -1,10 +1,14 @@
 package io.naryo.application.configuration.source.model.node.interaction;
 
+import java.util.Optional;
+
+import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
+
 public interface HederaMirrorNodeBlockInteractionDescriptor extends BlockInteractionDescriptor {
 
-    Integer getLimitPerRequest();
+    Optional<Integer> getLimitPerRequest();
 
-    Integer getRetriesPerRequest();
+    Optional<Integer> getRetriesPerRequest();
 
     void setLimitPerRequest(Integer limit);
 
@@ -12,18 +16,13 @@ public interface HederaMirrorNodeBlockInteractionDescriptor extends BlockInterac
 
     @Override
     default InteractionDescriptor merge(InteractionDescriptor other) {
-        var interaction = BlockInteractionDescriptor.super.merge(other);
+        BlockInteractionDescriptor.super.merge(other);
 
-        if (interaction instanceof HederaMirrorNodeBlockInteractionDescriptor otherDescriptor) {
-            if (!this.getLimitPerRequest().equals(otherDescriptor.getLimitPerRequest())) {
-                this.setLimitPerRequest(otherDescriptor.getLimitPerRequest());
-            }
-
-            if (!this.getRetriesPerRequest().equals(otherDescriptor.getRetriesPerRequest())) {
-                this.setRetriesPerRequest(otherDescriptor.getRetriesPerRequest());
-            }
+        if (other instanceof HederaMirrorNodeBlockInteractionDescriptor otherDescriptor) {
+            mergeOptionals(this::setLimitPerRequest, this.getLimitPerRequest(), otherDescriptor.getLimitPerRequest());
+            mergeOptionals(this::setRetriesPerRequest, this.getRetriesPerRequest(), otherDescriptor.getRetriesPerRequest());
         }
 
-        return interaction;
+        return this;
     }
 }

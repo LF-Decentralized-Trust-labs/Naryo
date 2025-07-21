@@ -1,10 +1,7 @@
 package io.naryo.application.node.configuration.manager;
 
 import java.math.BigInteger;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -16,6 +13,8 @@ import io.naryo.application.configuration.source.model.node.NodeDescriptor;
 import io.naryo.application.configuration.source.model.node.PrivateEthereumNodeDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.HttpNodeConnectionDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.NodeConnectionDescriptor;
+import io.naryo.application.configuration.source.model.node.connection.endpoint.ConnectionEndpointDescriptor;
+import io.naryo.application.configuration.source.model.node.connection.retry.NodeConnectionRetryDescriptor;
 import io.naryo.application.configuration.source.model.node.interaction.BlockInteractionDescriptor;
 import io.naryo.application.configuration.source.model.node.interaction.HederaMirrorNodeBlockInteractionDescriptor;
 import io.naryo.application.configuration.source.model.node.interaction.InteractionDescriptor;
@@ -45,8 +44,10 @@ import io.naryo.domain.node.subscription.block.method.poll.Interval;
 import io.naryo.domain.node.subscription.block.method.poll.PollBlockSubscriptionMethodConfiguration;
 import io.naryo.domain.node.subscription.block.method.pubsub.PubSubBlockSubscriptionMethodConfiguration;
 
+import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
+
 public final class DefaultNodeConfigurationManager
-        extends BaseCollectionConfigurationManager<Node, NodeDescriptor, String>
+        extends BaseCollectionConfigurationManager<Node, NodeDescriptor, UUID>
         implements NodeConfigurationManager {
 
     public DefaultNodeConfigurationManager(
@@ -56,9 +57,9 @@ public final class DefaultNodeConfigurationManager
     }
 
     @Override
-    protected Collector<NodeDescriptor, ?, Map<String, NodeDescriptor>> getCollector() {
+    protected Collector<NodeDescriptor, ?, Map<UUID, NodeDescriptor>> getCollector() {
         return Collectors.toMap(
-                NodeDescriptor::getName,
+                NodeDescriptor::getId,
                 Function.identity(),
                 NodeDescriptor::merge,
                 LinkedHashMap::new);
@@ -67,7 +68,7 @@ public final class DefaultNodeConfigurationManager
     @Override
     protected Node map(NodeDescriptor source) {
         var common = buildCommon(source);
-        return switch (source.getType()) {
+        return switch (valueOrNull(source.getType())) {
             case HEDERA ->
                     new HederaNode(
                             common.id,
@@ -86,8 +87,8 @@ public final class DefaultNodeConfigurationManager
                                 common.subscription,
                                 common.interaction,
                                 common.connection,
-                                new GroupId(privateEthSource.getGroupId()),
-                                new PrecompiledAddress(privateEthSource.getPrecompiledAddress()));
+                                new GroupId(valueOrNull(privateEthSource.getGroupId())),
+                                new PrecompiledAddress(valueOrNull(privateEthSource.getPrecompiledAddress())));
                     }
                     case PUBLIC ->
                             new PublicEthereumNode(
@@ -101,12 +102,12 @@ public final class DefaultNodeConfigurationManager
         };
     }
 
-    private CommonParams buildCommon(NodeDescriptor source) {
-        UUID id = source.getId();
-        NodeName name = new NodeName(source.getName());
-        var subscription = buildSubscription(source.getSubscription());
-        var interaction = buildInteraction(source.getInteraction());
-        var connection = buildConnection(source.getConnection());
+    private CommonParams buildCommon(NodeDescriptor descriptor) {
+        UUID id = descriptor.getId();
+        NodeName name = new NodeName(valueOrNull(NodeDescriptor::getName, descriptor));
+        var subscription = buildSubscription(valueOrNull(NodeDescriptor::getSubscription, descriptor));
+        var interaction = buildInteraction(valueOrNull(NodeDescriptor::getInteraction, descriptor));
+        var connection = buildConnection(valueOrNull(NodeDescriptor::getConnection, descriptor));
         return new CommonParams(id, name, subscription, interaction, connection);
     }
 
@@ -119,21 +120,20 @@ public final class DefaultNodeConfigurationManager
                 switch (blockDescriptor.method()) {
                     case POLL ->
                             new PollBlockSubscriptionMethodConfiguration(
-                                    new Interval(
-                                            ((PollBlockSubscriptionDescriptor) blockDescriptor)
-                                                    .getInterval()));
+                                    new Interval(valueOrNull(
+                                        ((PollBlockSubscriptionDescriptor) blockDescriptor).getInterval()))
+                            );
                     case PUBSUB -> new PubSubBlockSubscriptionMethodConfiguration();
                 };
         return new BlockSubscriptionConfiguration(
-                method,
-                blockDescriptor.getInitialBlock(),
-                new NonNegativeBlockNumber(
-                        BigInteger.ZERO), // TODO: Review last block processed when EventStore works
-                new NonNegativeBlockNumber(blockDescriptor.getConfirmationBlocks()),
-                new NonNegativeBlockNumber(blockDescriptor.getMissingTxRetryBlocks()),
-                new NonNegativeBlockNumber(blockDescriptor.getEventInvalidationBlockThreshold()),
-                new NonNegativeBlockNumber(blockDescriptor.getReplayBlockOffset()),
-                new NonNegativeBlockNumber(blockDescriptor.getSyncBlockLimit()));
+            method,
+            valueOrNull(blockDescriptor.getInitialBlock()),
+            new NonNegativeBlockNumber(BigInteger.ZERO), // TODO: Review last block processed when EventStore works
+            new NonNegativeBlockNumber(valueOrNull(blockDescriptor.getConfirmationBlocks())),
+            new NonNegativeBlockNumber(valueOrNull(blockDescriptor.getMissingTxRetryBlocks())),
+            new NonNegativeBlockNumber(valueOrNull(blockDescriptor.getEventInvalidationBlockThreshold())),
+            new NonNegativeBlockNumber(valueOrNull(blockDescriptor.getReplayBlockOffset())),
+            new NonNegativeBlockNumber(valueOrNull(blockDescriptor.getSyncBlockLimit())));
     }
 
     private InteractionConfiguration buildInteraction(InteractionDescriptor cfg) {
@@ -143,30 +143,39 @@ public final class DefaultNodeConfigurationManager
             case HEDERA_MIRROR_NODE -> {
                 var mirCfg = (HederaMirrorNodeBlockInteractionDescriptor) props;
                 yield new HederaMirrorNodeBlockInteractionConfiguration(
-                        new LimitPerRequest(mirCfg.getLimitPerRequest()),
-                        new RetriesPerRequest(mirCfg.getRetriesPerRequest()));
+                        new LimitPerRequest(valueOrNull(mirCfg.getLimitPerRequest())),
+                        new RetriesPerRequest(valueOrNull(mirCfg.getRetriesPerRequest())));
             }
         };
     }
 
     private NodeConnection buildConnection(NodeConnectionDescriptor descriptor) {
-        var endpoint = new ConnectionEndpoint(descriptor.getEndpoint().getUrl());
-        var retry =
-                new RetryConfiguration(
-                        descriptor.getRetry().getTimes(), descriptor.getRetry().getBackoff());
+        var endpoint = buildConnectionEndpoint(valueOrNull(NodeConnectionDescriptor::getEndpoint, descriptor));
+        var retry = buildRetry(valueOrNull(NodeConnectionDescriptor::getRetry, descriptor));
         return switch (descriptor.getType()) {
             case HTTP -> {
                 var httpDescriptor = (HttpNodeConnectionDescriptor) descriptor;
                 yield new HttpNodeConnection(
                         endpoint,
                         retry,
-                        new MaxIdleConnections(httpDescriptor.getMaxIdleConnections()),
-                        new KeepAliveDuration(httpDescriptor.getKeepAliveDuration()),
-                        new ConnectionTimeout(httpDescriptor.getConnectionTimeout()),
-                        new ReadTimeout(httpDescriptor.getReadTimeout()));
+                        new MaxIdleConnections(valueOrNull(httpDescriptor.getMaxIdleConnections())),
+                        new KeepAliveDuration(valueOrNull(httpDescriptor.getKeepAliveDuration())),
+                        new ConnectionTimeout(valueOrNull(httpDescriptor.getConnectionTimeout())),
+                        new ReadTimeout(valueOrNull(httpDescriptor.getReadTimeout())));
             }
             case WS -> new WsNodeConnection(endpoint, retry);
         };
+    }
+
+    private ConnectionEndpoint buildConnectionEndpoint(ConnectionEndpointDescriptor descriptor) {
+        return descriptor != null ? new ConnectionEndpoint(valueOrNull(descriptor.getUrl())) : null;
+    }
+
+    private RetryConfiguration buildRetry(NodeConnectionRetryDescriptor descriptor) {
+        return descriptor != null ? new RetryConfiguration(
+            valueOrNull(descriptor.getTimes()),
+            valueOrNull(descriptor.getBackoff())
+        ) : null;
     }
 
     private record CommonParams(
