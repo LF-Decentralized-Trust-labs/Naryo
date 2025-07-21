@@ -15,12 +15,12 @@ public interface ContractEventFilterDescriptor extends EventFilterDescriptor {
 
     @Override
     default FilterDescriptor merge(FilterDescriptor descriptor) {
-        var filter = EventFilterDescriptor.super.merge(descriptor);
+        EventFilterDescriptor.super.merge(descriptor);
 
-        if (filter instanceof ContractEventFilterDescriptor other) {
+        if (descriptor instanceof ContractEventFilterDescriptor other) {
             mergeOptionals(this::setAddress, this.getAddress(), other.getAddress());
         }
 
-        return filter;
+        return this;
     }
 }

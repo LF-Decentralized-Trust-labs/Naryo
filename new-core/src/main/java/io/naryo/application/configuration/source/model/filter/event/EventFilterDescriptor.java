@@ -34,9 +34,9 @@ public interface EventFilterDescriptor extends FilterDescriptor {
 
     @Override
     default FilterDescriptor merge(FilterDescriptor descriptor) {
-        var filter = FilterDescriptor.super.merge(descriptor);
+        FilterDescriptor.super.merge(descriptor);
 
-        if (filter instanceof EventFilterDescriptor other) {
+        if (descriptor instanceof EventFilterDescriptor other) {
             mergeOptionals(this::setScope, this.getScope(), other.getScope());
             mergeCollections(this::setStatuses, this.getStatuses(), other.getStatuses());
             mergeDescriptors(
@@ -45,6 +45,6 @@ public interface EventFilterDescriptor extends FilterDescriptor {
             mergeDescriptors(this::setVisibility, this.getVisibility(), other.getVisibility());
         }
 
-        return filter;
+        return this;
     }
 }
