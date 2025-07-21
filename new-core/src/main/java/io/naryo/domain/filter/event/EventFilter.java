@@ -39,7 +39,7 @@ public abstract class EventFilter extends Filter {
         Objects.requireNonNull(visibilityConfiguration, "VisibilityConfiguration cannot be null");
         this.scope = scope;
         this.specification = specification;
-        this.statuses = statuses.isEmpty() ? Set.of(ContractEventStatus.values()) : statuses;
+        this.statuses = statuses == null || statuses.isEmpty() ? Set.of(ContractEventStatus.values()) : statuses;
         this.syncState = syncState;
         this.visibilityConfiguration = visibilityConfiguration;
     }
