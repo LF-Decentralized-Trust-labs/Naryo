@@ -40,6 +40,8 @@ test {
     useJUnitPlatform()
 }
 
+tasks.named('bootJar') { enabled = false }
+
 tasks.named("spotlessJava").configure {
     dependsOn("spotlessGroovyGradle", "compileJava", "compileTestJava", "javadoc")
 }
