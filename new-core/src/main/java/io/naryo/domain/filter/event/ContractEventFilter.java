@@ -1,14 +1,14 @@
 package io.naryo.domain.filter.event;
 
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+
 import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.filter.FilterName;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
 
 @Getter
 @ToString(callSuper = true)

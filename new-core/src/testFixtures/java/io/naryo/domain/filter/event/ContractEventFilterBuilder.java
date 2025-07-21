@@ -3,7 +3,7 @@ package io.naryo.domain.filter.event;
 import org.instancio.Instancio;
 
 public class ContractEventFilterBuilder
-    extends EventFilterBuilder<ContractEventFilterBuilder, ContractEventFilter> {
+        extends EventFilterBuilder<ContractEventFilterBuilder, ContractEventFilter> {
 
     private String contractAddress;
 
@@ -15,15 +15,14 @@ public class ContractEventFilterBuilder
     @Override
     public ContractEventFilter build() {
         return new ContractEventFilter(
-            this.getId(),
-            this.getName(),
-            this.getNodeId(),
-            this.getSpecification(),
-            this.getStatuses(),
-            this.getSyncState(),
-            this.getVisibilityConfiguration(),
-            this.getContractAddress()
-        );
+                this.getId(),
+                this.getName(),
+                this.getNodeId(),
+                this.getSpecification(),
+                this.getStatuses(),
+                this.getSyncState(),
+                this.getVisibilityConfiguration(),
+                this.getContractAddress());
     }
 
     public ContractEventFilterBuilder withContractAddress(String contractAddress) {
@@ -32,8 +31,6 @@ public class ContractEventFilterBuilder
     }
 
     private String getContractAddress() {
-        return this.contractAddress == null
-            ? Instancio.create(String.class)
-            : this.contractAddress;
+        return this.contractAddress == null ? Instancio.create(String.class) : this.contractAddress;
     }
 }

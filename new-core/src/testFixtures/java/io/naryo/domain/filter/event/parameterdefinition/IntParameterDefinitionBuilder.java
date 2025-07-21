@@ -3,7 +3,7 @@ package io.naryo.domain.filter.event.parameterdefinition;
 import io.naryo.domain.filter.event.parameter.IntParameterDefinition;
 
 public class IntParameterDefinitionBuilder
-    extends ParameterDefinitionBuilder<IntParameterDefinitionBuilder, IntParameterDefinition> {
+        extends ParameterDefinitionBuilder<IntParameterDefinitionBuilder, IntParameterDefinition> {
 
     private static final int DEFAULT_BIT_SIZE = 8;
 
@@ -25,8 +25,6 @@ public class IntParameterDefinitionBuilder
     }
 
     private int getBitSize() {
-        return this.bitSize == null
-            ? DEFAULT_BIT_SIZE
-            : this.bitSize;
+        return this.bitSize == null ? DEFAULT_BIT_SIZE : this.bitSize;
     }
 }

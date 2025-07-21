@@ -4,7 +4,8 @@ import io.naryo.domain.filter.event.ParameterDefinition;
 import io.naryo.domain.filter.event.parameter.ArrayParameterDefinition;
 
 public class ArrayParameterDefinitionBuilder
-    extends ParameterDefinitionBuilder<ArrayParameterDefinitionBuilder, ArrayParameterDefinition> {
+        extends ParameterDefinitionBuilder<
+                ArrayParameterDefinitionBuilder, ArrayParameterDefinition> {
 
     private ParameterDefinition elementType;
     private Integer fixedLength;
@@ -16,7 +17,8 @@ public class ArrayParameterDefinitionBuilder
 
     @Override
     public ArrayParameterDefinition build() {
-        return new ArrayParameterDefinition(this.getPosition(), this.getElementType(), this.getFixedLength());
+        return new ArrayParameterDefinition(
+                this.getPosition(), this.getElementType(), this.getFixedLength());
     }
 
     public ArrayParameterDefinitionBuilder withElementType(ParameterDefinition elementType) {
@@ -31,13 +33,11 @@ public class ArrayParameterDefinitionBuilder
 
     private ParameterDefinition getElementType() {
         return this.elementType == null
-            ? new AddressParameterDefinitionBuilder().build()
-            : this.elementType;
+                ? new AddressParameterDefinitionBuilder().build()
+                : this.elementType;
     }
 
     private Integer getFixedLength() {
-        return this.fixedLength == null
-            ? 1
-            : this.fixedLength;
+        return this.fixedLength == null ? 1 : this.fixedLength;
     }
 }

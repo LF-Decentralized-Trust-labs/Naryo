@@ -1,5 +1,9 @@
 package io.naryo.infrastructure.configuration.source.env.model.filter.event.contract;
 
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+
 import io.naryo.application.configuration.source.model.filter.event.contract.ContractEventFilterDescriptor;
 import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.filter.event.EventFilterScope;
@@ -9,10 +13,6 @@ import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.visibility.EventFilterVisibilityProperties;
 import jakarta.annotation.Nullable;
 import lombok.Setter;
-
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
 
 @Setter
 public final class ContractEventFilterProperties extends EventFilterProperties

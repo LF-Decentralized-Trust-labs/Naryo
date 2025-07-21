@@ -1,10 +1,10 @@
 package io.naryo.domain.filter.event;
 
-import io.naryo.domain.common.event.ContractEventStatus;
-import io.naryo.domain.filter.FilterName;
-
 import java.util.Set;
 import java.util.UUID;
+
+import io.naryo.domain.common.event.ContractEventStatus;
+import io.naryo.domain.filter.FilterName;
 
 public class GlobalEventFilter extends EventFilter {
 
