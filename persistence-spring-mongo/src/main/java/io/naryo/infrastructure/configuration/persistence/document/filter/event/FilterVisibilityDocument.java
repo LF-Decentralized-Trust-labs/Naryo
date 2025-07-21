@@ -5,7 +5,9 @@ import java.util.Optional;
 import io.naryo.application.configuration.source.model.filter.event.FilterVisibilityDescriptor;
 import jakarta.annotation.Nullable;
 import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document
 @Setter
 public class FilterVisibilityDocument implements FilterVisibilityDescriptor {
 

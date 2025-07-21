@@ -62,7 +62,7 @@ public abstract class EventFilterDocumentBuilder<T, Y extends EventFilterDocumen
     }
 
     protected FilterSyncDocument getSync() {
-        return this.sync == null ? new BlockSyncDocumentBuilder().build() : this.sync;
+        return this.sync == null ? new BlockFilterSyncDocumentBuilder().build() : this.sync;
     }
 
     protected FilterVisibilityDocument getVisibility() {

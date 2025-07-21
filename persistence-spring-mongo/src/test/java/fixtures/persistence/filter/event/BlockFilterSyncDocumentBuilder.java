@@ -2,18 +2,18 @@ package fixtures.persistence.filter.event;
 
 import java.math.BigInteger;
 
-import io.naryo.infrastructure.configuration.persistence.document.filter.event.sync.BlockSyncDocument;
+import io.naryo.infrastructure.configuration.persistence.document.filter.event.sync.BlockFilterSyncDocument;
 import org.instancio.Instancio;
 
-public class BlockSyncDocumentBuilder {
+public class BlockFilterSyncDocumentBuilder {
 
     private BigInteger initialBlock;
 
-    public BlockSyncDocument build() {
-        return new BlockSyncDocument(this.getInitialBlock());
+    public BlockFilterSyncDocument build() {
+        return new BlockFilterSyncDocument(this.getInitialBlock());
     }
 
-    public BlockSyncDocumentBuilder withInitialBlock(BigInteger initialBlock) {
+    public BlockFilterSyncDocumentBuilder withInitialBlock(BigInteger initialBlock) {
         this.initialBlock = initialBlock;
         return this;
     }
