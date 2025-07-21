@@ -39,3 +39,7 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+tasks.named("spotlessJava").configure {
+    dependsOn("spotlessGroovyGradle", "compileJava", "compileTestJava", "javadoc")
+}
