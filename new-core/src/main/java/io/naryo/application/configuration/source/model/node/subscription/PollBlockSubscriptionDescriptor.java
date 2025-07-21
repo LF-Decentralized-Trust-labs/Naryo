@@ -1,12 +1,13 @@
 package io.naryo.application.configuration.source.model.node.subscription;
 
 import java.time.Duration;
+import java.util.Optional;
 
 import io.naryo.domain.node.subscription.block.method.BlockSubscriptionMethod;
 
 public interface PollBlockSubscriptionDescriptor extends BlockSubscriptionDescriptor {
 
-    Duration getInterval();
+    Optional<Duration> getInterval();
 
     void setInterval(Duration interval);
 

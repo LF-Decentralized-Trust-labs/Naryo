@@ -1,15 +1,18 @@
 package io.naryo.infrastructure.configuration.source.env.model.node.subscription.block;
 
 import java.math.BigInteger;
+import java.util.Optional;
 
+import io.naryo.application.configuration.source.model.node.subscription.BlockSubscriptionDescriptor;
 import io.naryo.domain.node.subscription.SubscriptionStrategy;
 import io.naryo.domain.node.subscription.block.method.BlockSubscriptionMethod;
 import io.naryo.infrastructure.configuration.source.env.model.node.subscription.SubscriptionProperties;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-public abstract class BlockSubscriptionProperties extends SubscriptionProperties {
+public abstract class BlockSubscriptionProperties extends SubscriptionProperties implements BlockSubscriptionDescriptor {
 
     private static final BigInteger DEFAULT_INITIAL_BLOCK = BigInteger.valueOf(-1);
     private static final BigInteger DEFAULT_CONFIRMATION_BLOCKS = BigInteger.valueOf(12);
@@ -19,12 +22,12 @@ public abstract class BlockSubscriptionProperties extends SubscriptionProperties
     private static final BigInteger DEFAULT_SYNC_BLOCK_LIMIT = BigInteger.valueOf(20000);
 
     private final @Getter @NotNull BlockSubscriptionMethod method;
-    private @Getter @Setter @NotNull BigInteger initialBlock;
-    private @Getter @Setter @NotNull BigInteger confirmationBlocks;
-    private @Getter @Setter @NotNull BigInteger missingTxRetryBlocks;
-    private @Getter @Setter @NotNull BigInteger eventInvalidationBlockThreshold;
-    private @Getter @Setter @NotNull BigInteger replayBlockOffset;
-    private @Getter @Setter @NotNull BigInteger syncBlockLimit;
+    private @Setter @Nullable BigInteger initialBlock;
+    private @Setter @Nullable BigInteger confirmationBlocks;
+    private @Setter @Nullable BigInteger missingTxRetryBlocks;
+    private @Setter @Nullable BigInteger eventInvalidationBlockThreshold;
+    private @Setter @Nullable BigInteger replayBlockOffset;
+    private @Setter @Nullable BigInteger syncBlockLimit;
 
     public BlockSubscriptionProperties(
             BlockSubscriptionMethod method,
@@ -50,5 +53,35 @@ public abstract class BlockSubscriptionProperties extends SubscriptionProperties
         this.replayBlockOffset =
                 replayBlockOffset != null ? replayBlockOffset : DEFAULT_REPLAY_BLOCK_OFFSET;
         this.syncBlockLimit = syncBlockLimit != null ? syncBlockLimit : DEFAULT_SYNC_BLOCK_LIMIT;
+    }
+
+    @Override
+    public Optional<BigInteger> getInitialBlock() {
+        return Optional.ofNullable(initialBlock);
+    }
+
+    @Override
+    public Optional<BigInteger> getConfirmationBlocks() {
+        return Optional.ofNullable(confirmationBlocks);
+    }
+
+    @Override
+    public Optional<BigInteger> getMissingTxRetryBlocks() {
+        return Optional.ofNullable(missingTxRetryBlocks);
+    }
+
+    @Override
+    public Optional<BigInteger> getEventInvalidationBlockThreshold() {
+        return Optional.ofNullable(eventInvalidationBlockThreshold);
+    }
+
+    @Override
+    public Optional<BigInteger> getReplayBlockOffset() {
+        return Optional.ofNullable(replayBlockOffset);
+    }
+
+    @Override
+    public Optional<BigInteger> getSyncBlockLimit() {
+        return Optional.ofNullable(syncBlockLimit);
     }
 }

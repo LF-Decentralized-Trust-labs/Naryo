@@ -1,5 +1,6 @@
 package io.naryo.application.configuration.source.model.node;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import io.naryo.application.configuration.source.model.MergeableDescriptor;
@@ -8,21 +9,25 @@ import io.naryo.application.configuration.source.model.node.interaction.Interact
 import io.naryo.application.configuration.source.model.node.subscription.SubscriptionDescriptor;
 import io.naryo.domain.node.NodeType;
 
+import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
+
 public interface NodeDescriptor extends MergeableDescriptor<NodeDescriptor> {
 
     UUID getId();
 
-    String getName();
+    Optional<String> getName();
 
-    NodeType getType();
+    Optional<NodeType> getType();
 
-    SubscriptionDescriptor getSubscription();
+    Optional<SubscriptionDescriptor> getSubscription();
 
-    InteractionDescriptor getInteraction();
+    Optional<InteractionDescriptor> getInteraction();
 
-    NodeConnectionDescriptor getConnection();
+    Optional<NodeConnectionDescriptor> getConnection();
 
     void setName(String name);
+
+    void setType(NodeType type);
 
     void setSubscription(SubscriptionDescriptor subscription);
 
@@ -36,42 +41,40 @@ public interface NodeDescriptor extends MergeableDescriptor<NodeDescriptor> {
             return this;
         }
 
-        if (!this.getName().equals(descriptor.getName())) {
-            this.setName(descriptor.getName());
-        }
+        mergeOptionals(this::setName, this.getName(), descriptor.getName());
+        mergeOptionals(this::setType, this.getType(), descriptor.getType());
 
-        if (!this.getType().equals(descriptor.getType())) {
-            return descriptor;
-        }
+        descriptor.getSubscription().ifPresent(newSubscription -> {
+            this.getSubscription().ifPresentOrElse(
+                currentSubscription -> {
+                    if (!newSubscription.getClass().equals(currentSubscription.getClass())) {
+                        this.setSubscription(newSubscription);
+                    } else {
+                        this.setSubscription(currentSubscription.merge(newSubscription));
+                    }
+                },
+                () -> this.setSubscription(newSubscription)
+            );
+        });
 
-        if (descriptor.getSubscription() != null) {
-            if (this.getSubscription() == null) {
-                this.setSubscription(descriptor.getSubscription());
-            } else if (!descriptor
-                    .getSubscription()
-                    .getClass()
-                    .equals(this.getSubscription().getClass())) {
-                this.setSubscription(descriptor.getSubscription());
-            } else {
-                this.setSubscription(this.getSubscription().merge(descriptor.getSubscription()));
-            }
-        }
 
-        if (descriptor.getInteraction() != null) {
-            if (this.getInteraction() == null) {
-                this.setInteraction(descriptor.getInteraction());
-            } else {
-                this.getInteraction().merge(descriptor.getInteraction());
-            }
-        }
+        descriptor.getInteraction().ifPresent(newInteraction -> {
+            this.getInteraction().ifPresentOrElse(
+                currentInteraction -> {
+                    currentInteraction.merge(newInteraction);
+                },
+                () -> this.setInteraction(newInteraction)
+            );
+        });
 
-        if (descriptor.getConnection() != null) {
-            if (this.getConnection() == null) {
-                this.setConnection(descriptor.getConnection());
-            } else {
-                this.getConnection().merge(descriptor.getConnection());
-            }
-        }
+        descriptor.getConnection().ifPresent(newConnection -> {
+            this.getConnection().ifPresentOrElse(
+                currentConnection -> {
+                    currentConnection.merge(newConnection);
+                },
+                () -> this.setConnection(newConnection)
+            );
+        });
 
         return this;
     }

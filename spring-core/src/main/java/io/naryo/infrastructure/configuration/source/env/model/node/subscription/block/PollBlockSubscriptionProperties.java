@@ -2,6 +2,7 @@ package io.naryo.infrastructure.configuration.source.env.model.node.subscription
 
 import java.math.BigInteger;
 import java.time.Duration;
+import java.util.Optional;
 
 import io.naryo.application.configuration.source.model.node.subscription.PollBlockSubscriptionDescriptor;
 import io.naryo.domain.node.subscription.block.method.BlockSubscriptionMethod;
@@ -14,7 +15,7 @@ public final class PollBlockSubscriptionProperties extends BlockSubscriptionProp
 
     private static final Duration DEFAULT_INTERVAL = Duration.ofSeconds(5);
 
-    private @Getter @Setter @NotNull Duration interval;
+    private @Setter @NotNull Duration interval;
 
     public PollBlockSubscriptionProperties(
             BigInteger initialBlock,
@@ -33,5 +34,10 @@ public final class PollBlockSubscriptionProperties extends BlockSubscriptionProp
                 replayBlockOffset,
                 syncBlockLimit);
         this.interval = interval != null ? interval : DEFAULT_INTERVAL;
+    }
+
+    @Override
+    public Optional<Duration> getInterval() {
+        return Optional.ofNullable(interval);
     }
 }

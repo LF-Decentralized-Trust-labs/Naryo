@@ -5,14 +5,14 @@ import io.naryo.domain.node.subscription.SubscriptionStrategy;
 
 public interface SubscriptionDescriptor extends MergeableDescriptor<SubscriptionDescriptor> {
 
-    SubscriptionStrategy strategy();
+    SubscriptionStrategy getStrategy();
 
     default SubscriptionDescriptor merge(SubscriptionDescriptor descriptor) {
         if (descriptor == null) {
             return this;
         }
 
-        if (!this.strategy().equals(descriptor.strategy())) {
+        if (!this.getStrategy().equals(descriptor.getStrategy())) {
             return descriptor;
         }
 

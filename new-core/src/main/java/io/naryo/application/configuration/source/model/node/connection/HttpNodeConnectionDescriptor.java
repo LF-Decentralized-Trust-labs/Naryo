@@ -1,8 +1,11 @@
 package io.naryo.application.configuration.source.model.node.connection;
 
 import java.time.Duration;
+import java.util.Optional;
 
 import io.naryo.domain.node.connection.NodeConnectionType;
+
+import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
 
 public interface HttpNodeConnectionDescriptor extends NodeConnectionDescriptor {
 
@@ -11,15 +14,15 @@ public interface HttpNodeConnectionDescriptor extends NodeConnectionDescriptor {
         return NodeConnectionType.HTTP;
     }
 
-    int getMaxIdleConnections();
+    Optional<Integer> getMaxIdleConnections();
 
-    Duration getKeepAliveDuration();
+    Optional<Duration> getKeepAliveDuration();
 
-    Duration getConnectionTimeout();
+    Optional<Duration> getConnectionTimeout();
 
-    Duration getReadTimeout();
+    Optional<Duration> getReadTimeout();
 
-    void setMaxIdleConnections(int maxIdleConnections);
+    void setMaxIdleConnections(Integer maxIdleConnections);
 
     void setKeepAliveDuration(Duration keepAliveDuration);
 
@@ -32,21 +35,10 @@ public interface HttpNodeConnectionDescriptor extends NodeConnectionDescriptor {
         var connection = NodeConnectionDescriptor.super.merge(other);
 
         if (other instanceof HttpNodeConnectionDescriptor otherDescriptor) {
-            if (this.getMaxIdleConnections() != otherDescriptor.getMaxIdleConnections()) {
-                this.setMaxIdleConnections(otherDescriptor.getMaxIdleConnections());
-            }
-
-            if (this.getKeepAliveDuration() != otherDescriptor.getKeepAliveDuration()) {
-                this.setKeepAliveDuration(otherDescriptor.getKeepAliveDuration());
-            }
-
-            if (this.getConnectionTimeout() != otherDescriptor.getConnectionTimeout()) {
-                this.setConnectionTimeout(otherDescriptor.getConnectionTimeout());
-            }
-
-            if (this.getReadTimeout() != otherDescriptor.getReadTimeout()) {
-                this.setReadTimeout(otherDescriptor.getReadTimeout());
-            }
+            mergeOptionals(this::setMaxIdleConnections, this.getMaxIdleConnections(), otherDescriptor.getMaxIdleConnections());
+            mergeOptionals(this::setKeepAliveDuration, this.getKeepAliveDuration(), otherDescriptor.getKeepAliveDuration());
+            mergeOptionals(this::setConnectionTimeout, this.getConnectionTimeout(), otherDescriptor.getConnectionTimeout());
+            mergeOptionals(this::setReadTimeout, this.getReadTimeout(), otherDescriptor.getReadTimeout());
         }
 
         return connection;
