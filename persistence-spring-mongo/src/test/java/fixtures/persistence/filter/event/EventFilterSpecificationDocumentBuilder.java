@@ -9,10 +9,7 @@ public class EventFilterSpecificationDocumentBuilder {
     private Integer correlationId;
 
     public EventSpecificationDocument build() {
-        return new EventSpecificationDocument(
-            this.getSignature(),
-            this.getCorrelationId()
-        );
+        return new EventSpecificationDocument(this.getSignature(), this.getCorrelationId());
     }
 
     public EventFilterSpecificationDocumentBuilder withSignature(String signature) {
@@ -26,15 +23,10 @@ public class EventFilterSpecificationDocumentBuilder {
     }
 
     private String getSignature() {
-        return this.signature == null
-            ? Instancio.create(String.class)
-            : this.signature;
+        return this.signature == null ? Instancio.create(String.class) : this.signature;
     }
 
     private int getCorrelationId() {
-        return this.correlationId == null
-            ? Instancio.create(Integer.class)
-            : this.correlationId;
+        return this.correlationId == null ? Instancio.create(Integer.class) : this.correlationId;
     }
-
 }

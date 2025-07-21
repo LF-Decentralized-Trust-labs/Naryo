@@ -1,21 +1,21 @@
 package io.naryo.application.configuration.manager;
 
-import io.naryo.application.configuration.provider.CollectionSourceProvider;
-import io.naryo.application.configuration.source.model.Descriptor;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import io.naryo.application.configuration.provider.CollectionSourceProvider;
+import io.naryo.application.configuration.source.model.Descriptor;
+
 public abstract class BaseCollectionConfigurationManager<T, S extends Descriptor, K>
-    implements CollectionConfigurationManager<T> {
+        implements CollectionConfigurationManager<T> {
 
     protected final List<? extends CollectionSourceProvider<S>> providers;
 
     protected BaseCollectionConfigurationManager(
-        List<? extends CollectionSourceProvider<S>> providers) {
+            List<? extends CollectionSourceProvider<S>> providers) {
         this.providers = providers;
     }
 

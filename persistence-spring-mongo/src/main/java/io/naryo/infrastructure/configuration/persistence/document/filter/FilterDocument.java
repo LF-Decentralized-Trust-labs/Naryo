@@ -1,5 +1,8 @@
 package io.naryo.infrastructure.configuration.persistence.document.filter;
 
+import java.util.Optional;
+import java.util.UUID;
+
 import io.naryo.application.configuration.source.model.filter.FilterDescriptor;
 import io.naryo.domain.filter.FilterType;
 import jakarta.annotation.Nullable;
@@ -7,24 +10,17 @@ import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-import java.util.Optional;
-import java.util.UUID;
-
 @Document(collection = "filters")
 @Setter
 public abstract class FilterDocument implements FilterDescriptor {
 
-    @MongoId
-    private String id;
+    @MongoId private String id;
 
-    @Nullable
-    private String name;
+    @Nullable private String name;
 
-    @Nullable
-    private FilterType type;
+    @Nullable private FilterType type;
 
-    @Nullable
-    private String nodeId;
+    @Nullable private String nodeId;
 
     public FilterDocument(String id, String name, FilterType type, String nodeId) {
         this.id = id;

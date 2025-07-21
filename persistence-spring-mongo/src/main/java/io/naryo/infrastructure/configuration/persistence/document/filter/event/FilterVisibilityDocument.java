@@ -1,19 +1,17 @@
 package io.naryo.infrastructure.configuration.persistence.document.filter.event;
 
+import java.util.Optional;
+
 import io.naryo.application.configuration.source.model.filter.event.FilterVisibilityDescriptor;
 import jakarta.annotation.Nullable;
 import lombok.Setter;
 
-import java.util.Optional;
-
 @Setter
 public class FilterVisibilityDocument implements FilterVisibilityDescriptor {
 
-    @Nullable
-    private Boolean visible;
+    @Nullable private Boolean visible;
 
-    @Nullable
-    private String privacyGroupId;
+    @Nullable private String privacyGroupId;
 
     public FilterVisibilityDocument(boolean visible, String privacyGroupId) {
         this.visible = visible;
@@ -29,5 +27,4 @@ public class FilterVisibilityDocument implements FilterVisibilityDescriptor {
     public Optional<String> getPrivacyGroupId() {
         return Optional.ofNullable(privacyGroupId);
     }
-
 }

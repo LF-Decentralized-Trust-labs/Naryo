@@ -1,15 +1,15 @@
 package fixtures.persistence.filter.transaction;
 
+import java.util.Set;
+
 import fixtures.persistence.filter.FilterDocumentBuilder;
 import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.filter.transaction.IdentifierType;
 import io.naryo.infrastructure.configuration.persistence.document.filter.transaction.TransactionFilterDocument;
 import org.instancio.Instancio;
 
-import java.util.Set;
-
 public class TransactionFilterDocumentBuilder
-    extends FilterDocumentBuilder<TransactionFilterDocumentBuilder, TransactionFilterDocument> {
+        extends FilterDocumentBuilder<TransactionFilterDocumentBuilder, TransactionFilterDocument> {
 
     private IdentifierType identifierType;
     private String value;
@@ -22,13 +22,12 @@ public class TransactionFilterDocumentBuilder
 
     public TransactionFilterDocument build() {
         return new TransactionFilterDocument(
-            this.getId(),
-            this.getName(),
-            this.getNodeId(),
-            this.getIdentifierType(),
-            this.getValue(),
-            this.getStatuses()
-        );
+                this.getId(),
+                this.getName(),
+                this.getNodeId(),
+                this.getIdentifierType(),
+                this.getValue(),
+                this.getStatuses());
     }
 
     public TransactionFilterDocumentBuilder withIdentifierType(IdentifierType identifierType) {
@@ -48,19 +47,15 @@ public class TransactionFilterDocumentBuilder
 
     private IdentifierType getIdentifierType() {
         return this.identifierType == null
-            ? Instancio.create(IdentifierType.class)
-            : this.identifierType;
+                ? Instancio.create(IdentifierType.class)
+                : this.identifierType;
     }
 
     private Set<TransactionStatus> getStatuses() {
-        return this.statuses == null
-            ? Instancio.createSet(TransactionStatus.class)
-            : this.statuses;
+        return this.statuses == null ? Instancio.createSet(TransactionStatus.class) : this.statuses;
     }
 
     private String getValue() {
-        return this.value == null
-            ? Instancio.create(String.class)
-            : this.value;
+        return this.value == null ? Instancio.create(String.class) : this.value;
     }
 }

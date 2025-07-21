@@ -1,14 +1,14 @@
 package io.naryo.infrastructure.configuration.provider.filter;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+
 import io.naryo.application.configuration.source.model.filter.FilterDescriptor;
 import io.naryo.application.filter.configuration.provider.FilterSourceProvider;
 import io.naryo.infrastructure.configuration.persistence.document.filter.FilterDocument;
 import io.naryo.infrastructure.configuration.persistence.repository.filter.FilterDocumentRepository;
 import org.springframework.stereotype.Component;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
 
 @Component
 public final class MongoFilterSourceProvider implements FilterSourceProvider {
@@ -29,5 +29,4 @@ public final class MongoFilterSourceProvider implements FilterSourceProvider {
     public int priority() {
         return 0;
     }
-
 }

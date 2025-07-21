@@ -1,9 +1,9 @@
 package fixtures.persistence.filter;
 
+import java.util.UUID;
+
 import io.naryo.infrastructure.configuration.persistence.document.filter.FilterDocument;
 import org.instancio.Instancio;
-
-import java.util.UUID;
 
 public abstract class FilterDocumentBuilder<T, Y extends FilterDocument> {
 
@@ -31,20 +31,14 @@ public abstract class FilterDocumentBuilder<T, Y extends FilterDocument> {
     }
 
     protected String getId() {
-        return this.id == null
-            ? UUID.randomUUID().toString()
-            : this.id;
+        return this.id == null ? UUID.randomUUID().toString() : this.id;
     }
 
     protected String getName() {
-        return this.name == null
-            ? Instancio.create(String.class)
-            : this.name;
+        return this.name == null ? Instancio.create(String.class) : this.name;
     }
 
     protected String getNodeId() {
-        return this.nodeId == null
-            ? UUID.randomUUID().toString()
-            : this.nodeId;
+        return this.nodeId == null ? UUID.randomUUID().toString() : this.nodeId;
     }
 }

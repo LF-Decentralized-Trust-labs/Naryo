@@ -4,6 +4,4 @@ import io.naryo.application.configuration.source.model.filter.event.sync.FilterS
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public abstract class FilterSyncDocument implements FilterSyncDescriptor {
-
-}
+public abstract class FilterSyncDocument implements FilterSyncDescriptor {}

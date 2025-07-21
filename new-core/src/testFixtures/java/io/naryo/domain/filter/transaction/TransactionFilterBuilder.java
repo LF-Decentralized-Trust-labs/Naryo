@@ -1,10 +1,10 @@
 package io.naryo.domain.filter.transaction;
 
+import java.util.Set;
+
 import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.filter.FilterBuilder;
 import org.instancio.Instancio;
-
-import java.util.Set;
 
 public class TransactionFilterBuilder
         extends FilterBuilder<TransactionFilterBuilder, TransactionFilter> {

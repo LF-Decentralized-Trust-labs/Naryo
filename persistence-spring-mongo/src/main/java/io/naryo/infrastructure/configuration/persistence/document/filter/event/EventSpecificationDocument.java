@@ -1,19 +1,17 @@
 package io.naryo.infrastructure.configuration.persistence.document.filter.event;
 
+import java.util.Optional;
+
 import io.naryo.application.configuration.source.model.filter.event.EventSpecificationDescriptor;
 import jakarta.annotation.Nullable;
 import lombok.Setter;
 
-import java.util.Optional;
-
 @Setter
 public class EventSpecificationDocument implements EventSpecificationDescriptor {
 
-    @Nullable
-    private String signature;
+    @Nullable private String signature;
 
-    @Nullable
-    private Integer correlationId;
+    @Nullable private Integer correlationId;
 
     public EventSpecificationDocument(String signature, Integer correlationId) {
         this.signature = signature;
@@ -29,5 +27,4 @@ public class EventSpecificationDocument implements EventSpecificationDescriptor 
     public Optional<Integer> getCorrelationId() {
         return Optional.ofNullable(correlationId);
     }
-
 }

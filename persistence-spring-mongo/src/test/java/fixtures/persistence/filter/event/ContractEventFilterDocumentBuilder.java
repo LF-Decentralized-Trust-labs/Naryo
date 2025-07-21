@@ -4,7 +4,8 @@ import io.naryo.infrastructure.configuration.persistence.document.filter.event.C
 import org.instancio.Instancio;
 
 public class ContractEventFilterDocumentBuilder
-    extends EventFilterDocumentBuilder<ContractEventFilterDocumentBuilder, ContractEventFilterDocument> {
+        extends EventFilterDocumentBuilder<
+                ContractEventFilterDocumentBuilder, ContractEventFilterDocument> {
 
     private String address;
 
@@ -16,16 +17,15 @@ public class ContractEventFilterDocumentBuilder
     @Override
     public ContractEventFilterDocument build() {
         return new ContractEventFilterDocument(
-            this.getId(),
-            this.getName(),
-            this.getNodeId(),
-            this.getScope(),
-            this.getSpecification(),
-            this.getStatuses(),
-            this.getSync(),
-            this.getVisibility(),
-            this.getAddress()
-        );
+                this.getId(),
+                this.getName(),
+                this.getNodeId(),
+                this.getScope(),
+                this.getSpecification(),
+                this.getStatuses(),
+                this.getSync(),
+                this.getVisibility(),
+                this.getAddress());
     }
 
     public ContractEventFilterDocumentBuilder withAddress(String contractAddress) {
@@ -34,9 +34,6 @@ public class ContractEventFilterDocumentBuilder
     }
 
     private String getAddress() {
-        return this.address == null
-            ? Instancio.create(String.class)
-            : this.address;
+        return this.address == null ? Instancio.create(String.class) : this.address;
     }
-
 }

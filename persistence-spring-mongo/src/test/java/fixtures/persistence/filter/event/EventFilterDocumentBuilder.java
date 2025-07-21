@@ -1,5 +1,7 @@
 package fixtures.persistence.filter.event;
 
+import java.util.Set;
+
 import fixtures.persistence.filter.FilterDocumentBuilder;
 import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.filter.event.EventFilterScope;
@@ -9,10 +11,8 @@ import io.naryo.infrastructure.configuration.persistence.document.filter.event.F
 import io.naryo.infrastructure.configuration.persistence.document.filter.event.sync.FilterSyncDocument;
 import org.instancio.Instancio;
 
-import java.util.Set;
-
 public abstract class EventFilterDocumentBuilder<T, Y extends EventFilterDocument>
-    extends FilterDocumentBuilder<T, Y> {
+        extends FilterDocumentBuilder<T, Y> {
 
     private EventFilterScope scope;
     private EventSpecificationDocument specification;
@@ -46,32 +46,28 @@ public abstract class EventFilterDocumentBuilder<T, Y extends EventFilterDocumen
     }
 
     protected EventFilterScope getScope() {
-        return this.scope == null
-            ? Instancio.create(EventFilterScope.class)
-            : this.scope;
+        return this.scope == null ? Instancio.create(EventFilterScope.class) : this.scope;
     }
 
     protected EventSpecificationDocument getSpecification() {
         return this.specification == null
-            ? new EventFilterSpecificationDocumentBuilder().build()
-            : this.specification;
+                ? new EventFilterSpecificationDocumentBuilder().build()
+                : this.specification;
     }
 
     protected Set<ContractEventStatus> getStatuses() {
         return this.statuses == null
-            ? Instancio.createSet(ContractEventStatus.class)
-            : this.statuses;
+                ? Instancio.createSet(ContractEventStatus.class)
+                : this.statuses;
     }
 
     protected FilterSyncDocument getSync() {
-        return this.sync == null
-            ? new BlockSyncDocumentBuilder().build()
-            : this.sync;
+        return this.sync == null ? new BlockSyncDocumentBuilder().build() : this.sync;
     }
 
     protected FilterVisibilityDocument getVisibility() {
         return this.visibility == null
-            ? new EventFilterVisibilityConfigurationDocumentBuilder().build()
-            : this.visibility;
+                ? new EventFilterVisibilityConfigurationDocumentBuilder().build()
+                : this.visibility;
     }
 }

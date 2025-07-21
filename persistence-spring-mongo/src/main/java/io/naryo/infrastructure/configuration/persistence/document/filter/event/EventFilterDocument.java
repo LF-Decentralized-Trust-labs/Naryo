@@ -1,5 +1,9 @@
 package io.naryo.infrastructure.configuration.persistence.document.filter.event;
 
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+
 import io.naryo.application.configuration.source.model.filter.event.EventFilterDescriptor;
 import io.naryo.application.configuration.source.model.filter.event.EventSpecificationDescriptor;
 import io.naryo.application.configuration.source.model.filter.event.FilterVisibilityDescriptor;
@@ -15,39 +19,29 @@ import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-
 import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 
 public abstract class EventFilterDocument extends FilterDocument implements EventFilterDescriptor {
 
-    @Nullable
-    @Setter
-    private EventFilterScope scope;
+    @Nullable @Setter private EventFilterScope scope;
 
-    @Nullable
-    private EventSpecificationDocument specification;
+    @Nullable private EventSpecificationDocument specification;
 
-    @Getter
-    @Setter
-    private Set<ContractEventStatus> statuses;
+    @Getter @Setter private Set<ContractEventStatus> statuses;
 
-    @Nullable
-    private FilterSyncDocument sync;
+    @Nullable private FilterSyncDocument sync;
 
-    @Nullable
-    private FilterVisibilityDocument visibility;
+    @Nullable private FilterVisibilityDocument visibility;
 
-    public EventFilterDocument(String id,
-                               String name,
-                               String nodeId,
-                               EventFilterScope scope,
-                               EventSpecificationDocument specification,
-                               Set<ContractEventStatus> statuses,
-                               FilterSyncDocument sync,
-                               FilterVisibilityDocument visibility) {
+    public EventFilterDocument(
+            String id,
+            String name,
+            String nodeId,
+            EventFilterScope scope,
+            EventSpecificationDocument specification,
+            Set<ContractEventStatus> statuses,
+            FilterSyncDocument sync,
+            FilterVisibilityDocument visibility) {
         super(id, name, FilterType.EVENT, nodeId);
         this.scope = scope;
         this.specification = specification;
@@ -68,10 +62,10 @@ public abstract class EventFilterDocument extends FilterDocument implements Even
 
     @Override
     public void setSpecification(EventSpecificationDescriptor specification) {
-        this.specification = new EventSpecificationDocument(
-                valueOrNull(specification.getSignature()),
-                valueOrNull(specification.getCorrelationId())
-        );
+        this.specification =
+                new EventSpecificationDocument(
+                        valueOrNull(specification.getSignature()),
+                        valueOrNull(specification.getCorrelationId()));
     }
 
     @Override
@@ -82,9 +76,9 @@ public abstract class EventFilterDocument extends FilterDocument implements Even
     @Override
     public void setSync(FilterSyncDescriptor sync) {
         if (sync instanceof BlockFilterSyncDescriptor blockFilterSyncDescriptor) {
-            this.sync = new BlockFilterSyncDocument(
-                    valueOrNull(blockFilterSyncDescriptor.getInitialBlock())
-            );
+            this.sync =
+                    new BlockFilterSyncDocument(
+                            valueOrNull(blockFilterSyncDescriptor.getInitialBlock()));
         } else {
             throw new IllegalArgumentException("Unknown sync strategy: " + sync.getStrategy());
         }
@@ -97,10 +91,9 @@ public abstract class EventFilterDocument extends FilterDocument implements Even
 
     @Override
     public void setVisibility(FilterVisibilityDescriptor visibility) {
-        this.visibility = new FilterVisibilityDocument(
-                valueOrNull(visibility.getVisible()),
-                valueOrNull(visibility.getPrivacyGroupId())
-        );
+        this.visibility =
+                new FilterVisibilityDocument(
+                        valueOrNull(visibility.getVisible()),
+                        valueOrNull(visibility.getPrivacyGroupId()));
     }
-
 }

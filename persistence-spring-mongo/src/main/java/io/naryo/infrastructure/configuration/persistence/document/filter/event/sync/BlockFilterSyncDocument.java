@@ -1,19 +1,19 @@
 package io.naryo.infrastructure.configuration.persistence.document.filter.event.sync;
 
+import java.math.BigInteger;
+import java.util.Optional;
+
 import io.naryo.application.configuration.source.model.filter.event.sync.BlockFilterSyncDescriptor;
 import jakarta.annotation.Nullable;
 import lombok.Setter;
 import org.springframework.data.annotation.TypeAlias;
 
-import java.math.BigInteger;
-import java.util.Optional;
-
 @TypeAlias("block_sync")
 @Setter
-public class BlockFilterSyncDocument extends FilterSyncDocument implements BlockFilterSyncDescriptor {
+public class BlockFilterSyncDocument extends FilterSyncDocument
+        implements BlockFilterSyncDescriptor {
 
-    @Nullable
-    private BigInteger initialBlock;
+    @Nullable private BigInteger initialBlock;
 
     public BlockFilterSyncDocument(BigInteger initialBlock) {
         this.initialBlock = initialBlock;
@@ -23,5 +23,4 @@ public class BlockFilterSyncDocument extends FilterSyncDocument implements Block
     public Optional<BigInteger> getInitialBlock() {
         return Optional.ofNullable(initialBlock);
     }
-
 }

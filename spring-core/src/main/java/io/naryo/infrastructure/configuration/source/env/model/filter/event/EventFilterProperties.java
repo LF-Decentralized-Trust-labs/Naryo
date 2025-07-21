@@ -1,5 +1,10 @@
 package io.naryo.infrastructure.configuration.source.env.model.filter.event;
 
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+
 import io.naryo.application.configuration.source.model.filter.event.EventFilterDescriptor;
 import io.naryo.application.configuration.source.model.filter.event.EventSpecificationDescriptor;
 import io.naryo.application.configuration.source.model.filter.event.FilterVisibilityDescriptor;
@@ -15,11 +20,6 @@ import io.naryo.infrastructure.configuration.source.env.model.filter.event.visib
 import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
 
 import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 
