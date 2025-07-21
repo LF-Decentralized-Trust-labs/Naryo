@@ -1,6 +1,6 @@
 package fixtures.persistence.filter.event;
 
-import io.naryo.infrastructure.configuration.persistence.document.filter.event.sync.BlockFilterSyncDocument;
+import io.naryo.infrastructure.configuration.persistence.document.filter.event.sync.BlockSyncDocument;
 import org.instancio.Instancio;
 
 import java.math.BigInteger;
@@ -9,8 +9,8 @@ public class BlockSyncDocumentBuilder {
 
     private BigInteger initialBlock;
 
-    public BlockFilterSyncDocument build() {
-        return new BlockFilterSyncDocument(this.getInitialBlock());
+    public BlockSyncDocument build() {
+        return new BlockSyncDocument(this.getInitialBlock());
     }
 
     public BlockSyncDocumentBuilder withInitialBlock(BigInteger initialBlock) {
@@ -23,5 +23,4 @@ public class BlockSyncDocumentBuilder {
             ? Instancio.create(BigInteger.class)
             : this.initialBlock;
     }
-
 }

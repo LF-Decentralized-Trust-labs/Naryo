@@ -27,7 +27,7 @@ public final class MongoFilterSourceProvider implements FilterSourceProvider {
 
     @Override
     public int priority() {
-        return 1;
+        return 0;
     }
 
 }

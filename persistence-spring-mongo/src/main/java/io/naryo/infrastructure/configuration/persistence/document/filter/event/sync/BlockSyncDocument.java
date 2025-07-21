@@ -10,12 +10,12 @@ import java.util.Optional;
 
 @TypeAlias("block_sync")
 @Setter
-public class BlockFilterSyncDocument extends FilterSyncDocument implements BlockFilterSyncDescriptor {
+public class BlockSyncDocument extends FilterSyncDocument implements BlockFilterSyncDescriptor {
 
     @Nullable
     private BigInteger initialBlock;
 
-    public BlockFilterSyncDocument(BigInteger initialBlock) {
+    public BlockSyncDocument(BigInteger initialBlock) {
         this.initialBlock = initialBlock;
     }
 

@@ -23,7 +23,7 @@ public class ContractEventFilterDocumentBuilder
             this.getSpecification(),
             this.getStatuses(),
             this.getSync(),
-            this.getVisibilityConfiguration(),
+            this.getVisibility(),
             this.getAddress()
         );
     }

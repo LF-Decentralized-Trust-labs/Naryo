@@ -4,33 +4,33 @@ import fixtures.persistence.filter.FilterDocumentBuilder;
 import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.filter.event.EventFilterScope;
 import io.naryo.infrastructure.configuration.persistence.document.filter.event.EventFilterDocument;
-import io.naryo.infrastructure.configuration.persistence.document.filter.event.EventFilterSpecificationDocument;
-import io.naryo.infrastructure.configuration.persistence.document.filter.event.EventFilterVisibilityConfigurationDocument;
+import io.naryo.infrastructure.configuration.persistence.document.filter.event.EventSpecificationDocument;
+import io.naryo.infrastructure.configuration.persistence.document.filter.event.FilterVisibilityDocument;
 import io.naryo.infrastructure.configuration.persistence.document.filter.event.sync.FilterSyncDocument;
 import org.instancio.Instancio;
 
-import java.util.List;
+import java.util.Set;
 
 public abstract class EventFilterDocumentBuilder<T, Y extends EventFilterDocument>
     extends FilterDocumentBuilder<T, Y> {
 
     private EventFilterScope scope;
-    private EventFilterSpecificationDocument specification;
-    private List<ContractEventStatus> statuses;
+    private EventSpecificationDocument specification;
+    private Set<ContractEventStatus> statuses;
     private FilterSyncDocument sync;
-    private EventFilterVisibilityConfigurationDocument visibilityConfiguration;
+    private FilterVisibilityDocument visibility;
 
     public T withScope(EventFilterScope scope) {
         this.scope = scope;
         return this.self();
     }
 
-    public T withSpecification(EventFilterSpecificationDocument specification) {
+    public T withSpecification(EventSpecificationDocument specification) {
         this.specification = specification;
         return this.self();
     }
 
-    public T withStatuses(List<ContractEventStatus> statuses) {
+    public T withStatuses(Set<ContractEventStatus> statuses) {
         this.statuses = statuses;
         return this.self();
     }
@@ -40,8 +40,8 @@ public abstract class EventFilterDocumentBuilder<T, Y extends EventFilterDocumen
         return this.self();
     }
 
-    public T withVisibilityConfiguration(EventFilterVisibilityConfigurationDocument visibilityConfiguration) {
-        this.visibilityConfiguration = visibilityConfiguration;
+    public T withVisibility(FilterVisibilityDocument visibilityConfiguration) {
+        this.visibility = visibilityConfiguration;
         return this.self();
     }
 
@@ -51,15 +51,15 @@ public abstract class EventFilterDocumentBuilder<T, Y extends EventFilterDocumen
             : this.scope;
     }
 
-    protected EventFilterSpecificationDocument getSpecification() {
+    protected EventSpecificationDocument getSpecification() {
         return this.specification == null
             ? new EventFilterSpecificationDocumentBuilder().build()
             : this.specification;
     }
 
-    protected List<ContractEventStatus> getStatuses() {
+    protected Set<ContractEventStatus> getStatuses() {
         return this.statuses == null
-            ? Instancio.createList(ContractEventStatus.class)
+            ? Instancio.createSet(ContractEventStatus.class)
             : this.statuses;
     }
 
@@ -69,10 +69,9 @@ public abstract class EventFilterDocumentBuilder<T, Y extends EventFilterDocumen
             : this.sync;
     }
 
-    protected EventFilterVisibilityConfigurationDocument getVisibilityConfiguration() {
-        return this.visibilityConfiguration == null
+    protected FilterVisibilityDocument getVisibility() {
+        return this.visibility == null
             ? new EventFilterVisibilityConfigurationDocumentBuilder().build()
-            : this.visibilityConfiguration;
+            : this.visibility;
     }
-
 }

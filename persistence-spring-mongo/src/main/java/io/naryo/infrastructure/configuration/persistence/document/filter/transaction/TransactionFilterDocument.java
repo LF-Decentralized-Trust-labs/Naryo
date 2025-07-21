@@ -5,37 +5,48 @@ import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.filter.FilterType;
 import io.naryo.domain.filter.transaction.IdentifierType;
 import io.naryo.infrastructure.configuration.persistence.document.filter.FilterDocument;
-import jakarta.validation.constraints.NotNull;
+import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.TypeAlias;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 @TypeAlias("transaction_filter")
-@Getter
 @Setter
 public class TransactionFilterDocument extends FilterDocument implements TransactionFilterDescriptor {
 
-    @NotNull
+    @Nullable
     private IdentifierType identifierType;
 
-    @NotNull
+    @Nullable
     private String value;
 
-    @NotNull
-    private List<TransactionStatus> statuses;
+    @Getter
+    private Set<TransactionStatus> statuses;
 
     public TransactionFilterDocument(String id,
                                      String name,
                                      String nodeId,
                                      IdentifierType identifierType,
                                      String value,
-                                     List<TransactionStatus> statuses) {
+                                     Set<TransactionStatus> statuses) {
         super(id, name, FilterType.TRANSACTION, nodeId);
         this.identifierType = identifierType;
         this.value = value;
-        this.statuses = statuses;
+        this.statuses = statuses == null ? new HashSet<>() : statuses;
     }
 
+
+    @Override
+    public Optional<IdentifierType> getIdentifierType() {
+        return Optional.ofNullable(identifierType);
+    }
+
+    @Override
+    public Optional<String> getValue() {
+        return Optional.ofNullable(value);
+    }
 }

@@ -1,9 +1,5 @@
 package io.naryo.infrastructure.configuration.source.env.model.filter.event;
 
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-
 import io.naryo.application.configuration.source.model.filter.event.EventFilterDescriptor;
 import io.naryo.application.configuration.source.model.filter.event.EventSpecificationDescriptor;
 import io.naryo.application.configuration.source.model.filter.event.FilterVisibilityDescriptor;
@@ -19,6 +15,11 @@ import io.naryo.infrastructure.configuration.source.env.model.filter.event.visib
 import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 
@@ -45,7 +46,7 @@ public abstract class EventFilterProperties extends FilterProperties
         super(id, name, FilterType.EVENT, nodeId);
         this.scope = scope;
         this.specification = specification;
-        this.statuses = statuses;
+        this.statuses = statuses == null ? new HashSet<>() : statuses;
         this.sync = sync;
         this.visibility = visibility;
     }

@@ -1,6 +1,6 @@
 package fixtures.persistence.filter.event;
 
-import io.naryo.infrastructure.configuration.persistence.document.filter.event.EventFilterVisibilityConfigurationDocument;
+import io.naryo.infrastructure.configuration.persistence.document.filter.event.FilterVisibilityDocument;
 import org.instancio.Instancio;
 
 public class EventFilterVisibilityConfigurationDocumentBuilder {
@@ -8,8 +8,8 @@ public class EventFilterVisibilityConfigurationDocumentBuilder {
     private Boolean visible;
     private String privacyGroupId;
 
-    public EventFilterVisibilityConfigurationDocument build() {
-        return new EventFilterVisibilityConfigurationDocument(this.isVisible(), this.getPrivacyGroupId());
+    public FilterVisibilityDocument build() {
+        return new FilterVisibilityDocument(this.isVisible(), this.getPrivacyGroupId());
     }
 
     public EventFilterVisibilityConfigurationDocumentBuilder withVisible(boolean visible) {

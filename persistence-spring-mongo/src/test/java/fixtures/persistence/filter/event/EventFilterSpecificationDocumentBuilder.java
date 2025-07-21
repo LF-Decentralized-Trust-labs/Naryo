@@ -1,6 +1,6 @@
 package fixtures.persistence.filter.event;
 
-import io.naryo.infrastructure.configuration.persistence.document.filter.event.EventFilterSpecificationDocument;
+import io.naryo.infrastructure.configuration.persistence.document.filter.event.EventSpecificationDocument;
 import org.instancio.Instancio;
 
 public class EventFilterSpecificationDocumentBuilder {
@@ -8,8 +8,8 @@ public class EventFilterSpecificationDocumentBuilder {
     private String signature;
     private Integer correlationId;
 
-    public EventFilterSpecificationDocument build() {
-        return new EventFilterSpecificationDocument(
+    public EventSpecificationDocument build() {
+        return new EventSpecificationDocument(
             this.getSignature(),
             this.getCorrelationId()
         );

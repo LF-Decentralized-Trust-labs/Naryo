@@ -6,14 +6,14 @@ import io.naryo.domain.filter.transaction.IdentifierType;
 import io.naryo.infrastructure.configuration.persistence.document.filter.transaction.TransactionFilterDocument;
 import org.instancio.Instancio;
 
-import java.util.List;
+import java.util.Set;
 
 public class TransactionFilterDocumentBuilder
     extends FilterDocumentBuilder<TransactionFilterDocumentBuilder, TransactionFilterDocument> {
 
     private IdentifierType identifierType;
     private String value;
-    private List<TransactionStatus> statuses;
+    private Set<TransactionStatus> statuses;
 
     @Override
     public TransactionFilterDocumentBuilder self() {
@@ -36,7 +36,7 @@ public class TransactionFilterDocumentBuilder
         return self();
     }
 
-    public TransactionFilterDocumentBuilder withStatuses(List<TransactionStatus> statuses) {
+    public TransactionFilterDocumentBuilder withStatuses(Set<TransactionStatus> statuses) {
         this.statuses = statuses;
         return self();
     }
@@ -52,9 +52,9 @@ public class TransactionFilterDocumentBuilder
             : this.identifierType;
     }
 
-    private List<TransactionStatus> getStatuses() {
-        return this.statuses == null || this.statuses.isEmpty()
-            ? List.of(Instancio.create(TransactionStatus.class))
+    private Set<TransactionStatus> getStatuses() {
+        return this.statuses == null
+            ? Instancio.createSet(TransactionStatus.class)
             : this.statuses;
     }
 

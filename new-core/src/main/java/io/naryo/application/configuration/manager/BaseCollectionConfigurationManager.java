@@ -1,30 +1,28 @@
 package io.naryo.application.configuration.manager;
 
+import io.naryo.application.configuration.provider.CollectionSourceProvider;
+import io.naryo.application.configuration.source.model.Descriptor;
+
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import io.naryo.application.configuration.provider.CollectionSourceProvider;
-import io.naryo.application.configuration.provider.SourceProvider;
-import io.naryo.application.configuration.source.model.Descriptor;
-
 public abstract class BaseCollectionConfigurationManager<T, S extends Descriptor, K>
-        implements CollectionConfigurationManager<T> {
+    implements CollectionConfigurationManager<T> {
 
     protected final List<? extends CollectionSourceProvider<S>> providers;
 
     protected BaseCollectionConfigurationManager(
-            List<? extends CollectionSourceProvider<S>> providers) {
+        List<? extends CollectionSourceProvider<S>> providers) {
         this.providers = providers;
     }
 
     @Override
     public Collection<T> load() {
         return providers.stream()
-                .sorted(Comparator.comparingInt(SourceProvider::priority))
+                .sorted((p1, p2) -> Integer.compare(p2.priority(), p1.priority()))
                 .flatMap(provider -> provider.load().stream())
                 .collect(
                         Collectors.collectingAndThen(

@@ -1,12 +1,12 @@
 package io.naryo.infrastructure.configuration.provider.filter;
 
-import java.util.Collection;
-import java.util.HashSet;
-
 import io.naryo.application.configuration.source.model.filter.FilterDescriptor;
 import io.naryo.application.filter.configuration.provider.FilterSourceProvider;
 import io.naryo.infrastructure.configuration.source.env.model.EnvironmentProperties;
 import org.springframework.stereotype.Component;
+
+import java.util.Collection;
+import java.util.HashSet;
 
 @Component
 public final class EnvFilterSourceProvider implements FilterSourceProvider {
@@ -25,6 +25,6 @@ public final class EnvFilterSourceProvider implements FilterSourceProvider {
 
     @Override
     public int priority() {
-        return 0;
+        return 1;
     }
 }

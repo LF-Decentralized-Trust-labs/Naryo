@@ -2,27 +2,28 @@ package io.naryo.infrastructure.configuration.persistence.document.filter;
 
 import io.naryo.application.configuration.source.model.filter.FilterDescriptor;
 import io.naryo.domain.filter.FilterType;
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
+import jakarta.annotation.Nullable;
+import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Document(collection = "filters")
-@Getter
+@Setter
 public abstract class FilterDocument implements FilterDescriptor {
 
     @MongoId
     private String id;
 
-    @NotNull
+    @Nullable
     private String name;
 
-    @NotNull
+    @Nullable
     private FilterType type;
 
-    @NotNull
+    @Nullable
     private String nodeId;
 
     public FilterDocument(String id, String name, FilterType type, String nodeId) {
@@ -32,24 +33,27 @@ public abstract class FilterDocument implements FilterDescriptor {
         this.nodeId = nodeId;
     }
 
-    @Override
     public UUID getId() {
         return UUID.fromString(this.id);
     }
 
     @Override
-    public UUID getNodeId() {
-        return UUID.fromString(this.nodeId);
+    public Optional<String> getName() {
+        return Optional.ofNullable(name);
     }
 
     @Override
-    public void setName(String name) {
-        this.name = name;
+    public Optional<FilterType> getType() {
+        return Optional.ofNullable(type);
+    }
+
+    @Override
+    public Optional<UUID> getNodeId() {
+        return nodeId == null ? Optional.empty() : Optional.of(UUID.fromString(nodeId));
     }
 
     @Override
     public void setNodeId(UUID nodeId) {
         this.nodeId = nodeId.toString();
     }
-
 }

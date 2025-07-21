@@ -5,15 +5,13 @@ import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.filter.event.EventFilterScope;
 import io.naryo.infrastructure.configuration.persistence.document.filter.event.sync.FilterSyncDocument;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
 import lombok.Setter;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.data.annotation.TypeAlias;
 
-import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @TypeAlias("contract_event_filter")
-@Getter
 @Setter
 public class ContractEventFilterDocument extends EventFilterDocument implements ContractEventFilterDescriptor {
 
@@ -24,13 +22,18 @@ public class ContractEventFilterDocument extends EventFilterDocument implements 
                                        String name,
                                        String nodeId,
                                        EventFilterScope scope,
-                                       EventFilterSpecificationDocument specification,
-                                       List<ContractEventStatus> statuses,
-                                       @Nullable FilterSyncDocument sync,
-                                       EventFilterVisibilityConfigurationDocument visibilityConfiguration,
+                                       EventSpecificationDocument specification,
+                                       Set<ContractEventStatus> statuses,
+                                       FilterSyncDocument sync,
+                                       FilterVisibilityDocument visibility,
                                        String address) {
-        super(id, name, nodeId, scope, specification, statuses, sync, visibilityConfiguration);
+        super(id, name, nodeId, scope, specification, statuses, sync, visibility);
         this.address = address;
+    }
+
+    @Override
+    public Optional<String> getAddress() {
+        return Optional.ofNullable(address);
     }
 
 }

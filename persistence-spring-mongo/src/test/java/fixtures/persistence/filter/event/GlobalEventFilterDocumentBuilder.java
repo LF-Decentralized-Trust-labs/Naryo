@@ -20,7 +20,7 @@ public class GlobalEventFilterDocumentBuilder
             this.getSpecification(),
             this.getStatuses(),
             this.getSync(),
-            this.getVisibilityConfiguration()
+            this.getVisibility()
         );
     }
 
