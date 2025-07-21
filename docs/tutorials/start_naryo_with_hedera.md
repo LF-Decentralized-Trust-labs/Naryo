@@ -9,7 +9,7 @@ Ensure you have the following installed:
 
 * Java 21
 * Docker & Docker Compose
-* Node.js & npm
+* [Node.js 20.19.4 LTS & npm 10.8.2](https://nodejs.org/en/download)
 * [Hardhat](https://hardhat.org/)
 * Git
 
@@ -43,7 +43,7 @@ networks with minimal setup.
    This command launches the network using Docker Compose and exposes the following JSON-RPC endpoint:
    `http://localhost:8545`
 
-   > ⚠️ Don't forget to have docker running on your machine.
+   > ⚠️ Remember to have docker running on your machine.
 
 3. Use the following pre-funded test account in your deployment scripts:
 
@@ -194,7 +194,7 @@ This will generate a folder `test-naryo/` in your tutorial directory with:
 
 > Make sure you are in the `test-naryo/` directory before following the steps below.
 
-Replace the generated file `src/main/resources/application.yml` to include your Hedeera node and contract:
+Replace the generated file `src/main/resources/application.yml` to include your Hedera node and contract:
 
 ```yaml
 naryo:
@@ -295,8 +295,6 @@ nohup node server.js > event-receiver.log 2>&1 &
 
 Now every received event will be forwarded and printed in your local Node.js server.
 
-> You can check the logs using the command `tail -f event-receiver.log`.
-
 ## 🥪 Step 7: Run the Naryo Application
 
 1. Go to your generated project folder:
@@ -313,6 +311,18 @@ Now every received event will be forwarded and printed in your local Node.js ser
 
 > Naryo will start and listen to the configured event (`Transfer`) using polling from your Hedera node.
 
+## 🪵 Step 8: Check the Naryo listener logs
+
+1. Open a new terminal window.
+2. Navigate to the `naryo-listener/` directory.
+3. Run the following command to monitor incoming events:
+   ```bash
+    tail -f event-receiver.log
+     ```
+
+> You should see the event payload printed whenever a `Transfer` event is emitted from your contract and every mined
+> block.
+
 ## ✅ Verify
 
 You can now verify that Naryo is correctly forwarding events to your local HTTP server.
@@ -321,13 +331,14 @@ You can now verify that Naryo is correctly forwarding events to your local HTTP 
 
 Let's trigger the event from the Hardhat console:
 
-1. Start the Hardhat console:
+1. Open a new terminal.
+2. Start the Hardhat console:
 
     ```bash
-    npx hardhat console
+    npx hardhat console --network besu
     ```
 
-2. Execute the following commands to interact with your contract (replace `DEPLOYED_CONTRACT_ADDRESS` if needed):
+3. Execute the following commands to interact with your contract (replace `DEPLOYED_CONTRACT_ADDRESS` if needed):
 
 ```js
 var token = await ethers.getContractAt("MyToken", DEPLOYED_CONTRACT_ADDRESS);
