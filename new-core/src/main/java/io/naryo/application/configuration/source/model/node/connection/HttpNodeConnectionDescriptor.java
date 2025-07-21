@@ -35,10 +35,20 @@ public interface HttpNodeConnectionDescriptor extends NodeConnectionDescriptor {
         var connection = NodeConnectionDescriptor.super.merge(other);
 
         if (other instanceof HttpNodeConnectionDescriptor otherDescriptor) {
-            mergeOptionals(this::setMaxIdleConnections, this.getMaxIdleConnections(), otherDescriptor.getMaxIdleConnections());
-            mergeOptionals(this::setKeepAliveDuration, this.getKeepAliveDuration(), otherDescriptor.getKeepAliveDuration());
-            mergeOptionals(this::setConnectionTimeout, this.getConnectionTimeout(), otherDescriptor.getConnectionTimeout());
-            mergeOptionals(this::setReadTimeout, this.getReadTimeout(), otherDescriptor.getReadTimeout());
+            mergeOptionals(
+                    this::setMaxIdleConnections,
+                    this.getMaxIdleConnections(),
+                    otherDescriptor.getMaxIdleConnections());
+            mergeOptionals(
+                    this::setKeepAliveDuration,
+                    this.getKeepAliveDuration(),
+                    otherDescriptor.getKeepAliveDuration());
+            mergeOptionals(
+                    this::setConnectionTimeout,
+                    this.getConnectionTimeout(),
+                    otherDescriptor.getConnectionTimeout());
+            mergeOptionals(
+                    this::setReadTimeout, this.getReadTimeout(), otherDescriptor.getReadTimeout());
         }
 
         return connection;

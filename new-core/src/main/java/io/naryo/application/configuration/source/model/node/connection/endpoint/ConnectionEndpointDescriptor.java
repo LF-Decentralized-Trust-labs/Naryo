@@ -1,8 +1,8 @@
 package io.naryo.application.configuration.source.model.node.connection.endpoint;
 
-import io.naryo.application.configuration.source.model.MergeableDescriptor;
-
 import java.util.Optional;
+
+import io.naryo.application.configuration.source.model.MergeableDescriptor;
 
 import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
 

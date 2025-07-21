@@ -88,7 +88,8 @@ public final class DefaultNodeConfigurationManager
                                 common.interaction,
                                 common.connection,
                                 new GroupId(valueOrNull(privateEthSource.getGroupId())),
-                                new PrecompiledAddress(valueOrNull(privateEthSource.getPrecompiledAddress())));
+                                new PrecompiledAddress(
+                                        valueOrNull(privateEthSource.getPrecompiledAddress())));
                     }
                     case PUBLIC ->
                             new PublicEthereumNode(
@@ -105,7 +106,8 @@ public final class DefaultNodeConfigurationManager
     private CommonParams buildCommon(NodeDescriptor descriptor) {
         UUID id = descriptor.getId();
         NodeName name = new NodeName(valueOrNull(NodeDescriptor::getName, descriptor));
-        var subscription = buildSubscription(valueOrNull(NodeDescriptor::getSubscription, descriptor));
+        var subscription =
+                buildSubscription(valueOrNull(NodeDescriptor::getSubscription, descriptor));
         var interaction = buildInteraction(valueOrNull(NodeDescriptor::getInteraction, descriptor));
         var connection = buildConnection(valueOrNull(NodeDescriptor::getConnection, descriptor));
         return new CommonParams(id, name, subscription, interaction, connection);
@@ -120,20 +122,24 @@ public final class DefaultNodeConfigurationManager
                 switch (blockDescriptor.method()) {
                     case POLL ->
                             new PollBlockSubscriptionMethodConfiguration(
-                                    new Interval(valueOrNull(
-                                        ((PollBlockSubscriptionDescriptor) blockDescriptor).getInterval()))
-                            );
+                                    new Interval(
+                                            valueOrNull(
+                                                    ((PollBlockSubscriptionDescriptor)
+                                                                    blockDescriptor)
+                                                            .getInterval())));
                     case PUBSUB -> new PubSubBlockSubscriptionMethodConfiguration();
                 };
         return new BlockSubscriptionConfiguration(
-            method,
-            valueOrNull(blockDescriptor.getInitialBlock()),
-            new NonNegativeBlockNumber(BigInteger.ZERO), // TODO: Review last block processed when EventStore works
-            new NonNegativeBlockNumber(valueOrNull(blockDescriptor.getConfirmationBlocks())),
-            new NonNegativeBlockNumber(valueOrNull(blockDescriptor.getMissingTxRetryBlocks())),
-            new NonNegativeBlockNumber(valueOrNull(blockDescriptor.getEventInvalidationBlockThreshold())),
-            new NonNegativeBlockNumber(valueOrNull(blockDescriptor.getReplayBlockOffset())),
-            new NonNegativeBlockNumber(valueOrNull(blockDescriptor.getSyncBlockLimit())));
+                method,
+                valueOrNull(blockDescriptor.getInitialBlock()),
+                new NonNegativeBlockNumber(
+                        BigInteger.ZERO), // TODO: Review last block processed when EventStore works
+                new NonNegativeBlockNumber(valueOrNull(blockDescriptor.getConfirmationBlocks())),
+                new NonNegativeBlockNumber(valueOrNull(blockDescriptor.getMissingTxRetryBlocks())),
+                new NonNegativeBlockNumber(
+                        valueOrNull(blockDescriptor.getEventInvalidationBlockThreshold())),
+                new NonNegativeBlockNumber(valueOrNull(blockDescriptor.getReplayBlockOffset())),
+                new NonNegativeBlockNumber(valueOrNull(blockDescriptor.getSyncBlockLimit())));
     }
 
     private InteractionConfiguration buildInteraction(InteractionDescriptor cfg) {
@@ -150,7 +156,9 @@ public final class DefaultNodeConfigurationManager
     }
 
     private NodeConnection buildConnection(NodeConnectionDescriptor descriptor) {
-        var endpoint = buildConnectionEndpoint(valueOrNull(NodeConnectionDescriptor::getEndpoint, descriptor));
+        var endpoint =
+                buildConnectionEndpoint(
+                        valueOrNull(NodeConnectionDescriptor::getEndpoint, descriptor));
         var retry = buildRetry(valueOrNull(NodeConnectionDescriptor::getRetry, descriptor));
         return switch (descriptor.getType()) {
             case HTTP -> {
@@ -172,10 +180,10 @@ public final class DefaultNodeConfigurationManager
     }
 
     private RetryConfiguration buildRetry(NodeConnectionRetryDescriptor descriptor) {
-        return descriptor != null ? new RetryConfiguration(
-            valueOrNull(descriptor.getTimes()),
-            valueOrNull(descriptor.getBackoff())
-        ) : null;
+        return descriptor != null
+                ? new RetryConfiguration(
+                        valueOrNull(descriptor.getTimes()), valueOrNull(descriptor.getBackoff()))
+                : null;
     }
 
     private record CommonParams(

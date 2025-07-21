@@ -1,11 +1,11 @@
 package io.naryo.application.configuration.source.model.node.connection;
 
+import java.util.Optional;
+
 import io.naryo.application.configuration.source.model.MergeableDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.endpoint.ConnectionEndpointDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.retry.NodeConnectionRetryDescriptor;
 import io.naryo.domain.node.connection.NodeConnectionType;
-
-import java.util.Optional;
 
 import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
 

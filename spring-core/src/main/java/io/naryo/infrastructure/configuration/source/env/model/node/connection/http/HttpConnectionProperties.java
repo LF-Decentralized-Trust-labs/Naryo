@@ -11,8 +11,6 @@ import io.naryo.infrastructure.configuration.source.env.model.common.ConnectionE
 import io.naryo.infrastructure.configuration.source.env.model.node.connection.ConnectionProperties;
 import io.naryo.infrastructure.configuration.source.env.model.node.connection.NodeConnectionRetryProperties;
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
 import lombok.Setter;
 
 public final class HttpConnectionProperties extends ConnectionProperties

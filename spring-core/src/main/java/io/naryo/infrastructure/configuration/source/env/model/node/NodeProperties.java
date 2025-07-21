@@ -66,27 +66,30 @@ public abstract class NodeProperties implements NodeDescriptor {
 
     @Override
     public void setSubscription(SubscriptionDescriptor subscription) {
-        switch(subscription) {
+        switch (subscription) {
             case PubsubBlockSubscriptionProperties pubsub ->
-                this.subscription = new PubsubBlockSubscriptionProperties(
-                    valueOrNull(pubsub.getInitialBlock()),
-                    valueOrNull(pubsub.getConfirmationBlocks()),
-                    valueOrNull(pubsub.getMissingTxRetryBlocks()),
-                    valueOrNull(pubsub.getEventInvalidationBlockThreshold()),
-                    valueOrNull(pubsub.getReplayBlockOffset()),
-                    valueOrNull(pubsub.getSyncBlockLimit())
-                );
+                    this.subscription =
+                            new PubsubBlockSubscriptionProperties(
+                                    valueOrNull(pubsub.getInitialBlock()),
+                                    valueOrNull(pubsub.getConfirmationBlocks()),
+                                    valueOrNull(pubsub.getMissingTxRetryBlocks()),
+                                    valueOrNull(pubsub.getEventInvalidationBlockThreshold()),
+                                    valueOrNull(pubsub.getReplayBlockOffset()),
+                                    valueOrNull(pubsub.getSyncBlockLimit()));
             case PollBlockSubscriptionProperties poll ->
-                this.subscription = new PollBlockSubscriptionProperties(
-                    valueOrNull(poll.getInitialBlock()),
-                    valueOrNull(poll.getConfirmationBlocks()),
-                    valueOrNull(poll.getMissingTxRetryBlocks()),
-                    valueOrNull(poll.getEventInvalidationBlockThreshold()),
-                    valueOrNull(poll.getReplayBlockOffset()),
-                    valueOrNull(poll.getSyncBlockLimit()),
-                    valueOrNull(poll.getInterval())
-                );
-            default -> throw new IllegalArgumentException("Unsupported subscription type: " + subscription.getClass().getSimpleName());
+                    this.subscription =
+                            new PollBlockSubscriptionProperties(
+                                    valueOrNull(poll.getInitialBlock()),
+                                    valueOrNull(poll.getConfirmationBlocks()),
+                                    valueOrNull(poll.getMissingTxRetryBlocks()),
+                                    valueOrNull(poll.getEventInvalidationBlockThreshold()),
+                                    valueOrNull(poll.getReplayBlockOffset()),
+                                    valueOrNull(poll.getSyncBlockLimit()),
+                                    valueOrNull(poll.getInterval()));
+            default ->
+                    throw new IllegalArgumentException(
+                            "Unsupported subscription type: "
+                                    + subscription.getClass().getSimpleName());
         }
     }
 
@@ -97,14 +100,18 @@ public abstract class NodeProperties implements NodeDescriptor {
 
     @Override
     public void setInteraction(InteractionDescriptor interaction) {
-        switch(interaction) {
+        switch (interaction) {
             case EthereumRpcBlockInteractionDescriptor ignored ->
-                this.interaction = new EthereumRpcBlockInteractionProperties();
+                    this.interaction = new EthereumRpcBlockInteractionProperties();
             case HederaMirrorNodeBlockInteractionDescriptor hedera ->
-                this.interaction = new HederaMirrorNodeBlockInteractionProperties(
-                    valueOrNull(hedera.getLimitPerRequest()),
-                    valueOrNull(hedera.getRetriesPerRequest()));
-            default -> throw new IllegalArgumentException("Unsupported interaction type: " + interaction.getClass().getSimpleName());
+                    this.interaction =
+                            new HederaMirrorNodeBlockInteractionProperties(
+                                    valueOrNull(hedera.getLimitPerRequest()),
+                                    valueOrNull(hedera.getRetriesPerRequest()));
+            default ->
+                    throw new IllegalArgumentException(
+                            "Unsupported interaction type: "
+                                    + interaction.getClass().getSimpleName());
         }
     }
 
@@ -117,20 +124,22 @@ public abstract class NodeProperties implements NodeDescriptor {
     public void setConnection(NodeConnectionDescriptor connection) {
         switch (connection) {
             case HttpNodeConnectionDescriptor http ->
-                this.connection = new HttpConnectionProperties(
-                    valueOrNull(http.getRetry()),
-                    valueOrNull(http.getEndpoint()),
-                    valueOrNull(http.getMaxIdleConnections()),
-                    valueOrNull(http.getKeepAliveDuration()),
-                    valueOrNull(http.getConnectionTimeout()),
-                    valueOrNull(http.getReadTimeout())
-                );
+                    this.connection =
+                            new HttpConnectionProperties(
+                                    valueOrNull(http.getRetry()),
+                                    valueOrNull(http.getEndpoint()),
+                                    valueOrNull(http.getMaxIdleConnections()),
+                                    valueOrNull(http.getKeepAliveDuration()),
+                                    valueOrNull(http.getConnectionTimeout()),
+                                    valueOrNull(http.getReadTimeout()));
             case WsNodeConnectionDescriptor ws ->
-                this.connection = new WsConnectionProperties(
-                    valueOrNull(ws.getRetry()),
-                    valueOrNull(ws.getEndpoint())
-                );
-            default -> throw new IllegalArgumentException("Unsupported connection type: " + connection.getClass().getSimpleName());
+                    this.connection =
+                            new WsConnectionProperties(
+                                    valueOrNull(ws.getRetry()), valueOrNull(ws.getEndpoint()));
+            default ->
+                    throw new IllegalArgumentException(
+                            "Unsupported connection type: "
+                                    + connection.getClass().getSimpleName());
         }
     }
 }
