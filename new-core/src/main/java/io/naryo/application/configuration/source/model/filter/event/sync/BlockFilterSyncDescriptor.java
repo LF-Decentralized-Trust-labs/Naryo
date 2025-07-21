@@ -1,9 +1,9 @@
 package io.naryo.application.configuration.source.model.filter.event.sync;
 
-import io.naryo.domain.filter.event.sync.SyncStrategy;
-
 import java.math.BigInteger;
 import java.util.Optional;
+
+import io.naryo.domain.filter.event.sync.SyncStrategy;
 
 import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
 

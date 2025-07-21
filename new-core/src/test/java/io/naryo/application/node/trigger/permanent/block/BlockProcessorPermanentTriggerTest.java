@@ -248,7 +248,7 @@ class BlockProcessorPermanentTriggerTest {
                                                 new EventName("Test"),
                                                 null,
                                                 Set.of(new AddressParameterDefinition(0, false))),
-                                        List.of(ContractEventStatus.CONFIRMED),
+                                        Set.of(ContractEventStatus.CONFIRMED),
                                         new NoSyncState(),
                                         "0xa6c9f780caeafc2b8e83469a8b6422c22fa39ba1")),
                         interactor,
@@ -275,7 +275,7 @@ class BlockProcessorPermanentTriggerTest {
                                                 new EventName("Test"),
                                                 null,
                                                 Set.of(new AddressParameterDefinition(0, false))),
-                                        List.of(ContractEventStatus.CONFIRMED),
+                                        Set.of(ContractEventStatus.CONFIRMED),
                                         new NoSyncState(),
                                         "0xa6c9f780caeafc2b8e83469a8b6422c22fa39ba1")),
                         new MockBlockInteractor(),
@@ -311,7 +311,7 @@ class BlockProcessorPermanentTriggerTest {
                                 new EventName("Test"),
                                 null,
                                 Set.of(new AddressParameterDefinition(0, false))),
-                        List.of(ContractEventStatus.UNCONFIRMED, ContractEventStatus.CONFIRMED),
+                        Set.of(ContractEventStatus.UNCONFIRMED, ContractEventStatus.CONFIRMED),
                         new NoSyncState());
         BlockProcessorPermanentTrigger<Node, BlockInteractor> trigger =
                 new BlockProcessorPermanentTrigger<>(
@@ -351,7 +351,7 @@ class BlockProcessorPermanentTriggerTest {
                                 new EventName("Test"),
                                 null,
                                 Set.of(new AddressParameterDefinition(0, false))),
-                        List.of(ContractEventStatus.UNCONFIRMED, ContractEventStatus.CONFIRMED),
+                        Set.of(ContractEventStatus.UNCONFIRMED, ContractEventStatus.CONFIRMED),
                         new NoSyncState());
         BlockProcessorPermanentTrigger<Node, BlockInteractor> trigger =
                 new BlockProcessorPermanentTrigger<>(
@@ -391,7 +391,7 @@ class BlockProcessorPermanentTriggerTest {
                                 new EventName("Test"),
                                 null,
                                 Set.of(new AddressParameterDefinition(0, false))),
-                        List.of(ContractEventStatus.UNCONFIRMED, ContractEventStatus.CONFIRMED),
+                        Set.of(ContractEventStatus.UNCONFIRMED, ContractEventStatus.CONFIRMED),
                         new NoSyncState());
         BlockProcessorPermanentTrigger<Node, BlockInteractor> trigger =
                 new BlockProcessorPermanentTrigger<>(

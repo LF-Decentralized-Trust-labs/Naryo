@@ -1,9 +1,9 @@
 package io.naryo.application.configuration.source.model.filter.event.contract;
 
+import java.util.Optional;
+
 import io.naryo.application.configuration.source.model.filter.FilterDescriptor;
 import io.naryo.application.configuration.source.model.filter.event.EventFilterDescriptor;
-
-import java.util.Optional;
 
 import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
 

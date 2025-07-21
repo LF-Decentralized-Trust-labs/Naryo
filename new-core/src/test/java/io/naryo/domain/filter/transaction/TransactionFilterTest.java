@@ -1,6 +1,6 @@
 package io.naryo.domain.filter.transaction;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import io.naryo.domain.common.TransactionStatus;
@@ -17,7 +17,7 @@ class TransactionFilterTest extends AbstractFilterTest {
     @Override
     protected Filter createFilter(UUID id, FilterName name, UUID nodeId) {
         return new TransactionFilter(
-                id, name, nodeId, IdentifierType.HASH, "0x0", List.of(TransactionStatus.FAILED));
+                id, name, nodeId, IdentifierType.HASH, "0x0", Set.of(TransactionStatus.FAILED));
     }
 
     @Test
@@ -31,7 +31,7 @@ class TransactionFilterTest extends AbstractFilterTest {
                                 UUID.randomUUID(),
                                 null,
                                 "0x0",
-                                List.of(TransactionStatus.FAILED)));
+                                Set.of(TransactionStatus.FAILED)));
     }
 
     @Test
@@ -45,7 +45,7 @@ class TransactionFilterTest extends AbstractFilterTest {
                                 UUID.randomUUID(),
                                 IdentifierType.HASH,
                                 null,
-                                List.of(TransactionStatus.FAILED)));
+                                Set.of(TransactionStatus.FAILED)));
     }
 
     @Test
@@ -73,7 +73,7 @@ class TransactionFilterTest extends AbstractFilterTest {
                                 UUID.randomUUID(),
                                 IdentifierType.HASH,
                                 "0x0",
-                                List.of()));
+                                Set.of()));
     }
 
     @Test
@@ -87,7 +87,7 @@ class TransactionFilterTest extends AbstractFilterTest {
                                 UUID.randomUUID(),
                                 IdentifierType.HASH,
                                 "",
-                                List.of(TransactionStatus.FAILED)));
+                                Set.of(TransactionStatus.FAILED)));
     }
 
     @Test
@@ -99,10 +99,10 @@ class TransactionFilterTest extends AbstractFilterTest {
                         DEFAULT_ID,
                         IdentifierType.HASH,
                         "0x0",
-                        List.of(TransactionStatus.FAILED));
+                        Set.of(TransactionStatus.FAILED));
 
         assertEquals("0x0", filter.getValue());
         assertEquals(IdentifierType.HASH, filter.getIdentifierType());
-        assertEquals(List.of(TransactionStatus.FAILED), filter.getStatuses());
+        assertEquals(Set.of(TransactionStatus.FAILED), filter.getStatuses());
     }
 }

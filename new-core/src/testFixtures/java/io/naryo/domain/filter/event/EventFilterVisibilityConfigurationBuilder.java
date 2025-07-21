@@ -24,14 +24,10 @@ public class EventFilterVisibilityConfigurationBuilder {
     }
 
     private boolean isVisible() {
-        return this.visible == null
-            ? Instancio.create(Boolean.class)
-            : this.visible;
+        return this.visible == null ? Instancio.create(Boolean.class) : this.visible;
     }
 
     private String getPrivacyGroupId() {
-        return this.privacyGroupId == null
-            ? Instancio.create(String.class)
-            : this.privacyGroupId;
+        return this.privacyGroupId == null ? Instancio.create(String.class) : this.privacyGroupId;
     }
 }

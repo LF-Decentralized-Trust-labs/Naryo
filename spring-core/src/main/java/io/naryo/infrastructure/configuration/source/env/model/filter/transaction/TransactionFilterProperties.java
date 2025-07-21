@@ -1,5 +1,9 @@
 package io.naryo.infrastructure.configuration.source.env.model.filter.transaction;
 
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+
 import io.naryo.application.configuration.source.model.filter.transaction.TransactionFilterDescriptor;
 import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.filter.FilterType;
@@ -8,10 +12,6 @@ import io.naryo.infrastructure.configuration.source.env.model.filter.FilterPrope
 import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
 
 @Setter
 public final class TransactionFilterProperties extends FilterProperties

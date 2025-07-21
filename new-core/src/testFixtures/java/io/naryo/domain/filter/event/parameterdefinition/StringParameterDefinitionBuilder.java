@@ -2,8 +2,9 @@ package io.naryo.domain.filter.event.parameterdefinition;
 
 import io.naryo.domain.filter.event.parameter.StringParameterDefinition;
 
-public class StringParameterDefinitionBuilder extends
-    ParameterDefinitionBuilder<StringParameterDefinitionBuilder, StringParameterDefinition> {
+public class StringParameterDefinitionBuilder
+        extends ParameterDefinitionBuilder<
+                StringParameterDefinitionBuilder, StringParameterDefinition> {
 
     @Override
     public StringParameterDefinitionBuilder self() {

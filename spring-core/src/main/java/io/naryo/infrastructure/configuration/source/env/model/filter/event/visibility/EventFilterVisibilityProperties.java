@@ -1,11 +1,11 @@
 package io.naryo.infrastructure.configuration.source.env.model.filter.event.visibility;
 
+import java.util.Optional;
+
 import io.naryo.application.configuration.source.model.filter.event.FilterVisibilityDescriptor;
 import jakarta.annotation.Nullable;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Optional;
 
 @NoArgsConstructor
 @Setter

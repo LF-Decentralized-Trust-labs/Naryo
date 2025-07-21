@@ -1,12 +1,13 @@
 package io.naryo.domain.filter.event.parameterdefinition;
 
+import java.util.Set;
+
 import io.naryo.domain.filter.event.ParameterDefinition;
 import io.naryo.domain.filter.event.parameter.StructParameterDefinition;
 
-import java.util.Set;
-
 public class StructParameterDefinitionBuilder
-    extends ParameterDefinitionBuilder<StructParameterDefinitionBuilder, StructParameterDefinition> {
+        extends ParameterDefinitionBuilder<
+                StructParameterDefinitionBuilder, StructParameterDefinition> {
 
     private Set<ParameterDefinition> parameterDefinitions;
 
@@ -20,14 +21,15 @@ public class StructParameterDefinitionBuilder
         return new StructParameterDefinition(this.getPosition(), this.getParameterDefinitions());
     }
 
-    public StructParameterDefinitionBuilder withParameterDefinitions(Set<ParameterDefinition> parameterDefinitions) {
+    public StructParameterDefinitionBuilder withParameterDefinitions(
+            Set<ParameterDefinition> parameterDefinitions) {
         this.parameterDefinitions = parameterDefinitions;
         return this.self();
     }
 
     private Set<ParameterDefinition> getParameterDefinitions() {
         return this.parameterDefinitions == null
-            ? Set.of(new AddressParameterDefinitionBuilder().build())
-            : this.parameterDefinitions;
+                ? Set.of(new AddressParameterDefinitionBuilder().build())
+                : this.parameterDefinitions;
     }
 }

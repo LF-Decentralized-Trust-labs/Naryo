@@ -1,5 +1,8 @@
 package io.naryo.infrastructure.configuration.source.env.serialization.filter.event.configuration;
 
+import java.io.IOException;
+import java.math.BigInteger;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -9,9 +12,6 @@ import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.block.BlockFilterSyncProperties;
 import io.naryo.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.math.BigInteger;
 
 @Component
 public final class SyncConfigurationPropertiesDeserializer
