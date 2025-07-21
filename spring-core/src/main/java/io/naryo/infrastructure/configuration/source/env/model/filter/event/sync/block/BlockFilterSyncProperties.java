@@ -1,13 +1,13 @@
 package io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.block;
 
+import java.math.BigInteger;
+import java.util.Optional;
+
 import io.naryo.application.configuration.source.model.filter.event.sync.BlockFilterSyncDescriptor;
 import io.naryo.domain.filter.event.sync.SyncStrategy;
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.FilterSyncProperties;
 import jakarta.annotation.Nullable;
 import lombok.Setter;
-
-import java.math.BigInteger;
-import java.util.Optional;
 
 @Setter
 public final class BlockFilterSyncProperties extends FilterSyncProperties

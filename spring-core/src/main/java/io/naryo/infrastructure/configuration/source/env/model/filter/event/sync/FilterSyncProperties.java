@@ -13,5 +13,4 @@ public abstract class FilterSyncProperties implements FilterSyncDescriptor {
     protected FilterSyncProperties(SyncStrategy strategy) {
         this.strategy = strategy;
     }
-
 }

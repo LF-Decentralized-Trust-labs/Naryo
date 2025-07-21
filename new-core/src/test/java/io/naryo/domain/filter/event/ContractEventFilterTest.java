@@ -1,6 +1,5 @@
 package io.naryo.domain.filter.event;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -21,7 +20,7 @@ class ContractEventFilterTest extends AbstractEventFilterTest {
             FilterName name,
             UUID nodeId,
             EventFilterSpecification specification,
-            List<ContractEventStatus> statuses,
+            Set<ContractEventStatus> statuses,
             SyncState syncState) {
         return new ContractEventFilter(id, name, nodeId, specification, statuses, syncState, "0x0");
     }
@@ -40,7 +39,7 @@ class ContractEventFilterTest extends AbstractEventFilterTest {
                                         name,
                                         new CorrelationId(0),
                                         Set.of(new BoolParameterDefinition(0, false))),
-                                List.of(ContractEventStatus.CONFIRMED),
+                                Set.of(ContractEventStatus.CONFIRMED),
                                 new NoSyncState(),
                                 null));
     }
@@ -59,7 +58,7 @@ class ContractEventFilterTest extends AbstractEventFilterTest {
                                         name,
                                         new CorrelationId(0),
                                         Set.of(new BoolParameterDefinition(0, false))),
-                                List.of(ContractEventStatus.CONFIRMED),
+                                Set.of(ContractEventStatus.CONFIRMED),
                                 new NoSyncState(),
                                 ""));
     }

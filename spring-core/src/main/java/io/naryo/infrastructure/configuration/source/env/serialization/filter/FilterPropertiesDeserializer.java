@@ -1,5 +1,9 @@
 package io.naryo.infrastructure.configuration.source.env.serialization.filter;
 
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.StreamSupport;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -22,10 +26,6 @@ import io.naryo.infrastructure.configuration.source.env.model.filter.event.visib
 import io.naryo.infrastructure.configuration.source.env.model.filter.transaction.TransactionFilterProperties;
 import io.naryo.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.StreamSupport;
 
 @Component
 public final class FilterPropertiesDeserializer extends EnvironmentDeserializer<FilterProperties> {

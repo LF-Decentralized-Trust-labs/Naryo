@@ -1,5 +1,9 @@
 package io.naryo.infrastructure.configuration.source.env.model.filter.event;
 
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+
 import io.naryo.application.configuration.source.model.filter.event.EventFilterDescriptor;
 import io.naryo.application.configuration.source.model.filter.event.EventSpecificationDescriptor;
 import io.naryo.application.configuration.source.model.filter.event.FilterVisibilityDescriptor;
@@ -16,16 +20,12 @@ import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-
 import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 
 @Getter
 @Setter
 public abstract class EventFilterProperties extends FilterProperties
-    implements EventFilterDescriptor {
+        implements EventFilterDescriptor {
 
     private @Nullable EventFilterScope scope;
     private @Nullable EventSpecification specification;
@@ -34,14 +34,14 @@ public abstract class EventFilterProperties extends FilterProperties
     private @Nullable EventFilterVisibilityProperties visibility;
 
     public EventFilterProperties(
-        UUID id,
-        String name,
-        UUID nodeId,
-        EventFilterScope scope,
-        EventSpecification specification,
-        Set<ContractEventStatus> statuses,
-        FilterSyncProperties sync,
-        EventFilterVisibilityProperties visibility) {
+            UUID id,
+            String name,
+            UUID nodeId,
+            EventFilterScope scope,
+            EventSpecification specification,
+            Set<ContractEventStatus> statuses,
+            FilterSyncProperties sync,
+            EventFilterVisibilityProperties visibility) {
         super(id, name, FilterType.EVENT, nodeId);
         this.scope = scope;
         this.specification = specification;
@@ -62,10 +62,10 @@ public abstract class EventFilterProperties extends FilterProperties
 
     @Override
     public void setSpecification(EventSpecificationDescriptor specification) {
-        this.specification = new EventSpecification(
-            valueOrNull(specification.getSignature()),
-            valueOrNull(specification.getCorrelationId())
-        );
+        this.specification =
+                new EventSpecification(
+                        valueOrNull(specification.getSignature()),
+                        valueOrNull(specification.getCorrelationId()));
     }
 
     @Override
@@ -76,9 +76,9 @@ public abstract class EventFilterProperties extends FilterProperties
     @Override
     public void setSync(FilterSyncDescriptor sync) {
         if (sync instanceof BlockFilterSyncDescriptor blockFilterSyncDescriptor) {
-            this.sync = new BlockFilterSyncProperties(
-                valueOrNull(blockFilterSyncDescriptor.getInitialBlock())
-            );
+            this.sync =
+                    new BlockFilterSyncProperties(
+                            valueOrNull(blockFilterSyncDescriptor.getInitialBlock()));
         } else {
             throw new IllegalArgumentException("Unknown sync strategy: " + sync.getStrategy());
         }
@@ -91,10 +91,9 @@ public abstract class EventFilterProperties extends FilterProperties
 
     @Override
     public void setVisibility(FilterVisibilityDescriptor visibility) {
-        this.visibility = new EventFilterVisibilityProperties(
-            valueOrNull(visibility.getVisible()),
-            valueOrNull(visibility.getPrivacyGroupId())
-        );
+        this.visibility =
+                new EventFilterVisibilityProperties(
+                        valueOrNull(visibility.getVisible()),
+                        valueOrNull(visibility.getPrivacyGroupId()));
     }
-
 }

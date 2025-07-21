@@ -1,5 +1,11 @@
 package io.naryo.application.filter.configuration.manager;
 
+import java.math.BigInteger;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collector;
+import javax.annotation.Nullable;
+
 import io.naryo.application.configuration.manager.BaseCollectionConfigurationManager;
 import io.naryo.application.configuration.source.model.filter.FilterDescriptor;
 import io.naryo.application.configuration.source.model.filter.event.EventFilterDescriptor;
@@ -20,12 +26,6 @@ import io.naryo.domain.filter.event.sync.NoSyncState;
 import io.naryo.domain.filter.event.sync.block.BlockActiveSyncState;
 import io.naryo.domain.filter.transaction.IdentifierType;
 import io.naryo.domain.filter.transaction.TransactionFilter;
-
-import javax.annotation.Nullable;
-import java.math.BigInteger;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collector;
 
 import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 import static java.util.stream.Collectors.toMap;
@@ -52,73 +52,73 @@ public final class DefaultFilterConfigurationManager
     protected Filter map(FilterDescriptor source) {
         return switch (source) {
             case TransactionFilterDescriptor txSource ->
-                getTransactionFilterFromDescriptor(txSource);
-            case EventFilterDescriptor eventSource ->
-                getEventFilterFromDescriptor(eventSource);
+                    getTransactionFilterFromDescriptor(txSource);
+            case EventFilterDescriptor eventSource -> getEventFilterFromDescriptor(eventSource);
             default ->
-                throw new IllegalArgumentException("Unknown filter descriptor: " + source.getType());
+                    throw new IllegalArgumentException(
+                            "Unknown filter descriptor: " + source.getType());
         };
     }
 
-    private TransactionFilter getTransactionFilterFromDescriptor(TransactionFilterDescriptor descriptor) {
+    private TransactionFilter getTransactionFilterFromDescriptor(
+            TransactionFilterDescriptor descriptor) {
         FilterName name = new FilterName(valueOrNull(FilterDescriptor::getName, descriptor));
         UUID nodeId = valueOrNull(FilterDescriptor::getNodeId, descriptor);
-        IdentifierType identifierType = valueOrNull(TransactionFilterDescriptor::getIdentifierType, descriptor);
+        IdentifierType identifierType =
+                valueOrNull(TransactionFilterDescriptor::getIdentifierType, descriptor);
         String value = valueOrNull(TransactionFilterDescriptor::getValue, descriptor);
         Set<TransactionStatus> statuses = descriptor.getStatuses();
 
         return new TransactionFilter(
-            descriptor.getId(),
-            name,
-            nodeId,
-            identifierType,
-            value,
-            statuses
-        );
+                descriptor.getId(), name, nodeId, identifierType, value, statuses);
     }
 
     private EventFilter getEventFilterFromDescriptor(EventFilterDescriptor descriptor) {
         FilterName name = new FilterName(valueOrNull(FilterDescriptor::getName, descriptor));
         UUID nodeId = valueOrNull(FilterDescriptor::getNodeId, descriptor);
-        EventFilterSpecification specification = getFilterSpecificationFromDescriptor(
-            valueOrNull(EventFilterDescriptor::getSpecification, descriptor)
-        );
-        SyncState syncState = getSyncStateFromDescriptor(
-            valueOrNull(EventFilterDescriptor::getSync, descriptor)
-        );
-        EventFilterVisibilityConfiguration visibilityConfiguration = getVisibilityConfigurationFromDescriptor(
-            valueOrNull(EventFilterDescriptor::getVisibility, descriptor)
-        );
+        EventFilterSpecification specification =
+                getFilterSpecificationFromDescriptor(
+                        valueOrNull(EventFilterDescriptor::getSpecification, descriptor));
+        SyncState syncState =
+                getSyncStateFromDescriptor(valueOrNull(EventFilterDescriptor::getSync, descriptor));
+        EventFilterVisibilityConfiguration visibilityConfiguration =
+                getVisibilityConfigurationFromDescriptor(
+                        valueOrNull(EventFilterDescriptor::getVisibility, descriptor));
 
         return switch (descriptor) {
             case GlobalEventFilterDescriptor ignored ->
-                new GlobalEventFilter(
-                    descriptor.getId(),
-                    name,
-                    nodeId,
-                    specification,
-                    descriptor.getStatuses(),
-                    syncState,
-                    visibilityConfiguration);
+                    new GlobalEventFilter(
+                            descriptor.getId(),
+                            name,
+                            nodeId,
+                            specification,
+                            descriptor.getStatuses(),
+                            syncState,
+                            visibilityConfiguration);
             case ContractEventFilterDescriptor contractDescriptor -> {
-                String address = valueOrNull(ContractEventFilterDescriptor::getAddress, contractDescriptor);
+                String address =
+                        valueOrNull(ContractEventFilterDescriptor::getAddress, contractDescriptor);
                 yield new ContractEventFilter(
-                    descriptor.getId(),
-                    name,
-                    nodeId,
-                    specification,
-                    descriptor.getStatuses(),
-                    syncState,
-                    visibilityConfiguration,
-                    address);
+                        descriptor.getId(),
+                        name,
+                        nodeId,
+                        specification,
+                        descriptor.getStatuses(),
+                        syncState,
+                        visibilityConfiguration,
+                        address);
             }
-            default -> throw new IllegalArgumentException("Unknown event filter with scope: " + descriptor.getScope());
+            default ->
+                    throw new IllegalArgumentException(
+                            "Unknown event filter with scope: " + descriptor.getScope());
         };
     }
 
-    private EventFilterSpecification getFilterSpecificationFromDescriptor(EventSpecificationDescriptor descriptor) {
+    private EventFilterSpecification getFilterSpecificationFromDescriptor(
+            EventSpecificationDescriptor descriptor) {
         String signature = valueOrNull(EventSpecificationDescriptor::getSignature, descriptor);
-        CorrelationId correlationId = descriptor.getCorrelationId().map(CorrelationId::new).orElse(null);
+        CorrelationId correlationId =
+                descriptor.getCorrelationId().map(CorrelationId::new).orElse(null);
 
         return new EventFilterSpecification(signature, correlationId);
     }
@@ -130,23 +130,24 @@ public final class DefaultFilterConfigurationManager
 
         if (descriptor instanceof BlockFilterSyncDescriptor blockSync) {
             new BlockActiveSyncState(
-                new NonNegativeBlockNumber(valueOrNull(blockSync.getInitialBlock())),
-                new NonNegativeBlockNumber(BigInteger.ZERO) // TODO: Review last block
-            );
+                    new NonNegativeBlockNumber(valueOrNull(blockSync.getInitialBlock())),
+                    new NonNegativeBlockNumber(BigInteger.ZERO) // TODO: Review last block
+                    );
         }
 
         throw new IllegalArgumentException("Unknown sync strategy: " + descriptor.getStrategy());
     }
 
-    private EventFilterVisibilityConfiguration getVisibilityConfigurationFromDescriptor(FilterVisibilityDescriptor descriptor) {
+    private EventFilterVisibilityConfiguration getVisibilityConfigurationFromDescriptor(
+            FilterVisibilityDescriptor descriptor) {
         boolean isVisible = valueOrNull(FilterVisibilityDescriptor::getVisible, descriptor);
 
         if (isVisible) {
             return EventFilterVisibilityConfiguration.visible();
         } else {
-            String privacyGroupId = valueOrNull(FilterVisibilityDescriptor::getPrivacyGroupId, descriptor);
+            String privacyGroupId =
+                    valueOrNull(FilterVisibilityDescriptor::getPrivacyGroupId, descriptor);
             return EventFilterVisibilityConfiguration.invisible(privacyGroupId);
         }
-
     }
 }

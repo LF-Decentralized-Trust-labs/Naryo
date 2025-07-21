@@ -18,20 +18,21 @@ public class BlockActiveSyncStateBuilder {
         return this;
     }
 
-    public BlockActiveSyncStateBuilder withLastBlockProcessed(NonNegativeBlockNumber lastBlockProcessed) {
+    public BlockActiveSyncStateBuilder withLastBlockProcessed(
+            NonNegativeBlockNumber lastBlockProcessed) {
         this.lastBlockProcessed = lastBlockProcessed;
         return this;
     }
 
     private NonNegativeBlockNumber getInitialBlock() {
         return this.initialBlock == null
-            ? Instancio.create(NonNegativeBlockNumber.class)
-            : this.initialBlock;
+                ? Instancio.create(NonNegativeBlockNumber.class)
+                : this.initialBlock;
     }
 
     private NonNegativeBlockNumber getLastBlockProcessed() {
         return this.lastBlockProcessed == null
-            ? Instancio.create(NonNegativeBlockNumber.class)
-            : this.lastBlockProcessed;
+                ? Instancio.create(NonNegativeBlockNumber.class)
+                : this.lastBlockProcessed;
     }
 }

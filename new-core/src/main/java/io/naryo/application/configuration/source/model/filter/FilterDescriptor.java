@@ -1,10 +1,10 @@
 package io.naryo.application.configuration.source.model.filter;
 
-import io.naryo.application.configuration.source.model.MergeableDescriptor;
-import io.naryo.domain.filter.FilterType;
-
 import java.util.Optional;
 import java.util.UUID;
+
+import io.naryo.application.configuration.source.model.MergeableDescriptor;
+import io.naryo.domain.filter.FilterType;
 
 import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
 
@@ -36,6 +36,4 @@ public interface FilterDescriptor extends MergeableDescriptor<FilterDescriptor> 
 
         return this;
     }
-
-
 }
