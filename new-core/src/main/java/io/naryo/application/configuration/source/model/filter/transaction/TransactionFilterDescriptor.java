@@ -29,7 +29,8 @@ public interface TransactionFilterDescriptor extends FilterDescriptor {
         FilterDescriptor.super.merge(descriptor);
 
         if (descriptor instanceof TransactionFilterDescriptor other) {
-            mergeOptionals(this::setIdentifierType, this.getIdentifierType(), other.getIdentifierType());
+            mergeOptionals(
+                    this::setIdentifierType, this.getIdentifierType(), other.getIdentifierType());
             mergeOptionals(this::setValue, this.getValue(), other.getValue());
             mergeCollections(this::setStatuses, this.getStatuses(), other.getStatuses());
         }

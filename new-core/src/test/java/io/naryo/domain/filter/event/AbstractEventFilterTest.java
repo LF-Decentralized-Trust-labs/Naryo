@@ -73,7 +73,7 @@ abstract class AbstractEventFilterTest {
         SyncState syncState = new NoSyncState();
 
         EventFilter eventFilter =
-            createEventFilter(id, name, nodeId, specification, statuses, syncState);
+                createEventFilter(id, name, nodeId, specification, statuses, syncState);
 
         assertEquals(id, eventFilter.getId());
         assertEquals(name, eventFilter.getName());
