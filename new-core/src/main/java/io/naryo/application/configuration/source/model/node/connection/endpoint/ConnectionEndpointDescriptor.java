@@ -2,10 +2,14 @@ package io.naryo.application.configuration.source.model.node.connection.endpoint
 
 import io.naryo.application.configuration.source.model.MergeableDescriptor;
 
+import java.util.Optional;
+
+import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
+
 public interface ConnectionEndpointDescriptor
         extends MergeableDescriptor<ConnectionEndpointDescriptor> {
 
-    String getUrl();
+    Optional<String> getUrl();
 
     void setUrl(String url);
 
@@ -15,9 +19,7 @@ public interface ConnectionEndpointDescriptor
             return this;
         }
 
-        if (!this.getUrl().equals(other.getUrl())) {
-            this.setUrl(other.getUrl());
-        }
+        mergeOptionals(this::setUrl, this.getUrl(), other.getUrl());
 
         return this;
     }

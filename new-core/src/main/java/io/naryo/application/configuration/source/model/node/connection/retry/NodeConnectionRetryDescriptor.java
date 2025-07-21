@@ -1,15 +1,18 @@
 package io.naryo.application.configuration.source.model.node.connection.retry;
 
 import java.time.Duration;
+import java.util.Optional;
 
 import io.naryo.application.configuration.source.model.MergeableDescriptor;
+
+import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
 
 public interface NodeConnectionRetryDescriptor
         extends MergeableDescriptor<NodeConnectionRetryDescriptor> {
 
-    Integer getTimes();
+    Optional<Integer> getTimes();
 
-    Duration getBackoff();
+    Optional<Duration> getBackoff();
 
     void setTimes(Integer times);
 
@@ -21,13 +24,8 @@ public interface NodeConnectionRetryDescriptor
             return this;
         }
 
-        if (!this.getTimes().equals(other.getTimes())) {
-            this.setTimes(other.getTimes());
-        }
-
-        if (!this.getBackoff().equals(other.getBackoff())) {
-            this.setBackoff(other.getBackoff());
-        }
+        mergeOptionals(this::setTimes, this.getTimes(), other.getTimes());
+        mergeOptionals(this::setBackoff, this.getBackoff(), other.getBackoff());
 
         return this;
     }
