@@ -45,7 +45,9 @@ public abstract class EventFilterProperties extends FilterProperties
         super(id, name, FilterType.EVENT, nodeId);
         this.scope = scope;
         this.specification = specification;
-        this.statuses = statuses;
+        this.statuses = statuses == null || statuses.isEmpty()
+            ? Set.of(ContractEventStatus.values())
+            : statuses;
         this.sync = sync;
         this.visibility = visibility;
     }
