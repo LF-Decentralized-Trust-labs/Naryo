@@ -138,16 +138,16 @@ public final class DefaultFilterConfigurationManager
         throw new IllegalArgumentException("Unknown sync strategy: " + descriptor.getStrategy());
     }
 
-    private EventFilterVisibilityConfiguration getVisibilityConfigurationFromDescriptor(
-            FilterVisibilityDescriptor descriptor) {
-        boolean isVisible = valueOrNull(FilterVisibilityDescriptor::getVisible, descriptor);
-
-        if (isVisible) {
-            return EventFilterVisibilityConfiguration.visible();
-        } else {
-            String privacyGroupId =
-                    valueOrNull(FilterVisibilityDescriptor::getPrivacyGroupId, descriptor);
-            return EventFilterVisibilityConfiguration.invisible(privacyGroupId);
-        }
+    private EventFilterVisibilityConfiguration getVisibilityConfigurationFromDescriptor(FilterVisibilityDescriptor descriptor) {
+        return descriptor.getVisible()
+            .map(isVisible -> {
+                if (isVisible) {
+                    return EventFilterVisibilityConfiguration.visible();
+                } else {
+                    String privacyGroupId = valueOrNull(FilterVisibilityDescriptor::getPrivacyGroupId, descriptor);
+                    return EventFilterVisibilityConfiguration.invisible(privacyGroupId);
+                }
+            })
+            .orElse(EventFilterVisibilityConfiguration.visible());
     }
 }
