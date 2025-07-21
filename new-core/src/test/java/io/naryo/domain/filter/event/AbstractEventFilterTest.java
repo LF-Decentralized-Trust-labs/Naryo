@@ -1,9 +1,13 @@
 package io.naryo.domain.filter.event;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.common.event.EventName;
+import io.naryo.domain.filter.AbstractFilterTest;
+import io.naryo.domain.filter.Filter;
 import io.naryo.domain.filter.FilterName;
 import io.naryo.domain.filter.event.parameter.BoolParameterDefinition;
 import io.naryo.domain.filter.event.sync.NoSyncState;
@@ -12,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-abstract class AbstractEventFilterTest {
+abstract class AbstractEventFilterTest extends AbstractFilterTest {
 
     protected abstract EventFilter createEventFilter(
             UUID id,
@@ -21,6 +25,17 @@ abstract class AbstractEventFilterTest {
             EventFilterSpecification specification,
             Set<ContractEventStatus> statuses,
             SyncState syncState);
+
+    @Override
+    protected Filter createFilter(UUID id, FilterName name, UUID nodeId) {
+        return createEventFilter(
+                id,
+                name,
+                nodeId,
+                new EventFilterSpecificationBuilder().build(),
+                new HashSet<>(),
+                new BlockActiveSyncStateBuilder().build());
+    }
 
     @Test
     void testValidEventFilter() {

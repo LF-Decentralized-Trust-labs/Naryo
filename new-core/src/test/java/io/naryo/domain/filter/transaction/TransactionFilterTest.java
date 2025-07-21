@@ -1,5 +1,6 @@
 package io.naryo.domain.filter.transaction;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -64,16 +65,18 @@ class TransactionFilterTest extends AbstractFilterTest {
 
     @Test
     void testEmptyStatuses() {
-        assertThrows(
-                IllegalArgumentException.class,
-                () ->
-                        new TransactionFilter(
-                                UUID.randomUUID(),
-                                new FilterName("Test"),
-                                UUID.randomUUID(),
-                                IdentifierType.HASH,
-                                "0x0",
-                                Set.of()));
+        TransactionFilter filter =
+                new TransactionFilter(
+                        DEFAULT_ID,
+                        new FilterName(DEFAULT_NAME),
+                        DEFAULT_ID,
+                        IdentifierType.HASH,
+                        "0x0",
+                        new HashSet<>());
+
+        assertEquals("0x0", filter.getValue());
+        assertEquals(IdentifierType.HASH, filter.getIdentifierType());
+        assertEquals(Set.of(TransactionStatus.values()), filter.getStatuses());
     }
 
     @Test
