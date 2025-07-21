@@ -1,6 +1,6 @@
 # Naryo
 
-Naryo is a lightweight, highly modular and flexible framework for capturing and processing events from Distributed
+Naryo is a lightweight, highly modular, and flexible framework for capturing and processing events from Distributed
 Ledger Technology (DLT) networks. This project is based on [Eventeum](https://github.com/eventeum/eventeum) and aims to
 provide a user-friendly, resilient event listener that supports a wide range of DLT protocols. It is designed to
 simplify event handling by reducing the complexity of developing, deploying, and maintaining application logic for
@@ -16,7 +16,7 @@ enterprise-grade systems.
 Naryo configures filters that are used to determine which events to capture and process. These filters can be based on
 smart contract events, transaction fields, or any other criteria you may need to define. Naryo then connects to a DLT
 node and captures events that match the configured filters. These events are then processed and broadcast to the
-specified recipients, such as endpoints, queues or databases.
+specified recipients, such as endpoints, queues, or databases.
 
 ## 🚀 Features
 
@@ -64,9 +64,6 @@ events from a DLT network:
 
 - [Getting started](./docs/getting_started.md)
 - [Configuration](./docs/configuration.md)
-- [Usage](./docs/usage.md)
-- [Metrics](./docs/metrics.md)
-- [Known Caveats / Issues](./docs/issues.md)
 
 ## 🙌 Contributing
 
