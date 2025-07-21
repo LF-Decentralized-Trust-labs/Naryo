@@ -139,15 +139,14 @@ public final class DefaultFilterConfigurationManager
     }
 
     private EventFilterVisibilityConfiguration getVisibilityConfigurationFromDescriptor(FilterVisibilityDescriptor descriptor) {
-        return descriptor.getVisible()
-            .map(isVisible -> {
-                if (isVisible) {
-                    return EventFilterVisibilityConfiguration.visible();
-                } else {
-                    String privacyGroupId = valueOrNull(FilterVisibilityDescriptor::getPrivacyGroupId, descriptor);
-                    return EventFilterVisibilityConfiguration.invisible(privacyGroupId);
-                }
-            })
-            .orElse(EventFilterVisibilityConfiguration.visible());
+        boolean isVisible = valueOrNull(FilterVisibilityDescriptor::getVisible, descriptor);
+
+        if (isVisible) {
+            return EventFilterVisibilityConfiguration.visible();
+        } else {
+            String privacyGroupId = valueOrNull(FilterVisibilityDescriptor::getPrivacyGroupId, descriptor);
+            return EventFilterVisibilityConfiguration.invisible(privacyGroupId);
+        }
+
     }
 }
