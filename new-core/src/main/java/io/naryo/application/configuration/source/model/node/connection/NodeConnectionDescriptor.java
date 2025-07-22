@@ -7,7 +7,7 @@ import io.naryo.application.configuration.source.model.node.connection.endpoint.
 import io.naryo.application.configuration.source.model.node.connection.retry.NodeConnectionRetryDescriptor;
 import io.naryo.domain.node.connection.NodeConnectionType;
 
-import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
+import static io.naryo.application.common.util.MergeUtil.mergeDescriptors;
 
 public interface NodeConnectionDescriptor extends MergeableDescriptor<NodeConnectionDescriptor> {
 
@@ -31,8 +31,8 @@ public interface NodeConnectionDescriptor extends MergeableDescriptor<NodeConnec
             return other;
         }
 
-        mergeOptionals(this::setEndpoint, this.getEndpoint(), other.getEndpoint());
-        mergeOptionals(this::setRetry, this.getRetry(), other.getRetry());
+        mergeDescriptors(this::setEndpoint, this.getEndpoint(), other.getEndpoint());
+        mergeDescriptors(this::setRetry, this.getRetry(), other.getRetry());
 
         return this;
     }
