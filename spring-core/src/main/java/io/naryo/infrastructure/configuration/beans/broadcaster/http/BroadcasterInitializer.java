@@ -51,7 +51,8 @@ public final class BroadcasterInitializer implements EnvironmentInitializer {
 
                     return new HttpBroadcasterConfiguration(
                             properties.getId(),
-                            new BroadcasterCache(valueOrNull(properties.getCache()).getExpirationTime()),
+                            new BroadcasterCache(
+                                    valueOrNull(properties.getCache()).getExpirationTime()),
                             new ConnectionEndpoint(endpoint.url));
                 });
 

@@ -7,8 +7,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "broadcasters")
 @TypeAlias("all_broadcaster_targets")
-public class AllBroadcasterTargetDocument extends BroadcasterTargetDocument implements AllBroadcasterTargetDescriptor {
-
+public class AllBroadcasterTargetDocument extends BroadcasterTargetDocument
+        implements AllBroadcasterTargetDescriptor {
 
     public AllBroadcasterTargetDocument(String destination) {
         super(BroadcasterTargetType.ALL, destination);
@@ -17,6 +17,4 @@ public class AllBroadcasterTargetDocument extends BroadcasterTargetDocument impl
     public AllBroadcasterTargetDocument() {
         super(BroadcasterTargetType.ALL, null);
     }
-
-
 }
