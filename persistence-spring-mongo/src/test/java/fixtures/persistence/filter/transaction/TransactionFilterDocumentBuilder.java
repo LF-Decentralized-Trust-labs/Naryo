@@ -1,25 +1,27 @@
-package io.naryo.domain.filter.transaction;
+package fixtures.persistence.filter.transaction;
 
 import java.util.Set;
 
+import fixtures.persistence.filter.FilterDocumentBuilder;
 import io.naryo.domain.common.TransactionStatus;
-import io.naryo.domain.filter.FilterBuilder;
+import io.naryo.domain.filter.transaction.IdentifierType;
+import io.naryo.infrastructure.configuration.persistence.document.filter.transaction.TransactionFilterDocument;
 import org.instancio.Instancio;
 
-public class TransactionFilterBuilder
-        extends FilterBuilder<TransactionFilterBuilder, TransactionFilter> {
+public class TransactionFilterDocumentBuilder
+        extends FilterDocumentBuilder<TransactionFilterDocumentBuilder, TransactionFilterDocument> {
 
     private IdentifierType identifierType;
     private String value;
     private Set<TransactionStatus> statuses;
 
     @Override
-    public TransactionFilterBuilder self() {
+    public TransactionFilterDocumentBuilder self() {
         return this;
     }
 
-    public TransactionFilter build() {
-        return new TransactionFilter(
+    public TransactionFilterDocument build() {
+        return new TransactionFilterDocument(
                 this.getId(),
                 this.getName(),
                 this.getNodeId(),
@@ -28,17 +30,17 @@ public class TransactionFilterBuilder
                 this.getStatuses());
     }
 
-    public TransactionFilterBuilder withIdentifierType(IdentifierType identifierType) {
+    public TransactionFilterDocumentBuilder withIdentifierType(IdentifierType identifierType) {
         this.identifierType = identifierType;
         return self();
     }
 
-    public TransactionFilterBuilder withStatuses(Set<TransactionStatus> statuses) {
+    public TransactionFilterDocumentBuilder withStatuses(Set<TransactionStatus> statuses) {
         this.statuses = statuses;
         return self();
     }
 
-    public TransactionFilterBuilder withValue(String value) {
+    public TransactionFilterDocumentBuilder withValue(String value) {
         this.value = value;
         return self();
     }
@@ -50,9 +52,7 @@ public class TransactionFilterBuilder
     }
 
     private Set<TransactionStatus> getStatuses() {
-        return this.statuses == null || this.statuses.isEmpty()
-                ? Instancio.createSet(TransactionStatus.class)
-                : this.statuses;
+        return this.statuses == null ? Instancio.createSet(TransactionStatus.class) : this.statuses;
     }
 
     private String getValue() {
