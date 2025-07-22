@@ -27,6 +27,6 @@ public class MongoBroadcasterSourceProvider implements BroadcasterSourceProvider
 
     @Override
     public int priority() {
-        return 1;
+        return 0;
     }
 }
