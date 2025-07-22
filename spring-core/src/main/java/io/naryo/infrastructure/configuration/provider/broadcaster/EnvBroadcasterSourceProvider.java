@@ -24,6 +24,6 @@ public final class EnvBroadcasterSourceProvider implements BroadcasterSourceProv
 
     @Override
     public int priority() {
-        return 0;
+        return 1;
     }
 }

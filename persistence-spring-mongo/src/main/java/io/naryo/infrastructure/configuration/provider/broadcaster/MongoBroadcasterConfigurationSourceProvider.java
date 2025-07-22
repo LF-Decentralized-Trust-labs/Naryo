@@ -30,6 +30,6 @@ public class MongoBroadcasterConfigurationSourceProvider
 
     @Override
     public int priority() {
-        return 1;
+        return 0;
     }
 }
