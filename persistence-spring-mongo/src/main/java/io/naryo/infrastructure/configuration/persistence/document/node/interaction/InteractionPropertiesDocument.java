@@ -2,9 +2,14 @@ package io.naryo.infrastructure.configuration.persistence.document.node.interact
 
 import io.naryo.application.configuration.source.model.node.interaction.InteractionDescriptor;
 import io.naryo.domain.node.interaction.InteractionStrategy;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
-@Getter
 public abstract class InteractionPropertiesDocument implements InteractionDescriptor {
-    private InteractionStrategy strategy;
+
+    private final @Getter @NotNull InteractionStrategy strategy;
+
+    public InteractionPropertiesDocument(InteractionStrategy strategy) {
+        this.strategy = strategy;
+    }
 }

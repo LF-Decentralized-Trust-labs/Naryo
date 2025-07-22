@@ -1,10 +1,13 @@
 package io.naryo.infrastructure.configuration.persistence.document.node.subscription.block;
 
 import java.math.BigInteger;
+import java.util.Optional;
 
 import io.naryo.application.configuration.source.model.node.subscription.BlockSubscriptionDescriptor;
+import io.naryo.domain.node.subscription.SubscriptionStrategy;
 import io.naryo.domain.node.subscription.block.method.BlockSubscriptionMethod;
 import io.naryo.infrastructure.configuration.persistence.document.node.subscription.SubscriptionPropertiesDocument;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,49 +22,67 @@ public abstract class BlockSubscriptionPropertiesDocument extends SubscriptionPr
     private static final BigInteger DEFAULT_REPLAY_BLOCK_OFFSET = BigInteger.valueOf(12);
     private static final BigInteger DEFAULT_SYNC_BLOCK_LIMIT = BigInteger.valueOf(20000);
 
-    private @Getter @NotNull BlockSubscriptionMethod method;
-    private @Setter @NotNull BigInteger initialBlock;
-    private @Setter @NotNull BigInteger confirmationBlocks;
-    private @Setter @NotNull BigInteger missingTxRetryBlocks;
-    private @Setter @NotNull BigInteger eventInvalidationBlockThreshold;
-    private @Setter @NotNull BigInteger replayBlockOffset;
-    private @Setter @NotNull BigInteger syncBlockLimit;
+    private final @Getter @NotNull BlockSubscriptionMethod method;
+    private @Setter @Nullable BigInteger initialBlock;
+    private @Setter @Nullable BigInteger confirmationBlocks;
+    private @Setter @Nullable BigInteger missingTxRetryBlocks;
+    private @Setter @Nullable BigInteger eventInvalidationBlockThreshold;
+    private @Setter @Nullable BigInteger replayBlockOffset;
+    private @Setter @Nullable BigInteger syncBlockLimit;
 
-    @Override
-    public BigInteger getInitialBlock() {
-        return this.initialBlock != null ? this.initialBlock : DEFAULT_INITIAL_BLOCK;
+    public BlockSubscriptionPropertiesDocument(
+            BlockSubscriptionMethod method,
+            BigInteger initialBlock,
+            BigInteger confirmationBlocks,
+            BigInteger missingTxRetryBlocks,
+            BigInteger eventInvalidationBlockThreshold,
+            BigInteger replayBlockOffset,
+            BigInteger syncBlockLimit) {
+        super(SubscriptionStrategy.BLOCK_BASED);
+        this.method = method;
+        this.initialBlock = initialBlock != null ? initialBlock : DEFAULT_INITIAL_BLOCK;
+        this.confirmationBlocks =
+                confirmationBlocks != null ? confirmationBlocks : DEFAULT_CONFIRMATION_BLOCKS;
+        this.missingTxRetryBlocks =
+                missingTxRetryBlocks != null
+                        ? missingTxRetryBlocks
+                        : DEFAULT_MISSING_TX_RETRY_BLOCKS;
+        this.eventInvalidationBlockThreshold =
+                eventInvalidationBlockThreshold != null
+                        ? eventInvalidationBlockThreshold
+                        : DEFAULT_EVENT_INVALIDATION_BLOCK_THRESHOLD;
+        this.replayBlockOffset =
+                replayBlockOffset != null ? replayBlockOffset : DEFAULT_REPLAY_BLOCK_OFFSET;
+        this.syncBlockLimit = syncBlockLimit != null ? syncBlockLimit : DEFAULT_SYNC_BLOCK_LIMIT;
     }
 
     @Override
-    public BigInteger getConfirmationBlocks() {
-        return this.confirmationBlocks != null
-                ? this.confirmationBlocks
-                : DEFAULT_CONFIRMATION_BLOCKS;
+    public Optional<BigInteger> getInitialBlock() {
+        return Optional.ofNullable(initialBlock);
     }
 
     @Override
-    public BigInteger getMissingTxRetryBlocks() {
-        return this.missingTxRetryBlocks != null
-                ? this.missingTxRetryBlocks
-                : DEFAULT_MISSING_TX_RETRY_BLOCKS;
+    public Optional<BigInteger> getConfirmationBlocks() {
+        return Optional.ofNullable(confirmationBlocks);
     }
 
     @Override
-    public BigInteger getEventInvalidationBlockThreshold() {
-        return this.eventInvalidationBlockThreshold != null
-                ? this.eventInvalidationBlockThreshold
-                : DEFAULT_EVENT_INVALIDATION_BLOCK_THRESHOLD;
+    public Optional<BigInteger> getMissingTxRetryBlocks() {
+        return Optional.ofNullable(missingTxRetryBlocks);
     }
 
     @Override
-    public BigInteger getReplayBlockOffset() {
-        return this.replayBlockOffset != null
-                ? this.replayBlockOffset
-                : DEFAULT_REPLAY_BLOCK_OFFSET;
+    public Optional<BigInteger> getEventInvalidationBlockThreshold() {
+        return Optional.ofNullable(eventInvalidationBlockThreshold);
     }
 
     @Override
-    public BigInteger getSyncBlockLimit() {
-        return this.syncBlockLimit != null ? this.syncBlockLimit : DEFAULT_SYNC_BLOCK_LIMIT;
+    public Optional<BigInteger> getReplayBlockOffset() {
+        return Optional.ofNullable(replayBlockOffset);
+    }
+
+    @Override
+    public Optional<BigInteger> getSyncBlockLimit() {
+        return Optional.ofNullable(syncBlockLimit);
     }
 }
