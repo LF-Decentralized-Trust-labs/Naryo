@@ -12,8 +12,4 @@ public class BlockBroadcasterTargetDocument extends BroadcasterTargetDocument
     public BlockBroadcasterTargetDocument(String destination) {
         super(BroadcasterTargetType.BLOCK, destination);
     }
-
-    public BlockBroadcasterTargetDocument() {
-        super(BroadcasterTargetType.BLOCK, null);
-    }
 }
