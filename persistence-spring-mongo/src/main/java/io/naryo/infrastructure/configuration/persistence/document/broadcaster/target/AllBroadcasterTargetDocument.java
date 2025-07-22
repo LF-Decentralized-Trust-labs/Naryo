@@ -13,8 +13,4 @@ public class AllBroadcasterTargetDocument extends BroadcasterTargetDocument
     public AllBroadcasterTargetDocument(String destination) {
         super(BroadcasterTargetType.ALL, destination);
     }
-
-    public AllBroadcasterTargetDocument() {
-        super(BroadcasterTargetType.ALL, null);
-    }
 }

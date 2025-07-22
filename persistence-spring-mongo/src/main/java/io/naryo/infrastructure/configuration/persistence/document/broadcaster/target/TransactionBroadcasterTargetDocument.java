@@ -13,8 +13,4 @@ public class TransactionBroadcasterTargetDocument extends BroadcasterTargetDocum
     public TransactionBroadcasterTargetDocument(String destination) {
         super(BroadcasterTargetType.TRANSACTION, destination);
     }
-
-    public TransactionBroadcasterTargetDocument() {
-        super(BroadcasterTargetType.TRANSACTION, null);
-    }
 }

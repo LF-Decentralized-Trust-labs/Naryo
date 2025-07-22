@@ -31,7 +31,9 @@ public final class BroadcasterDocument implements BroadcasterDescriptor {
 
     @Override
     public Optional<UUID> getConfigurationId() {
-        return Optional.of(UUID.fromString(this.configurationId));
+        return this.configurationId == null
+                ? Optional.empty()
+                : Optional.of(UUID.fromString(this.configurationId));
     }
 
     @Override

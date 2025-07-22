@@ -12,8 +12,4 @@ public class ContractEventBroadcasterTargetDocument extends BroadcasterTargetDoc
     public ContractEventBroadcasterTargetDocument(String destination) {
         super(BroadcasterTargetType.CONTRACT_EVENT, destination);
     }
-
-    public ContractEventBroadcasterTargetDocument() {
-        super(BroadcasterTargetType.CONTRACT_EVENT, null);
-    }
 }

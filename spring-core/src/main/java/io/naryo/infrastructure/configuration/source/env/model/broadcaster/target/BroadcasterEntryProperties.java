@@ -29,7 +29,7 @@ public final class BroadcasterEntryProperties implements BroadcasterDescriptor {
 
     @Override
     public Optional<UUID> getConfigurationId() {
-        return Optional.ofNullable(configurationId);
+        return this.configurationId == null ? Optional.empty() : Optional.of(this.configurationId);
     }
 
     @Override

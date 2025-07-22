@@ -60,7 +60,7 @@ public final class BroadcasterConfigurationDocument implements BroadcasterConfig
 
     @Override
     public void setCache(BroadcasterCacheConfigurationDescriptor cache) {
-        this.cache = (BroadcasterCacheConfiguration) cache;
+        this.cache = new BroadcasterCacheConfiguration(cache.getExpirationTime());
     }
 
     @Override

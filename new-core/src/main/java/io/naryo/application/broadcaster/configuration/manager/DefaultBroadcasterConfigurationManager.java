@@ -41,9 +41,10 @@ public final class DefaultBroadcasterConfigurationManager
 
     @Override
     protected Broadcaster map(BroadcasterDescriptor source) {
-        var common = buildCommon(source);
+        UUID id = source.getId();
+        UUID configurationId = valueOrNull(source.getConfigurationId());
         BroadcasterTarget target = buildTarget(valueOrNull(source.getTarget()));
-        return new Broadcaster(common.id, target, common.configurationId);
+        return new Broadcaster(id, target, configurationId);
     }
 
     private BroadcasterTarget buildTarget(BroadcasterTargetDescriptor descriptor) {
@@ -60,10 +61,4 @@ public final class DefaultBroadcasterConfigurationManager
             }
         };
     }
-
-    private CommonParams buildCommon(BroadcasterDescriptor descriptor) {
-        return new CommonParams(descriptor.getId(), valueOrNull(descriptor.getConfigurationId()));
-    }
-
-    private record CommonParams(UUID id, UUID configurationId) {}
 }
