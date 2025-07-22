@@ -22,7 +22,7 @@ public final class BroadcasterDocument implements BroadcasterDescriptor {
 
     @Nullable private String configurationId;
 
-    @Valid @Nullable private BroadcasterTargetDescriptor target;
+    @Valid @Nullable private BroadcasterTargetDocument target;
 
     @Override
     public UUID getId() {
