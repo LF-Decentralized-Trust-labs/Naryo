@@ -9,6 +9,7 @@ import io.naryo.application.configuration.source.model.node.interaction.Interact
 import io.naryo.application.configuration.source.model.node.subscription.SubscriptionDescriptor;
 import io.naryo.domain.node.NodeType;
 
+import static io.naryo.application.common.util.MergeUtil.mergeDescriptors;
 import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
 
 public interface NodeDescriptor extends MergeableDescriptor<NodeDescriptor> {
@@ -43,50 +44,10 @@ public interface NodeDescriptor extends MergeableDescriptor<NodeDescriptor> {
 
         mergeOptionals(this::setName, this.getName(), descriptor.getName());
         mergeOptionals(this::setType, this.getType(), descriptor.getType());
-
-        descriptor
-                .getSubscription()
-                .ifPresent(
-                        newSubscription -> {
-                            this.getSubscription()
-                                    .ifPresentOrElse(
-                                            currentSubscription -> {
-                                                if (!newSubscription
-                                                        .getClass()
-                                                        .equals(currentSubscription.getClass())) {
-                                                    this.setSubscription(newSubscription);
-                                                } else {
-                                                    this.setSubscription(
-                                                            currentSubscription.merge(
-                                                                    newSubscription));
-                                                }
-                                            },
-                                            () -> this.setSubscription(newSubscription));
-                        });
-
-        descriptor
-                .getInteraction()
-                .ifPresent(
-                        newInteraction -> {
-                            this.getInteraction()
-                                    .ifPresentOrElse(
-                                            currentInteraction -> {
-                                                currentInteraction.merge(newInteraction);
-                                            },
-                                            () -> this.setInteraction(newInteraction));
-                        });
-
-        descriptor
-                .getConnection()
-                .ifPresent(
-                        newConnection -> {
-                            this.getConnection()
-                                    .ifPresentOrElse(
-                                            currentConnection -> {
-                                                currentConnection.merge(newConnection);
-                                            },
-                                            () -> this.setConnection(newConnection));
-                        });
+        mergeDescriptors(
+                this::setSubscription, this.getSubscription(), descriptor.getSubscription());
+        mergeDescriptors(this::setInteraction, this.getInteraction(), descriptor.getInteraction());
+        mergeDescriptors(this::setConnection, this.getConnection(), descriptor.getConnection());
 
         return this;
     }
