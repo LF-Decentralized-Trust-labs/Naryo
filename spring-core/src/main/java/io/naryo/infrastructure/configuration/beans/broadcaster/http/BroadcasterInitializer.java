@@ -14,6 +14,8 @@ import io.naryo.infrastructure.broadcaster.http.configuration.HttpBroadcasterCon
 import io.naryo.infrastructure.configuration.beans.env.EnvironmentInitializer;
 import org.springframework.stereotype.Component;
 
+import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
+
 @Component
 public final class BroadcasterInitializer implements EnvironmentInitializer {
 
@@ -35,8 +37,8 @@ public final class BroadcasterInitializer implements EnvironmentInitializer {
                 HTTP_BROADCASTER_TYPE,
                 BroadcasterConfigurationDescriptor.class,
                 properties -> {
-                    Object raw = properties.getAdditionalProperties().get("endpoint");
-
+                    Map<String, Object> props = valueOrNull(properties.getAdditionalProperties());
+                    Object raw = props != null ? props.get("endpoint") : null;
                     HttpBroadcasterEndpoint endpoint;
 
                     if (raw instanceof HttpBroadcasterEndpoint typed) {
@@ -49,7 +51,7 @@ public final class BroadcasterInitializer implements EnvironmentInitializer {
 
                     return new HttpBroadcasterConfiguration(
                             properties.getId(),
-                            new BroadcasterCache(properties.getCache().getExpirationTime()),
+                            new BroadcasterCache(valueOrNull(properties.getCache()).getExpirationTime()),
                             new ConnectionEndpoint(endpoint.url));
                 });
 

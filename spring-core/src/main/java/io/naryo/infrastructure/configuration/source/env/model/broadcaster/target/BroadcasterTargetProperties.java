@@ -1,18 +1,40 @@
 package io.naryo.infrastructure.configuration.source.env.model.broadcaster.target;
 
 import io.naryo.domain.broadcaster.BroadcasterTargetType;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Optional;
+
 public abstract class BroadcasterTargetProperties {
 
-    private final @Getter @NotNull BroadcasterTargetType type;
-    private @Setter @Getter @NotNull @NotBlank String destination;
+    private final @NotNull BroadcasterTargetType type;
+
+    @Nullable
+    @NotBlank
+    private String destination;
 
     public BroadcasterTargetProperties(BroadcasterTargetType type, String destination) {
         this.type = type;
         this.destination = destination;
     }
+
+
+    public BroadcasterTargetType getType() {
+        return this.type;
+    }
+
+
+    public Optional<String> getDestination() {
+        return Optional.ofNullable(destination);
+    }
+
+
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
+
 }

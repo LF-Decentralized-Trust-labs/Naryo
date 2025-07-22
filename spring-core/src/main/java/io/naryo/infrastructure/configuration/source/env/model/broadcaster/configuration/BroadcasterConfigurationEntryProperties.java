@@ -1,12 +1,14 @@
 package io.naryo.infrastructure.configuration.source.env.model.broadcaster.configuration;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.model.broadcaster.configuration.BroadcasterCacheConfigurationDescriptor;
 import io.naryo.application.configuration.source.model.broadcaster.configuration.BroadcasterConfigurationDescriptor;
 import io.naryo.domain.broadcaster.BroadcasterType;
+import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
@@ -15,9 +17,9 @@ public final class BroadcasterConfigurationEntryProperties
 
     private final @NotNull UUID id;
     private final @NotNull BroadcasterType type;
-    private @Valid @NotNull BroadcasterCacheProperties cache;
-    private @NotNull Map<String, Object> additionalProperties;
-    private @NotNull ConfigurationSchema propertiesSchema;
+    private @Valid @Nullable BroadcasterCacheProperties cache;
+    private @Nullable Map<String, Object> additionalProperties;
+    private @Nullable ConfigurationSchema propertiesSchema;
 
     public BroadcasterConfigurationEntryProperties(
             UUID id,
@@ -43,18 +45,18 @@ public final class BroadcasterConfigurationEntryProperties
     }
 
     @Override
-    public BroadcasterCacheConfigurationDescriptor getCache() {
-        return cache;
+    public Optional<BroadcasterCacheConfigurationDescriptor> getCache() {
+        return Optional.ofNullable(cache);
     }
 
     @Override
-    public Map<String, Object> getAdditionalProperties() {
-        return additionalProperties;
+    public Optional<Map<String, Object>> getAdditionalProperties() {
+        return Optional.ofNullable(additionalProperties);
     }
 
     @Override
-    public ConfigurationSchema getPropertiesSchema() {
-        return propertiesSchema;
+    public Optional<ConfigurationSchema> getPropertiesSchema() {
+        return Optional.ofNullable(propertiesSchema);
     }
 
     @Override

@@ -2,19 +2,19 @@ package io.naryo.infrastructure.configuration.persistence.document.broadcaster.t
 
 import io.naryo.application.configuration.source.model.broadcaster.target.BroadcasterTargetDescriptor;
 import io.naryo.domain.broadcaster.BroadcasterTargetType;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.Setter;
+
+import java.util.Optional;
 
 public abstract class BroadcasterTargetDocument implements BroadcasterTargetDescriptor {
     @NotNull
-    @Getter
     private BroadcasterTargetType type;
 
-    @Setter
-    @Getter
-    @NotNull
+
+    @Nullable
     @NotBlank
     private String destination;
 
@@ -23,4 +23,18 @@ public abstract class BroadcasterTargetDocument implements BroadcasterTargetDesc
         this.destination = destination;
     }
 
+    @Override
+    public BroadcasterTargetType getType() {
+        return this.type;
+    }
+
+    @Override
+    public Optional<String> getDestination() {
+        return Optional.ofNullable(destination);
+    }
+
+    @Override
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
 }
