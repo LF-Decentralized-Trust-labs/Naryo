@@ -1,4 +1,4 @@
-package io.naryo.infrastructure.configuration.source.env.model.node.connection;
+package io.naryo.infrastructure.configuration.persistence.document.node.connection;
 
 import java.util.Optional;
 
@@ -6,20 +6,22 @@ import io.naryo.application.configuration.source.model.node.connection.NodeConne
 import io.naryo.application.configuration.source.model.node.connection.endpoint.ConnectionEndpointDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.retry.NodeConnectionRetryDescriptor;
 import io.naryo.domain.node.connection.NodeConnectionType;
-import io.naryo.infrastructure.configuration.source.env.model.common.ConnectionEndpointProperties;
+import io.naryo.infrastructure.configuration.persistence.document.common.ConnectionEndpointPropertiesDocument;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 
-public abstract class ConnectionProperties implements NodeConnectionDescriptor {
+@Document
+public abstract class ConnectionPropertiesDocument implements NodeConnectionDescriptor {
 
     private final @Getter @NotNull NodeConnectionType type;
     private @Nullable NodeConnectionRetryDescriptor retry;
     private @Nullable ConnectionEndpointDescriptor endpoint;
 
-    public ConnectionProperties(
+    public ConnectionPropertiesDocument(
             NodeConnectionType type,
             NodeConnectionRetryDescriptor retry,
             ConnectionEndpointDescriptor endpoint) {
@@ -36,7 +38,7 @@ public abstract class ConnectionProperties implements NodeConnectionDescriptor {
     @Override
     public void setRetry(NodeConnectionRetryDescriptor retry) {
         this.retry =
-                new NodeConnectionRetryProperties(
+                new NodeConnectionRetryPropertiesDocument(
                         valueOrNull(retry.getTimes()), valueOrNull(retry.getBackoff()));
     }
 
@@ -47,6 +49,6 @@ public abstract class ConnectionProperties implements NodeConnectionDescriptor {
 
     @Override
     public void setEndpoint(ConnectionEndpointDescriptor endpoint) {
-        this.endpoint = new ConnectionEndpointProperties(valueOrNull(endpoint.getUrl()));
+        this.endpoint = new ConnectionEndpointPropertiesDocument(valueOrNull(endpoint.getUrl()));
     }
 }

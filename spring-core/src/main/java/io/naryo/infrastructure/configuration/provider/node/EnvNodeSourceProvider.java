@@ -26,6 +26,6 @@ public final class EnvNodeSourceProvider implements NodeSourceProvider {
 
     @Override
     public int priority() {
-        return 0;
+        return 1;
     }
 }
