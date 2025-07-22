@@ -1,10 +1,14 @@
 package io.naryo.application.configuration.source.model.node;
 
+import java.util.Optional;
+
+import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
+
 public interface PrivateEthereumNodeDescriptor extends EthereumNodeDescriptor {
 
-    String getGroupId();
+    Optional<String> getGroupId();
 
-    String getPrecompiledAddress();
+    Optional<String> getPrecompiledAddress();
 
     void setGroupId(String groupId);
 
@@ -15,12 +19,11 @@ public interface PrivateEthereumNodeDescriptor extends EthereumNodeDescriptor {
         var result = EthereumNodeDescriptor.super.merge(descriptor);
 
         if (descriptor instanceof PrivateEthereumNodeDescriptor other) {
-            if (!this.getGroupId().equals(other.getGroupId())) {
-                this.setGroupId(other.getGroupId());
-            }
-            if (!this.getPrecompiledAddress().equals(other.getPrecompiledAddress())) {
-                this.setPrecompiledAddress(other.getPrecompiledAddress());
-            }
+            mergeOptionals(this::setGroupId, this.getGroupId(), other.getGroupId());
+            mergeOptionals(
+                    this::setPrecompiledAddress,
+                    this.getPrecompiledAddress(),
+                    other.getPrecompiledAddress());
         }
 
         return result;

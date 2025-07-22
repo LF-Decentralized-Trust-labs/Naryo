@@ -1,9 +1,10 @@
 package io.naryo.infrastructure.configuration.source.env.model.node.interaction.block;
 
+import java.util.Optional;
+
 import io.naryo.application.configuration.source.model.node.interaction.HederaMirrorNodeBlockInteractionDescriptor;
 import io.naryo.domain.node.interaction.block.InteractionMode;
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
+import jakarta.annotation.Nullable;
 import lombok.Setter;
 
 public class HederaMirrorNodeBlockInteractionProperties extends BlockInteractionProperties
@@ -12,8 +13,8 @@ public class HederaMirrorNodeBlockInteractionProperties extends BlockInteraction
     private static final Integer DEFAULT_LIMIT_PER_REQUEST = 10;
     private static final Integer DEFAULT_RETRIES_PER_REQUEST = 3;
 
-    private @Getter @Setter @NotNull Integer limitPerRequest;
-    private @Getter @Setter @NotNull Integer retriesPerRequest;
+    private @Setter @Nullable Integer limitPerRequest;
+    private @Setter @Nullable Integer retriesPerRequest;
 
     public HederaMirrorNodeBlockInteractionProperties(
             Integer limitPerRequest, Integer retriesPerRequest) {
@@ -26,5 +27,15 @@ public class HederaMirrorNodeBlockInteractionProperties extends BlockInteraction
 
     public HederaMirrorNodeBlockInteractionProperties() {
         this(DEFAULT_LIMIT_PER_REQUEST, DEFAULT_RETRIES_PER_REQUEST);
+    }
+
+    @Override
+    public Optional<Integer> getLimitPerRequest() {
+        return Optional.ofNullable(limitPerRequest);
+    }
+
+    @Override
+    public Optional<Integer> getRetriesPerRequest() {
+        return Optional.ofNullable(retriesPerRequest);
     }
 }

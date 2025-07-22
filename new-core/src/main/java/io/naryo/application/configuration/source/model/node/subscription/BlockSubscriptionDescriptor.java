@@ -1,6 +1,7 @@
 package io.naryo.application.configuration.source.model.node.subscription;
 
 import java.math.BigInteger;
+import java.util.Optional;
 
 import io.naryo.domain.node.subscription.SubscriptionStrategy;
 import io.naryo.domain.node.subscription.block.method.BlockSubscriptionMethod;
@@ -9,17 +10,17 @@ public interface BlockSubscriptionDescriptor extends SubscriptionDescriptor {
 
     BlockSubscriptionMethod method();
 
-    BigInteger getInitialBlock();
+    Optional<BigInteger> getInitialBlock();
 
-    BigInteger getConfirmationBlocks();
+    Optional<BigInteger> getConfirmationBlocks();
 
-    BigInteger getMissingTxRetryBlocks();
+    Optional<BigInteger> getMissingTxRetryBlocks();
 
-    BigInteger getEventInvalidationBlockThreshold();
+    Optional<BigInteger> getEventInvalidationBlockThreshold();
 
-    BigInteger getReplayBlockOffset();
+    Optional<BigInteger> getReplayBlockOffset();
 
-    BigInteger getSyncBlockLimit();
+    Optional<BigInteger> getSyncBlockLimit();
 
     void setInitialBlock(BigInteger initialBlock);
 
@@ -28,7 +29,7 @@ public interface BlockSubscriptionDescriptor extends SubscriptionDescriptor {
     void setMissingTxRetryBlocks(BigInteger missingTxRetryBlocks);
 
     @Override
-    default SubscriptionStrategy strategy() {
+    default SubscriptionStrategy getStrategy() {
         return SubscriptionStrategy.BLOCK_BASED;
     }
 

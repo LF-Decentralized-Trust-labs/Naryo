@@ -1,10 +1,10 @@
 package io.naryo.infrastructure.configuration.source.env.model.node.connection;
 
 import java.time.Duration;
+import java.util.Optional;
 
 import io.naryo.application.configuration.source.model.node.connection.retry.NodeConnectionRetryDescriptor;
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
+import jakarta.annotation.Nullable;
 import lombok.Setter;
 
 public final class NodeConnectionRetryProperties implements NodeConnectionRetryDescriptor {
@@ -12,15 +12,25 @@ public final class NodeConnectionRetryProperties implements NodeConnectionRetryD
     private static final Integer DEFAULT_RETRY_TIMES = 3;
     private static final Duration DEFAULT_BACKOFF = Duration.ofSeconds(30);
 
-    private @Getter @Setter Integer times;
-    private @Getter @Setter @NotNull Duration backoff;
+    private @Setter @Nullable Integer times;
+    private @Setter @Nullable Duration backoff;
 
-    public NodeConnectionRetryProperties(int times, Duration backoff) {
+    public NodeConnectionRetryProperties(Integer times, Duration backoff) {
         this.times = times;
         this.backoff = backoff;
     }
 
     public NodeConnectionRetryProperties() {
         this(DEFAULT_RETRY_TIMES, DEFAULT_BACKOFF);
+    }
+
+    @Override
+    public Optional<Integer> getTimes() {
+        return Optional.ofNullable(times);
+    }
+
+    @Override
+    public Optional<Duration> getBackoff() {
+        return Optional.ofNullable(backoff);
     }
 }

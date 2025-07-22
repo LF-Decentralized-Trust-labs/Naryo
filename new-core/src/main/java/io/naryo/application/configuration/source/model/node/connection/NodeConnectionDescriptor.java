@@ -1,17 +1,21 @@
 package io.naryo.application.configuration.source.model.node.connection;
 
+import java.util.Optional;
+
 import io.naryo.application.configuration.source.model.MergeableDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.endpoint.ConnectionEndpointDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.retry.NodeConnectionRetryDescriptor;
 import io.naryo.domain.node.connection.NodeConnectionType;
 
+import static io.naryo.application.common.util.MergeUtil.mergeDescriptors;
+
 public interface NodeConnectionDescriptor extends MergeableDescriptor<NodeConnectionDescriptor> {
 
     NodeConnectionType getType();
 
-    ConnectionEndpointDescriptor getEndpoint();
+    Optional<ConnectionEndpointDescriptor> getEndpoint();
 
-    NodeConnectionRetryDescriptor getRetry();
+    Optional<NodeConnectionRetryDescriptor> getRetry();
 
     void setEndpoint(ConnectionEndpointDescriptor endpoint);
 
@@ -27,13 +31,8 @@ public interface NodeConnectionDescriptor extends MergeableDescriptor<NodeConnec
             return other;
         }
 
-        if (!this.getEndpoint().equals(other.getEndpoint())) {
-            this.setEndpoint(this.getEndpoint().merge(other.getEndpoint()));
-        }
-
-        if (this.getRetry() != null && other.getRetry() != null) {
-            this.setRetry(this.getRetry().merge(other.getRetry()));
-        }
+        mergeDescriptors(this::setEndpoint, this.getEndpoint(), other.getEndpoint());
+        mergeDescriptors(this::setRetry, this.getRetry(), other.getRetry());
 
         return this;
     }
