@@ -1,43 +1,46 @@
 package io.naryo.infrastructure.configuration.persistence.document.broadcaster.target;
 
+import com.mongodb.lang.Nullable;
 import io.naryo.application.configuration.source.model.broadcaster.BroadcasterDescriptor;
 import io.naryo.application.configuration.source.model.broadcaster.target.BroadcasterTargetDescriptor;
 import io.naryo.application.configuration.source.model.broadcaster.target.FilterBroadcasterTargetDescriptor;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import java.util.Optional;
 import java.util.UUID;
+
+import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 
 @Document(collection = "broadcasters")
 @AllArgsConstructor
 public final class BroadcasterDocument implements BroadcasterDescriptor {
 
-    @NotNull
+    @MongoId
     private final String id;
 
-    @NotNull
+    @Nullable
     private String configurationId;
 
     @Valid
-    @NotNull
+    @Nullable
     private BroadcasterTargetDescriptor target;
 
-
     @Override
-    public UUID id() {
+    public UUID getId() {
         return UUID.fromString(this.id);
     }
 
     @Override
-    public UUID configurationId() {
-        return UUID.fromString(this.configurationId);
+    public Optional<UUID> getConfigurationId() {
+        return Optional.of(UUID.fromString(this.configurationId));
     }
 
     @Override
-    public BroadcasterTargetDescriptor target() {
-        return this.target;
+    public Optional<BroadcasterTargetDescriptor> getTarget() {
+        return Optional.ofNullable(this.target);
     }
 
     @Override
@@ -53,21 +56,21 @@ public final class BroadcasterDocument implements BroadcasterDescriptor {
         }
 
         switch (target.getType()) {
-            case BLOCK -> this.target = new BlockBroadcasterTargetDocument(target.getDestination());
+            case BLOCK -> this.target = new BlockBroadcasterTargetDocument(valueOrNull(target.getDestination()));
 
-            case TRANSACTION -> this.target = new TransactionBroadcasterTargetDocument(target.getDestination());
+            case TRANSACTION -> this.target = new TransactionBroadcasterTargetDocument(valueOrNull(target.getDestination()));
 
-            case CONTRACT_EVENT -> this.target = new ContractEventBroadcasterTargetDocument(target.getDestination());
+            case CONTRACT_EVENT -> this.target = new ContractEventBroadcasterTargetDocument(valueOrNull(target.getDestination()));
 
             case FILTER -> {
                 if (target instanceof FilterBroadcasterTargetDescriptor filterTarget) {
                     this.target = new FilterBroadcasterTargetDocument(
-                        filterTarget.getDestination(),
+                        valueOrNull(filterTarget.getDestination()),
                         filterTarget.getFilterId());
                 }
             }
 
-            case ALL -> this.target = new AllBroadcasterTargetDocument(target.getDestination());
+            case ALL -> this.target = new AllBroadcasterTargetDocument(valueOrNull(target.getDestination()));
         }
     }
 

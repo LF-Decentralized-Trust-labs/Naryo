@@ -1,6 +1,10 @@
 package io.naryo.application.configuration.source.model.broadcaster.configuration;
 
+import static io.naryo.application.common.util.MergeUtil.mergeDescriptors;
+import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
+
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
@@ -14,11 +18,11 @@ public interface BroadcasterConfigurationDescriptor
 
     BroadcasterType getType();
 
-    BroadcasterCacheConfigurationDescriptor getCache();
+    Optional <BroadcasterCacheConfigurationDescriptor> getCache();
 
-    Map<String, Object> getAdditionalProperties();
+    Optional <Map<String, Object>> getAdditionalProperties();
 
-    ConfigurationSchema getPropertiesSchema();
+    Optional <ConfigurationSchema> getPropertiesSchema();
 
     void setCache(BroadcasterCacheConfigurationDescriptor cache);
 
@@ -32,17 +36,10 @@ public interface BroadcasterConfigurationDescriptor
             return this;
         }
 
-        if (!this.getCache().equals(other.getCache())) {
-            this.setCache(other.getCache());
-        }
+        mergeDescriptors(this::setCache, this.getCache(), other.getCache());
+        mergeOptionals(this::setAdditionalProperties, this.getAdditionalProperties(), other.getAdditionalProperties());
+        mergeOptionals(this::setPropertiesSchema, this.getPropertiesSchema(), other.getPropertiesSchema());
 
-        if (!this.getAdditionalProperties().equals(other.getAdditionalProperties())) {
-            this.setAdditionalProperties(other.getAdditionalProperties());
-        }
-
-        if (!this.getPropertiesSchema().equals(other.getPropertiesSchema())) {
-            this.setPropertiesSchema(other.getPropertiesSchema());
-        }
 
         return this;
     }

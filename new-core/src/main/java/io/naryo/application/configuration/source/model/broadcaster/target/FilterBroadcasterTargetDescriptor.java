@@ -1,5 +1,6 @@
 package io.naryo.application.configuration.source.model.broadcaster.target;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import io.naryo.domain.broadcaster.BroadcasterTargetType;

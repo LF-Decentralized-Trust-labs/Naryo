@@ -1,5 +1,6 @@
 package io.naryo.infrastructure.configuration.persistence.document.broadcaster.configuration;
 
+import com.mongodb.lang.Nullable;
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.definition.FieldDefinition;
 import io.naryo.application.configuration.source.model.broadcaster.configuration.BroadcasterCacheConfigurationDescriptor;
@@ -7,6 +8,7 @@ import io.naryo.application.configuration.source.model.broadcaster.configuration
 
 import io.naryo.domain.broadcaster.BroadcasterType;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -23,19 +26,20 @@ import java.util.stream.Collectors;
 public final class BroadcasterConfigurationDocument implements BroadcasterConfigurationDescriptor {
 
     @MongoId
-    private String id;
+    private final String id;
 
     @NotNull
-    private String type;
+    @NotBlank
+    private final String type;
 
-    @NotNull
+    @Nullable
     @Valid
     private BroadcasterCacheConfiguration cache;
 
-    @NotNull
+    @Nullable
     private Map<String, Object> additionalProperties;
 
-    @NotNull
+    @Nullable
     private ConfigurationSchemaDocument propertiesSchema;
 
     @Override
@@ -48,20 +52,19 @@ public final class BroadcasterConfigurationDocument implements BroadcasterConfig
         return () -> this.type.toLowerCase();
     }
 
-
     @Override
-    public BroadcasterCacheConfigurationDescriptor getCache() {
-        return this.cache;
+    public Optional<BroadcasterCacheConfigurationDescriptor> getCache() {
+        return Optional.ofNullable(this.cache);
     }
 
     @Override
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+    public Optional<Map<String, Object>> getAdditionalProperties() {
+        return Optional.ofNullable(this.additionalProperties);
     }
 
     @Override
-    public ConfigurationSchema getPropertiesSchema() {
-        return fromDocument(this.propertiesSchema);
+    public Optional<ConfigurationSchema> getPropertiesSchema() {
+        return Optional.ofNullable(fromDocument(this.propertiesSchema));
     }
 
     @Override
