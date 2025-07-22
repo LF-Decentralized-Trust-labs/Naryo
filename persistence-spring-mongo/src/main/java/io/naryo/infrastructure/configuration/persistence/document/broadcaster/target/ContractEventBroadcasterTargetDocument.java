@@ -7,7 +7,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "broadcasters")
 @TypeAlias("contract_event_broadcaster_targets")
-public class ContractEventBroadcasterTargetDocument extends BroadcasterTargetDocument implements ContractEventBroadcasterTargetDescriptor {
+public class ContractEventBroadcasterTargetDocument extends BroadcasterTargetDocument
+        implements ContractEventBroadcasterTargetDescriptor {
     public ContractEventBroadcasterTargetDocument(String destination) {
         super(BroadcasterTargetType.CONTRACT_EVENT, destination);
     }

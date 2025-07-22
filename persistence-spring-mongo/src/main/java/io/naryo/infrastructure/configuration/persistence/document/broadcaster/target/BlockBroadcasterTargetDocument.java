@@ -7,7 +7,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "broadcasters")
 @TypeAlias("block_broadcaster_targets")
-public class BlockBroadcasterTargetDocument extends BroadcasterTargetDocument implements BlockBroadcasterTargetDescriptor {
+public class BlockBroadcasterTargetDocument extends BroadcasterTargetDocument
+        implements BlockBroadcasterTargetDescriptor {
     public BlockBroadcasterTargetDocument(String destination) {
         super(BroadcasterTargetType.BLOCK, destination);
     }

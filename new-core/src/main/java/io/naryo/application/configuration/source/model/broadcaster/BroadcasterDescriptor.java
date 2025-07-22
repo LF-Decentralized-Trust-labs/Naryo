@@ -13,7 +13,7 @@ public interface BroadcasterDescriptor extends MergeableDescriptor<BroadcasterDe
 
     UUID getId();
 
-    Optional <UUID> getConfigurationId();
+    Optional<UUID> getConfigurationId();
 
     Optional<BroadcasterTargetDescriptor> getTarget();
 
@@ -27,10 +27,10 @@ public interface BroadcasterDescriptor extends MergeableDescriptor<BroadcasterDe
             return this;
         }
 
-        mergeOptionals(this::setConfigurationId, this.getConfigurationId(), other.getConfigurationId());
+        mergeOptionals(
+                this::setConfigurationId, this.getConfigurationId(), other.getConfigurationId());
         mergeDescriptors(this::setTarget, this.getTarget(), other.getTarget());
 
         return this;
     }
-
 }

@@ -1,14 +1,14 @@
 package io.naryo.infrastructure.configuration.provider.broadcaster;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+
 import io.naryo.application.configuration.source.model.broadcaster.BroadcasterDescriptor;
 import io.naryo.application.configuration.source.provider.broadcaster.BroadcasterSourceProvider;
 import io.naryo.infrastructure.configuration.persistence.document.broadcaster.target.BroadcasterDocument;
 import io.naryo.infrastructure.configuration.persistence.repository.broadcaster.BroadcasterDocumentRepository;
 import org.springframework.stereotype.Component;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
 
 @Component
 public class MongoBroadcasterSourceProvider implements BroadcasterSourceProvider {

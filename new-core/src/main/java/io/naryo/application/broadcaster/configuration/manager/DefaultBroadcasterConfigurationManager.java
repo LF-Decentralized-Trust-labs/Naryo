@@ -12,7 +12,6 @@ import io.naryo.application.configuration.provider.CollectionSourceProvider;
 import io.naryo.application.configuration.source.model.broadcaster.BroadcasterDescriptor;
 import io.naryo.application.configuration.source.model.broadcaster.target.BroadcasterTargetDescriptor;
 import io.naryo.application.configuration.source.model.broadcaster.target.FilterBroadcasterTargetDescriptor;
-import io.naryo.application.node.configuration.manager.DefaultNodeConfigurationManager;
 import io.naryo.domain.broadcaster.Broadcaster;
 import io.naryo.domain.broadcaster.BroadcasterTarget;
 import io.naryo.domain.broadcaster.Destination;
@@ -45,7 +44,6 @@ public final class DefaultBroadcasterConfigurationManager
         var common = buildCommon(source);
         BroadcasterTarget target = buildTarget(valueOrNull(source.getTarget()));
         return new Broadcaster(common.id, target, common.configurationId);
-
     }
 
     private BroadcasterTarget buildTarget(BroadcasterTargetDescriptor descriptor) {
@@ -63,12 +61,9 @@ public final class DefaultBroadcasterConfigurationManager
         };
     }
 
-
     private CommonParams buildCommon(BroadcasterDescriptor descriptor) {
-        return new CommonParams(
-            descriptor.getId(),
-            valueOrNull(descriptor.getConfigurationId()));
+        return new CommonParams(descriptor.getId(), valueOrNull(descriptor.getConfigurationId()));
     }
 
     private record CommonParams(UUID id, UUID configurationId) {}
-    }
+}

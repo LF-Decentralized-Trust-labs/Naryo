@@ -10,12 +10,12 @@ import io.naryo.application.configuration.provider.CollectionSourceProvider;
 import io.naryo.application.configuration.source.model.Descriptor;
 
 public abstract class BaseCollectionConfigurationManager<T, S extends Descriptor, K>
-    implements CollectionConfigurationManager<T> {
+        implements CollectionConfigurationManager<T> {
 
     protected final List<? extends CollectionSourceProvider<S>> providers;
 
     protected BaseCollectionConfigurationManager(
-        List<? extends CollectionSourceProvider<S>> providers) {
+            List<? extends CollectionSourceProvider<S>> providers) {
         this.providers = providers;
     }
 

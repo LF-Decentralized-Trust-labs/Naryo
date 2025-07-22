@@ -1,8 +1,5 @@
 package io.naryo.application.configuration.source.model.broadcaster.configuration;
 
-import static io.naryo.application.common.util.MergeUtil.mergeDescriptors;
-import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
-
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -11,6 +8,9 @@ import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.model.MergeableDescriptor;
 import io.naryo.domain.broadcaster.BroadcasterType;
 
+import static io.naryo.application.common.util.MergeUtil.mergeDescriptors;
+import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
+
 public interface BroadcasterConfigurationDescriptor
         extends MergeableDescriptor<BroadcasterConfigurationDescriptor> {
 
@@ -18,11 +18,11 @@ public interface BroadcasterConfigurationDescriptor
 
     BroadcasterType getType();
 
-    Optional <BroadcasterCacheConfigurationDescriptor> getCache();
+    Optional<BroadcasterCacheConfigurationDescriptor> getCache();
 
-    Optional <Map<String, Object>> getAdditionalProperties();
+    Optional<Map<String, Object>> getAdditionalProperties();
 
-    Optional <ConfigurationSchema> getPropertiesSchema();
+    Optional<ConfigurationSchema> getPropertiesSchema();
 
     void setCache(BroadcasterCacheConfigurationDescriptor cache);
 
@@ -37,9 +37,12 @@ public interface BroadcasterConfigurationDescriptor
         }
 
         mergeDescriptors(this::setCache, this.getCache(), other.getCache());
-        mergeOptionals(this::setAdditionalProperties, this.getAdditionalProperties(), other.getAdditionalProperties());
-        mergeOptionals(this::setPropertiesSchema, this.getPropertiesSchema(), other.getPropertiesSchema());
-
+        mergeOptionals(
+                this::setAdditionalProperties,
+                this.getAdditionalProperties(),
+                other.getAdditionalProperties());
+        mergeOptionals(
+                this::setPropertiesSchema, this.getPropertiesSchema(), other.getPropertiesSchema());
 
         return this;
     }
