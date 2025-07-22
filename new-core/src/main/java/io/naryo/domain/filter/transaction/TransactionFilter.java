@@ -32,7 +32,7 @@ public final class TransactionFilter extends Filter {
         super(id, name, FilterType.TRANSACTION, nodeId);
         this.identifierType = identifierType;
         this.value = value;
-        this.statuses = statuses;
+        this.statuses = statuses.isEmpty() ? Set.of(TransactionStatus.values()) : statuses;
 
         validInvariants();
     }
