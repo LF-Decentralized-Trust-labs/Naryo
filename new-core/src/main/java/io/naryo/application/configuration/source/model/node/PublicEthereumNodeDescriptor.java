@@ -1,3 +1,11 @@
 package io.naryo.application.configuration.source.model.node;
 
-public interface PublicEthereumNodeDescriptor extends EthereumNodeDescriptor {}
+import io.naryo.domain.node.ethereum.EthereumNodeVisibility;
+
+public interface PublicEthereumNodeDescriptor extends EthereumNodeDescriptor {
+
+    @Override
+    default EthereumNodeVisibility getVisibility() {
+        return EthereumNodeVisibility.PUBLIC;
+    }
+}

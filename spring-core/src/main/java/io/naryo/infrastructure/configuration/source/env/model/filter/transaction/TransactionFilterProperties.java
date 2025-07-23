@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import io.naryo.application.configuration.source.model.filter.transaction.TransactionFilterDescriptor;
 import io.naryo.domain.common.TransactionStatus;
-import io.naryo.domain.filter.FilterType;
 import io.naryo.domain.filter.transaction.IdentifierType;
 import io.naryo.infrastructure.configuration.source.env.model.filter.FilterProperties;
 import jakarta.annotation.Nullable;
@@ -28,7 +27,7 @@ public final class TransactionFilterProperties extends FilterProperties
             IdentifierType identifierType,
             String value,
             Set<TransactionStatus> statuses) {
-        super(id, name, FilterType.TRANSACTION, nodeId);
+        super(id, name, nodeId);
         this.identifierType = identifierType;
         this.value = value;
         this.statuses = statuses;

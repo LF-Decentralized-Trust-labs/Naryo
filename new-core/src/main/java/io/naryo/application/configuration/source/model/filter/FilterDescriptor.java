@@ -14,13 +14,11 @@ public interface FilterDescriptor extends MergeableDescriptor<FilterDescriptor> 
 
     Optional<String> getName();
 
-    Optional<FilterType> getType();
+    FilterType getType();
 
     Optional<UUID> getNodeId();
 
     void setName(String name);
-
-    void setType(FilterType type);
 
     void setNodeId(UUID nodeId);
 
@@ -31,7 +29,6 @@ public interface FilterDescriptor extends MergeableDescriptor<FilterDescriptor> 
         }
 
         mergeOptionals(this::setName, this.getName(), descriptor.getName());
-        mergeOptionals(this::setType, this.getType(), descriptor.getType());
         mergeOptionals(this::setNodeId, this.getNodeId(), descriptor.getNodeId());
 
         return this;

@@ -4,7 +4,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import io.naryo.application.configuration.source.model.filter.FilterDescriptor;
-import io.naryo.domain.filter.FilterType;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -15,24 +14,17 @@ public abstract class FilterProperties implements FilterDescriptor {
 
     private final @Getter @NotNull UUID id;
     private @Nullable String name;
-    private @Nullable FilterType type;
     private @Nullable UUID nodeId;
 
-    public FilterProperties(UUID id, String name, FilterType type, UUID nodeId) {
+    public FilterProperties(UUID id, String name, UUID nodeId) {
         this.id = id;
         this.name = name;
-        this.type = type;
         this.nodeId = nodeId;
     }
 
     @Override
     public Optional<String> getName() {
         return Optional.ofNullable(name);
-    }
-
-    @Override
-    public Optional<FilterType> getType() {
-        return Optional.ofNullable(type);
     }
 
     @Override
