@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import io.naryo.domain.node.subscription.block.method.BlockSubscriptionMethod;
 
+import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
+
 public interface PollBlockSubscriptionDescriptor extends BlockSubscriptionDescriptor {
 
     Optional<Duration> getInterval();
@@ -18,14 +20,16 @@ public interface PollBlockSubscriptionDescriptor extends BlockSubscriptionDescri
 
     @Override
     default SubscriptionDescriptor merge(SubscriptionDescriptor descriptor) {
-        var subscription = BlockSubscriptionDescriptor.super.merge(descriptor);
+         BlockSubscriptionDescriptor.super.merge(descriptor);
 
-        if (subscription instanceof PollBlockSubscriptionDescriptor other) {
+        if (descriptor instanceof PollBlockSubscriptionDescriptor other) {
             if (!this.method().equals(other.method())) {
-                return subscription;
+                return descriptor;
             }
+
+            mergeOptionals(this::setInterval, this.getInterval(), other.getInterval());
         }
 
-        return subscription;
+        return this;
     }
 }

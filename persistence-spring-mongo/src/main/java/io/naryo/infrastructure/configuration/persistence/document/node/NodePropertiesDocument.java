@@ -12,10 +12,13 @@ import io.naryo.application.configuration.source.model.node.interaction.HederaMi
 import io.naryo.application.configuration.source.model.node.interaction.InteractionDescriptor;
 import io.naryo.application.configuration.source.model.node.subscription.SubscriptionDescriptor;
 import io.naryo.domain.node.NodeType;
+import io.naryo.infrastructure.configuration.persistence.document.node.connection.ConnectionPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.connection.http.HttpConnectionPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.connection.ws.WsConnectionPropertiesDocument;
+import io.naryo.infrastructure.configuration.persistence.document.node.interaction.InteractionPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.interaction.block.EthereumRpcBlockInteractionPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.interaction.block.HederaMirrorNodeBlockInteractionPropertiesDocument;
+import io.naryo.infrastructure.configuration.persistence.document.node.subscription.SubscriptionPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.subscription.block.PollBlockSubscriptionPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.subscription.block.PubSubBlockSubscriptionPropertiesDocument;
 import jakarta.annotation.Nullable;
@@ -33,17 +36,17 @@ public abstract class NodePropertiesDocument implements NodeDescriptor {
     private final @MongoId UUID id;
     private @Setter @Nullable NodeType type;
     private @Setter @Nullable String name;
-    private @Nullable SubscriptionDescriptor subscription;
-    private @Nullable InteractionDescriptor interaction;
-    private @Nullable NodeConnectionDescriptor connection;
+    private @Nullable SubscriptionPropertiesDocument subscription;
+    private @Nullable InteractionPropertiesDocument interaction;
+    private @Nullable ConnectionPropertiesDocument connection;
 
     protected NodePropertiesDocument(
             UUID id,
             String name,
             NodeType type,
-            SubscriptionDescriptor subscription,
-            InteractionDescriptor interaction,
-            NodeConnectionDescriptor connection) {
+            SubscriptionPropertiesDocument subscription,
+            InteractionPropertiesDocument interaction,
+            ConnectionPropertiesDocument connection) {
         this.id = id;
         this.name = name;
         this.type = type;

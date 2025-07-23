@@ -13,9 +13,9 @@ public interface NodeConnectionDescriptor extends MergeableDescriptor<NodeConnec
 
     NodeConnectionType getType();
 
-    Optional<ConnectionEndpointDescriptor> getEndpoint();
+    <T extends ConnectionEndpointDescriptor> Optional<T> getEndpoint();
 
-    Optional<NodeConnectionRetryDescriptor> getRetry();
+    <T extends NodeConnectionRetryDescriptor> Optional<T> getRetry();
 
     void setEndpoint(ConnectionEndpointDescriptor endpoint);
 

@@ -4,9 +4,11 @@ import io.naryo.application.configuration.source.model.node.subscription.Subscri
 import io.naryo.domain.node.subscription.SubscriptionStrategy;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 public abstract class SubscriptionPropertiesDocument implements SubscriptionDescriptor {
-    private final @Getter @NotNull SubscriptionStrategy strategy;
+    private @Setter @Getter @NotNull SubscriptionStrategy strategy;
 
     public SubscriptionPropertiesDocument(SubscriptionStrategy strategy) {
         this.strategy = strategy;

@@ -20,11 +20,11 @@ public interface NodeDescriptor extends MergeableDescriptor<NodeDescriptor> {
 
     Optional<NodeType> getType();
 
-    Optional<SubscriptionDescriptor> getSubscription();
+    <T extends SubscriptionDescriptor> Optional<T> getSubscription();
 
-    Optional<InteractionDescriptor> getInteraction();
+    <T extends InteractionDescriptor> Optional<T> getInteraction();
 
-    Optional<NodeConnectionDescriptor> getConnection();
+    <T extends NodeConnectionDescriptor> Optional<T> getConnection();
 
     void setName(String name);
 
