@@ -9,11 +9,6 @@ import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
 
 public interface HttpNodeConnectionDescriptor extends NodeConnectionDescriptor {
 
-    @Override
-    default NodeConnectionType getType() {
-        return NodeConnectionType.HTTP;
-    }
-
     Optional<Integer> getMaxIdleConnections();
 
     Optional<Duration> getKeepAliveDuration();
@@ -29,6 +24,11 @@ public interface HttpNodeConnectionDescriptor extends NodeConnectionDescriptor {
     void setConnectionTimeout(Duration connectionTimeout);
 
     void setReadTimeout(Duration readTimeout);
+
+    @Override
+    default NodeConnectionType getType() {
+        return NodeConnectionType.HTTP;
+    }
 
     @Override
     default NodeConnectionDescriptor merge(NodeConnectionDescriptor other) {

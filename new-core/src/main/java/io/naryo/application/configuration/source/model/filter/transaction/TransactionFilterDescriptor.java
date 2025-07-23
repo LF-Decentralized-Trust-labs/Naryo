@@ -5,6 +5,7 @@ import java.util.Set;
 
 import io.naryo.application.configuration.source.model.filter.FilterDescriptor;
 import io.naryo.domain.common.TransactionStatus;
+import io.naryo.domain.filter.FilterType;
 import io.naryo.domain.filter.transaction.IdentifierType;
 
 import static io.naryo.application.common.util.MergeUtil.mergeCollections;
@@ -23,6 +24,11 @@ public interface TransactionFilterDescriptor extends FilterDescriptor {
     void setValue(String value);
 
     void setStatuses(Set<TransactionStatus> statuses);
+
+    @Override
+    default FilterType getType() {
+        return FilterType.TRANSACTION;
+    }
 
     @Override
     default FilterDescriptor merge(FilterDescriptor descriptor) {

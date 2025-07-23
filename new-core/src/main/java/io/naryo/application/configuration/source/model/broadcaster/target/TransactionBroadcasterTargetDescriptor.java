@@ -1,3 +1,11 @@
 package io.naryo.application.configuration.source.model.broadcaster.target;
 
-public interface TransactionBroadcasterTargetDescriptor extends BroadcasterTargetDescriptor {}
+import io.naryo.domain.broadcaster.BroadcasterTargetType;
+
+public interface TransactionBroadcasterTargetDescriptor extends BroadcasterTargetDescriptor {
+
+    @Override
+    default BroadcasterTargetType getType() {
+        return BroadcasterTargetType.TRANSACTION;
+    }
+}
