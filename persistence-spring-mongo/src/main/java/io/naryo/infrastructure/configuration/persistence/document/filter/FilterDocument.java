@@ -13,11 +13,11 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 @Setter
 public abstract class FilterDocument implements FilterDescriptor {
 
-    @MongoId private final String id;
+    private final @MongoId String id;
 
-    @Nullable private String name;
+    private @Nullable String name;
 
-    @Nullable private String nodeId;
+    private @Nullable String nodeId;
 
     public FilterDocument(String id, String name, String nodeId) {
         this.id = id;

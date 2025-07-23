@@ -7,7 +7,8 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 
 public abstract class BroadcasterTargetDocument implements BroadcasterTargetDescriptor {
-    @Nullable @NotBlank private String destination;
+
+    private @Nullable @NotBlank String destination;
 
     public BroadcasterTargetDocument(String destination) {
         this.destination = destination;

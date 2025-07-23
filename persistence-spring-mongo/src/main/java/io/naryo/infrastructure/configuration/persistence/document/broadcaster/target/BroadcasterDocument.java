@@ -18,11 +18,11 @@ import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 @AllArgsConstructor
 public final class BroadcasterDocument implements BroadcasterDescriptor {
 
-    @MongoId private final String id;
+    private final @MongoId String id;
 
-    @Nullable private String configurationId;
+    private @Nullable String configurationId;
 
-    @Valid @Nullable private BroadcasterTargetDocument target;
+    private @Valid @Nullable BroadcasterTargetDocument target;
 
     @Override
     public UUID getId() {
