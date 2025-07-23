@@ -33,7 +33,7 @@ import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 @Getter
 public abstract class NodePropertiesDocument implements NodeDescriptor {
 
-    private final @MongoId UUID id;
+    private final @MongoId String id;
     private @Setter @Nullable NodeType type;
     private @Setter @Nullable String name;
     private @Nullable SubscriptionPropertiesDocument subscription;
@@ -41,7 +41,7 @@ public abstract class NodePropertiesDocument implements NodeDescriptor {
     private @Nullable ConnectionPropertiesDocument connection;
 
     protected NodePropertiesDocument(
-            UUID id,
+        String id,
             String name,
             NodeType type,
             SubscriptionPropertiesDocument subscription,
@@ -53,6 +53,11 @@ public abstract class NodePropertiesDocument implements NodeDescriptor {
         this.subscription = subscription;
         this.interaction = interaction;
         this.connection = connection;
+    }
+
+    @Override
+    public UUID getId() {
+        return UUID.fromString(this.id);
     }
 
     @Override

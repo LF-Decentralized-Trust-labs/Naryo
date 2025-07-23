@@ -20,7 +20,7 @@ public final class PrivateEthereumNodePropertiesDocument extends EthereumNodePro
     private @Setter @Nullable String precompiledAddress;
 
     public PrivateEthereumNodePropertiesDocument(
-            UUID id,
+            String id,
             String name,
             SubscriptionPropertiesDocument subscription,
             InteractionPropertiesDocument interaction,

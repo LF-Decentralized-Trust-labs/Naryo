@@ -14,7 +14,7 @@ public class PublicEthereumNodePropertiesDocument extends EthereumNodeProperties
         implements PublicEthereumNodeDescriptor {
 
     public PublicEthereumNodePropertiesDocument(
-            UUID id,
+            String id,
             String name,
             SubscriptionPropertiesDocument subscription,
             InteractionPropertiesDocument interaction,
