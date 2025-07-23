@@ -2,6 +2,8 @@ package io.naryo.application.configuration.source.model.node;
 
 import java.util.Optional;
 
+import io.naryo.domain.node.ethereum.EthereumNodeVisibility;
+
 import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
 
 public interface PrivateEthereumNodeDescriptor extends EthereumNodeDescriptor {
@@ -13,6 +15,11 @@ public interface PrivateEthereumNodeDescriptor extends EthereumNodeDescriptor {
     void setGroupId(String groupId);
 
     void setPrecompiledAddress(String precompiledAddress);
+
+    @Override
+    default EthereumNodeVisibility getVisibility() {
+        return EthereumNodeVisibility.PRIVATE;
+    }
 
     @Override
     default NodeDescriptor merge(NodeDescriptor descriptor) {

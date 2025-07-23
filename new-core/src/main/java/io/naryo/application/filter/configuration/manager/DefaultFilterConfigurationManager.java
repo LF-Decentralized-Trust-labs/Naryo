@@ -129,7 +129,7 @@ public final class DefaultFilterConfigurationManager
         }
 
         if (descriptor instanceof BlockFilterSyncDescriptor blockSync) {
-            new BlockActiveSyncState(
+            return new BlockActiveSyncState(
                     new NonNegativeBlockNumber(valueOrNull(blockSync.getInitialBlock())),
                     new NonNegativeBlockNumber(BigInteger.ZERO) // TODO: Review last block
                     );

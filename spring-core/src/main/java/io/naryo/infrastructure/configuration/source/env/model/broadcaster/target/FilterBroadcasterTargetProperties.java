@@ -4,23 +4,22 @@ import java.util.UUID;
 
 import io.naryo.application.configuration.source.model.broadcaster.target.BroadcasterTargetDescriptor;
 import io.naryo.application.configuration.source.model.broadcaster.target.FilterBroadcasterTargetDescriptor;
-import io.naryo.domain.broadcaster.BroadcasterTargetType;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Setter
+@Getter
+@NoArgsConstructor
 public class FilterBroadcasterTargetProperties extends BroadcasterTargetProperties
         implements FilterBroadcasterTargetDescriptor {
 
-    private @Getter @Setter @NotNull UUID filterId;
+    private @NotNull UUID filterId;
 
     protected FilterBroadcasterTargetProperties(String destination, UUID filterId) {
-        super(BroadcasterTargetType.FILTER, destination);
+        super(destination);
         this.filterId = filterId;
-    }
-
-    public FilterBroadcasterTargetProperties() {
-        super(BroadcasterTargetType.FILTER, null);
     }
 
     @Override

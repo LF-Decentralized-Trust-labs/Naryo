@@ -3,6 +3,7 @@ package io.naryo.infrastructure.configuration.beans.serialization;
 import java.time.Duration;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -28,6 +29,7 @@ public class ModelMapperAutoConfiguration {
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE);
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.findAndRegisterModules();
         mapper.registerModule(module);
         return mapper;
