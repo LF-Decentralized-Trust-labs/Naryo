@@ -11,6 +11,7 @@ include 'integration-tests'
 include 'new-core'
 include 'spring-core'
 include 'initializer'
+include 'persistence-spring-mongo'
 
 develocity {
     buildScan {
