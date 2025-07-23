@@ -6,7 +6,6 @@ import java.util.Optional;
 import io.naryo.application.configuration.source.model.node.connection.HttpNodeConnectionDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.endpoint.ConnectionEndpointDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.retry.NodeConnectionRetryDescriptor;
-import io.naryo.domain.node.connection.NodeConnectionType;
 import io.naryo.infrastructure.configuration.source.env.model.common.ConnectionEndpointProperties;
 import io.naryo.infrastructure.configuration.source.env.model.node.connection.ConnectionProperties;
 import io.naryo.infrastructure.configuration.source.env.model.node.connection.NodeConnectionRetryProperties;
@@ -33,7 +32,7 @@ public final class HttpConnectionProperties extends ConnectionProperties
             Duration keepAliveDuration,
             Duration connectionTimeout,
             Duration readTimeout) {
-        super(NodeConnectionType.HTTP, retry, endpoint);
+        super(retry, endpoint);
         this.maxIdleConnections =
                 maxIdleConnections != null ? maxIdleConnections : DEFAULT_MAX_IDLE_CONNECTIONS;
         this.keepAliveDuration =

@@ -7,7 +7,6 @@ import io.naryo.application.configuration.source.model.node.PrivateEthereumNodeD
 import io.naryo.application.configuration.source.model.node.connection.NodeConnectionDescriptor;
 import io.naryo.application.configuration.source.model.node.interaction.InteractionDescriptor;
 import io.naryo.application.configuration.source.model.node.subscription.SubscriptionDescriptor;
-import io.naryo.domain.node.ethereum.EthereumNodeVisibility;
 import jakarta.annotation.Nullable;
 import lombok.Setter;
 
@@ -25,7 +24,7 @@ public final class PrivateEthereumNodeProperties extends EthereumNodeProperties
             NodeConnectionDescriptor connection,
             String groupId,
             String precompiledAddress) {
-        super(id, name, subscription, interaction, connection, EthereumNodeVisibility.PRIVATE);
+        super(id, name, subscription, interaction, connection);
         this.groupId = groupId;
         this.precompiledAddress = precompiledAddress;
     }

@@ -10,8 +10,6 @@ import io.naryo.application.configuration.source.model.filter.event.FilterVisibi
 import io.naryo.application.configuration.source.model.filter.event.sync.BlockFilterSyncDescriptor;
 import io.naryo.application.configuration.source.model.filter.event.sync.FilterSyncDescriptor;
 import io.naryo.domain.common.event.ContractEventStatus;
-import io.naryo.domain.filter.FilterType;
-import io.naryo.domain.filter.event.EventFilterScope;
 import io.naryo.infrastructure.configuration.source.env.model.filter.FilterProperties;
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.FilterSyncProperties;
 import io.naryo.infrastructure.configuration.source.env.model.filter.event.sync.block.BlockFilterSyncProperties;
@@ -27,7 +25,6 @@ import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 public abstract class EventFilterProperties extends FilterProperties
         implements EventFilterDescriptor {
 
-    private @Nullable EventFilterScope scope;
     private @Nullable EventSpecification specification;
     private Set<ContractEventStatus> statuses;
     private @Nullable FilterSyncProperties sync;
@@ -37,22 +34,15 @@ public abstract class EventFilterProperties extends FilterProperties
             UUID id,
             String name,
             UUID nodeId,
-            EventFilterScope scope,
             EventSpecification specification,
             Set<ContractEventStatus> statuses,
             FilterSyncProperties sync,
             EventFilterVisibilityProperties visibility) {
-        super(id, name, FilterType.EVENT, nodeId);
-        this.scope = scope;
+        super(id, name, nodeId);
         this.specification = specification;
         this.statuses = statuses;
         this.sync = sync;
         this.visibility = visibility;
-    }
-
-    @Override
-    public Optional<EventFilterScope> getScope() {
-        return Optional.ofNullable(scope);
     }
 
     @Override

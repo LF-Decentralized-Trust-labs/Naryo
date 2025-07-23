@@ -6,13 +6,14 @@ import java.util.Set;
 import io.naryo.application.configuration.source.model.filter.FilterDescriptor;
 import io.naryo.application.configuration.source.model.filter.event.sync.FilterSyncDescriptor;
 import io.naryo.domain.common.event.ContractEventStatus;
+import io.naryo.domain.filter.FilterType;
 import io.naryo.domain.filter.event.EventFilterScope;
 
 import static io.naryo.application.common.util.MergeUtil.*;
 
 public interface EventFilterDescriptor extends FilterDescriptor {
 
-    Optional<EventFilterScope> getScope();
+    EventFilterScope getScope();
 
     Set<ContractEventStatus> getStatuses();
 
@@ -21,8 +22,6 @@ public interface EventFilterDescriptor extends FilterDescriptor {
     <T extends FilterSyncDescriptor> Optional<T> getSync();
 
     <T extends FilterVisibilityDescriptor> Optional<T> getVisibility();
-
-    void setScope(EventFilterScope scope);
 
     void setStatuses(Set<ContractEventStatus> statuses);
 
@@ -33,11 +32,15 @@ public interface EventFilterDescriptor extends FilterDescriptor {
     void setVisibility(FilterVisibilityDescriptor visibility);
 
     @Override
+    default FilterType getType() {
+        return FilterType.EVENT;
+    }
+
+    @Override
     default FilterDescriptor merge(FilterDescriptor descriptor) {
         FilterDescriptor.super.merge(descriptor);
 
         if (descriptor instanceof EventFilterDescriptor other) {
-            mergeOptionals(this::setScope, this.getScope(), other.getScope());
             mergeCollections(this::setStatuses, this.getStatuses(), other.getStatuses());
             mergeDescriptors(
                     this::setSpecification, this.getSpecification(), other.getSpecification());

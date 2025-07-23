@@ -24,6 +24,12 @@ public final class MergeUtil {
         } else other.ifPresent(setter);
     }
 
+    public static <V> void mergeValues(Consumer<V> setter, V original, V other) {
+        if (other != null && !Objects.equals(original, other)) {
+            setter.accept(other);
+        }
+    }
+
     public static <V extends Collection<?>> void mergeCollections(
             Consumer<V> setter, V original, V other) {
         if (!other.isEmpty() && !Objects.equals(original, other)) {
