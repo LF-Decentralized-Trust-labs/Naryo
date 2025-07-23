@@ -16,36 +16,32 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 @TypeAlias("http_connection")
 public final class HttpConnectionPropertiesDocument extends ConnectionPropertiesDocument
-    implements HttpNodeConnectionDescriptor {
+        implements HttpNodeConnectionDescriptor {
 
     private static final int DEFAULT_MAX_IDLE_CONNECTIONS = 5;
     private static final Duration DEFAULT_KEEP_ALIVE_DURATION = Duration.ofMinutes(5);
     private static final Duration DEFAULT_CONNECTION_TIMEOUT = Duration.ofSeconds(10);
     private static final Duration DEFAULT_READ_TIMEOUT = Duration.ofSeconds(30);
 
-    private @Setter
-    @Nullable Integer maxIdleConnections;
-    private @Setter
-    @Nullable Duration keepAliveDuration;
-    private @Setter
-    @Nullable Duration connectionTimeout;
-    private @Setter
-    @Nullable Duration readTimeout;
+    private @Setter @Nullable Integer maxIdleConnections;
+    private @Setter @Nullable Duration keepAliveDuration;
+    private @Setter @Nullable Duration connectionTimeout;
+    private @Setter @Nullable Duration readTimeout;
 
     public HttpConnectionPropertiesDocument(
-        NodeConnectionRetryPropertiesDocument retry,
-        ConnectionEndpointPropertiesDocument endpoint,
-        Integer maxIdleConnections,
-        Duration keepAliveDuration,
-        Duration connectionTimeout,
-        Duration readTimeout) {
+            NodeConnectionRetryPropertiesDocument retry,
+            ConnectionEndpointPropertiesDocument endpoint,
+            Integer maxIdleConnections,
+            Duration keepAliveDuration,
+            Duration connectionTimeout,
+            Duration readTimeout) {
         super(NodeConnectionType.HTTP, retry, endpoint);
         this.maxIdleConnections =
-            maxIdleConnections != null ? maxIdleConnections : DEFAULT_MAX_IDLE_CONNECTIONS;
+                maxIdleConnections != null ? maxIdleConnections : DEFAULT_MAX_IDLE_CONNECTIONS;
         this.keepAliveDuration =
-            keepAliveDuration != null ? keepAliveDuration : DEFAULT_KEEP_ALIVE_DURATION;
+                keepAliveDuration != null ? keepAliveDuration : DEFAULT_KEEP_ALIVE_DURATION;
         this.connectionTimeout =
-            connectionTimeout != null ? connectionTimeout : DEFAULT_CONNECTION_TIMEOUT;
+                connectionTimeout != null ? connectionTimeout : DEFAULT_CONNECTION_TIMEOUT;
         this.readTimeout = readTimeout != null ? readTimeout : DEFAULT_READ_TIMEOUT;
     }
 
