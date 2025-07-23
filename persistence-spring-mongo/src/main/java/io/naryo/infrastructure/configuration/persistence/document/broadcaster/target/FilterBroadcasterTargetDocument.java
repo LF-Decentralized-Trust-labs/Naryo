@@ -4,10 +4,11 @@ import java.util.UUID;
 
 import io.naryo.application.configuration.source.model.broadcaster.target.BroadcasterTargetDescriptor;
 import io.naryo.application.configuration.source.model.broadcaster.target.FilterBroadcasterTargetDescriptor;
-import io.naryo.infrastructure.configuration.source.env.model.broadcaster.target.FilterBroadcasterTargetProperties;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import static io.naryo.application.common.util.MergeUtil.mergeValues;
 
 @Document(collection = "broadcasters")
 @TypeAlias("filter_broadcaster_targets")
@@ -33,14 +34,13 @@ public class FilterBroadcasterTargetDocument extends BroadcasterTargetDocument
 
     @Override
     public BroadcasterTargetDescriptor merge(BroadcasterTargetDescriptor other) {
-        FilterBroadcasterTargetProperties target =
-                (FilterBroadcasterTargetProperties)
-                        FilterBroadcasterTargetDescriptor.super.merge(other);
+        FilterBroadcasterTargetDescriptor.super.merge(other);
 
         if (other instanceof FilterBroadcasterTargetDescriptor descriptor) {
-            if (!target.getFilterId().equals(descriptor.getFilterId())) {
-                target.setFilterId(descriptor.getFilterId());
+            if (!this.getFilterId().equals(descriptor.getFilterId())) {
+                this.setFilterId(descriptor.getFilterId());
             }
+            mergeValues(this::setFilterId, this.getFilterId(), descriptor.getFilterId());
         }
 
         return this;

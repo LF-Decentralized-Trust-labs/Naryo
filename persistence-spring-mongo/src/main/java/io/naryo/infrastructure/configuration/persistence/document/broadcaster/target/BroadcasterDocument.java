@@ -5,8 +5,7 @@ import java.util.UUID;
 
 import com.mongodb.lang.Nullable;
 import io.naryo.application.configuration.source.model.broadcaster.BroadcasterDescriptor;
-import io.naryo.application.configuration.source.model.broadcaster.target.BroadcasterTargetDescriptor;
-import io.naryo.application.configuration.source.model.broadcaster.target.FilterBroadcasterTargetDescriptor;
+import io.naryo.application.configuration.source.model.broadcaster.target.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -53,34 +52,31 @@ public final class BroadcasterDocument implements BroadcasterDescriptor {
             return;
         }
 
-        switch (target.getType()) {
-            case BLOCK ->
+        switch (target) {
+            case BlockBroadcasterTargetDescriptor blockTarget ->
                     this.target =
-                            new BlockBroadcasterTargetDocument(
-                                    valueOrNull(target.getDestination()));
+                            new BlockBroadcasterTargetDocument(valueOrNull(blockTarget.getDestination()));
 
-            case TRANSACTION ->
+            case TransactionBroadcasterTargetDescriptor transactionTarget ->
                     this.target =
                             new TransactionBroadcasterTargetDocument(
-                                    valueOrNull(target.getDestination()));
+                                    valueOrNull(transactionTarget.getDestination()));
 
-            case CONTRACT_EVENT ->
+            case ContractEventBroadcasterTargetDescriptor contractEventTarget ->
                     this.target =
                             new ContractEventBroadcasterTargetDocument(
-                                    valueOrNull(target.getDestination()));
+                                    valueOrNull(contractEventTarget.getDestination()));
 
-            case FILTER -> {
-                if (target instanceof FilterBroadcasterTargetDescriptor filterTarget) {
+            case FilterBroadcasterTargetDescriptor filterTarget ->
                     this.target =
                             new FilterBroadcasterTargetDocument(
                                     valueOrNull(filterTarget.getDestination()),
                                     filterTarget.getFilterId());
-                }
-            }
-
-            case ALL ->
-                    this.target =
-                            new AllBroadcasterTargetDocument(valueOrNull(target.getDestination()));
+            case AllBroadcasterTargetDescriptor allTarget ->
+                    this.target = new AllBroadcasterTargetDocument(valueOrNull(allTarget.getDestination()));
+            default ->
+                    throw new IllegalArgumentException(
+                            "Unsupported target type: " + target.getClass().getSimpleName());
         }
     }
 }
