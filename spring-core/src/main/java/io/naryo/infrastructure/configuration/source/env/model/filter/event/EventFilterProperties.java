@@ -1,5 +1,6 @@
 package io.naryo.infrastructure.configuration.source.env.model.filter.event;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -40,7 +41,7 @@ public abstract class EventFilterProperties extends FilterProperties
             EventFilterVisibilityProperties visibility) {
         super(id, name, nodeId);
         this.specification = specification;
-        this.statuses = statuses;
+        this.statuses = statuses == null ? new HashSet<>() : statuses;
         this.sync = sync;
         this.visibility = visibility;
     }

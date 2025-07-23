@@ -16,8 +16,8 @@ public final class NodeConnectionRetryProperties implements NodeConnectionRetryD
     private @Setter @Nullable Duration backoff;
 
     public NodeConnectionRetryProperties(Integer times, Duration backoff) {
-        this.times = times;
-        this.backoff = backoff;
+        this.times = times != null ? times : DEFAULT_RETRY_TIMES;
+        this.backoff = backoff != null ? backoff : DEFAULT_BACKOFF;
     }
 
     public NodeConnectionRetryProperties() {

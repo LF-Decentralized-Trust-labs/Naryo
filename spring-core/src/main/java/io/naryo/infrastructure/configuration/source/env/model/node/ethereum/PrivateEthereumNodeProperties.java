@@ -10,11 +10,12 @@ import io.naryo.application.configuration.source.model.node.subscription.Subscri
 import jakarta.annotation.Nullable;
 import lombok.Setter;
 
+@Setter
 public final class PrivateEthereumNodeProperties extends EthereumNodeProperties
         implements PrivateEthereumNodeDescriptor {
 
-    private @Setter @Nullable String groupId;
-    private @Setter @Nullable String precompiledAddress;
+    private @Nullable String groupId;
+    private @Nullable String precompiledAddress;
 
     public PrivateEthereumNodeProperties(
             UUID id,

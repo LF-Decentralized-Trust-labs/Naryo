@@ -14,14 +14,14 @@ public interface BlockInteractionDescriptor extends InteractionDescriptor {
 
     @Override
     default InteractionDescriptor merge(InteractionDescriptor other) {
-        var interaction = InteractionDescriptor.super.merge(other);
+        InteractionDescriptor.super.merge(other);
 
-        if (interaction instanceof BlockInteractionDescriptor otherDescriptor) {
+        if (other instanceof BlockInteractionDescriptor otherDescriptor) {
             if (!this.getMode().equals(otherDescriptor.getMode())) {
-                return interaction;
+                return other;
             }
         }
 
-        return interaction;
+        return this;
     }
 }
