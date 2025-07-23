@@ -11,9 +11,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 public class EventSpecificationDocument implements EventSpecificationDescriptor {
 
-    @Nullable private String signature;
+    private @Nullable String signature;
 
-    @Nullable private Integer correlationId;
+    private @Nullable Integer correlationId;
 
     public EventSpecificationDocument(String signature, Integer correlationId) {
         this.signature = signature;

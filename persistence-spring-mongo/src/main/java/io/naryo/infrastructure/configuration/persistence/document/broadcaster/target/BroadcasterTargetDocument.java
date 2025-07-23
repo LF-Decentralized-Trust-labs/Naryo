@@ -9,9 +9,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public abstract class BroadcasterTargetDocument implements BroadcasterTargetDescriptor {
-    @NotNull private BroadcasterTargetType type;
 
-    @Nullable @NotBlank private String destination;
+    private @NotNull BroadcasterTargetType type;
+
+    private @Nullable @NotBlank String destination;
 
     public BroadcasterTargetDocument(BroadcasterTargetType type, String destination) {
         this.type = type;

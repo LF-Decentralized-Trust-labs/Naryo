@@ -13,7 +13,7 @@ import org.springframework.data.annotation.TypeAlias;
 public class BlockFilterSyncDocument extends FilterSyncDocument
         implements BlockFilterSyncDescriptor {
 
-    @Nullable private BigInteger initialBlock;
+    private @Nullable BigInteger initialBlock;
 
     public BlockFilterSyncDocument(BigInteger initialBlock) {
         this.initialBlock = initialBlock;

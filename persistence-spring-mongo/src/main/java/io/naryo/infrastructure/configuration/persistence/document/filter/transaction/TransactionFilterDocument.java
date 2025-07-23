@@ -19,11 +19,11 @@ import org.springframework.data.annotation.TypeAlias;
 public class TransactionFilterDocument extends FilterDocument
         implements TransactionFilterDescriptor {
 
-    @Nullable private IdentifierType identifierType;
+    private @Nullable IdentifierType identifierType;
 
-    @Nullable private String value;
+    private @Nullable String value;
 
-    @Getter private Set<TransactionStatus> statuses;
+    private @Getter Set<TransactionStatus> statuses;
 
     public TransactionFilterDocument(
             String id,

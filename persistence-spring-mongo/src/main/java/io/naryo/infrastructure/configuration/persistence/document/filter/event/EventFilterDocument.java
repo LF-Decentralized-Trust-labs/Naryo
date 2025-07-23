@@ -23,15 +23,15 @@ import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 
 public abstract class EventFilterDocument extends FilterDocument implements EventFilterDescriptor {
 
-    @Nullable @Setter private EventFilterScope scope;
+    private @Nullable @Setter EventFilterScope scope;
 
-    @Nullable private EventSpecificationDocument specification;
+    private @Nullable EventSpecificationDocument specification;
 
-    @Getter @Setter private Set<ContractEventStatus> statuses;
+    private @Getter @Setter Set<ContractEventStatus> statuses;
 
-    @Nullable private FilterSyncDocument sync;
+    private @Nullable FilterSyncDocument sync;
 
-    @Nullable private FilterVisibilityDocument visibility;
+    private @Nullable FilterVisibilityDocument visibility;
 
     public EventFilterDocument(
             String id,

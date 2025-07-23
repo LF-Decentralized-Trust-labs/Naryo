@@ -23,15 +23,15 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 @AllArgsConstructor
 public final class BroadcasterConfigurationDocument implements BroadcasterConfigurationDescriptor {
 
-    @MongoId private final String id;
+    private final @MongoId String id;
 
-    @NotNull @NotBlank private final String type;
+    private final @NotNull @NotBlank String type;
 
-    @Nullable @Valid private BroadcasterCacheConfiguration cache;
+    private @Nullable @Valid BroadcasterCacheConfiguration cache;
 
-    @Nullable private Map<String, Object> additionalProperties;
+    private @Nullable Map<String, Object> additionalProperties;
 
-    @Nullable private ConfigurationSchemaDocument propertiesSchema;
+    private @Nullable ConfigurationSchemaDocument propertiesSchema;
 
     @Override
     public UUID getId() {

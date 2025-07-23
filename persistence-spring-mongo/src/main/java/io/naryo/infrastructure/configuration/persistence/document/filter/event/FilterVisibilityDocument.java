@@ -11,9 +11,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 public class FilterVisibilityDocument implements FilterVisibilityDescriptor {
 
-    @Nullable private Boolean visible;
+    private @Nullable Boolean visible;
 
-    @Nullable private String privacyGroupId;
+    private @Nullable String privacyGroupId;
 
     public FilterVisibilityDocument(boolean visible, String privacyGroupId) {
         this.visible = visible;

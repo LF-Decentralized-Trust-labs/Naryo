@@ -11,7 +11,7 @@ public abstract class BroadcasterTargetProperties {
 
     private final @NotNull BroadcasterTargetType type;
 
-    @Nullable @NotBlank private String destination;
+    private @Nullable @NotBlank String destination;
 
     public BroadcasterTargetProperties(BroadcasterTargetType type, String destination) {
         this.type = type;

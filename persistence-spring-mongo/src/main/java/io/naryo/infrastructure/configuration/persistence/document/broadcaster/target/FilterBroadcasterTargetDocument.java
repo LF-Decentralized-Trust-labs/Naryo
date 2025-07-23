@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class FilterBroadcasterTargetDocument extends BroadcasterTargetDocument
         implements FilterBroadcasterTargetDescriptor {
 
-    @NotNull private UUID filterId;
+    private @NotNull UUID filterId;
 
     public FilterBroadcasterTargetDocument(String destination, UUID filterId) {
         super(BroadcasterTargetType.FILTER, destination);

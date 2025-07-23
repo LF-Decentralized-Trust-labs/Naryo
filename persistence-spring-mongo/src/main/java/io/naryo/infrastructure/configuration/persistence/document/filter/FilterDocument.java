@@ -14,13 +14,13 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 @Setter
 public abstract class FilterDocument implements FilterDescriptor {
 
-    @MongoId private String id;
+    private @MongoId String id;
 
-    @Nullable private String name;
+    private @Nullable String name;
 
-    @Nullable private FilterType type;
+    private @Nullable FilterType type;
 
-    @Nullable private String nodeId;
+    private @Nullable String nodeId;
 
     public FilterDocument(String id, String name, FilterType type, String nodeId) {
         this.id = id;
