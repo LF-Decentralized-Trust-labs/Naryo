@@ -1,7 +1,6 @@
 package io.naryo.infrastructure.configuration.persistence.document.node.eth;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import io.naryo.application.configuration.source.model.node.PrivateEthereumNodeDescriptor;
 import io.naryo.domain.node.ethereum.EthereumNodeVisibility;

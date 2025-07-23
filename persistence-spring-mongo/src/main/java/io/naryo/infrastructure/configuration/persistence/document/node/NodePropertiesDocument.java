@@ -41,7 +41,7 @@ public abstract class NodePropertiesDocument implements NodeDescriptor {
     private @Nullable ConnectionPropertiesDocument connection;
 
     protected NodePropertiesDocument(
-        String id,
+            String id,
             String name,
             NodeType type,
             SubscriptionPropertiesDocument subscription,
