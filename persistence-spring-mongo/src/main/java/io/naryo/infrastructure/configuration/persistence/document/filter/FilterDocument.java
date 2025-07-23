@@ -4,7 +4,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import io.naryo.application.configuration.source.model.filter.FilterDescriptor;
-import io.naryo.domain.filter.FilterType;
 import jakarta.annotation.Nullable;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -14,18 +13,15 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 @Setter
 public abstract class FilterDocument implements FilterDescriptor {
 
-    @MongoId private String id;
+    @MongoId private final String id;
 
     @Nullable private String name;
 
-    @Nullable private FilterType type;
-
     @Nullable private String nodeId;
 
-    public FilterDocument(String id, String name, FilterType type, String nodeId) {
+    public FilterDocument(String id, String name, String nodeId) {
         this.id = id;
         this.name = name;
-        this.type = type;
         this.nodeId = nodeId;
     }
 
@@ -36,11 +32,6 @@ public abstract class FilterDocument implements FilterDescriptor {
     @Override
     public Optional<String> getName() {
         return Optional.ofNullable(name);
-    }
-
-    @Override
-    public Optional<FilterType> getType() {
-        return Optional.ofNullable(type);
     }
 
     @Override

@@ -4,7 +4,6 @@ import java.util.Set;
 
 import fixtures.persistence.filter.FilterDocumentBuilder;
 import io.naryo.domain.common.event.ContractEventStatus;
-import io.naryo.domain.filter.event.EventFilterScope;
 import io.naryo.infrastructure.configuration.persistence.document.filter.event.EventFilterDocument;
 import io.naryo.infrastructure.configuration.persistence.document.filter.event.EventSpecificationDocument;
 import io.naryo.infrastructure.configuration.persistence.document.filter.event.FilterVisibilityDocument;
@@ -14,16 +13,10 @@ import org.instancio.Instancio;
 public abstract class EventFilterDocumentBuilder<T, Y extends EventFilterDocument>
         extends FilterDocumentBuilder<T, Y> {
 
-    private EventFilterScope scope;
     private EventSpecificationDocument specification;
     private Set<ContractEventStatus> statuses;
     private FilterSyncDocument sync;
     private FilterVisibilityDocument visibility;
-
-    public T withScope(EventFilterScope scope) {
-        this.scope = scope;
-        return this.self();
-    }
 
     public T withSpecification(EventSpecificationDocument specification) {
         this.specification = specification;
@@ -43,10 +36,6 @@ public abstract class EventFilterDocumentBuilder<T, Y extends EventFilterDocumen
     public T withVisibility(FilterVisibilityDocument visibilityConfiguration) {
         this.visibility = visibilityConfiguration;
         return this.self();
-    }
-
-    protected EventFilterScope getScope() {
-        return this.scope == null ? Instancio.create(EventFilterScope.class) : this.scope;
     }
 
     protected EventSpecificationDocument getSpecification() {

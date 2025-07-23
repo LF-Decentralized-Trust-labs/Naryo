@@ -6,7 +6,6 @@ import java.util.Set;
 
 import io.naryo.application.configuration.source.model.filter.transaction.TransactionFilterDescriptor;
 import io.naryo.domain.common.TransactionStatus;
-import io.naryo.domain.filter.FilterType;
 import io.naryo.domain.filter.transaction.IdentifierType;
 import io.naryo.infrastructure.configuration.persistence.document.filter.FilterDocument;
 import jakarta.annotation.Nullable;
@@ -32,7 +31,7 @@ public class TransactionFilterDocument extends FilterDocument
             IdentifierType identifierType,
             String value,
             Set<TransactionStatus> statuses) {
-        super(id, name, FilterType.TRANSACTION, nodeId);
+        super(id, name, nodeId);
         this.identifierType = identifierType;
         this.value = value;
         this.statuses = statuses == null ? new HashSet<>() : statuses;
