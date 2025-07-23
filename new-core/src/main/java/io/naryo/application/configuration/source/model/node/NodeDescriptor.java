@@ -18,7 +18,7 @@ public interface NodeDescriptor extends MergeableDescriptor<NodeDescriptor> {
 
     Optional<String> getName();
 
-    Optional<NodeType> getType();
+    NodeType getType();
 
     <T extends SubscriptionDescriptor> Optional<T> getSubscription();
 
@@ -27,8 +27,6 @@ public interface NodeDescriptor extends MergeableDescriptor<NodeDescriptor> {
     <T extends NodeConnectionDescriptor> Optional<T> getConnection();
 
     void setName(String name);
-
-    void setType(NodeType type);
 
     void setSubscription(SubscriptionDescriptor subscription);
 
@@ -43,7 +41,6 @@ public interface NodeDescriptor extends MergeableDescriptor<NodeDescriptor> {
         }
 
         mergeOptionals(this::setName, this.getName(), descriptor.getName());
-        mergeOptionals(this::setType, this.getType(), descriptor.getType());
         mergeDescriptors(
                 this::setSubscription, this.getSubscription(), descriptor.getSubscription());
         mergeDescriptors(this::setInteraction, this.getInteraction(), descriptor.getInteraction());

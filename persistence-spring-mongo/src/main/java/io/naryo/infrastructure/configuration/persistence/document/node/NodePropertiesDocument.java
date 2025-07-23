@@ -11,7 +11,6 @@ import io.naryo.application.configuration.source.model.node.interaction.Ethereum
 import io.naryo.application.configuration.source.model.node.interaction.HederaMirrorNodeBlockInteractionDescriptor;
 import io.naryo.application.configuration.source.model.node.interaction.InteractionDescriptor;
 import io.naryo.application.configuration.source.model.node.subscription.SubscriptionDescriptor;
-import io.naryo.domain.node.NodeType;
 import io.naryo.infrastructure.configuration.persistence.document.node.connection.ConnectionPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.connection.http.HttpConnectionPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.connection.ws.WsConnectionPropertiesDocument;
@@ -34,7 +33,6 @@ import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 public abstract class NodePropertiesDocument implements NodeDescriptor {
 
     private final @MongoId String id;
-    private @Setter @Nullable NodeType type;
     private @Setter @Nullable String name;
     private @Nullable SubscriptionPropertiesDocument subscription;
     private @Nullable InteractionPropertiesDocument interaction;
@@ -43,13 +41,11 @@ public abstract class NodePropertiesDocument implements NodeDescriptor {
     protected NodePropertiesDocument(
             String id,
             String name,
-            NodeType type,
             SubscriptionPropertiesDocument subscription,
             InteractionPropertiesDocument interaction,
             ConnectionPropertiesDocument connection) {
         this.id = id;
         this.name = name;
-        this.type = type;
         this.subscription = subscription;
         this.interaction = interaction;
         this.connection = connection;
@@ -63,11 +59,6 @@ public abstract class NodePropertiesDocument implements NodeDescriptor {
     @Override
     public Optional<String> getName() {
         return Optional.ofNullable(name);
-    }
-
-    @Override
-    public Optional<NodeType> getType() {
-        return Optional.ofNullable(type);
     }
 
     @Override

@@ -20,7 +20,6 @@ public class ContractEventFilterDocumentBuilder
                 this.getId(),
                 this.getName(),
                 this.getNodeId(),
-                this.getScope(),
                 this.getSpecification(),
                 this.getStatuses(),
                 this.getSync(),

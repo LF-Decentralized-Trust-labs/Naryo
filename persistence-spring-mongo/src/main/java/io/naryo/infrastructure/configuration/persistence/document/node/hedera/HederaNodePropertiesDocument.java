@@ -1,7 +1,6 @@
 package io.naryo.infrastructure.configuration.persistence.document.node.hedera;
 
 import io.naryo.application.configuration.source.model.node.HederaNodeDescriptor;
-import io.naryo.domain.node.NodeType;
 import io.naryo.infrastructure.configuration.persistence.document.node.NodePropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.connection.ConnectionPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.interaction.InteractionPropertiesDocument;
@@ -18,6 +17,6 @@ public final class HederaNodePropertiesDocument extends NodePropertiesDocument
             SubscriptionPropertiesDocument subscription,
             InteractionPropertiesDocument interaction,
             ConnectionPropertiesDocument connection) {
-        super(id, name, NodeType.ETHEREUM, subscription, interaction, connection);
+        super(id, name, subscription, interaction, connection);
     }
 }

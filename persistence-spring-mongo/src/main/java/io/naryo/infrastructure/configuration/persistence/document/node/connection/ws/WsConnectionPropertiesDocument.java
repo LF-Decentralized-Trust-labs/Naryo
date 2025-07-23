@@ -1,7 +1,6 @@
 package io.naryo.infrastructure.configuration.persistence.document.node.connection.ws;
 
 import io.naryo.application.configuration.source.model.node.connection.WsNodeConnectionDescriptor;
-import io.naryo.domain.node.connection.NodeConnectionType;
 import io.naryo.infrastructure.configuration.persistence.document.common.ConnectionEndpointPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.connection.ConnectionPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.connection.NodeConnectionRetryPropertiesDocument;
@@ -16,6 +15,6 @@ public final class WsConnectionPropertiesDocument extends ConnectionPropertiesDo
     public WsConnectionPropertiesDocument(
             NodeConnectionRetryPropertiesDocument retry,
             ConnectionEndpointPropertiesDocument endpoint) {
-        super(NodeConnectionType.WS, retry, endpoint);
+        super(retry, endpoint);
     }
 }

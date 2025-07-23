@@ -3,7 +3,6 @@ package io.naryo.infrastructure.configuration.persistence.document.node.interact
 import java.util.Optional;
 
 import io.naryo.application.configuration.source.model.node.interaction.HederaMirrorNodeBlockInteractionDescriptor;
-import io.naryo.domain.node.interaction.block.InteractionMode;
 import jakarta.annotation.Nullable;
 import lombok.Setter;
 import org.springframework.data.annotation.TypeAlias;
@@ -23,7 +22,6 @@ public final class HederaMirrorNodeBlockInteractionPropertiesDocument
 
     public HederaMirrorNodeBlockInteractionPropertiesDocument(
             Integer limitPerRequest, Integer retriesPerRequest) {
-        super(InteractionMode.HEDERA_MIRROR_NODE);
         this.limitPerRequest =
                 limitPerRequest != null ? limitPerRequest : DEFAULT_LIMIT_PER_REQUEST;
         this.retriesPerRequest =

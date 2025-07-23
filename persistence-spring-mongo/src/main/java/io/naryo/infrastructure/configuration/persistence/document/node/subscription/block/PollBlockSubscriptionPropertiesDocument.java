@@ -5,7 +5,6 @@ import java.time.Duration;
 import java.util.Optional;
 
 import io.naryo.application.configuration.source.model.node.subscription.PollBlockSubscriptionDescriptor;
-import io.naryo.domain.node.subscription.block.method.BlockSubscriptionMethod;
 import jakarta.validation.constraints.NotNull;
 import lombok.Setter;
 import org.springframework.data.annotation.TypeAlias;
@@ -29,7 +28,6 @@ public final class PollBlockSubscriptionPropertiesDocument
             BigInteger syncBlockLimit,
             Duration interval) {
         super(
-                BlockSubscriptionMethod.POLL,
                 initialBlock,
                 confirmationBlocks,
                 missingTxRetryBlocks,

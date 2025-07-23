@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import io.naryo.application.configuration.source.model.broadcaster.target.BroadcasterTargetDescriptor;
 import io.naryo.application.configuration.source.model.broadcaster.target.FilterBroadcasterTargetDescriptor;
-import io.naryo.domain.broadcaster.BroadcasterTargetType;
 import io.naryo.infrastructure.configuration.source.env.model.broadcaster.target.FilterBroadcasterTargetProperties;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.TypeAlias;
@@ -18,7 +17,7 @@ public class FilterBroadcasterTargetDocument extends BroadcasterTargetDocument
     @NotNull private UUID filterId;
 
     public FilterBroadcasterTargetDocument(String destination, UUID filterId) {
-        super(BroadcasterTargetType.FILTER, destination);
+        super(destination);
         this.filterId = filterId;
     }
 
