@@ -11,7 +11,6 @@ import io.naryo.application.configuration.source.model.node.interaction.Ethereum
 import io.naryo.application.configuration.source.model.node.interaction.HederaMirrorNodeBlockInteractionDescriptor;
 import io.naryo.application.configuration.source.model.node.interaction.InteractionDescriptor;
 import io.naryo.application.configuration.source.model.node.subscription.SubscriptionDescriptor;
-import io.naryo.domain.node.NodeType;
 import io.naryo.infrastructure.configuration.persistence.document.node.connection.ConnectionPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.connection.http.HttpConnectionPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.connection.ws.WsConnectionPropertiesDocument;

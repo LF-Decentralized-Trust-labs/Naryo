@@ -1,7 +1,6 @@
 package io.naryo.infrastructure.configuration.persistence.document.node.eth;
 
 import io.naryo.application.configuration.source.model.node.PublicEthereumNodeDescriptor;
-import io.naryo.domain.node.ethereum.EthereumNodeVisibility;
 import io.naryo.infrastructure.configuration.persistence.document.node.connection.ConnectionPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.interaction.InteractionPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.subscription.SubscriptionPropertiesDocument;

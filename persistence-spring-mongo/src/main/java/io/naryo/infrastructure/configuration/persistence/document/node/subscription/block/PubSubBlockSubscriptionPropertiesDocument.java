@@ -3,7 +3,6 @@ package io.naryo.infrastructure.configuration.persistence.document.node.subscrip
 import java.math.BigInteger;
 
 import io.naryo.application.configuration.source.model.node.subscription.PubsubBlockSubscriptionDescriptor;
-import io.naryo.domain.node.subscription.block.method.BlockSubscriptionMethod;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 

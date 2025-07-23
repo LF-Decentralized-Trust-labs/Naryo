@@ -5,12 +5,8 @@ import java.util.Optional;
 import io.naryo.application.configuration.source.model.node.connection.NodeConnectionDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.endpoint.ConnectionEndpointDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.retry.NodeConnectionRetryDescriptor;
-import io.naryo.domain.node.connection.NodeConnectionType;
 import io.naryo.infrastructure.configuration.persistence.document.common.ConnectionEndpointPropertiesDocument;
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
 
 import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 
