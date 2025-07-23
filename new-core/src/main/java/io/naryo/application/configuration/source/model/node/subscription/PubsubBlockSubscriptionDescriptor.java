@@ -11,14 +11,14 @@ public interface PubsubBlockSubscriptionDescriptor extends BlockSubscriptionDesc
 
     @Override
     default SubscriptionDescriptor merge(SubscriptionDescriptor descriptor) {
-        var subscription = BlockSubscriptionDescriptor.super.merge(descriptor);
+        BlockSubscriptionDescriptor.super.merge(descriptor);
 
-        if (subscription instanceof PubsubBlockSubscriptionDescriptor other) {
+        if (descriptor instanceof PubsubBlockSubscriptionDescriptor other) {
             if (!this.method().equals(other.method())) {
-                return subscription;
+                return descriptor;
             }
         }
 
-        return subscription;
+        return this;
     }
 }

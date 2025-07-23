@@ -68,7 +68,7 @@ public final class DefaultNodeConfigurationManager
     @Override
     protected Node map(NodeDescriptor source) {
         var common = buildCommon(source);
-        return switch (valueOrNull(source.getType())) {
+        return switch (source.getType()) {
             case HEDERA ->
                     new HederaNode(
                             common.id,

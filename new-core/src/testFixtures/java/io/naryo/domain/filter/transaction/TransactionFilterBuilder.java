@@ -51,7 +51,7 @@ public class TransactionFilterBuilder
 
     private Set<TransactionStatus> getStatuses() {
         return this.statuses == null || this.statuses.isEmpty()
-                ? Set.of(Instancio.create(TransactionStatus.class))
+                ? Instancio.createSet(TransactionStatus.class)
                 : this.statuses;
     }
 
