@@ -16,15 +16,12 @@ import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 
 public abstract class ConnectionPropertiesDocument implements NodeConnectionDescriptor {
 
-    private @Setter @Getter @NotNull NodeConnectionType type;
     private @Nullable NodeConnectionRetryPropertiesDocument retry;
     private @Nullable ConnectionEndpointPropertiesDocument endpoint;
 
     public ConnectionPropertiesDocument(
-            NodeConnectionType type,
             NodeConnectionRetryPropertiesDocument retry,
             ConnectionEndpointPropertiesDocument endpoint) {
-        this.type = type;
         this.retry = retry != null ? retry : new NodeConnectionRetryPropertiesDocument();
         this.endpoint = endpoint;
     }

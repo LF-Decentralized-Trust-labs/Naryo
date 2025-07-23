@@ -10,8 +10,4 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public final class EthereumRpcBlockInteractionPropertiesDocument
         extends BlockInteractionPropertiesDocument
         implements EthereumRpcBlockInteractionDescriptor {
-
-    public EthereumRpcBlockInteractionPropertiesDocument() {
-        super(InteractionMode.ETHEREUM_RPC);
-    }
 }

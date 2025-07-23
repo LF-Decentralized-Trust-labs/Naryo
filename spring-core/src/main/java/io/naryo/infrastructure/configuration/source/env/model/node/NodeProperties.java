@@ -28,7 +28,6 @@ import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 public abstract class NodeProperties implements NodeDescriptor {
 
     private final @Getter @NotNull UUID id;
-    private @Setter @Nullable NodeType type;
     private @Setter @Nullable String name;
     private @Nullable SubscriptionDescriptor subscription;
     private @Nullable InteractionDescriptor interaction;
@@ -37,13 +36,11 @@ public abstract class NodeProperties implements NodeDescriptor {
     protected NodeProperties(
             UUID id,
             String name,
-            NodeType type,
             SubscriptionDescriptor subscription,
             InteractionDescriptor interaction,
             NodeConnectionDescriptor connection) {
         this.id = id;
         this.name = name;
-        this.type = type;
         this.subscription = subscription;
         this.interaction = interaction;
         this.connection = connection;
@@ -52,11 +49,6 @@ public abstract class NodeProperties implements NodeDescriptor {
     @Override
     public Optional<String> getName() {
         return Optional.ofNullable(name);
-    }
-
-    @Override
-    public Optional<NodeType> getType() {
-        return Optional.ofNullable(type);
     }
 
     @Override

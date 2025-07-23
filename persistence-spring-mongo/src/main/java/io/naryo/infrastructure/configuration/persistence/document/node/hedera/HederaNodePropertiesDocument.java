@@ -18,6 +18,6 @@ public final class HederaNodePropertiesDocument extends NodePropertiesDocument
             SubscriptionPropertiesDocument subscription,
             InteractionPropertiesDocument interaction,
             ConnectionPropertiesDocument connection) {
-        super(id, name, NodeType.ETHEREUM, subscription, interaction, connection);
+        super(id, name, subscription, interaction, connection);
     }
 }

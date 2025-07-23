@@ -4,14 +4,11 @@ import java.math.BigInteger;
 import java.util.Optional;
 
 import io.naryo.application.configuration.source.model.node.subscription.BlockSubscriptionDescriptor;
-import io.naryo.domain.node.subscription.SubscriptionStrategy;
-import io.naryo.domain.node.subscription.block.method.BlockSubscriptionMethod;
 import io.naryo.infrastructure.configuration.persistence.document.node.subscription.SubscriptionPropertiesDocument;
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
 import lombok.Setter;
 
+@Setter
 public abstract class BlockSubscriptionPropertiesDocument extends SubscriptionPropertiesDocument
         implements BlockSubscriptionDescriptor {
 
@@ -22,24 +19,20 @@ public abstract class BlockSubscriptionPropertiesDocument extends SubscriptionPr
     private static final BigInteger DEFAULT_REPLAY_BLOCK_OFFSET = BigInteger.valueOf(12);
     private static final BigInteger DEFAULT_SYNC_BLOCK_LIMIT = BigInteger.valueOf(20000);
 
-    private final @Getter @NotNull BlockSubscriptionMethod method;
-    private @Setter @Nullable BigInteger initialBlock;
-    private @Setter @Nullable BigInteger confirmationBlocks;
-    private @Setter @Nullable BigInteger missingTxRetryBlocks;
-    private @Setter @Nullable BigInteger eventInvalidationBlockThreshold;
-    private @Setter @Nullable BigInteger replayBlockOffset;
-    private @Setter @Nullable BigInteger syncBlockLimit;
+    private @Nullable BigInteger initialBlock;
+    private @Nullable BigInteger confirmationBlocks;
+    private @Nullable BigInteger missingTxRetryBlocks;
+    private @Nullable BigInteger eventInvalidationBlockThreshold;
+    private @Nullable BigInteger replayBlockOffset;
+    private @Nullable BigInteger syncBlockLimit;
 
     public BlockSubscriptionPropertiesDocument(
-            BlockSubscriptionMethod method,
             BigInteger initialBlock,
             BigInteger confirmationBlocks,
             BigInteger missingTxRetryBlocks,
             BigInteger eventInvalidationBlockThreshold,
             BigInteger replayBlockOffset,
             BigInteger syncBlockLimit) {
-        super(SubscriptionStrategy.BLOCK_BASED);
-        this.method = method;
         this.initialBlock = initialBlock != null ? initialBlock : DEFAULT_INITIAL_BLOCK;
         this.confirmationBlocks =
                 confirmationBlocks != null ? confirmationBlocks : DEFAULT_CONFIRMATION_BLOCKS;

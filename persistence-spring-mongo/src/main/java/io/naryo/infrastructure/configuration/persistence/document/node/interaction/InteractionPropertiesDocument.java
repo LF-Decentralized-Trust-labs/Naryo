@@ -6,10 +6,4 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 public abstract class InteractionPropertiesDocument implements InteractionDescriptor {
-
-    private final @Getter @NotNull InteractionStrategy strategy;
-
-    public InteractionPropertiesDocument(InteractionStrategy strategy) {
-        this.strategy = strategy;
-    }
 }

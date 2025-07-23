@@ -16,6 +16,6 @@ public final class WsConnectionPropertiesDocument extends ConnectionPropertiesDo
     public WsConnectionPropertiesDocument(
             NodeConnectionRetryPropertiesDocument retry,
             ConnectionEndpointPropertiesDocument endpoint) {
-        super(NodeConnectionType.WS, retry, endpoint);
+        super(retry, endpoint);
     }
 }

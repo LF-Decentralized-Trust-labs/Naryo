@@ -23,7 +23,6 @@ public final class HederaMirrorNodeBlockInteractionPropertiesDocument
 
     public HederaMirrorNodeBlockInteractionPropertiesDocument(
             Integer limitPerRequest, Integer retriesPerRequest) {
-        super(InteractionMode.HEDERA_MIRROR_NODE);
         this.limitPerRequest =
                 limitPerRequest != null ? limitPerRequest : DEFAULT_LIMIT_PER_REQUEST;
         this.retriesPerRequest =

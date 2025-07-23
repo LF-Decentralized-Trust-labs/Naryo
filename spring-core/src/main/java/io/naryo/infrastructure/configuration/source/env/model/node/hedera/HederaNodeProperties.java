@@ -17,6 +17,6 @@ public final class HederaNodeProperties extends NodeProperties implements Hedera
             SubscriptionDescriptor subscription,
             InteractionDescriptor interaction,
             NodeConnectionDescriptor connection) {
-        super(id, name, NodeType.ETHEREUM, subscription, interaction, connection);
+        super(id, name, subscription, interaction, connection);
     }
 }

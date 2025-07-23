@@ -7,9 +7,4 @@ import lombok.Getter;
 import lombok.Setter;
 
 public abstract class SubscriptionPropertiesDocument implements SubscriptionDescriptor {
-    private @Setter @Getter @NotNull SubscriptionStrategy strategy;
-
-    public SubscriptionPropertiesDocument(SubscriptionStrategy strategy) {
-        this.strategy = strategy;
-    }
 }

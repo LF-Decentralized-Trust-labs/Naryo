@@ -35,7 +35,7 @@ public final class HttpConnectionPropertiesDocument extends ConnectionProperties
             Duration keepAliveDuration,
             Duration connectionTimeout,
             Duration readTimeout) {
-        super(NodeConnectionType.HTTP, retry, endpoint);
+        super(retry, endpoint);
         this.maxIdleConnections =
                 maxIdleConnections != null ? maxIdleConnections : DEFAULT_MAX_IDLE_CONNECTIONS;
         this.keepAliveDuration =

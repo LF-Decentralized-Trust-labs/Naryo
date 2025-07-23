@@ -10,10 +10,8 @@ import lombok.Getter;
 public abstract class BlockInteractionPropertiesDocument extends InteractionPropertiesDocument
         implements BlockInteractionDescriptor {
 
-    private final @Getter @NotNull InteractionMode mode;
-
-    public BlockInteractionPropertiesDocument(InteractionMode mode) {
-        super(InteractionStrategy.BLOCK_BASED);
-        this.mode = mode;
+    @Override
+    public InteractionStrategy getStrategy() {
+        return InteractionStrategy.BLOCK_BASED;
     }
 }

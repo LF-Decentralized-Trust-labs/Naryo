@@ -17,6 +17,6 @@ public class PublicEthereumNodePropertiesDocument extends EthereumNodeProperties
             SubscriptionPropertiesDocument subscription,
             InteractionPropertiesDocument interaction,
             ConnectionPropertiesDocument connection) {
-        super(id, name, subscription, interaction, connection, EthereumNodeVisibility.PUBLIC);
+        super(id, name, subscription, interaction, connection);
     }
 }

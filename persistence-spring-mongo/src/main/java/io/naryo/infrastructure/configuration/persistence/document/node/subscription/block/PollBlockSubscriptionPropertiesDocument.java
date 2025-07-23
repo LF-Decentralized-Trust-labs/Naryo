@@ -29,7 +29,6 @@ public final class PollBlockSubscriptionPropertiesDocument
             BigInteger syncBlockLimit,
             Duration interval) {
         super(
-                BlockSubscriptionMethod.POLL,
                 initialBlock,
                 confirmationBlocks,
                 missingTxRetryBlocks,

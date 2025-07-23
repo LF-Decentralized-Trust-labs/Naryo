@@ -20,7 +20,6 @@ public final class PubSubBlockSubscriptionPropertiesDocument
             BigInteger replayBlockOffset,
             BigInteger syncBlockLimit) {
         super(
-                BlockSubscriptionMethod.PUBSUB,
                 initialBlock,
                 confirmationBlocks,
                 missingTxRetryBlocks,
