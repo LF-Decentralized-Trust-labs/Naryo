@@ -1,13 +1,13 @@
 package io.naryo.infrastructure.configuration.source.env.model.broadcaster.target;
 
+import java.util.Optional;
+
 import io.naryo.application.configuration.source.model.broadcaster.target.BroadcasterTargetDescriptor;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Optional;
 
 @Setter
 @Getter
