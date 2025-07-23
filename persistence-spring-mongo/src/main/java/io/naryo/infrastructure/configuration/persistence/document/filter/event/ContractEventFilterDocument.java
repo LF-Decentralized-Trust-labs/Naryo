@@ -15,7 +15,7 @@ import org.springframework.data.annotation.TypeAlias;
 public class ContractEventFilterDocument extends EventFilterDocument
         implements ContractEventFilterDescriptor {
 
-    @Nullable private String address;
+    private @Nullable String address;
 
     public ContractEventFilterDocument(
             String id,
