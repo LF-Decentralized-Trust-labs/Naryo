@@ -1,17 +1,21 @@
 package io.naryo.application.configuration.source.model.broadcaster;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import io.naryo.application.configuration.source.model.MergeableDescriptor;
 import io.naryo.application.configuration.source.model.broadcaster.target.BroadcasterTargetDescriptor;
 
+import static io.naryo.application.common.util.MergeUtil.mergeDescriptors;
+import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
+
 public interface BroadcasterDescriptor extends MergeableDescriptor<BroadcasterDescriptor> {
 
-    UUID id();
+    UUID getId();
 
-    UUID configurationId();
+    Optional<UUID> getConfigurationId();
 
-    BroadcasterTargetDescriptor target();
+    Optional<BroadcasterTargetDescriptor> getTarget();
 
     void setConfigurationId(UUID configurationId);
 
@@ -23,13 +27,9 @@ public interface BroadcasterDescriptor extends MergeableDescriptor<BroadcasterDe
             return this;
         }
 
-        if (!this.configurationId().equals(other.configurationId())) {
-            this.setConfigurationId(other.configurationId());
-        }
-
-        if (!this.target().equals(other.target())) {
-            this.setTarget(this.target().merge(other.target()));
-        }
+        mergeOptionals(
+                this::setConfigurationId, this.getConfigurationId(), other.getConfigurationId());
+        mergeDescriptors(this::setTarget, this.getTarget(), other.getTarget());
 
         return this;
     }
