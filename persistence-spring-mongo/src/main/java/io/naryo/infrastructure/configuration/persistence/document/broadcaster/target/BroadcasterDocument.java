@@ -55,7 +55,8 @@ public final class BroadcasterDocument implements BroadcasterDescriptor {
         switch (target) {
             case BlockBroadcasterTargetDescriptor blockTarget ->
                     this.target =
-                            new BlockBroadcasterTargetDocument(valueOrNull(blockTarget.getDestination()));
+                            new BlockBroadcasterTargetDocument(
+                                    valueOrNull(blockTarget.getDestination()));
 
             case TransactionBroadcasterTargetDescriptor transactionTarget ->
                     this.target =
@@ -73,7 +74,9 @@ public final class BroadcasterDocument implements BroadcasterDescriptor {
                                     valueOrNull(filterTarget.getDestination()),
                                     filterTarget.getFilterId());
             case AllBroadcasterTargetDescriptor allTarget ->
-                    this.target = new AllBroadcasterTargetDocument(valueOrNull(allTarget.getDestination()));
+                    this.target =
+                            new AllBroadcasterTargetDocument(
+                                    valueOrNull(allTarget.getDestination()));
             default ->
                     throw new IllegalArgumentException(
                             "Unsupported target type: " + target.getClass().getSimpleName());
