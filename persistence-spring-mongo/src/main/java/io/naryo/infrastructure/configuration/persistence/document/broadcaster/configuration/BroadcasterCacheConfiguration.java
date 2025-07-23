@@ -9,7 +9,7 @@ public class BroadcasterCacheConfiguration implements BroadcasterCacheConfigurat
 
     private static final Duration DEFAULT_EXPIRATION_TIME = Duration.ofMinutes(5);
 
-    @NotNull private Duration expirationTime;
+    private @NotNull Duration expirationTime;
 
     public BroadcasterCacheConfiguration(Duration expirationTime) {
         this.expirationTime = (expirationTime != null) ? expirationTime : DEFAULT_EXPIRATION_TIME;
