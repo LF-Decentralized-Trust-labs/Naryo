@@ -1,7 +1,5 @@
 package io.naryo.infrastructure.configuration.persistence.document.node.hedera;
 
-import java.util.UUID;
-
 import io.naryo.application.configuration.source.model.node.HederaNodeDescriptor;
 import io.naryo.domain.node.NodeType;
 import io.naryo.infrastructure.configuration.persistence.document.node.NodePropertiesDocument;
