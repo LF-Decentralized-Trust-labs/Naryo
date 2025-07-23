@@ -15,7 +15,7 @@ public final class HederaNodePropertiesDocument extends NodePropertiesDocument
         implements HederaNodeDescriptor {
 
     public HederaNodePropertiesDocument(
-            UUID id,
+            String id,
             String name,
             SubscriptionPropertiesDocument subscription,
             InteractionPropertiesDocument interaction,

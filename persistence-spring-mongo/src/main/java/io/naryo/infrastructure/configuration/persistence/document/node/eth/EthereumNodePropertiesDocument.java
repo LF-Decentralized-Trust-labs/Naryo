@@ -16,7 +16,7 @@ public abstract class EthereumNodePropertiesDocument extends NodePropertiesDocum
     private final @Getter @NotNull EthereumNodeVisibility visibility;
 
     protected EthereumNodePropertiesDocument(
-            UUID id,
+            String id,
             String name,
             SubscriptionPropertiesDocument subscription,
             InteractionPropertiesDocument interaction,
