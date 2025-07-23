@@ -53,11 +53,24 @@ public interface BlockSubscriptionDescriptor extends SubscriptionDescriptor {
             }
 
             mergeOptionals(this::setInitialBlock, this.getInitialBlock(), other.getInitialBlock());
-            mergeOptionals(this::setConfirmationBlocks, this.getConfirmationBlocks(), other.getConfirmationBlocks());
-            mergeOptionals(this::setMissingTxRetryBlocks, this.getMissingTxRetryBlocks(), other.getMissingTxRetryBlocks());
-            mergeOptionals(this::setEventInvalidationBlockThreshold, this.getEventInvalidationBlockThreshold(), other.getEventInvalidationBlockThreshold());
-            mergeOptionals(this::setReplayBlockOffset, this.getReplayBlockOffset(), other.getReplayBlockOffset());
-            mergeOptionals(this::setSyncBlockLimit, this.getSyncBlockLimit(), other.getSyncBlockLimit());
+            mergeOptionals(
+                    this::setConfirmationBlocks,
+                    this.getConfirmationBlocks(),
+                    other.getConfirmationBlocks());
+            mergeOptionals(
+                    this::setMissingTxRetryBlocks,
+                    this.getMissingTxRetryBlocks(),
+                    other.getMissingTxRetryBlocks());
+            mergeOptionals(
+                    this::setEventInvalidationBlockThreshold,
+                    this.getEventInvalidationBlockThreshold(),
+                    other.getEventInvalidationBlockThreshold());
+            mergeOptionals(
+                    this::setReplayBlockOffset,
+                    this.getReplayBlockOffset(),
+                    other.getReplayBlockOffset());
+            mergeOptionals(
+                    this::setSyncBlockLimit, this.getSyncBlockLimit(), other.getSyncBlockLimit());
         }
 
         return this;

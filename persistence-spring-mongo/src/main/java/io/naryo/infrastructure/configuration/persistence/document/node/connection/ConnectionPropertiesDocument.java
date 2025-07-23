@@ -25,7 +25,7 @@ public abstract class ConnectionPropertiesDocument implements NodeConnectionDesc
             NodeConnectionRetryPropertiesDocument retry,
             ConnectionEndpointPropertiesDocument endpoint) {
         this.type = type;
-        this.retry = retry != null? retry : new NodeConnectionRetryPropertiesDocument();
+        this.retry = retry != null ? retry : new NodeConnectionRetryPropertiesDocument();
         this.endpoint = endpoint;
     }
 

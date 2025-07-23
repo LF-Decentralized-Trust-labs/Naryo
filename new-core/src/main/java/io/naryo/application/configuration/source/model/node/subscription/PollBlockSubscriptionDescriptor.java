@@ -20,7 +20,7 @@ public interface PollBlockSubscriptionDescriptor extends BlockSubscriptionDescri
 
     @Override
     default SubscriptionDescriptor merge(SubscriptionDescriptor descriptor) {
-         BlockSubscriptionDescriptor.super.merge(descriptor);
+        BlockSubscriptionDescriptor.super.merge(descriptor);
 
         if (descriptor instanceof PollBlockSubscriptionDescriptor other) {
             if (!this.method().equals(other.method())) {
