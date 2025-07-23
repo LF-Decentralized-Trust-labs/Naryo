@@ -10,28 +10,27 @@ import io.naryo.infrastructure.configuration.persistence.document.common.Connect
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.Setter;
 
 import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 
-@Document
 public abstract class ConnectionPropertiesDocument implements NodeConnectionDescriptor {
 
-    private final @Getter @NotNull NodeConnectionType type;
-    private @Nullable NodeConnectionRetryDescriptor retry;
-    private @Nullable ConnectionEndpointDescriptor endpoint;
+    private @Setter @Getter @NotNull NodeConnectionType type;
+    private @Nullable NodeConnectionRetryPropertiesDocument retry;
+    private @Nullable ConnectionEndpointPropertiesDocument endpoint;
 
     public ConnectionPropertiesDocument(
             NodeConnectionType type,
-            NodeConnectionRetryDescriptor retry,
-            ConnectionEndpointDescriptor endpoint) {
+            NodeConnectionRetryPropertiesDocument retry,
+            ConnectionEndpointPropertiesDocument endpoint) {
         this.type = type;
-        this.retry = retry;
+        this.retry = retry != null? retry : new NodeConnectionRetryPropertiesDocument();
         this.endpoint = endpoint;
     }
 
     @Override
-    public Optional<NodeConnectionRetryDescriptor> getRetry() {
+    public Optional<NodeConnectionRetryPropertiesDocument> getRetry() {
         return Optional.ofNullable(retry);
     }
 

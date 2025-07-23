@@ -7,7 +7,9 @@ import io.naryo.domain.node.interaction.block.InteractionMode;
 import jakarta.annotation.Nullable;
 import lombok.Setter;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document
 @TypeAlias("hedera_mirror_node_block_interaction")
 public final class HederaMirrorNodeBlockInteractionPropertiesDocument
         extends BlockInteractionPropertiesDocument

@@ -4,10 +4,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 import io.naryo.application.configuration.source.model.node.PrivateEthereumNodeDescriptor;
-import io.naryo.application.configuration.source.model.node.connection.NodeConnectionDescriptor;
-import io.naryo.application.configuration.source.model.node.interaction.InteractionDescriptor;
-import io.naryo.application.configuration.source.model.node.subscription.SubscriptionDescriptor;
 import io.naryo.domain.node.ethereum.EthereumNodeVisibility;
+import io.naryo.infrastructure.configuration.persistence.document.node.connection.ConnectionPropertiesDocument;
+import io.naryo.infrastructure.configuration.persistence.document.node.interaction.InteractionPropertiesDocument;
+import io.naryo.infrastructure.configuration.persistence.document.node.subscription.SubscriptionPropertiesDocument;
 import jakarta.annotation.Nullable;
 import lombok.Setter;
 import org.springframework.data.annotation.TypeAlias;
@@ -22,9 +22,9 @@ public final class PrivateEthereumNodePropertiesDocument extends EthereumNodePro
     public PrivateEthereumNodePropertiesDocument(
             UUID id,
             String name,
-            SubscriptionDescriptor subscription,
-            InteractionDescriptor interaction,
-            NodeConnectionDescriptor connection,
+            SubscriptionPropertiesDocument subscription,
+            InteractionPropertiesDocument interaction,
+            ConnectionPropertiesDocument connection,
             String groupId,
             String precompiledAddress) {
         super(id, name, subscription, interaction, connection, EthereumNodeVisibility.PRIVATE);

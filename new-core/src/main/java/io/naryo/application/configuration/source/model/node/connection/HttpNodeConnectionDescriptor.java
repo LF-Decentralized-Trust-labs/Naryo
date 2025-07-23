@@ -32,7 +32,7 @@ public interface HttpNodeConnectionDescriptor extends NodeConnectionDescriptor {
 
     @Override
     default NodeConnectionDescriptor merge(NodeConnectionDescriptor other) {
-        var connection = NodeConnectionDescriptor.super.merge(other);
+        NodeConnectionDescriptor.super.merge(other);
 
         if (other instanceof HttpNodeConnectionDescriptor otherDescriptor) {
             mergeOptionals(
@@ -51,6 +51,6 @@ public interface HttpNodeConnectionDescriptor extends NodeConnectionDescriptor {
                     this::setReadTimeout, this.getReadTimeout(), otherDescriptor.getReadTimeout());
         }
 
-        return connection;
+        return this;
     }
 }

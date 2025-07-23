@@ -3,7 +3,9 @@ package io.naryo.infrastructure.configuration.persistence.document.node.interact
 import io.naryo.application.configuration.source.model.node.interaction.EthereumRpcBlockInteractionDescriptor;
 import io.naryo.domain.node.interaction.block.InteractionMode;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document
 @TypeAlias("ethereum_rpc_block_interaction")
 public final class EthereumRpcBlockInteractionPropertiesDocument
         extends BlockInteractionPropertiesDocument

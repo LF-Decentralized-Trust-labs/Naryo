@@ -7,7 +7,9 @@ import io.naryo.application.configuration.source.model.node.connection.retry.Nod
 import jakarta.annotation.Nullable;
 import lombok.Setter;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document
 @TypeAlias("connection_retry")
 public final class NodeConnectionRetryPropertiesDocument implements NodeConnectionRetryDescriptor {
 

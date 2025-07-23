@@ -9,7 +9,9 @@ import io.naryo.domain.node.subscription.block.method.BlockSubscriptionMethod;
 import jakarta.validation.constraints.NotNull;
 import lombok.Setter;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document
 @TypeAlias("poll_block_subscription")
 public final class PollBlockSubscriptionPropertiesDocument
         extends BlockSubscriptionPropertiesDocument implements PollBlockSubscriptionDescriptor {
