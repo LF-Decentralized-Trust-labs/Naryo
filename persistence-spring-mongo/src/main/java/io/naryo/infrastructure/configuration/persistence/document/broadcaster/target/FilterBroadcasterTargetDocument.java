@@ -6,11 +6,9 @@ import io.naryo.application.configuration.source.model.broadcaster.target.Broadc
 import io.naryo.application.configuration.source.model.broadcaster.target.FilterBroadcasterTargetDescriptor;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import static io.naryo.application.common.util.MergeUtil.mergeValues;
 
-@Document
 @TypeAlias("filter_broadcaster_targets")
 public class FilterBroadcasterTargetDocument extends BroadcasterTargetDocument
         implements FilterBroadcasterTargetDescriptor {
