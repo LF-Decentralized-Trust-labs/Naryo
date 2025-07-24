@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.naryo.infrastructure.configuration.source.env.model.EnvironmentProperties;
 import io.naryo.infrastructure.configuration.source.env.model.broadcaster.BroadcastingProperties;
+import io.naryo.infrastructure.configuration.source.env.model.event.store.EventStoreConfigurationProperties;
 import io.naryo.infrastructure.configuration.source.env.model.filter.FilterProperties;
 import io.naryo.infrastructure.configuration.source.env.model.http.HttpClientProperties;
 import io.naryo.infrastructure.configuration.source.env.model.node.NodeProperties;
@@ -31,7 +32,9 @@ public final class EnvironmentPropertiesDeserializer
         List<NodeProperties> nodes = safeTreeToList(root, "nodes", codec, NodeProperties.class);
         List<FilterProperties> filters =
                 safeTreeToList(root, "filters", codec, FilterProperties.class);
+        EventStoreConfigurationProperties eventStore =
+                safeTreeToValue(root, "eventStore", codec, EventStoreConfigurationProperties.class);
 
-        return new EnvironmentProperties(httpClient, broadcasting, nodes, filters);
+        return new EnvironmentProperties(httpClient, broadcasting, nodes, filters, eventStore);
     }
 }
