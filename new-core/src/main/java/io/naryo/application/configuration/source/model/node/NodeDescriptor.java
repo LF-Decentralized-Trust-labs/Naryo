@@ -35,16 +35,15 @@ public interface NodeDescriptor extends MergeableDescriptor<NodeDescriptor> {
     void setConnection(NodeConnectionDescriptor connection);
 
     @Override
-    default NodeDescriptor merge(NodeDescriptor descriptor) {
-        if (descriptor == null) {
+    default NodeDescriptor merge(NodeDescriptor other) {
+        if (!this.getType().equals(other.getType())) {
             return this;
         }
 
-        mergeOptionals(this::setName, this.getName(), descriptor.getName());
-        mergeDescriptors(
-                this::setSubscription, this.getSubscription(), descriptor.getSubscription());
-        mergeDescriptors(this::setInteraction, this.getInteraction(), descriptor.getInteraction());
-        mergeDescriptors(this::setConnection, this.getConnection(), descriptor.getConnection());
+        mergeOptionals(this::setName, this.getName(), other.getName());
+        mergeDescriptors(this::setSubscription, this.getSubscription(), other.getSubscription());
+        mergeDescriptors(this::setInteraction, this.getInteraction(), other.getInteraction());
+        mergeDescriptors(this::setConnection, this.getConnection(), other.getConnection());
 
         return this;
     }

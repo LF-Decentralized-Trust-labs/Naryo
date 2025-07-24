@@ -32,10 +32,6 @@ public interface BroadcasterConfigurationDescriptor
 
     @Override
     default BroadcasterConfigurationDescriptor merge(BroadcasterConfigurationDescriptor other) {
-        if (other == null) {
-            return this;
-        }
-
         mergeDescriptors(this::setCache, this.getCache(), other.getCache());
         mergeOptionals(
                 this::setAdditionalProperties,

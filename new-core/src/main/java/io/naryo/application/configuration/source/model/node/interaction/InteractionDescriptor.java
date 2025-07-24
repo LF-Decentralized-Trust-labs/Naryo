@@ -9,14 +9,6 @@ public interface InteractionDescriptor extends MergeableDescriptor<InteractionDe
 
     @Override
     default InteractionDescriptor merge(InteractionDescriptor other) {
-        if (other == null) {
-            return this;
-        }
-
-        if (!this.getStrategy().equals(other.getStrategy())) {
-            return other;
-        }
-
         return this;
     }
 }

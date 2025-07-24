@@ -15,10 +15,6 @@ public interface ConnectionEndpointDescriptor
 
     @Override
     default ConnectionEndpointDescriptor merge(ConnectionEndpointDescriptor other) {
-        if (other == null) {
-            return this;
-        }
-
         mergeOptionals(this::setUrl, this.getUrl(), other.getUrl());
 
         return this;
