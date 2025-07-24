@@ -1,14 +1,22 @@
 package io.naryo.domain.filter.event;
 
+import io.naryo.domain.DomainBuilder;
 import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.filter.event.sync.block.BlockActiveSyncState;
 import org.instancio.Instancio;
 
-public class BlockActiveSyncStateBuilder {
+public class BlockActiveSyncStateBuilder
+        implements DomainBuilder<BlockActiveSyncStateBuilder, BlockActiveSyncState> {
 
     private NonNegativeBlockNumber initialBlock;
     private NonNegativeBlockNumber lastBlockProcessed;
 
+    @Override
+    public BlockActiveSyncStateBuilder self() {
+        return this;
+    }
+
+    @Override
     public BlockActiveSyncState build() {
         return new BlockActiveSyncState(this.getInitialBlock(), this.getLastBlockProcessed());
     }

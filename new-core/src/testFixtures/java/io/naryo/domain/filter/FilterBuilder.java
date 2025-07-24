@@ -2,12 +2,14 @@ package io.naryo.domain.filter;
 
 import java.util.UUID;
 
+import io.naryo.domain.DomainBuilder;
 import org.instancio.Instancio;
 import org.instancio.InstancioApi;
 
 import static org.instancio.Select.field;
 
-public abstract class FilterBuilder<T, Y extends Filter> {
+public abstract class FilterBuilder<T extends FilterBuilder<T, Y>, Y extends Filter>
+        implements DomainBuilder<T, Y> {
 
     private UUID id;
     private FilterName name;

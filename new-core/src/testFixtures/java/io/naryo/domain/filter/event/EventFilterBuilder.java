@@ -6,7 +6,8 @@ import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.filter.FilterBuilder;
 import org.instancio.Instancio;
 
-public abstract class EventFilterBuilder<T, Y extends EventFilter> extends FilterBuilder<T, Y> {
+public abstract class EventFilterBuilder<T extends EventFilterBuilder<T, Y>, Y extends EventFilter>
+        extends FilterBuilder<T, Y> {
 
     private EventFilterSpecification specification;
     private Set<ContractEventStatus> statuses;
