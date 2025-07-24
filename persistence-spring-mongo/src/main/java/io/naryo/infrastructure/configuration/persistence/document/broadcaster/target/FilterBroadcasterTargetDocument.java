@@ -6,10 +6,8 @@ import io.naryo.application.configuration.source.model.broadcaster.target.Filter
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
-@Document(collection = "broadcasters")
 @TypeAlias("filter_broadcaster_targets")
 public class FilterBroadcasterTargetDocument extends BroadcasterTargetDocument
         implements FilterBroadcasterTargetDescriptor {
