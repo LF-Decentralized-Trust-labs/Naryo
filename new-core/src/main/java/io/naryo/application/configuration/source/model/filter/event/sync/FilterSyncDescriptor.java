@@ -9,10 +9,6 @@ public interface FilterSyncDescriptor extends MergeableDescriptor<FilterSyncDesc
 
     @Override
     default FilterSyncDescriptor merge(FilterSyncDescriptor other) {
-        if (other == null) {
-            return this;
-        }
-
         if (!this.getStrategy().equals(other.getStrategy())) {
             return other;
         }

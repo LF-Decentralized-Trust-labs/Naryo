@@ -5,20 +5,20 @@ import io.naryo.domain.node.subscription.block.method.BlockSubscriptionMethod;
 public interface PubsubBlockSubscriptionDescriptor extends BlockSubscriptionDescriptor {
 
     @Override
-    default BlockSubscriptionMethod method() {
+    default BlockSubscriptionMethod getMethod() {
         return BlockSubscriptionMethod.PUBSUB;
     }
 
     @Override
-    default SubscriptionDescriptor merge(SubscriptionDescriptor descriptor) {
-        BlockSubscriptionDescriptor.super.merge(descriptor);
-
-        if (descriptor instanceof PubsubBlockSubscriptionDescriptor other) {
-            if (!this.method().equals(other.method())) {
-                return descriptor;
-            }
+    default SubscriptionDescriptor merge(SubscriptionDescriptor other) {
+        if (!(other instanceof PubsubBlockSubscriptionDescriptor otherPubsubSubscription)) {
+            return this;
         }
 
-        return this;
+        if (!this.getMethod().equals(otherPubsubSubscription.getMethod())) {
+            return this;
+        }
+
+        return BlockSubscriptionDescriptor.super.merge(otherPubsubSubscription);
     }
 }

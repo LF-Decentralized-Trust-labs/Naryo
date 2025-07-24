@@ -14,39 +14,29 @@ public final class MergeUtil {
 
     public static <V> void mergeOptionals(
             Consumer<V> setter, Optional<V> original, Optional<V> other) {
-        boolean objectsAreMergeable =
-                original.isPresent()
-                        && other.isPresent()
-                        && !Objects.equals(original.get(), other.get());
-
-        if (objectsAreMergeable) {
+        if (original.isEmpty() && other.isPresent()) {
             setter.accept(other.get());
-        } else other.ifPresent(setter);
-    }
-
-    public static <V> void mergeValues(Consumer<V> setter, V original, V other) {
-        if (other != null && !Objects.equals(original, other)) {
-            setter.accept(other);
         }
     }
 
     public static <V extends Collection<?>> void mergeCollections(
             Consumer<V> setter, V original, V other) {
-        if (!other.isEmpty() && !Objects.equals(original, other)) {
+        if (original.isEmpty() && !other.isEmpty()) {
             setter.accept(other);
         }
     }
 
     public static <V extends MergeableDescriptor<V>> void mergeDescriptors(
             Consumer<V> setter, Optional<V> original, Optional<V> other) {
-        boolean objectsAreMergeable =
-                original.isPresent()
-                        && other.isPresent()
-                        && !Objects.equals(original.get(), other.get());
+        boolean originalIsPresent = original.isPresent();
+        boolean otherIsPresent = other.isPresent();
 
-        if (objectsAreMergeable) {
-            V merged = original.get().merge(other.get());
-            setter.accept(merged);
-        } else other.ifPresent(setter);
+        if (!originalIsPresent && otherIsPresent) {
+            setter.accept(other.get());
+        } else if (originalIsPresent
+                && otherIsPresent
+                && !Objects.equals(original.get(), other.get())) {
+            setter.accept(original.get().merge(other.get()));
+        }
     }
 }

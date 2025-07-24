@@ -4,7 +4,9 @@ import java.time.Duration;
 
 import io.naryo.application.configuration.source.model.broadcaster.configuration.BroadcasterCacheConfigurationDescriptor;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 
+@Getter
 public class BroadcasterCacheProperties implements BroadcasterCacheConfigurationDescriptor {
 
     private static final Duration DEFAULT_EXPIRATION_TIME = Duration.ofMinutes(5);
@@ -17,15 +19,5 @@ public class BroadcasterCacheProperties implements BroadcasterCacheConfiguration
 
     public BroadcasterCacheProperties() {
         this(DEFAULT_EXPIRATION_TIME);
-    }
-
-    @Override
-    public Duration getExpirationTime() {
-        return expirationTime;
-    }
-
-    @Override
-    public void setExpirationTime(Duration expirationTime) {
-        this.expirationTime = expirationTime;
     }
 }
