@@ -2,9 +2,7 @@ package io.naryo.infrastructure.configuration.persistence.document.broadcaster.t
 
 import io.naryo.application.configuration.source.model.broadcaster.target.BlockBroadcasterTargetDescriptor;
 import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "broadcasters")
 @TypeAlias("block_broadcaster_targets")
 public class BlockBroadcasterTargetDocument extends BroadcasterTargetDocument
         implements BlockBroadcasterTargetDescriptor {

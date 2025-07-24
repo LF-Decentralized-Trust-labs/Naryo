@@ -10,9 +10,7 @@ import io.naryo.infrastructure.configuration.persistence.document.node.connectio
 import jakarta.annotation.Nullable;
 import lombok.Setter;
 import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document
 @TypeAlias("http_connection")
 public final class HttpConnectionPropertiesDocument extends ConnectionPropertiesDocument
         implements HttpNodeConnectionDescriptor {

@@ -7,9 +7,11 @@ import io.naryo.application.configuration.source.model.node.connection.endpoint.
 import io.naryo.application.configuration.source.model.node.connection.retry.NodeConnectionRetryDescriptor;
 import io.naryo.infrastructure.configuration.persistence.document.common.ConnectionEndpointPropertiesDocument;
 import jakarta.annotation.Nullable;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 
+@Document
 public abstract class ConnectionPropertiesDocument implements NodeConnectionDescriptor {
 
     private @Nullable NodeConnectionRetryPropertiesDocument retry;
