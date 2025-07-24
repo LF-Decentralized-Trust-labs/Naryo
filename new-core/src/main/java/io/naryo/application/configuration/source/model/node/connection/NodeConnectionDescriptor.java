@@ -23,12 +23,8 @@ public interface NodeConnectionDescriptor extends MergeableDescriptor<NodeConnec
 
     @Override
     default NodeConnectionDescriptor merge(NodeConnectionDescriptor other) {
-        if (other == null) {
-            return this;
-        }
-
         if (!this.getType().equals(other.getType())) {
-            return other;
+            return this;
         }
 
         mergeDescriptors(this::setEndpoint, this.getEndpoint(), other.getEndpoint());

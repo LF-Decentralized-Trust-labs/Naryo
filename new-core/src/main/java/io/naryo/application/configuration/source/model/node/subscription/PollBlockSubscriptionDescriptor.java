@@ -14,22 +14,19 @@ public interface PollBlockSubscriptionDescriptor extends BlockSubscriptionDescri
     void setInterval(Duration interval);
 
     @Override
-    default BlockSubscriptionMethod method() {
+    default BlockSubscriptionMethod getMethod() {
         return BlockSubscriptionMethod.POLL;
     }
 
     @Override
-    default SubscriptionDescriptor merge(SubscriptionDescriptor descriptor) {
-        BlockSubscriptionDescriptor.super.merge(descriptor);
-
-        if (descriptor instanceof PollBlockSubscriptionDescriptor other) {
-            if (!this.method().equals(other.method())) {
-                return descriptor;
-            }
-
-            mergeOptionals(this::setInterval, this.getInterval(), other.getInterval());
+    default SubscriptionDescriptor merge(SubscriptionDescriptor other) {
+        if (!(other instanceof PollBlockSubscriptionDescriptor otherPollBlockSubscription)) {
+            return this;
         }
 
-        return this;
+        mergeOptionals(
+                this::setInterval, this.getInterval(), otherPollBlockSubscription.getInterval());
+
+        return BlockSubscriptionDescriptor.super.merge(other);
     }
 }

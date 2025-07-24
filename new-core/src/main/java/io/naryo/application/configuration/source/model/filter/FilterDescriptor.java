@@ -23,13 +23,13 @@ public interface FilterDescriptor extends MergeableDescriptor<FilterDescriptor> 
     void setNodeId(UUID nodeId);
 
     @Override
-    default FilterDescriptor merge(FilterDescriptor descriptor) {
-        if (descriptor == null) {
+    default FilterDescriptor merge(FilterDescriptor other) {
+        if (!this.getType().equals(other.getType())) {
             return this;
         }
 
-        mergeOptionals(this::setName, this.getName(), descriptor.getName());
-        mergeOptionals(this::setNodeId, this.getNodeId(), descriptor.getNodeId());
+        mergeOptionals(this::setName, this.getName(), other.getName());
+        mergeOptionals(this::setNodeId, this.getNodeId(), other.getNodeId());
 
         return this;
     }

@@ -31,16 +31,19 @@ public interface TransactionFilterDescriptor extends FilterDescriptor {
     }
 
     @Override
-    default FilterDescriptor merge(FilterDescriptor descriptor) {
-        FilterDescriptor.super.merge(descriptor);
-
-        if (descriptor instanceof TransactionFilterDescriptor other) {
-            mergeOptionals(
-                    this::setIdentifierType, this.getIdentifierType(), other.getIdentifierType());
-            mergeOptionals(this::setValue, this.getValue(), other.getValue());
-            mergeCollections(this::setStatuses, this.getStatuses(), other.getStatuses());
+    default FilterDescriptor merge(FilterDescriptor other) {
+        if (!(other instanceof TransactionFilterDescriptor otherTransactionFilter)) {
+            return this;
         }
 
-        return this;
+        mergeOptionals(
+                this::setIdentifierType,
+                this.getIdentifierType(),
+                otherTransactionFilter.getIdentifierType());
+        mergeOptionals(this::setValue, this.getValue(), otherTransactionFilter.getValue());
+        mergeCollections(
+                this::setStatuses, this.getStatuses(), otherTransactionFilter.getStatuses());
+
+        return FilterDescriptor.super.merge(other);
     }
 }

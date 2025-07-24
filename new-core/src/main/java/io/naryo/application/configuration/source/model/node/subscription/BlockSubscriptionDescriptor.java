@@ -10,7 +10,7 @@ import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
 
 public interface BlockSubscriptionDescriptor extends SubscriptionDescriptor {
 
-    BlockSubscriptionMethod method();
+    BlockSubscriptionMethod getMethod();
 
     Optional<BigInteger> getInitialBlock();
 
@@ -42,37 +42,40 @@ public interface BlockSubscriptionDescriptor extends SubscriptionDescriptor {
     }
 
     @Override
-    default SubscriptionDescriptor merge(SubscriptionDescriptor descriptor) {
-        if (descriptor == null) {
+    default SubscriptionDescriptor merge(SubscriptionDescriptor other) {
+        if (!(other instanceof BlockSubscriptionDescriptor otherBlockSubscription)) {
             return this;
         }
 
-        if (descriptor instanceof BlockSubscriptionDescriptor other) {
-            if (!this.method().equals(other.method())) {
-                return descriptor;
-            }
-
-            mergeOptionals(this::setInitialBlock, this.getInitialBlock(), other.getInitialBlock());
-            mergeOptionals(
-                    this::setConfirmationBlocks,
-                    this.getConfirmationBlocks(),
-                    other.getConfirmationBlocks());
-            mergeOptionals(
-                    this::setMissingTxRetryBlocks,
-                    this.getMissingTxRetryBlocks(),
-                    other.getMissingTxRetryBlocks());
-            mergeOptionals(
-                    this::setEventInvalidationBlockThreshold,
-                    this.getEventInvalidationBlockThreshold(),
-                    other.getEventInvalidationBlockThreshold());
-            mergeOptionals(
-                    this::setReplayBlockOffset,
-                    this.getReplayBlockOffset(),
-                    other.getReplayBlockOffset());
-            mergeOptionals(
-                    this::setSyncBlockLimit, this.getSyncBlockLimit(), other.getSyncBlockLimit());
+        if (!this.getMethod().equals(otherBlockSubscription.getMethod())) {
+            return this;
         }
 
-        return this;
+        mergeOptionals(
+                this::setInitialBlock,
+                this.getInitialBlock(),
+                otherBlockSubscription.getInitialBlock());
+        mergeOptionals(
+                this::setConfirmationBlocks,
+                this.getConfirmationBlocks(),
+                otherBlockSubscription.getConfirmationBlocks());
+        mergeOptionals(
+                this::setMissingTxRetryBlocks,
+                this.getMissingTxRetryBlocks(),
+                otherBlockSubscription.getMissingTxRetryBlocks());
+        mergeOptionals(
+                this::setEventInvalidationBlockThreshold,
+                this.getEventInvalidationBlockThreshold(),
+                otherBlockSubscription.getEventInvalidationBlockThreshold());
+        mergeOptionals(
+                this::setReplayBlockOffset,
+                this.getReplayBlockOffset(),
+                otherBlockSubscription.getReplayBlockOffset());
+        mergeOptionals(
+                this::setSyncBlockLimit,
+                this.getSyncBlockLimit(),
+                otherBlockSubscription.getSyncBlockLimit());
+
+        return SubscriptionDescriptor.super.merge(other);
     }
 }

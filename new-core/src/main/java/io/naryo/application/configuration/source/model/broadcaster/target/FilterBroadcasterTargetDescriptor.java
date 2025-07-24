@@ -8,10 +8,17 @@ public interface FilterBroadcasterTargetDescriptor extends BroadcasterTargetDesc
 
     UUID getFilterId();
 
-    void setFilterId(UUID filterId);
-
     @Override
     default BroadcasterTargetType getType() {
         return BroadcasterTargetType.FILTER;
+    }
+
+    @Override
+    default BroadcasterTargetDescriptor merge(BroadcasterTargetDescriptor other) {
+        if (!(other instanceof FilterBroadcasterTargetDescriptor)) {
+            return this;
+        }
+
+        return BroadcasterTargetDescriptor.super.merge(other);
     }
 }

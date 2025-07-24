@@ -20,10 +20,6 @@ public interface NodeConnectionRetryDescriptor
 
     @Override
     default NodeConnectionRetryDescriptor merge(NodeConnectionRetryDescriptor other) {
-        if (other == null) {
-            return this;
-        }
-
         mergeOptionals(this::setTimes, this.getTimes(), other.getTimes());
         mergeOptionals(this::setBackoff, this.getBackoff(), other.getBackoff());
 

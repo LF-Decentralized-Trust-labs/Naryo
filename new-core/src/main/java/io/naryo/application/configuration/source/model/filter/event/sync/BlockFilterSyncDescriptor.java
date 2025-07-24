@@ -19,13 +19,16 @@ public interface BlockFilterSyncDescriptor extends FilterSyncDescriptor {
     }
 
     @Override
-    default FilterSyncDescriptor merge(FilterSyncDescriptor descriptor) {
-        FilterSyncDescriptor.super.merge(descriptor);
-
-        if (descriptor instanceof BlockFilterSyncDescriptor other) {
-            mergeOptionals(this::setInitialBlock, this.getInitialBlock(), other.getInitialBlock());
+    default FilterSyncDescriptor merge(FilterSyncDescriptor other) {
+        if (!(other instanceof BlockFilterSyncDescriptor otherBlockFilterSync)) {
+            return this;
         }
 
-        return this;
+        mergeOptionals(
+                this::setInitialBlock,
+                this.getInitialBlock(),
+                otherBlockFilterSync.getInitialBlock());
+
+        return FilterSyncDescriptor.super.merge(other);
     }
 }

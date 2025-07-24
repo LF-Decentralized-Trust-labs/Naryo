@@ -18,7 +18,7 @@ public interface BroadcasterTargetDescriptor
 
     @Override
     default BroadcasterTargetDescriptor merge(BroadcasterTargetDescriptor other) {
-        if (other == null) {
+        if (!this.getType().equals(other.getType())) {
             return this;
         }
 

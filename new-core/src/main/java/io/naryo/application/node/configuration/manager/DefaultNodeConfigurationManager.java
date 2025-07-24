@@ -119,7 +119,7 @@ public final class DefaultNodeConfigurationManager
                         descriptor; // We assume this is the correct type because there's not more
         // at this moment
         var method =
-                switch (blockDescriptor.method()) {
+                switch (blockDescriptor.getMethod()) {
                     case POLL ->
                             new PollBlockSubscriptionMethodConfiguration(
                                     new Interval(
