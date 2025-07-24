@@ -5,8 +5,6 @@ import org.instancio.Instancio;
 
 public abstract class ParameterDefinitionBuilder<T, Y extends ParameterDefinition> {
 
-    private static final boolean DEFAULT_INDEXED = false;
-
     private Integer position;
     private Boolean indexed;
 
@@ -29,6 +27,6 @@ public abstract class ParameterDefinitionBuilder<T, Y extends ParameterDefinitio
     }
 
     protected boolean isIndexed() {
-        return this.indexed == null ? DEFAULT_INDEXED : this.indexed;
+        return this.indexed == null ? Instancio.create(Boolean.class) : this.indexed;
     }
 }
