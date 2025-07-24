@@ -38,6 +38,6 @@ public class ArrayParameterDefinitionBuilder
     }
 
     private Integer getFixedLength() {
-        return this.fixedLength;
+        return this.fixedLength == null ? 1 : this.fixedLength;
     }
 }
