@@ -15,7 +15,7 @@ public interface BroadcasterDescriptor extends MergeableDescriptor<BroadcasterDe
 
     Optional<UUID> getConfigurationId();
 
-    Optional<BroadcasterTargetDescriptor> getTarget();
+    <T extends BroadcasterTargetDescriptor> Optional<T> getTarget();
 
     void setConfigurationId(UUID configurationId);
 
