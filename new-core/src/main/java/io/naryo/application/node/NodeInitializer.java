@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 import io.naryo.application.broadcaster.BroadcasterProducer;
 import io.naryo.application.configuration.resilence.ResilienceRegistry;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
+import io.naryo.application.event.store.EventStore;
 import io.naryo.application.filter.block.NodeSynchronizer;
 import io.naryo.application.node.calculator.StartBlockCalculator;
 import io.naryo.application.node.dispatch.block.EventDispatcher;
@@ -23,6 +24,8 @@ import io.naryo.application.node.trigger.Trigger;
 import io.naryo.application.node.trigger.permanent.EventBroadcasterPermanentTrigger;
 import io.naryo.application.node.trigger.permanent.EventStoreBroadcasterPermanentTrigger;
 import io.naryo.application.node.trigger.permanent.block.ProcessorTriggerFactory;
+import io.naryo.domain.configuration.eventstore.EventStoreConfiguration;
+import io.naryo.domain.event.Event;
 import io.naryo.domain.filter.Filter;
 import io.naryo.domain.filter.FilterType;
 import io.naryo.domain.filter.event.EventFilter;
@@ -48,7 +51,8 @@ public class NodeInitializer {
             BlockSubscriberFactory subscriberFactory,
             ProcessorTriggerFactory processorFactory,
             ContractEventParameterDecoder decoder,
-            List<BroadcasterProducer> producers) {
+            List<BroadcasterProducer> producers,
+            List<EventStore<Event, EventStoreConfiguration>> eventStores) {
         this.config = config;
         this.resilienceRegistry = resilienceRegistry;
         this.interactorFactory = interactorFactory;
@@ -63,7 +67,8 @@ public class NodeInitializer {
                                 new EventRoutingService(config.getFilters()),
                                 producers,
                                 config.getBroadcasterConfigurations()),
-                        new EventStoreBroadcasterPermanentTrigger(List.of()));
+                        new EventStoreBroadcasterPermanentTrigger(
+                                eventStores, config.getEventStoreConfiguration()));
     }
 
     public NodeContainer init() {

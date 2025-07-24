@@ -10,9 +10,9 @@ import io.naryo.application.configuration.source.model.Descriptor;
 public abstract class BaseConfigurationManager<T, S extends Descriptor>
         implements ConfigurationManager<T> {
 
-    protected final List<SourceProvider<S>> providers;
+    protected final List<? extends SourceProvider<S>> providers;
 
-    protected BaseConfigurationManager(List<SourceProvider<S>> providers) {
+    protected BaseConfigurationManager(List<? extends SourceProvider<S>> providers) {
         this.providers = providers;
     }
 

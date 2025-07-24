@@ -3,6 +3,7 @@ package io.naryo.application.node.trigger.permanent;
 import java.util.List;
 
 import io.naryo.application.event.store.EventStore;
+import io.naryo.domain.configuration.eventstore.EventStoreConfiguration;
 import io.naryo.domain.event.Event;
 import io.reactivex.functions.Consumer;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,15 +19,16 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class EventStoreBroadcasterPermanentTriggerTest {
 
-    @Mock private EventStore<Event> store1;
-    @Mock private EventStore<Event> store2;
+    @Mock private EventStore<Event, EventStoreConfiguration> store1;
+    @Mock private EventStore<Event, EventStoreConfiguration> store2;
     @Mock private Consumer<Event> consumer;
+    @Mock private EventStoreConfiguration configuration;
 
     private EventStoreBroadcasterPermanentTrigger trigger;
 
     @BeforeEach
     void setUp() {
-        trigger = new EventStoreBroadcasterPermanentTrigger(List.of(store1, store2));
+        trigger = new EventStoreBroadcasterPermanentTrigger(List.of(store1, store2), configuration);
     }
 
     @Test
@@ -37,8 +39,8 @@ class EventStoreBroadcasterPermanentTriggerTest {
 
         trigger.trigger(evt);
 
-        verify(store1, times(1)).save(evt);
-        verify(store2, never()).save(any());
+        verify(store1, times(1)).save(evt, configuration);
+        verify(store2, never()).save(any(), any());
     }
 
     @Test
@@ -50,7 +52,7 @@ class EventStoreBroadcasterPermanentTriggerTest {
         trigger.onExecute(consumer);
         trigger.trigger(evt);
 
-        verify(store1).save(evt);
+        verify(store1).save(evt, configuration);
         verify(consumer).accept(evt);
     }
 
@@ -58,11 +60,11 @@ class EventStoreBroadcasterPermanentTriggerTest {
     void trigger_catchesExceptionsFromSaveAndContinues() throws Exception {
         Event evt = mock(Event.class);
         when(store1.supports(evt)).thenReturn(true);
-        doThrow(new RuntimeException("db down")).when(store1).save(evt);
+        doThrow(new RuntimeException("db down")).when(store1).save(evt, configuration);
 
         assertDoesNotThrow(() -> trigger.trigger(evt));
 
-        verify(store1).save(evt);
+        verify(store1).save(evt, configuration);
     }
 
     @Test
