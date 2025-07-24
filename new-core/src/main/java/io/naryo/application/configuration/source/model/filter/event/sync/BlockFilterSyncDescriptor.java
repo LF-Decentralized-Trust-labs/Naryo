@@ -29,6 +29,6 @@ public interface BlockFilterSyncDescriptor extends FilterSyncDescriptor {
                 this.getInitialBlock(),
                 otherBlockFilterSync.getInitialBlock());
 
-        return FilterSyncDescriptor.super.merge(other);
+        return FilterSyncDescriptor.super.merge(otherBlockFilterSync);
     }
 }

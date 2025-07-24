@@ -44,6 +44,6 @@ public interface TransactionFilterDescriptor extends FilterDescriptor {
         mergeCollections(
                 this::setStatuses, this.getStatuses(), otherTransactionFilter.getStatuses());
 
-        return FilterDescriptor.super.merge(other);
+        return FilterDescriptor.super.merge(otherTransactionFilter);
     }
 }

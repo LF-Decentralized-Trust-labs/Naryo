@@ -55,6 +55,6 @@ public interface EventFilterDescriptor extends FilterDescriptor {
         mergeDescriptors(
                 this::setVisibility, this.getVisibility(), otherEventFilter.getVisibility());
 
-        return FilterDescriptor.super.merge(other);
+        return FilterDescriptor.super.merge(otherEventFilter);
     }
 }

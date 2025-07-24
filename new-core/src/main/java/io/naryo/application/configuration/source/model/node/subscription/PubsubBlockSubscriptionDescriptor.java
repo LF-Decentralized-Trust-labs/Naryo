@@ -19,6 +19,6 @@ public interface PubsubBlockSubscriptionDescriptor extends BlockSubscriptionDesc
             return this;
         }
 
-        return BlockSubscriptionDescriptor.super.merge(other);
+        return BlockSubscriptionDescriptor.super.merge(otherPubsubSubscription);
     }
 }

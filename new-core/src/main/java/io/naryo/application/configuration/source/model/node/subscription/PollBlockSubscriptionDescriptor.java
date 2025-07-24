@@ -27,6 +27,6 @@ public interface PollBlockSubscriptionDescriptor extends BlockSubscriptionDescri
         mergeOptionals(
                 this::setInterval, this.getInterval(), otherPollBlockSubscription.getInterval());
 
-        return BlockSubscriptionDescriptor.super.merge(other);
+        return BlockSubscriptionDescriptor.super.merge(otherPollBlockSubscription);
     }
 }

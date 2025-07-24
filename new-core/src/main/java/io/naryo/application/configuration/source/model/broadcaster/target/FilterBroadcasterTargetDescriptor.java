@@ -15,10 +15,10 @@ public interface FilterBroadcasterTargetDescriptor extends BroadcasterTargetDesc
 
     @Override
     default BroadcasterTargetDescriptor merge(BroadcasterTargetDescriptor other) {
-        if (!(other instanceof FilterBroadcasterTargetDescriptor)) {
+        if (!(other instanceof FilterBroadcasterTargetDescriptor otherFilterBroadcasterTarget)) {
             return this;
         }
 
-        return BroadcasterTargetDescriptor.super.merge(other);
+        return BroadcasterTargetDescriptor.super.merge(otherFilterBroadcasterTarget);
     }
 }

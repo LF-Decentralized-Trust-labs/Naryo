@@ -76,6 +76,6 @@ public interface BlockSubscriptionDescriptor extends SubscriptionDescriptor {
                 this.getSyncBlockLimit(),
                 otherBlockSubscription.getSyncBlockLimit());
 
-        return SubscriptionDescriptor.super.merge(other);
+        return SubscriptionDescriptor.super.merge(otherBlockSubscription);
     }
 }

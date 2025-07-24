@@ -14,10 +14,10 @@ public interface EthereumNodeDescriptor extends NodeDescriptor {
 
     @Override
     default NodeDescriptor merge(NodeDescriptor other) {
-        if (!(other instanceof EthereumNodeDescriptor)) {
+        if (!(other instanceof EthereumNodeDescriptor otherEthereumNode)) {
             return this;
         }
 
-        return NodeDescriptor.super.merge(other);
+        return NodeDescriptor.super.merge(otherEthereumNode);
     }
 }

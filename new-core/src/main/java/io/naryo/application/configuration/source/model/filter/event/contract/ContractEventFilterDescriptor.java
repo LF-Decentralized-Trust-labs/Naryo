@@ -27,6 +27,6 @@ public interface ContractEventFilterDescriptor extends EventFilterDescriptor {
 
         mergeOptionals(this::setAddress, this.getAddress(), otherContractEventFilter.getAddress());
 
-        return EventFilterDescriptor.super.merge(other);
+        return EventFilterDescriptor.super.merge(otherContractEventFilter);
     }
 }

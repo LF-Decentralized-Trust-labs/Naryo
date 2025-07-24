@@ -23,19 +23,16 @@ public interface PrivateEthereumNodeDescriptor extends EthereumNodeDescriptor {
 
     @Override
     default NodeDescriptor merge(NodeDescriptor other) {
-        if (!(other instanceof PrivateEthereumNodeDescriptor otherPrivateEthereumNodeDescriptor)) {
+        if (!(other instanceof PrivateEthereumNodeDescriptor otherPrivateEthereumNode)) {
             return this;
         }
 
-        mergeOptionals(
-                this::setGroupId,
-                this.getGroupId(),
-                otherPrivateEthereumNodeDescriptor.getGroupId());
+        mergeOptionals(this::setGroupId, this.getGroupId(), otherPrivateEthereumNode.getGroupId());
         mergeOptionals(
                 this::setPrecompiledAddress,
                 this.getPrecompiledAddress(),
-                otherPrivateEthereumNodeDescriptor.getPrecompiledAddress());
+                otherPrivateEthereumNode.getPrecompiledAddress());
 
-        return EthereumNodeDescriptor.super.merge(other);
+        return EthereumNodeDescriptor.super.merge(otherPrivateEthereumNode);
     }
 }
