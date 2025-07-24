@@ -1,6 +1,9 @@
 package io.naryo.domain.configuration.eventstore.database;
 
+import java.util.Set;
+
 import io.naryo.domain.configuration.eventstore.EventStoreType;
+import io.naryo.domain.configuration.eventstore.block.database.DatabaseEventStoreConfiguration;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,8 +27,9 @@ class DatabaseEventStoreConfigurationTest {
 
     private static class MockDatabaseEventStoreConfiguration
             extends DatabaseEventStoreConfiguration {
-        protected MockDatabaseEventStoreConfiguration(DatabaseEngine databaseEngine) {
-            super(databaseEngine);
+
+        protected MockDatabaseEventStoreConfiguration(DatabaseEngine engine) {
+            super(engine, Set.of());
         }
     }
 }
