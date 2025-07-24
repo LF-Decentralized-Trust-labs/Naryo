@@ -4,7 +4,7 @@ import io.naryo.application.configuration.source.model.broadcaster.target.AllBro
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "broadcasters")
+@Document
 @TypeAlias("all_broadcaster_targets")
 public class AllBroadcasterTargetDocument extends BroadcasterTargetDocument
         implements AllBroadcasterTargetDescriptor {

@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import static io.naryo.application.common.util.MergeUtil.mergeValues;
 
-@Document(collection = "broadcasters")
+@Document
 @TypeAlias("filter_broadcaster_targets")
 public class FilterBroadcasterTargetDocument extends BroadcasterTargetDocument
         implements FilterBroadcasterTargetDescriptor {
