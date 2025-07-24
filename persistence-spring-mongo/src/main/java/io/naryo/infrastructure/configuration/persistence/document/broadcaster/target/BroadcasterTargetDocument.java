@@ -5,7 +5,9 @@ import java.util.Optional;
 import io.naryo.application.configuration.source.model.broadcaster.target.BroadcasterTargetDescriptor;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document
 public abstract class BroadcasterTargetDocument implements BroadcasterTargetDescriptor {
 
     private @Nullable @NotBlank String destination;
