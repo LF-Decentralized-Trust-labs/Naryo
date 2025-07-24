@@ -2,7 +2,6 @@ package io.naryo.infrastructure.configuration.source.env.model.broadcaster.targe
 
 import java.util.UUID;
 
-import io.naryo.application.configuration.source.model.broadcaster.target.BroadcasterTargetDescriptor;
 import io.naryo.application.configuration.source.model.broadcaster.target.FilterBroadcasterTargetDescriptor;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -20,20 +19,5 @@ public class FilterBroadcasterTargetProperties extends BroadcasterTargetProperti
     protected FilterBroadcasterTargetProperties(String destination, UUID filterId) {
         super(destination);
         this.filterId = filterId;
-    }
-
-    @Override
-    public BroadcasterTargetDescriptor merge(BroadcasterTargetDescriptor other) {
-        FilterBroadcasterTargetProperties target =
-                (FilterBroadcasterTargetProperties)
-                        FilterBroadcasterTargetDescriptor.super.merge(other);
-
-        if (other instanceof FilterBroadcasterTargetDescriptor descriptor) {
-            if (!target.filterId.equals(descriptor.getFilterId())) {
-                target.setFilterId(descriptor.getFilterId());
-            }
-        }
-
-        return this;
     }
 }

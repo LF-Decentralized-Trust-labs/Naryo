@@ -7,15 +7,7 @@ public interface SubscriptionDescriptor extends MergeableDescriptor<Subscription
 
     SubscriptionStrategy getStrategy();
 
-    default SubscriptionDescriptor merge(SubscriptionDescriptor descriptor) {
-        if (descriptor == null) {
-            return this;
-        }
-
-        if (!this.getStrategy().equals(descriptor.getStrategy())) {
-            return descriptor;
-        }
-
+    default SubscriptionDescriptor merge(SubscriptionDescriptor other) {
         return this;
     }
 }

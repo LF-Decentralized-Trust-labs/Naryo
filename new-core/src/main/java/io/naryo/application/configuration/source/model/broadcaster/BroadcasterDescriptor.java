@@ -23,10 +23,6 @@ public interface BroadcasterDescriptor extends MergeableDescriptor<BroadcasterDe
 
     @Override
     default BroadcasterDescriptor merge(BroadcasterDescriptor other) {
-        if (other == null) {
-            return this;
-        }
-
         mergeOptionals(
                 this::setConfigurationId, this.getConfigurationId(), other.getConfigurationId());
         mergeDescriptors(this::setTarget, this.getTarget(), other.getTarget());
