@@ -18,11 +18,11 @@ public interface BroadcasterConfigurationDescriptor
 
     BroadcasterType getType();
 
-    Optional<BroadcasterCacheConfigurationDescriptor> getCache();
+    <T extends BroadcasterCacheConfigurationDescriptor> Optional<T> getCache();
 
     Optional<Map<String, Object>> getAdditionalProperties();
 
-    Optional<ConfigurationSchema> getPropertiesSchema();
+    <T extends ConfigurationSchema> Optional<T> getPropertiesSchema();
 
     void setCache(BroadcasterCacheConfigurationDescriptor cache);
 
