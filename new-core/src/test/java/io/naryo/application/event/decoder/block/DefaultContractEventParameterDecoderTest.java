@@ -7,12 +7,11 @@ import java.util.Set;
 
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.node.interactor.block.dto.Log;
-import io.naryo.domain.common.event.EventName;
 import io.naryo.domain.event.contract.ContractEventParameter;
 import io.naryo.domain.event.contract.parameter.*;
-import io.naryo.domain.filter.event.CorrelationId;
 import io.naryo.domain.filter.event.EventFilterSpecification;
-import io.naryo.domain.filter.event.parameter.*;
+import io.naryo.domain.filter.event.EventFilterSpecificationBuilder;
+import io.naryo.domain.filter.event.parameterdefinition.*;
 import org.junit.jupiter.api.Test;
 
 class DefaultContractEventParameterDecoderTest {
@@ -23,19 +22,41 @@ class DefaultContractEventParameterDecoderTest {
     @Test
     void testDecode() {
         EventFilterSpecification spec =
-                new EventFilterSpecification(
-                        new EventName("Test"),
-                        new CorrelationId(0),
-                        Set.of(
-                                new AddressParameterDefinition(0, false),
-                                new ArrayParameterDefinition(
-                                        1, new AddressParameterDefinition(), null),
-                                new BoolParameterDefinition(2, false),
-                                new BytesFixedParameterDefinition(32, 3, false),
-                                new BytesParameterDefinition(4),
-                                new IntParameterDefinition(256, 5, false),
-                                new StringParameterDefinition(6),
-                                new UintParameterDefinition(256, 7, false)));
+                new EventFilterSpecificationBuilder()
+                        .withParameters(
+                                Set.of(
+                                        new AddressParameterDefinitionBuilder()
+                                                .withPosition(0)
+                                                .build(),
+                                        new ArrayParameterDefinitionBuilder()
+                                                .withPosition(1)
+                                                .withElementType(
+                                                        new AddressParameterDefinitionBuilder()
+                                                                .build())
+                                                .withFixedLength(null)
+                                                .build(),
+                                        new BoolParameterDefinitionBuilder()
+                                                .withPosition(2)
+                                                .build(),
+                                        new BytesFixedParameterDefinitionBuilder()
+                                                .withByteLength(32)
+                                                .withPosition(3)
+                                                .build(),
+                                        new BytesParameterDefinitionBuilder()
+                                                .withPosition(4)
+                                                .build(),
+                                        new IntParameterDefinitionBuilder()
+                                                .withBitSize(256)
+                                                .withPosition(5)
+                                                .build(),
+                                        new StringParameterDefinitionBuilder()
+                                                .withPosition(6)
+                                                .build(),
+                                        new UintParameterDefinitionBuilder()
+                                                .withBitSize(256)
+                                                .withPosition(7)
+                                                .build()))
+                        .build();
 
         // @formatter:off
         String logData =
