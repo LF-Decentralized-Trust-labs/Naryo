@@ -1,15 +1,18 @@
 package io.naryo.domain.configuration.eventstore.server;
 
+import java.util.Set;
+
 import io.naryo.domain.configuration.eventstore.EventStoreType;
+import io.naryo.domain.configuration.eventstore.block.server.ServerBlockEventStoreConfiguration;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ServerEventStoreConfigurationTest {
+class ServerBlockEventStoreConfigurationTest {
 
     @Test
     void testConstructor() {
-        ServerEventStoreConfiguration config =
+        ServerBlockEventStoreConfiguration config =
                 new MockServerEventStoreConfiguration(new MockServerType());
         assertEquals(EventStoreType.SERVER, config.getType());
         assertEquals("MockServer", config.getServerType().getName());
@@ -22,9 +25,10 @@ class ServerEventStoreConfigurationTest {
         }
     }
 
-    private static class MockServerEventStoreConfiguration extends ServerEventStoreConfiguration {
+    private static class MockServerEventStoreConfiguration
+            extends ServerBlockEventStoreConfiguration {
         protected MockServerEventStoreConfiguration(ServerType serverType) {
-            super(serverType);
+            super(Set.of(), serverType);
         }
     }
 }

@@ -1,6 +1,6 @@
 package io.naryo.application.event.store.configuration.provider;
 
 import io.naryo.application.configuration.provider.SourceProvider;
-import io.naryo.domain.configuration.eventstore.EventStoreConfiguration;
+import io.naryo.application.configuration.source.model.event.EventStoreDescriptor;
 
-public interface EventStoreSourceProvider extends SourceProvider<EventStoreConfiguration> {}
+public interface EventStoreSourceProvider extends SourceProvider<EventStoreDescriptor> {}

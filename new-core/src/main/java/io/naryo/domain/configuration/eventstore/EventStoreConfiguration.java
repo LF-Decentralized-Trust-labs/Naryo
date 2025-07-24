@@ -10,9 +10,11 @@ import lombok.ToString;
 public abstract class EventStoreConfiguration implements Configuration {
 
     private final EventStoreType type;
+    private final EventStoreStrategy strategy;
 
-    protected EventStoreConfiguration(EventStoreType type) {
+    protected EventStoreConfiguration(EventStoreType type, EventStoreStrategy strategy) {
         this.type = type;
+        this.strategy = strategy;
     }
 
     @Override
