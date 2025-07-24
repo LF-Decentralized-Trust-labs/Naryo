@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 public final class BroadcasterConfigurationEntryPropertiesDeserializer
         extends EnvironmentDeserializer<BroadcasterConfigurationEntryProperties> {
 
+    private static final String PREFIX_CONFIGURATION_SCHEMA = "broadcaster_";
     private final ConfigurationSchemaRegistry schemaRegistry;
 
     public BroadcasterConfigurationEntryPropertiesDeserializer(
@@ -36,7 +37,7 @@ public final class BroadcasterConfigurationEntryPropertiesDeserializer
         String type = getTextOrNull(root.get("type"));
         BroadcasterCacheProperties cache =
                 safeTreeToValue(root, "cache", codec, BroadcasterCacheProperties.class);
-        ConfigurationSchema schema = schemaRegistry.getSchema(type);
+        ConfigurationSchema schema = schemaRegistry.getSchema(PREFIX_CONFIGURATION_SCHEMA + type);
 
         Set<String> knownFields = Set.of("id", "type", "cache");
 

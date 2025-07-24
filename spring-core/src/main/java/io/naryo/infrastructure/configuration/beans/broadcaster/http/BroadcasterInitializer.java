@@ -20,6 +20,8 @@ import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 public final class BroadcasterInitializer implements EnvironmentInitializer {
 
     private static final String HTTP_BROADCASTER_TYPE = "http";
+    private static final String HTTP_BROADCASTER_SCHEMA_NAME =
+            "broadcaster_" + HTTP_BROADCASTER_TYPE;
 
     private final BroadcasterConfigurationMapperRegistry mapperRegistry;
     private final ConfigurationSchemaRegistry schemaRegistry;
@@ -57,7 +59,7 @@ public final class BroadcasterInitializer implements EnvironmentInitializer {
                 });
 
         schemaRegistry.register(
-                HTTP_BROADCASTER_TYPE,
+                HTTP_BROADCASTER_SCHEMA_NAME,
                 new ConfigurationSchema(
                         HTTP_BROADCASTER_TYPE,
                         List.of(
