@@ -1,6 +1,7 @@
-package io.naryo.infrastructure.event.http.configuration;
+package io.naryo.domain.configuration.eventstore.block.server.http;
 
 import java.util.Set;
+import java.util.UUID;
 
 import io.naryo.domain.common.connection.endpoint.ConnectionEndpoint;
 import io.naryo.domain.configuration.eventstore.block.EventStoreTarget;
@@ -18,8 +19,11 @@ public final class HttpBlockEventStoreConfiguration extends ServerBlockEventStor
     private final ConnectionEndpoint endpoint;
 
     public HttpBlockEventStoreConfiguration(
-            Set<EventStoreTarget> targets, ServerType serverType, ConnectionEndpoint endpoint) {
-        super(targets, serverType);
+            UUID nodeId,
+            Set<EventStoreTarget> targets,
+            ServerType serverType,
+            ConnectionEndpoint endpoint) {
+        super(nodeId, targets, serverType);
         this.endpoint = endpoint;
     }
 }

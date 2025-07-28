@@ -2,22 +2,25 @@ package io.naryo.application.configuration.source.model.event;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.model.MergeableDescriptor;
 import io.naryo.domain.configuration.eventstore.EventStoreStrategy;
 import io.naryo.domain.configuration.eventstore.EventStoreType;
 
-import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
+import static io.naryo.application.common.util.MergeUtil.*;
 
 public interface EventStoreConfigurationDescriptor
         extends MergeableDescriptor<EventStoreConfigurationDescriptor> {
+
+    UUID getNodeId();
 
     EventStoreType getType();
 
     EventStoreStrategy getStrategy();
 
-    Optional<Map<String, Object>> getAdditionalProperties();
+    Map<String, Object> getAdditionalProperties();
 
     Optional<ConfigurationSchema> getPropertiesSchema();
 
@@ -31,7 +34,7 @@ public interface EventStoreConfigurationDescriptor
             return this;
         }
 
-        mergeOptionals(
+        mergeMaps(
                 this::setAdditionalProperties,
                 this.getAdditionalProperties(),
                 other.getAdditionalProperties());

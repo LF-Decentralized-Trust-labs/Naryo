@@ -1,6 +1,7 @@
 package io.naryo.application.common.util;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -21,6 +22,12 @@ public final class MergeUtil {
 
     public static <V extends Collection<?>> void mergeCollections(
             Consumer<V> setter, V original, V other) {
+        if (original.isEmpty() && !other.isEmpty()) {
+            setter.accept(other);
+        }
+    }
+
+    public static <V extends Map<?, ?>> void mergeMaps(Consumer<V> setter, V original, V other) {
         if (original.isEmpty() && !other.isEmpty()) {
             setter.accept(other);
         }

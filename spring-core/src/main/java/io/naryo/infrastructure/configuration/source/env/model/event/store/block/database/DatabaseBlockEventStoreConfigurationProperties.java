@@ -2,6 +2,7 @@ package io.naryo.infrastructure.configuration.source.env.model.event.store.block
 
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.model.event.DatabaseBlockEventStoreConfigurationDescriptor;
@@ -21,11 +22,12 @@ public final class DatabaseBlockEventStoreConfigurationProperties
     private @NotNull DatabaseEngine engine;
 
     public DatabaseBlockEventStoreConfigurationProperties(
+            @NotNull UUID nodeId,
             Set<EventStoreTargetProperties> targets,
             @Nullable Map<String, Object> additionalProperties,
             @Nullable ConfigurationSchema propertiesSchema,
             @NotNull DatabaseEngine engine) {
-        super(EventStoreType.DATABASE, targets, additionalProperties, propertiesSchema);
+        super(nodeId, EventStoreType.DATABASE, targets, additionalProperties, propertiesSchema);
         this.engine = engine;
     }
 

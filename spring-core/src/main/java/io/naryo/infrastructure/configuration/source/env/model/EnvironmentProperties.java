@@ -15,14 +15,14 @@ public record EnvironmentProperties(
         @Valid @NotNull BroadcastingProperties broadcasting,
         @Valid @NotNull List<NodeProperties> nodes,
         @Valid @NotNull List<FilterProperties> filters,
-        @Valid @NotNull EventStoreConfigurationProperties eventStore) {
+        @Valid @NotNull List<EventStoreConfigurationProperties> eventStores) {
 
     public EnvironmentProperties(
             HttpClientProperties httpClient,
             BroadcastingProperties broadcasting,
             List<NodeProperties> nodes,
             List<FilterProperties> filters,
-            EventStoreConfigurationProperties eventStore) {
+            List<EventStoreConfigurationProperties> eventStores) {
         this.httpClient = httpClient != null ? httpClient : new HttpClientProperties();
         this.broadcasting =
                 broadcasting != null
@@ -30,6 +30,6 @@ public record EnvironmentProperties(
                         : new BroadcastingProperties(List.of(), List.of());
         this.nodes = nodes != null ? nodes : List.of();
         this.filters = filters != null ? filters : List.of();
-        this.eventStore = eventStore;
+        this.eventStores = eventStores != null ? eventStores : List.of();
     }
 }

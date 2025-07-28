@@ -2,6 +2,7 @@ package io.naryo.infrastructure.configuration.source.env.model.event.store.block
 
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.model.event.ServerBlockEventStoreConfigurationDescriptor;
@@ -21,11 +22,12 @@ public final class ServerEventStoreConfigurationProperties
     private @NotNull ServerType serverType;
 
     public ServerEventStoreConfigurationProperties(
+            @NotNull UUID nodeId,
             Set<EventStoreTargetProperties> targets,
             @Nullable Map<String, Object> additionalProperties,
             @Nullable ConfigurationSchema propertiesSchema,
             @NotNull ServerType serverType) {
-        super(EventStoreType.SERVER, targets, additionalProperties, propertiesSchema);
+        super(nodeId, EventStoreType.SERVER, targets, additionalProperties, propertiesSchema);
         this.serverType = serverType;
     }
 

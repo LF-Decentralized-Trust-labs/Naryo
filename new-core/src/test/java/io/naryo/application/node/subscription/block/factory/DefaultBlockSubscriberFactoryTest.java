@@ -1,15 +1,19 @@
 package io.naryo.application.node.subscription.block.factory;
 
+import java.util.Set;
+
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.retry.Retry;
 import io.naryo.application.common.Mapper;
 import io.naryo.application.configuration.resilence.ResilienceRegistry;
+import io.naryo.application.event.store.block.BlockEventStore;
 import io.naryo.application.node.dispatch.Dispatcher;
 import io.naryo.application.node.interactor.block.BlockInteractor;
 import io.naryo.application.node.interactor.block.dto.Block;
 import io.naryo.application.node.subscription.block.BlockSubscriber;
 import io.naryo.application.node.subscription.block.poll.PollBlockSubscriber;
 import io.naryo.application.node.subscription.block.pubsub.PubSubBlockSubscriber;
+import io.naryo.domain.configuration.eventstore.BlockEventStoreConfiguration;
 import io.naryo.domain.event.block.BlockEvent;
 import io.naryo.domain.node.Node;
 import io.naryo.domain.node.subscription.SubscriptionStrategy;
@@ -47,6 +51,10 @@ class DefaultBlockSubscriberFactoryTest {
 
     @Mock private Retry retry;
 
+    @Mock private BlockEventStoreConfiguration eventStoreConfiguration;
+
+    @Mock private BlockEventStore<BlockEventStoreConfiguration> blockEventStore;
+
     private DefaultBlockSubscriberFactory factory;
 
     @BeforeEach
@@ -67,7 +75,13 @@ class DefaultBlockSubscriberFactoryTest {
         when(methodConfig.getMethod()).thenReturn(BlockSubscriptionMethod.POLL);
 
         // When
-        BlockSubscriber subscriber = factory.create(blockInteractor, dispatcher, node);
+        BlockSubscriber subscriber =
+                factory.create(
+                        blockInteractor,
+                        dispatcher,
+                        node,
+                        eventStoreConfiguration,
+                        Set.of(blockEventStore));
 
         // Then
         assertNotNull(subscriber);
@@ -82,7 +96,13 @@ class DefaultBlockSubscriberFactoryTest {
         when(methodConfig.getMethod()).thenReturn(BlockSubscriptionMethod.PUBSUB);
 
         // When
-        BlockSubscriber subscriber = factory.create(blockInteractor, dispatcher, node);
+        BlockSubscriber subscriber =
+                factory.create(
+                        blockInteractor,
+                        dispatcher,
+                        node,
+                        eventStoreConfiguration,
+                        Set.of(blockEventStore));
 
         // Then
         assertNotNull(subscriber);

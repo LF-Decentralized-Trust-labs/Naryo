@@ -1,6 +1,7 @@
 package io.naryo.domain.configuration.eventstore.block.server;
 
 import java.util.Set;
+import java.util.UUID;
 
 import io.naryo.domain.configuration.eventstore.BlockEventStoreConfiguration;
 import io.naryo.domain.configuration.eventstore.EventStoreType;
@@ -18,8 +19,8 @@ public abstract class ServerBlockEventStoreConfiguration extends BlockEventStore
     protected final ServerType serverType;
 
     protected ServerBlockEventStoreConfiguration(
-            Set<EventStoreTarget> targets, ServerType serverType) {
-        super(EventStoreType.SERVER, targets);
+            UUID nodeId, Set<EventStoreTarget> targets, ServerType serverType) {
+        super(nodeId, EventStoreType.SERVER, targets);
         this.serverType = serverType;
     }
 }

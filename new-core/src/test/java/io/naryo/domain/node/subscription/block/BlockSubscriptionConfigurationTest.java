@@ -22,7 +22,6 @@ final class BlockSubscriptionConfigurationTest {
                         new NonNegativeBlockNumber(BigInteger.ZERO),
                         new NonNegativeBlockNumber(BigInteger.ZERO),
                         new NonNegativeBlockNumber(BigInteger.ZERO),
-                        new NonNegativeBlockNumber(BigInteger.ZERO),
                         new NonNegativeBlockNumber(BigInteger.ZERO));
         assertNotNull(config);
     }
@@ -35,7 +34,6 @@ final class BlockSubscriptionConfigurationTest {
                     new BlockSubscriptionConfiguration(
                             null,
                             BigInteger.ZERO,
-                            new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
@@ -56,7 +54,6 @@ final class BlockSubscriptionConfigurationTest {
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
-                            new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO));
                 });
     }
@@ -73,7 +70,6 @@ final class BlockSubscriptionConfigurationTest {
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
-                            new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO));
                 });
     }
@@ -86,7 +82,6 @@ final class BlockSubscriptionConfigurationTest {
                     new BlockSubscriptionConfiguration(
                             new MockBlockSubscriptionMethodConfiguration(),
                             BigInteger.ZERO,
-                            new NonNegativeBlockNumber(BigInteger.ZERO),
                             null,
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
@@ -104,7 +99,6 @@ final class BlockSubscriptionConfigurationTest {
                             new MockBlockSubscriptionMethodConfiguration(),
                             BigInteger.ZERO,
                             new NonNegativeBlockNumber(BigInteger.ZERO),
-                            new NonNegativeBlockNumber(BigInteger.ZERO),
                             null,
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
@@ -120,7 +114,6 @@ final class BlockSubscriptionConfigurationTest {
                     new BlockSubscriptionConfiguration(
                             new MockBlockSubscriptionMethodConfiguration(),
                             BigInteger.ZERO,
-                            new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             null,
@@ -140,7 +133,6 @@ final class BlockSubscriptionConfigurationTest {
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
-                            new NonNegativeBlockNumber(BigInteger.ZERO),
                             null,
                             new NonNegativeBlockNumber(BigInteger.ZERO));
                 });
@@ -154,7 +146,6 @@ final class BlockSubscriptionConfigurationTest {
                     new BlockSubscriptionConfiguration(
                             new MockBlockSubscriptionMethodConfiguration(),
                             BigInteger.ZERO,
-                            new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),

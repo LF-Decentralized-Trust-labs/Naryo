@@ -40,6 +40,7 @@ public final class EventStoreConfigurationPropertiesDeserializer
         ObjectCodec codec = p.getCodec();
         JsonNode root = codec.readTree(p);
 
+        UUID nodeId = getUuidOrNull(getTextOrNull(root.get("nodeId")));
         EventStoreType type = safeTreeToValue(root, "type", codec, EventStoreType.class);
         EventStoreStrategy strategy =
                 safeTreeToValue(root, "strategy", codec, EventStoreStrategy.class);
@@ -59,6 +60,7 @@ public final class EventStoreConfigurationPropertiesDeserializer
                                         PREFIX_EVENT_STORE_SCHEMA + serverType.toLowerCase());
                         knownFields.add("serverType");
                         yield new ServerEventStoreConfigurationProperties(
+                                nodeId,
                                 new HashSet<>(targets),
                                 getAdditionalConfiguration(root, knownFields, codec, schema),
                                 schema,
@@ -71,6 +73,7 @@ public final class EventStoreConfigurationPropertiesDeserializer
                                         PREFIX_EVENT_STORE_SCHEMA + databaseEngine.toLowerCase());
                         knownFields.add("databaseEngine");
                         yield new DatabaseBlockEventStoreConfigurationProperties(
+                                nodeId,
                                 new HashSet<>(targets),
                                 getAdditionalConfiguration(root, knownFields, codec, schema),
                                 schema,

@@ -1,8 +1,12 @@
 package io.naryo.domain.configuration.eventstore.server;
 
 import java.util.Set;
+import java.util.UUID;
 
+import io.naryo.domain.broadcaster.Destination;
 import io.naryo.domain.configuration.eventstore.EventStoreType;
+import io.naryo.domain.configuration.eventstore.block.EventStoreTarget;
+import io.naryo.domain.configuration.eventstore.block.TargetType;
 import io.naryo.domain.configuration.eventstore.block.server.ServerBlockEventStoreConfiguration;
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +32,14 @@ class ServerBlockEventStoreConfigurationDescriptorTest {
     private static class MockServerEventStoreConfiguration
             extends ServerBlockEventStoreConfiguration {
         protected MockServerEventStoreConfiguration(ServerType serverType) {
-            super(Set.of(), serverType);
+            super(
+                    UUID.randomUUID(),
+                    Set.of(
+                            new EventStoreTarget(TargetType.BLOCK, new Destination("xyc")),
+                            new EventStoreTarget(TargetType.TRANSACTION, new Destination("xyc")),
+                            new EventStoreTarget(
+                                    TargetType.CONTRACT_EVENT, new Destination("xyc"))),
+                    serverType);
         }
     }
 }
