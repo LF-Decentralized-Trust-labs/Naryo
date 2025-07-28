@@ -1,9 +1,9 @@
 package io.naryo.infrastructure.configuration.beans.eventstore.http;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.naryo.infrastructure.event.http.store.block.BlockHttpBlockEventStore;
-import io.naryo.infrastructure.event.http.store.block.ContractEventHttpBlockEventStore;
-import io.naryo.infrastructure.event.http.store.block.TransactionHttpBlockEventStore;
+import io.naryo.infrastructure.event.http.block.BlockHttpBlockEventStore;
+import io.naryo.infrastructure.event.http.block.ContractEventHttpBlockEventStore;
+import io.naryo.infrastructure.event.http.block.TransactionHttpBlockEventStore;
 import okhttp3.OkHttpClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;

@@ -32,9 +32,9 @@ public final class EnvironmentPropertiesDeserializer
         List<NodeProperties> nodes = safeTreeToList(root, "nodes", codec, NodeProperties.class);
         List<FilterProperties> filters =
                 safeTreeToList(root, "filters", codec, FilterProperties.class);
-        EventStoreConfigurationProperties eventStore =
-                safeTreeToValue(root, "eventStore", codec, EventStoreConfigurationProperties.class);
+        List<EventStoreConfigurationProperties> eventStores =
+                safeTreeToList(root, "eventStores", codec, EventStoreConfigurationProperties.class);
 
-        return new EnvironmentProperties(httpClient, broadcasting, nodes, filters, eventStore);
+        return new EnvironmentProperties(httpClient, broadcasting, nodes, filters, eventStores);
     }
 }

@@ -1,6 +1,8 @@
 package io.naryo.application.node.trigger.permanent;
 
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 import io.naryo.application.event.store.EventStore;
 import io.naryo.domain.configuration.eventstore.EventStoreConfiguration;
@@ -28,7 +30,9 @@ class EventStoreBroadcasterPermanentTriggerTest {
 
     @BeforeEach
     void setUp() {
-        trigger = new EventStoreBroadcasterPermanentTrigger(List.of(store1, store2), configuration);
+        trigger =
+                new EventStoreBroadcasterPermanentTrigger(
+                        Set.of(store1, store2), List.of(configuration));
     }
 
     @Test
@@ -36,6 +40,9 @@ class EventStoreBroadcasterPermanentTriggerTest {
         Event evt = mock(Event.class);
         when(store1.supports(evt)).thenReturn(true);
         when(store2.supports(evt)).thenReturn(false);
+        UUID nodeId = UUID.randomUUID();
+        when(evt.getNodeId()).thenReturn(nodeId);
+        when(configuration.getNodeId()).thenReturn(nodeId);
 
         trigger.trigger(evt);
 
@@ -48,6 +55,9 @@ class EventStoreBroadcasterPermanentTriggerTest {
         Event evt = mock(Event.class);
         when(store1.supports(evt)).thenReturn(true);
         when(store2.supports(evt)).thenReturn(false);
+        UUID nodeId = UUID.randomUUID();
+        when(evt.getNodeId()).thenReturn(nodeId);
+        when(configuration.getNodeId()).thenReturn(nodeId);
 
         trigger.onExecute(consumer);
         trigger.trigger(evt);
@@ -60,6 +70,9 @@ class EventStoreBroadcasterPermanentTriggerTest {
     void trigger_catchesExceptionsFromSaveAndContinues() throws Exception {
         Event evt = mock(Event.class);
         when(store1.supports(evt)).thenReturn(true);
+        UUID nodeId = UUID.randomUUID();
+        when(evt.getNodeId()).thenReturn(nodeId);
+        when(configuration.getNodeId()).thenReturn(nodeId);
         doThrow(new RuntimeException("db down")).when(store1).save(evt, configuration);
 
         assertDoesNotThrow(() -> trigger.trigger(evt));

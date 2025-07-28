@@ -1,6 +1,7 @@
 package io.naryo.application.node.trigger.permanent;
 
 import java.util.List;
+import java.util.Set;
 
 import io.naryo.application.event.store.EventStore;
 import io.naryo.domain.configuration.eventstore.EventStoreConfiguration;
@@ -11,14 +12,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public final class EventStoreBroadcasterPermanentTrigger implements PermanentTrigger<Event> {
 
-    private final List<EventStore<Event, EventStoreConfiguration>> eventStores;
-    private final EventStoreConfiguration configuration;
+    private final Set<EventStore<? extends Event, ? extends EventStoreConfiguration>> eventStores;
+    private final List<EventStoreConfiguration> configurations;
     private Consumer<Event> consumer;
 
     public <C extends EventStoreConfiguration> EventStoreBroadcasterPermanentTrigger(
-            List<EventStore<Event, EventStoreConfiguration>> eventStores, C configuration) {
+            Set<EventStore<? extends Event, ? extends EventStoreConfiguration>> eventStores,
+            List<EventStoreConfiguration> configurations) {
         this.eventStores = eventStores;
-        this.configuration = configuration;
+        this.configurations = configurations;
     }
 
     @Override
@@ -33,16 +35,42 @@ public final class EventStoreBroadcasterPermanentTrigger implements PermanentTri
                 .forEach(
                         eventStore -> {
                             try {
-                                eventStore.save(event, configuration);
+                                @SuppressWarnings("unchecked")
+                                EventStore<Event, EventStoreConfiguration> typedStore =
+                                        (EventStore<Event, EventStoreConfiguration>) eventStore;
+                                EventStoreConfiguration eventStoreConfiguration =
+                                        configurations.stream()
+                                                .filter(
+                                                        configuration ->
+                                                                configuration
+                                                                        .getNodeId()
+                                                                        .equals(event.getNodeId()))
+                                                .findFirst()
+                                                .orElseThrow(
+                                                        () ->
+                                                                new IllegalStateException(
+                                                                        "No configuration found for node: "
+                                                                                + event
+                                                                                        .getNodeId()));
+                                typedStore.save(event, eventStoreConfiguration);
                             } catch (Exception e) {
-                                log.error("Error while saving event to event store", e);
+                                log.error(
+                                        "Error while saving event {} to event store: {}",
+                                        event.getEventType(),
+                                        e.getMessage(),
+                                        e);
                             }
                         });
+
         if (consumer != null) {
             try {
                 consumer.accept(event);
             } catch (Exception e) {
-                log.error("Error while consumer execution", e);
+                log.error(
+                        "Error while consumer execution for event {}: {}",
+                        event.getEventType(),
+                        e.getMessage(),
+                        e);
             }
         }
     }
