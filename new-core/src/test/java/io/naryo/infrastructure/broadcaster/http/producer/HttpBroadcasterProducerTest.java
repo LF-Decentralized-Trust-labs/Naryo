@@ -8,7 +8,7 @@ import io.naryo.domain.broadcaster.Broadcaster;
 import io.naryo.domain.broadcaster.BroadcasterTarget;
 import io.naryo.domain.broadcaster.Destination;
 import io.naryo.domain.common.connection.endpoint.ConnectionEndpoint;
-import io.naryo.infrastructure.broadcaster.http.configuration.HttpBroadcasterConfiguration;
+import io.naryo.domain.configuration.broadcaster.http.HttpBroadcasterConfiguration;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import org.junit.jupiter.api.Test;

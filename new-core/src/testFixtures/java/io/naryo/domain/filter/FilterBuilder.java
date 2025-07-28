@@ -4,9 +4,6 @@ import java.util.UUID;
 
 import io.naryo.domain.DomainBuilder;
 import org.instancio.Instancio;
-import org.instancio.InstancioApi;
-
-import static org.instancio.Select.field;
 
 public abstract class FilterBuilder<T extends FilterBuilder<T, Y>, Y extends Filter>
         implements DomainBuilder<T, Y> {
@@ -32,13 +29,6 @@ public abstract class FilterBuilder<T extends FilterBuilder<T, Y>, Y extends Fil
     public T withNodeId(UUID nodeId) {
         this.nodeId = nodeId;
         return self();
-    }
-
-    protected InstancioApi<Y> buildBase(InstancioApi<Y> builder, FilterType type) {
-        return builder.set(field(Filter::getId), this.getId())
-                .set(field(Filter::getName), this.getName())
-                .set(field(Filter::getNodeId), this.getNodeId())
-                .set(field(Filter::getType), type);
     }
 
     protected UUID getId() {

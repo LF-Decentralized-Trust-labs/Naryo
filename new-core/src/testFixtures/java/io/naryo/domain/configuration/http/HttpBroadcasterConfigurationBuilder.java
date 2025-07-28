@@ -1,8 +1,8 @@
-package io.naryo.domain.infraestructure;
+package io.naryo.domain.configuration.http;
 
 import io.naryo.domain.common.connection.endpoint.ConnectionEndpoint;
 import io.naryo.domain.configuration.BroadcasterConfigurationBuilder;
-import io.naryo.infrastructure.broadcaster.http.configuration.HttpBroadcasterConfiguration;
+import io.naryo.domain.configuration.broadcaster.http.HttpBroadcasterConfiguration;
 import org.instancio.Instancio;
 
 public class HttpBroadcasterConfigurationBuilder
