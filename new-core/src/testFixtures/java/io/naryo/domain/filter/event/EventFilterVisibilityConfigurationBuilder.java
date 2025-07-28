@@ -1,12 +1,21 @@
 package io.naryo.domain.filter.event;
 
+import io.naryo.domain.DomainBuilder;
 import org.instancio.Instancio;
 
-public class EventFilterVisibilityConfigurationBuilder {
+public class EventFilterVisibilityConfigurationBuilder
+        implements DomainBuilder<
+                EventFilterVisibilityConfigurationBuilder, EventFilterVisibilityConfiguration> {
 
     private Boolean visible;
     private String privacyGroupId;
 
+    @Override
+    public EventFilterVisibilityConfigurationBuilder self() {
+        return this;
+    }
+
+    @Override
     public EventFilterVisibilityConfiguration build() {
         return this.isVisible()
                 ? EventFilterVisibilityConfiguration.visible()

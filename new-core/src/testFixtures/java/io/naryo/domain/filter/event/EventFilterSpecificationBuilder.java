@@ -2,16 +2,24 @@ package io.naryo.domain.filter.event;
 
 import java.util.Set;
 
+import io.naryo.domain.DomainBuilder;
 import io.naryo.domain.common.event.EventName;
 import io.naryo.domain.filter.event.parameterdefinition.AddressParameterDefinitionBuilder;
 import org.instancio.Instancio;
 
-public class EventFilterSpecificationBuilder {
+public class EventFilterSpecificationBuilder
+        implements DomainBuilder<EventFilterSpecificationBuilder, EventFilterSpecification> {
 
     private EventName eventName;
     private CorrelationId correlationId;
     private Set<ParameterDefinition> parameters;
 
+    @Override
+    public EventFilterSpecificationBuilder self() {
+        return this;
+    }
+
+    @Override
     public EventFilterSpecification build() {
         return new EventFilterSpecification(
                 this.getEventName(), this.getCorrelationId(), this.getParameters());

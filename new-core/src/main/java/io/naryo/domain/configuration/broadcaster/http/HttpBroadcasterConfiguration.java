@@ -1,4 +1,4 @@
-package io.naryo.infrastructure.broadcaster.http.configuration;
+package io.naryo.domain.configuration.broadcaster.http;
 
 import java.util.Objects;
 import java.util.UUID;
