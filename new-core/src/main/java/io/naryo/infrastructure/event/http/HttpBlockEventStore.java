@@ -1,4 +1,4 @@
-package io.naryo.infrastructure.event.http.store;
+package io.naryo.infrastructure.event.http;
 
 import java.io.IOException;
 import java.util.Map;
@@ -6,13 +6,14 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.naryo.application.event.store.EventStore;
 import io.naryo.domain.configuration.eventstore.block.EventStoreTarget;
 import io.naryo.domain.configuration.eventstore.block.TargetType;
+import io.naryo.domain.configuration.eventstore.block.server.http.HttpBlockEventStoreConfiguration;
 import io.naryo.domain.event.Event;
 import io.naryo.domain.event.EventType;
-import io.naryo.infrastructure.event.http.configuration.HttpBlockEventStoreConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 
@@ -63,8 +64,9 @@ public abstract class HttpBlockEventStore<E extends Event>
         return url;
     }
 
-    protected <T> T get(HttpUrl url, Map<String, String> headers, Class<T> clazz) {
-        return objectMapper.convertValue(
+    protected <T> T get(HttpUrl url, Map<String, String> headers, Class<T> clazz)
+            throws JsonProcessingException {
+        return objectMapper.readValue(
                 this.makeCall(
                         () ->
                                 new Request.Builder()

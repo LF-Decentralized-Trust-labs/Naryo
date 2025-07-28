@@ -1,10 +1,7 @@
 package io.naryo.application.node;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -12,11 +9,13 @@ import io.naryo.application.broadcaster.BroadcasterProducer;
 import io.naryo.application.configuration.resilence.ResilienceRegistry;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.event.store.EventStore;
+import io.naryo.application.event.store.block.BlockEventStore;
 import io.naryo.application.filter.block.NodeSynchronizer;
 import io.naryo.application.node.calculator.StartBlockCalculator;
 import io.naryo.application.node.dispatch.block.EventDispatcher;
 import io.naryo.application.node.helper.ContractEventDispatcherHelper;
 import io.naryo.application.node.helper.TransactionEventDispatcherHelper;
+import io.naryo.application.node.interactor.block.BlockInteractor;
 import io.naryo.application.node.interactor.block.factory.BlockInteractorFactory;
 import io.naryo.application.node.routing.EventRoutingService;
 import io.naryo.application.node.subscription.block.factory.BlockSubscriberFactory;
@@ -24,6 +23,7 @@ import io.naryo.application.node.trigger.Trigger;
 import io.naryo.application.node.trigger.permanent.EventBroadcasterPermanentTrigger;
 import io.naryo.application.node.trigger.permanent.EventStoreBroadcasterPermanentTrigger;
 import io.naryo.application.node.trigger.permanent.block.ProcessorTriggerFactory;
+import io.naryo.domain.configuration.eventstore.BlockEventStoreConfiguration;
 import io.naryo.domain.configuration.eventstore.EventStoreConfiguration;
 import io.naryo.domain.event.Event;
 import io.naryo.domain.filter.Filter;
@@ -43,6 +43,7 @@ public class NodeInitializer {
     private final ProcessorTriggerFactory processorFactory;
     private final ContractEventParameterDecoder decoder;
     private final NodeConfigurationFacade config;
+    private final Set<EventStore<? extends Event, ? extends EventStoreConfiguration>> eventStores;
 
     public NodeInitializer(
             NodeConfigurationFacade config,
@@ -52,13 +53,14 @@ public class NodeInitializer {
             ProcessorTriggerFactory processorFactory,
             ContractEventParameterDecoder decoder,
             List<BroadcasterProducer> producers,
-            List<EventStore<Event, EventStoreConfiguration>> eventStores) {
+            Set<EventStore<? extends Event, ? extends EventStoreConfiguration>> eventStores) {
         this.config = config;
         this.resilienceRegistry = resilienceRegistry;
         this.interactorFactory = interactorFactory;
         this.subscriberFactory = subscriberFactory;
         this.processorFactory = processorFactory;
         this.decoder = decoder;
+        this.eventStores = eventStores;
 
         this.sharedTriggers =
                 List.of(
@@ -68,7 +70,7 @@ public class NodeInitializer {
                                 producers,
                                 config.getBroadcasterConfigurations()),
                         new EventStoreBroadcasterPermanentTrigger(
-                                eventStores, config.getEventStoreConfiguration()));
+                                eventStores, config.getEventStoreConfigurations()));
     }
 
     public NodeContainer init() {
@@ -95,6 +97,7 @@ public class NodeInitializer {
 
     private NodeRunner initNode(Node node, List<Filter> allFilters) throws IOException {
         var interactor = interactorFactory.create(node);
+        var eventStoreConfiguration = filterForNode(node);
         var nodeFilters = filterForNode(allFilters, node.getId());
         var dispatcher = new EventDispatcher(resilienceRegistry, new HashSet<>(sharedTriggers));
         var contractEventHelper = new ContractEventDispatcherHelper(dispatcher, interactor);
@@ -113,17 +116,30 @@ public class NodeInitializer {
                         transactionEventHelper);
         dispatcher.addTrigger(transactionTrigger);
 
-        var subscriber = subscriberFactory.create(interactor, dispatcher, node);
+        var subscriber =
+                subscriberFactory.create(
+                        interactor, dispatcher, node, eventStoreConfiguration, eventStores);
         var synchronizer =
                 new NodeSynchronizer(
                         node,
-                        new StartBlockCalculator(node, interactor),
+                        createStartBlockCalculator(node, interactor, eventStoreConfiguration),
                         interactor,
                         nodeFilters,
                         decoder,
                         contractEventHelper,
                         resilienceRegistry);
         return new DefaultNodeRunner(node, subscriber, synchronizer);
+    }
+
+    private EventStoreConfiguration filterForNode(Node node) {
+        return config.getEventStoreConfigurations().stream()
+                .filter(configuration -> configuration.getNodeId().equals(node.getId()))
+                .findFirst()
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "No event store configuration found for node: "
+                                                + node.getId()));
     }
 
     private List<Filter> filterForNode(List<Filter> filters, UUID id) {
@@ -142,5 +158,25 @@ public class NodeInitializer {
 
     private Stream<Filter> findFilters(List<Filter> filters, FilterType type) {
         return filters.stream().filter(f -> f.getType() == type);
+    }
+
+    private StartBlockCalculator createStartBlockCalculator(
+            Node node, BlockInteractor interactor, EventStoreConfiguration configuration) {
+        Optional<EventStore<?, ?>> storeOpt =
+                eventStores.stream()
+                        .filter(eventStore -> eventStore instanceof BlockEventStore<?>)
+                        .findFirst();
+        if (storeOpt.isPresent()
+                && storeOpt.get() instanceof BlockEventStore<?> blockEventStore
+                && configuration
+                        instanceof BlockEventStoreConfiguration blockEventStoreConfiguration) {
+
+            return new StartBlockCalculator(
+                    node, interactor, blockEventStore, blockEventStoreConfiguration);
+        } else {
+            throw new IllegalArgumentException(
+                    "Unsupported event store for type: "
+                            + node.getSubscriptionConfiguration().getStrategy().name());
+        }
     }
 }

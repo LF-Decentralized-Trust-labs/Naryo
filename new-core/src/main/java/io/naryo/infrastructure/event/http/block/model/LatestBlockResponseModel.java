@@ -1,4 +1,4 @@
-package io.naryo.infrastructure.event.http.store.block.model;
+package io.naryo.infrastructure.event.http.block.model;
 
 import java.math.BigInteger;
 

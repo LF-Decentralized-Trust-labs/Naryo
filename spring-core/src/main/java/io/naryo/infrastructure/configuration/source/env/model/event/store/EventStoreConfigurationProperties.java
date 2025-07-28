@@ -1,7 +1,9 @@
 package io.naryo.infrastructure.configuration.source.env.model.event.store;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.model.event.EventStoreConfigurationDescriptor;
@@ -15,20 +17,29 @@ import lombok.Setter;
 public abstract class EventStoreConfigurationProperties
         implements EventStoreConfigurationDescriptor {
 
-    private @NotNull EventStoreType type;
-    private @NotNull EventStoreStrategy strategy;
-    private @Nullable Map<String, Object> additionalProperties;
+    private final @NotNull UUID nodeId;
+    private final @NotNull EventStoreType type;
+    private final @NotNull EventStoreStrategy strategy;
+    private Map<String, Object> additionalProperties;
     private @Nullable ConfigurationSchema propertiesSchema;
 
     public EventStoreConfigurationProperties(
+            @NotNull UUID nodeId,
             @NotNull EventStoreType type,
             @NotNull EventStoreStrategy strategy,
-            @Nullable Map<String, Object> additionalProperties,
+            Map<String, Object> additionalProperties,
             @Nullable ConfigurationSchema propertiesSchema) {
+        this.nodeId = nodeId;
         this.type = type;
         this.strategy = strategy;
-        this.additionalProperties = additionalProperties;
+        this.additionalProperties =
+                additionalProperties == null ? new HashMap<>() : additionalProperties;
         this.propertiesSchema = propertiesSchema;
+    }
+
+    @Override
+    public UUID getNodeId() {
+        return nodeId;
     }
 
     @Override
@@ -42,8 +53,8 @@ public abstract class EventStoreConfigurationProperties
     }
 
     @Override
-    public Optional<Map<String, Object>> getAdditionalProperties() {
-        return Optional.ofNullable(additionalProperties);
+    public Map<String, Object> getAdditionalProperties() {
+        return additionalProperties;
     }
 
     @Override

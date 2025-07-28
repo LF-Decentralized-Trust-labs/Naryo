@@ -36,7 +36,7 @@ public record NodeConfigurationFacade(
         return List.copyOf(nodeConfigurationManager.load());
     }
 
-    public EventStoreConfiguration getEventStoreConfiguration() {
-        return eventStoreConfigurationManager.load();
+    public List<EventStoreConfiguration> getEventStoreConfigurations() {
+        return List.copyOf(eventStoreConfigurationManager.load());
     }
 }

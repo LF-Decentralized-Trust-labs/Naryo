@@ -1,6 +1,7 @@
 package io.naryo.domain.configuration.eventstore.block.database;
 
 import java.util.Set;
+import java.util.UUID;
 
 import io.naryo.domain.configuration.eventstore.BlockEventStoreConfiguration;
 import io.naryo.domain.configuration.eventstore.EventStoreType;
@@ -13,13 +14,13 @@ import lombok.ToString;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public abstract class DatabaseEventStoreConfiguration extends BlockEventStoreConfiguration {
+public abstract class DatabaseBlockEventStoreConfiguration extends BlockEventStoreConfiguration {
 
     private final DatabaseEngine engine;
 
-    protected DatabaseEventStoreConfiguration(
-            DatabaseEngine engine, Set<EventStoreTarget> targets) {
-        super(EventStoreType.DATABASE, targets);
+    protected DatabaseBlockEventStoreConfiguration(
+            UUID nodeId, DatabaseEngine engine, Set<EventStoreTarget> targets) {
+        super(nodeId, EventStoreType.DATABASE, targets);
         this.engine = engine;
     }
 }

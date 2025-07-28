@@ -113,7 +113,6 @@ public abstract class BlockSubscriberTest {
                         new NonNegativeBlockNumber(BigInteger.ZERO),
                         new NonNegativeBlockNumber(BigInteger.ZERO),
                         new NonNegativeBlockNumber(BigInteger.ZERO),
-                        new NonNegativeBlockNumber(BigInteger.ZERO),
                         new NonNegativeBlockNumber(BigInteger.valueOf(replayOffset)),
                         new NonNegativeBlockNumber(BigInteger.valueOf(syncLimit))),
                 new EthereumRpcBlockInteractionConfiguration(),
