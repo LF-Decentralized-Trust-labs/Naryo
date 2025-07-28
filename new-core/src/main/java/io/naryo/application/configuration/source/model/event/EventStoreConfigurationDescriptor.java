@@ -13,17 +13,13 @@ import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
 public interface EventStoreConfigurationDescriptor
         extends MergeableDescriptor<EventStoreConfigurationDescriptor> {
 
-    Optional<EventStoreType> getType();
+    EventStoreType getType();
 
-    Optional<EventStoreStrategy> getStrategy();
+    EventStoreStrategy getStrategy();
 
     Optional<Map<String, Object>> getAdditionalProperties();
 
     Optional<ConfigurationSchema> getPropertiesSchema();
-
-    void setType(EventStoreType type);
-
-    void setStrategy(EventStoreStrategy strategy);
 
     void setAdditionalProperties(Map<String, Object> additionalProperties);
 
@@ -35,8 +31,6 @@ public interface EventStoreConfigurationDescriptor
             return this;
         }
 
-        mergeOptionals(this::setType, this.getType(), other.getType());
-        mergeOptionals(this::setStrategy, this.getStrategy(), other.getStrategy());
         mergeOptionals(
                 this::setAdditionalProperties,
                 this.getAdditionalProperties(),

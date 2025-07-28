@@ -47,7 +47,7 @@ public final class EventStoreConfigurationPropertiesDeserializer
         return switch (strategy) {
             case BLOCK_BASED -> {
                 List<EventStoreTargetProperties> targets =
-                        safeTreeToList(root, "target", codec, EventStoreTargetProperties.class);
+                        safeTreeToList(root, "targets", codec, EventStoreTargetProperties.class);
 
                 Set<String> knownFields = new HashSet<>(Set.of("type", "strategy", "target"));
 
