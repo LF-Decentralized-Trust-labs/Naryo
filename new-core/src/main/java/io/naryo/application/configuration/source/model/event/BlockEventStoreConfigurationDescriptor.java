@@ -1,6 +1,5 @@
 package io.naryo.application.configuration.source.model.event;
 
-import java.util.Optional;
 import java.util.Set;
 
 import io.naryo.domain.configuration.eventstore.EventStoreStrategy;
@@ -14,8 +13,8 @@ public interface BlockEventStoreConfigurationDescriptor extends EventStoreConfig
     void setTargets(Set<? extends EventStoreTargetDescriptor> targets);
 
     @Override
-    default Optional<EventStoreStrategy> getStrategy() {
-        return Optional.of(EventStoreStrategy.BLOCK_BASED);
+    default EventStoreStrategy getStrategy() {
+        return EventStoreStrategy.BLOCK_BASED;
     }
 
     @Override
