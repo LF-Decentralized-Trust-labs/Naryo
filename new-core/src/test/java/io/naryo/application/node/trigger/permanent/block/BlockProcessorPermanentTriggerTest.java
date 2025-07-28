@@ -460,7 +460,6 @@ class BlockProcessorPermanentTriggerTest {
                     new BlockSubscriptionConfiguration(
                             new PubSubBlockSubscriptionMethodConfiguration(),
                             BigInteger.ZERO,
-                            new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(confirmationBlocks),
                             new NonNegativeBlockNumber(BigInteger.ZERO),
                             new NonNegativeBlockNumber(BigInteger.ZERO),

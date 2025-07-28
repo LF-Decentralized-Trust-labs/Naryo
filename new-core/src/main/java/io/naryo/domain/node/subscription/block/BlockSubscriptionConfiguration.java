@@ -18,7 +18,6 @@ public final class BlockSubscriptionConfiguration extends SubscriptionConfigurat
 
     private final BlockSubscriptionMethodConfiguration methodConfiguration;
     private final BigInteger initialBlock;
-    private final NonNegativeBlockNumber latestBlock;
     private final NonNegativeBlockNumber confirmationBlocks;
     private final NonNegativeBlockNumber missingTxRetryBlocks;
     private final NonNegativeBlockNumber eventInvalidationBlockThreshold;
@@ -28,7 +27,6 @@ public final class BlockSubscriptionConfiguration extends SubscriptionConfigurat
     public BlockSubscriptionConfiguration(
             BlockSubscriptionMethodConfiguration methodConfiguration,
             BigInteger initialBlock,
-            NonNegativeBlockNumber latestBlock,
             NonNegativeBlockNumber confirmationBlocks,
             NonNegativeBlockNumber missingTxRetryBlocks,
             NonNegativeBlockNumber eventInvalidationBlockThreshold,
@@ -38,7 +36,6 @@ public final class BlockSubscriptionConfiguration extends SubscriptionConfigurat
         Objects.requireNonNull(
                 methodConfiguration, "blockSubscriptionMethodConfiguration cannot be null");
         Objects.requireNonNull(initialBlock, "initialBlock cannot be null");
-        Objects.requireNonNull(latestBlock, "latestBlock cannot be null");
         Objects.requireNonNull(confirmationBlocks, "confirmationBlocks cannot be null");
         Objects.requireNonNull(missingTxRetryBlocks, "missingTxRetryBlocks cannot be null");
         Objects.requireNonNull(
@@ -49,7 +46,6 @@ public final class BlockSubscriptionConfiguration extends SubscriptionConfigurat
         this.missingTxRetryBlocks = missingTxRetryBlocks;
         this.methodConfiguration = methodConfiguration;
         this.initialBlock = initialBlock;
-        this.latestBlock = latestBlock;
         this.eventInvalidationBlockThreshold = eventInvalidationBlockThreshold;
         this.replayBlockOffset = replayBlockOffset;
         this.syncBlockLimit = syncBlockLimit;

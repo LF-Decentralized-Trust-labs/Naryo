@@ -19,12 +19,15 @@ public interface BlockEventStoreConfigurationDescriptor extends EventStoreConfig
 
     @Override
     default EventStoreConfigurationDescriptor merge(EventStoreConfigurationDescriptor other) {
-        EventStoreConfigurationDescriptor.super.merge(other);
-
-        if (other instanceof BlockEventStoreConfigurationDescriptor otherBlock) {
-            mergeCollections(this::setTargets, this.getTargets(), otherBlock.getTargets());
+        if (!(other
+                instanceof
+                BlockEventStoreConfigurationDescriptor otherBlockEventStoreConfiguration)) {
+            return this;
         }
-
-        return this;
+        mergeCollections(
+                this::setTargets,
+                this.getTargets(),
+                otherBlockEventStoreConfiguration.getTargets());
+        return EventStoreConfigurationDescriptor.super.merge(other);
     }
 }

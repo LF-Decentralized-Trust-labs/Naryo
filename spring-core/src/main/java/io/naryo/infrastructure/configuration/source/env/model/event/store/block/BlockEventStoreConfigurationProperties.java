@@ -3,6 +3,7 @@ package io.naryo.infrastructure.configuration.source.env.model.event.store.block
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
@@ -12,6 +13,7 @@ import io.naryo.domain.configuration.eventstore.EventStoreStrategy;
 import io.naryo.domain.configuration.eventstore.EventStoreType;
 import io.naryo.infrastructure.configuration.source.env.model.event.store.EventStoreConfigurationProperties;
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
@@ -22,11 +24,12 @@ public abstract class BlockEventStoreConfigurationProperties
     private Set<EventStoreTargetProperties> targets;
 
     public BlockEventStoreConfigurationProperties(
+            @NotNull UUID nodeId,
             @Nullable EventStoreType type,
             Set<EventStoreTargetProperties> targets,
             @Nullable Map<String, Object> additionalProperties,
             @Nullable ConfigurationSchema propertiesSchema) {
-        super(type, EventStoreStrategy.BLOCK_BASED, additionalProperties, propertiesSchema);
+        super(nodeId, type, EventStoreStrategy.BLOCK_BASED, additionalProperties, propertiesSchema);
         this.targets = new HashSet<>(targets);
     }
 

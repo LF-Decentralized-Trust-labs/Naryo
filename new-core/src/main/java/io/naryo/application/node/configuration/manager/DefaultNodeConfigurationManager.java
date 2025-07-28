@@ -1,6 +1,5 @@
 package io.naryo.application.node.configuration.manager;
 
-import java.math.BigInteger;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collector;
@@ -132,8 +131,6 @@ public final class DefaultNodeConfigurationManager
         return new BlockSubscriptionConfiguration(
                 method,
                 valueOrNull(blockDescriptor.getInitialBlock()),
-                new NonNegativeBlockNumber(
-                        BigInteger.ZERO), // TODO: Review last block processed when EventStore works
                 new NonNegativeBlockNumber(valueOrNull(blockDescriptor.getConfirmationBlocks())),
                 new NonNegativeBlockNumber(valueOrNull(blockDescriptor.getMissingTxRetryBlocks())),
                 new NonNegativeBlockNumber(

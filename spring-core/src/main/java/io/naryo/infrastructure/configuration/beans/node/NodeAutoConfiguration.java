@@ -1,6 +1,7 @@
 package io.naryo.infrastructure.configuration.beans.node;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -113,7 +114,7 @@ public class NodeAutoConfiguration {
             ProcessorTriggerFactory processorFactory,
             ContractEventParameterDecoder decoder,
             List<BroadcasterProducer> producers,
-            List<EventStore<Event, EventStoreConfiguration>> eventStores) {
+            Set<EventStore<? extends Event, ? extends EventStoreConfiguration>> eventStores) {
         return new NodeInitializer(
                 config,
                 resilienceRegistry,

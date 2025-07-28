@@ -12,8 +12,8 @@ import io.naryo.application.event.store.configuration.mapper.EventStoreConfigura
 import io.naryo.domain.broadcaster.Destination;
 import io.naryo.domain.common.connection.endpoint.ConnectionEndpoint;
 import io.naryo.domain.configuration.eventstore.block.EventStoreTarget;
+import io.naryo.domain.configuration.eventstore.block.server.http.HttpBlockEventStoreConfiguration;
 import io.naryo.infrastructure.configuration.beans.env.EnvironmentInitializer;
-import io.naryo.infrastructure.event.http.configuration.HttpBlockEventStoreConfiguration;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -41,6 +41,7 @@ public final class EventStoreInitializer implements EnvironmentInitializer {
                     ServerBlockEventStoreConfigurationDescriptor descriptor =
                             (ServerBlockEventStoreConfigurationDescriptor) properties;
                     return new HttpBlockEventStoreConfiguration(
+                            descriptor.getNodeId(),
                             descriptor.getTargets().stream()
                                     .map(
                                             target ->
@@ -50,11 +51,10 @@ public final class EventStoreInitializer implements EnvironmentInitializer {
                                     .collect(Collectors.toSet()),
                             descriptor.getServerType(),
                             new ConnectionEndpoint(
-                                    descriptor.getAdditionalProperties().isPresent()
+                                    !descriptor.getAdditionalProperties().isEmpty()
                                             ? ((HttpBroadcasterEndpoint)
                                                             descriptor
                                                                     .getAdditionalProperties()
-                                                                    .get()
                                                                     .get("endpoint"))
                                                     .url()
                                             : null));
