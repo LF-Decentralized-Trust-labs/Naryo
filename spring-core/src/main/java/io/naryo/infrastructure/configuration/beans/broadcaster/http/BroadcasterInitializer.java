@@ -10,7 +10,7 @@ import io.naryo.application.configuration.source.definition.registry.Configurati
 import io.naryo.application.configuration.source.model.broadcaster.configuration.BroadcasterConfigurationDescriptor;
 import io.naryo.domain.common.connection.endpoint.ConnectionEndpoint;
 import io.naryo.domain.configuration.broadcaster.BroadcasterCache;
-import io.naryo.infrastructure.broadcaster.http.configuration.HttpBroadcasterConfiguration;
+import io.naryo.domain.configuration.broadcaster.http.HttpBroadcasterConfiguration;
 import io.naryo.infrastructure.configuration.beans.env.EnvironmentInitializer;
 import org.springframework.stereotype.Component;
 

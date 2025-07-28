@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import io.naryo.domain.common.connection.endpoint.ConnectionEndpoint;
 import io.naryo.domain.configuration.broadcaster.BroadcasterCache;
+import io.naryo.domain.configuration.broadcaster.http.HttpBroadcasterConfiguration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;

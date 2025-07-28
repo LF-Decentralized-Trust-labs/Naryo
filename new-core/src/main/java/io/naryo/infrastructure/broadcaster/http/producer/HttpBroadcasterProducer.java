@@ -9,8 +9,8 @@ import io.naryo.domain.broadcaster.Broadcaster;
 import io.naryo.domain.broadcaster.BroadcasterType;
 import io.naryo.domain.common.connection.endpoint.ConnectionEndpoint;
 import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;
+import io.naryo.domain.configuration.broadcaster.http.HttpBroadcasterConfiguration;
 import io.naryo.domain.event.Event;
-import io.naryo.infrastructure.broadcaster.http.configuration.HttpBroadcasterConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 
