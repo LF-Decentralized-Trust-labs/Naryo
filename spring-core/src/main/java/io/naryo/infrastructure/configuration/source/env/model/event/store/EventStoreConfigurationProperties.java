@@ -8,20 +8,21 @@ import io.naryo.application.configuration.source.model.event.EventStoreConfigura
 import io.naryo.domain.configuration.eventstore.EventStoreStrategy;
 import io.naryo.domain.configuration.eventstore.EventStoreType;
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
 import lombok.Setter;
 
 @Setter
 public abstract class EventStoreConfigurationProperties
         implements EventStoreConfigurationDescriptor {
 
-    private @Nullable EventStoreType type;
-    private @Nullable EventStoreStrategy strategy;
+    private @NotNull EventStoreType type;
+    private @NotNull EventStoreStrategy strategy;
     private @Nullable Map<String, Object> additionalProperties;
     private @Nullable ConfigurationSchema propertiesSchema;
 
     public EventStoreConfigurationProperties(
-            @Nullable EventStoreType type,
-            @Nullable EventStoreStrategy strategy,
+            @NotNull EventStoreType type,
+            @NotNull EventStoreStrategy strategy,
             @Nullable Map<String, Object> additionalProperties,
             @Nullable ConfigurationSchema propertiesSchema) {
         this.type = type;
@@ -31,13 +32,13 @@ public abstract class EventStoreConfigurationProperties
     }
 
     @Override
-    public Optional<EventStoreType> getType() {
-        return Optional.ofNullable(type);
+    public EventStoreType getType() {
+        return type;
     }
 
     @Override
-    public Optional<EventStoreStrategy> getStrategy() {
-        return Optional.ofNullable(strategy);
+    public EventStoreStrategy getStrategy() {
+        return strategy;
     }
 
     @Override

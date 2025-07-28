@@ -22,7 +22,7 @@
       "artifactId": "persistence-spring-mongo",
       "version": "0.1.0",
       "description": "Naryo mongo support",
-      "required": true
+      "required": false
     }
   ]
 }

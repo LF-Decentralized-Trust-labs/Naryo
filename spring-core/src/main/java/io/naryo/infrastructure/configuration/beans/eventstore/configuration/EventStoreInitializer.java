@@ -1,12 +1,17 @@
 package io.naryo.infrastructure.configuration.beans.eventstore.configuration;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.definition.FieldDefinition;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaRegistry;
 import io.naryo.application.configuration.source.model.event.EventStoreConfigurationDescriptor;
+import io.naryo.application.configuration.source.model.event.ServerBlockEventStoreConfigurationDescriptor;
 import io.naryo.application.event.store.configuration.mapper.EventStoreConfigurationMapperRegistry;
+import io.naryo.domain.broadcaster.Destination;
+import io.naryo.domain.common.connection.endpoint.ConnectionEndpoint;
+import io.naryo.domain.configuration.eventstore.block.EventStoreTarget;
 import io.naryo.infrastructure.configuration.beans.env.EnvironmentInitializer;
 import io.naryo.infrastructure.event.http.configuration.HttpBlockEventStoreConfiguration;
 import org.springframework.stereotype.Component;
@@ -33,7 +38,26 @@ public final class EventStoreInitializer implements EnvironmentInitializer {
                 EVENT_STORE_TYPE,
                 EventStoreConfigurationDescriptor.class,
                 properties -> {
-                    return new HttpBlockEventStoreConfiguration(null, null, null);
+                    ServerBlockEventStoreConfigurationDescriptor descriptor =
+                            (ServerBlockEventStoreConfigurationDescriptor) properties;
+                    return new HttpBlockEventStoreConfiguration(
+                            descriptor.getTargets().stream()
+                                    .map(
+                                            target ->
+                                                    new EventStoreTarget(
+                                                            target.type(),
+                                                            new Destination(target.destination())))
+                                    .collect(Collectors.toSet()),
+                            descriptor.getServerType(),
+                            new ConnectionEndpoint(
+                                    descriptor.getAdditionalProperties().isPresent()
+                                            ? ((HttpBroadcasterEndpoint)
+                                                            descriptor
+                                                                    .getAdditionalProperties()
+                                                                    .get()
+                                                                    .get("endpoint"))
+                                                    .url()
+                                            : null));
                 });
 
         schemaRegistry.register(
