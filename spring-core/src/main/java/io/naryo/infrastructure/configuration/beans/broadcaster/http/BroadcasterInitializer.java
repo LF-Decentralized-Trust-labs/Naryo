@@ -39,13 +39,13 @@ public final class BroadcasterInitializer implements EnvironmentInitializer {
                 HTTP_BROADCASTER_TYPE,
                 BroadcasterConfigurationDescriptor.class,
                 properties -> {
-                    Map<String, Object> props = valueOrNull(properties.getAdditionalProperties());
-                    Object raw = props != null ? props.get("endpoint") : null;
+                    Map<String, Object> props = properties.getAdditionalProperties();
+                    Object raw = props.isEmpty() ? null : props.get("endpoint");
                     HttpBroadcasterEndpoint endpoint;
 
                     if (raw instanceof HttpBroadcasterEndpoint typed) {
                         endpoint = typed;
-                    } else if (raw instanceof Map map) {
+                    } else if (raw instanceof Map<?, ?> map) {
                         endpoint = new HttpBroadcasterEndpoint((String) map.get("url"));
                     } else {
                         return null;
