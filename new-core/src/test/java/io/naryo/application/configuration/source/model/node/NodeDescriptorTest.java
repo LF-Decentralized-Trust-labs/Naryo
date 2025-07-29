@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import io.naryo.application.configuration.source.model.DescriptorTestStringArgumentsProvider;
+import io.naryo.application.configuration.source.model.node.connection.HttpNodeConnectionDescriptorTest;
 import io.naryo.application.configuration.source.model.node.connection.NodeConnectionDescriptor;
 import io.naryo.application.configuration.source.model.node.interaction.HederaMirrorNodeBlockInteractionDescriptorTest;
 import io.naryo.application.configuration.source.model.node.interaction.InteractionDescriptor;
@@ -137,37 +138,33 @@ abstract class NodeDescriptorTest {
                 Arguments.of(null, null, null));
     }
 
-    //
-    //    @ParameterizedTest
-    //    @MethodSource("nodeConnectionParameters")
-    //    void testMerge_nodeConnection(
-    //        NodeConnectionDescriptor originalConnection,
-    //        NodeConnectionDescriptor otherConnection,
-    //        NodeConnectionDescriptor expectedConnection) {
-    //        NodeDescriptor original = getNodeDescriptor();
-    //        original.setConnection(originalConnection);
-    //        NodeDescriptor other = getNodeDescriptor();
-    //        other.setConnection(otherConnection);
-    //
-    //        NodeDescriptor result = original.merge(other);
-    //
-    //        assertEquals(Optional.ofNullable(expectedConnection), result.getConnection(), "Should
-    // merge the connection");
-    //    }
-    //
-    //    private static Stream<Arguments> nodeConnectionParameters() {
-    //        NodeDescriptor original =
-    //            Instancio.create(
-    //                BlockFilterSyncDescriptorTest.DummyBlockFilterSyncDescriptor.class);
-    //        NodeDescriptor other =
-    //            Instancio.create(
-    //                BlockFilterSyncDescriptorTest.DummyBlockFilterSyncDescriptor.class);
-    //
-    //        return Stream.of(
-    //            Arguments.of(original, other, original),
-    //            Arguments.of(null, other, other),
-    //            Arguments.of(null, null, null));
-    //    }
+        @ParameterizedTest
+        @MethodSource("nodeConnectionParameters")
+        void testMerge_nodeConnection(
+            NodeConnectionDescriptor originalConnection,
+            NodeConnectionDescriptor otherConnection,
+            NodeConnectionDescriptor expectedConnection) {
+            NodeDescriptor original = getNodeDescriptor();
+            original.setConnection(originalConnection);
+            NodeDescriptor other = getNodeDescriptor();
+            other.setConnection(otherConnection);
+
+            NodeDescriptor result = original.merge(other);
+
+            assertEquals(Optional.ofNullable(expectedConnection), result.getConnection(), "Should merge the connection");
+        }
+
+        private static Stream<Arguments> nodeConnectionParameters() {
+            NodeConnectionDescriptor original =
+                Instancio.create(HttpNodeConnectionDescriptorTest.DummyHttpNodeConnectionDescriptor.class);
+            NodeConnectionDescriptor other =
+                Instancio.create(HttpNodeConnectionDescriptorTest.DummyHttpNodeConnectionDescriptor.class);
+
+            return Stream.of(
+                Arguments.of(original, other, original),
+                Arguments.of(null, other, other),
+                Arguments.of(null, null, null));
+        }
 
     @Setter
     protected abstract static class DummyNodeDescriptor implements NodeDescriptor {

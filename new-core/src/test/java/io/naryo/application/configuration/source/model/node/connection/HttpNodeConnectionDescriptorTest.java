@@ -15,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
-class HttpNodeConnectionDescriptorTest extends NodeConnectionDescriptorTest {
+public class HttpNodeConnectionDescriptorTest extends NodeConnectionDescriptorTest {
 
     HttpNodeConnectionDescriptor getNodeConnectionDescriptor() {
         return new DummyHttpNodeConnectionDescriptor();
@@ -110,7 +110,7 @@ class HttpNodeConnectionDescriptorTest extends NodeConnectionDescriptorTest {
     }
 
     @Setter
-    protected static class DummyHttpNodeConnectionDescriptor extends DummyNodeConnectionDescriptor
+    public static class DummyHttpNodeConnectionDescriptor extends DummyNodeConnectionDescriptor
             implements HttpNodeConnectionDescriptor {
         private Integer maxIdleConnections;
         private Duration keepAliveDuration;
