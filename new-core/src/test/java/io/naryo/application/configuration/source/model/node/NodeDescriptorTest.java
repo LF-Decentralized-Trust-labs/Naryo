@@ -138,33 +138,38 @@ abstract class NodeDescriptorTest {
                 Arguments.of(null, null, null));
     }
 
-        @ParameterizedTest
-        @MethodSource("nodeConnectionParameters")
-        void testMerge_nodeConnection(
+    @ParameterizedTest
+    @MethodSource("nodeConnectionParameters")
+    void testMerge_nodeConnection(
             NodeConnectionDescriptor originalConnection,
             NodeConnectionDescriptor otherConnection,
             NodeConnectionDescriptor expectedConnection) {
-            NodeDescriptor original = getNodeDescriptor();
-            original.setConnection(originalConnection);
-            NodeDescriptor other = getNodeDescriptor();
-            other.setConnection(otherConnection);
+        NodeDescriptor original = getNodeDescriptor();
+        original.setConnection(originalConnection);
+        NodeDescriptor other = getNodeDescriptor();
+        other.setConnection(otherConnection);
 
-            NodeDescriptor result = original.merge(other);
+        NodeDescriptor result = original.merge(other);
 
-            assertEquals(Optional.ofNullable(expectedConnection), result.getConnection(), "Should merge the connection");
-        }
+        assertEquals(
+                Optional.ofNullable(expectedConnection),
+                result.getConnection(),
+                "Should merge the connection");
+    }
 
-        private static Stream<Arguments> nodeConnectionParameters() {
-            NodeConnectionDescriptor original =
-                Instancio.create(HttpNodeConnectionDescriptorTest.DummyHttpNodeConnectionDescriptor.class);
-            NodeConnectionDescriptor other =
-                Instancio.create(HttpNodeConnectionDescriptorTest.DummyHttpNodeConnectionDescriptor.class);
+    private static Stream<Arguments> nodeConnectionParameters() {
+        NodeConnectionDescriptor original =
+                Instancio.create(
+                        HttpNodeConnectionDescriptorTest.DummyHttpNodeConnectionDescriptor.class);
+        NodeConnectionDescriptor other =
+                Instancio.create(
+                        HttpNodeConnectionDescriptorTest.DummyHttpNodeConnectionDescriptor.class);
 
-            return Stream.of(
+        return Stream.of(
                 Arguments.of(original, other, original),
                 Arguments.of(null, other, other),
                 Arguments.of(null, null, null));
-        }
+    }
 
     @Setter
     protected abstract static class DummyNodeDescriptor implements NodeDescriptor {
