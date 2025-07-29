@@ -8,4 +8,13 @@ public interface HederaNodeDescriptor extends NodeDescriptor {
     default NodeType getType() {
         return NodeType.HEDERA;
     }
+
+    @Override
+    default NodeDescriptor merge(NodeDescriptor other) {
+        if (!(other instanceof HederaNodeDescriptor otherHederaNode)) {
+            return this;
+        }
+
+        return NodeDescriptor.super.merge(otherHederaNode);
+    }
 }

@@ -8,4 +8,13 @@ public interface PublicEthereumNodeDescriptor extends EthereumNodeDescriptor {
     default EthereumNodeVisibility getVisibility() {
         return EthereumNodeVisibility.PUBLIC;
     }
+
+    @Override
+    default NodeDescriptor merge(NodeDescriptor other) {
+        if (!(other instanceof PublicEthereumNodeDescriptor otherPublicEthereumNode)) {
+            return this;
+        }
+
+        return EthereumNodeDescriptor.super.merge(otherPublicEthereumNode);
+    }
 }
