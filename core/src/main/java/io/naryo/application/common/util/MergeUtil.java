@@ -28,7 +28,7 @@ public final class MergeUtil {
     }
 
     public static <V extends Map<?, ?>> void mergeMaps(Consumer<V> setter, V original, V other) {
-        if (original.isEmpty() && !other.isEmpty()) {
+        if (original == null || original.isEmpty() && !other.isEmpty()) {
             setter.accept(other);
         }
     }
