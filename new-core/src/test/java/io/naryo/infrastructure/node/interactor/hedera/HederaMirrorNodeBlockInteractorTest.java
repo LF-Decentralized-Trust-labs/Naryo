@@ -72,34 +72,6 @@ class HederaMirrorNodeBlockInteractorTest {
     void replayPastBlocks_returnsFlowable() throws IOException {
         HederaMirrorNodeBlockInteractor spyInteractor = spy(interactor);
         doReturn(BigInteger.ONE).when(spyInteractor).getCurrentBlockNumber();
-        ContractResultListResponseModel list = mock();
-        ContractResultResponseModel model = mock();
-        doAnswer(
-                        invocation -> {
-                            TypeReference<?> typeRef = invocation.getArgument(1);
-                            if (typeRef.getType()
-                                    == new TypeReference<BlockResponseModel>() {}.getType()) {
-                                return createFakeBlock(0);
-                            }
-
-                            if (typeRef.getType()
-                                    == new TypeReference<
-                                            ContractResultListResponseModel>() {}.getType()) {
-                                doReturn(List.of(model)).when(list).getResults();
-                                doReturn(Map.of()).when(list).getLinks();
-                                when(model.hash()).thenReturn("0xabc");
-                                when(model.nonce()).thenReturn(BigInteger.ZERO);
-                                when(model.blockNumber()).thenReturn("0");
-                                when(model.blockHash()).thenReturn("0xdef");
-                                when(model.from()).thenReturn("0xghi");
-                                when(model.to()).thenReturn("0xjkl");
-                                return list;
-                            }
-
-                            return null;
-                        })
-                .when(client)
-                .get(any(), any());
 
         var flowable = spyInteractor.replayPastBlocks(BigInteger.ZERO);
         assertNotNull(flowable);
