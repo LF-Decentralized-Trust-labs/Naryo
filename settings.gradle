@@ -12,6 +12,7 @@ include 'core'
 include 'spring-core'
 include 'initializer'
 include 'persistence-spring-mongo'
+include 'persistence-spring-jpa'
 include 'broadcaster-spring-rabbitmq'
 
 develocity {
