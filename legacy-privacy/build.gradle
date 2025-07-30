@@ -11,7 +11,7 @@ ext {
 }
 
 dependencies {
-    implementation project(':core')
+    implementation project(':legacy-core')
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation "org.web3j:core:${web3jVersion}"
     implementation "org.web3j:besu:${web3jVersion}"
