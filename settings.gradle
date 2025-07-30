@@ -4,9 +4,9 @@ plugins {
 
 rootProject.name = 'naryo'
 
-include 'core'
-include 'server'
-include 'privacy'
+include 'legacy-core'
+include 'legacy-server'
+include 'legacy-privacy'
 include 'integration-tests'
 include 'new-core'
 include 'spring-core'

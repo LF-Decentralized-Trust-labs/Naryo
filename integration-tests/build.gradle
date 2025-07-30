@@ -16,7 +16,7 @@ ext {
 
 
 dependencies {
-    testImplementation project(':core')
+    testImplementation project(':legacy-core')
     testImplementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     testImplementation "org.web3j:core:${web3jVersion}"
