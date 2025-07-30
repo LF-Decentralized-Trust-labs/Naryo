@@ -8,6 +8,8 @@ spotless {
             exclude '**/.gradle/**'
             exclude '**/generated/**'
             exclude '**/build/install/**'
+            exclude '**/build/scripts/**'
+            exclude '**/build/distributions/**'
         }
         removeUnusedImports()
         googleJavaFormat("1.25.2").aosp()
