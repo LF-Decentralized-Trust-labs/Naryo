@@ -12,6 +12,7 @@ ext {
     mockitoVersion = '5.17.0'
     okHttpVersion = '4.12.0'
     resilience4jVersion = '2.3.0'
+    instancioJunitVersion = '5.4.0'
     jakartaAnnotationVersion = '2.1.1'
 }
 
@@ -31,7 +32,7 @@ dependencies {
     testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    testFixturesApi 'org.instancio:instancio-junit:5.4.0'
+    testFixturesApi "org.instancio:instancio-junit:$instancioJunitVersion"
 }
 
 tasks.named('test', Test) {
