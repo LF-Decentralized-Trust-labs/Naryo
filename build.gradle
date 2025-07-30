@@ -33,6 +33,9 @@ allprojects {
     }
 }
 
-tasks.named("spotlessJava").configure { dependsOn("spotlessGroovyGradle") }
+tasks.named("spotlessJava").configure {
+    dependsOn("spotlessGroovyGradle")
+    mustRunAfter("bootStartScripts", "startScripts")
+}
 
 tasks.named('bootJar') { enabled = false }
