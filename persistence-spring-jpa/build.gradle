@@ -1,0 +1,48 @@
+plugins {
+    id 'java-library'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'com.gradle.plugin-publish'
+}
+
+ext {
+    mockitoVersion = '5.17.0'
+}
+
+group = 'io.naryo'
+version = '0.1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':spring-core')
+    implementation project(':new-core')
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    implementation 'org.springframework:spring-context'
+    implementation 'org.springframework:spring-beans'
+    implementation 'jakarta.validation:jakarta.validation-api'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation testFixtures(project(':new-core'))
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
+    testImplementation 'org.instancio:instancio-junit:5.4.0'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.named('bootJar') { enabled = false }
+
+tasks.named("spotlessJava").configure {
+    dependsOn("spotlessGroovyGradle", "compileJava", "compileTestJava", "javadoc")
+}
