@@ -3,13 +3,13 @@ package io.naryo.application.node.calculator;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Objects;
-import javax.annotation.Nullable;
 
 import io.naryo.application.event.store.block.BlockEventStore;
 import io.naryo.application.node.interactor.block.BlockInteractor;
 import io.naryo.domain.configuration.eventstore.BlockEventStoreConfiguration;
 import io.naryo.domain.node.Node;
 import io.naryo.domain.node.subscription.block.BlockSubscriptionConfiguration;
+import jakarta.annotation.Nullable;
 
 public final class StartBlockCalculator {
 
