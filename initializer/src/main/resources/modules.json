@@ -23,6 +23,14 @@
       "version": "0.1.0",
       "description": "Naryo mongo support",
       "required": false
+    },
+    {
+      "id": "jpa",
+      "groupId": "io.naryo",
+      "artifactId": "persistence-spring-jpa",
+      "version": "0.1.0",
+      "description": "Naryo jpa support",
+      "required": false
     }
   ]
 }
