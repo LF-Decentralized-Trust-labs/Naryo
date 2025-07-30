@@ -8,4 +8,13 @@ public interface WsNodeConnectionDescriptor extends NodeConnectionDescriptor {
     default NodeConnectionType getType() {
         return NodeConnectionType.WS;
     }
+
+    @Override
+    default NodeConnectionDescriptor merge(NodeConnectionDescriptor other) {
+        if (!(other instanceof WsNodeConnectionDescriptor otherWsNodeConnection)) {
+            return this;
+        }
+
+        return NodeConnectionDescriptor.super.merge(otherWsNodeConnection);
+    }
 }
