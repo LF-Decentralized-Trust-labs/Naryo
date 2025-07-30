@@ -580,3 +580,5 @@ build/
 
 !core/**/broadcaster/target
 !spring-core/**/broadcaster/target
+!persistence-spring-jpa/**/broadcaster/target
+!persistence-spring-mongo/**/broadcaster/target
