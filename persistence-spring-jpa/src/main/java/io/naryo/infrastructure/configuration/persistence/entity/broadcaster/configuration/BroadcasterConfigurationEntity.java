@@ -11,9 +11,9 @@ import io.naryo.application.configuration.source.definition.FieldDefinition;
 import io.naryo.application.configuration.source.model.broadcaster.configuration.BroadcasterCacheConfigurationDescriptor;
 import io.naryo.application.configuration.source.model.broadcaster.configuration.BroadcasterConfigurationDescriptor;
 import io.naryo.domain.broadcaster.BroadcasterType;
+import io.naryo.infrastructure.configuration.persistence.entity.broadcaster.configuration.converter.JsonMapConverter;
 import io.naryo.infrastructure.configuration.persistence.entity.broadcaster.configuration.schema.ConfigurationSchemaEntity;
 import io.naryo.infrastructure.configuration.persistence.entity.broadcaster.configuration.schema.FieldDefinitionEntity;
-import io.naryo.infrastructure.configuration.persistence.entity.broadcaster.util.JsonMapConverter;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public final class BroadcasterConfigurationEntity implements BroadcasterConfigurationDescriptor {
 
-    private @Id String id;
+    private @Id UUID id;
 
     private @NotNull @NotBlank String type;
 
@@ -56,7 +56,7 @@ public final class BroadcasterConfigurationEntity implements BroadcasterConfigur
 
     @Override
     public UUID getId() {
-        return UUID.fromString(this.id);
+        return this.id;
     }
 
     @Override
@@ -70,8 +70,8 @@ public final class BroadcasterConfigurationEntity implements BroadcasterConfigur
     }
 
     @Override
-    public Optional<Map<String, Object>> getAdditionalProperties() {
-        return Optional.ofNullable(this.additionalProperties);
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties == null ? Map.of() : this.additionalProperties;
     }
 
     @Override

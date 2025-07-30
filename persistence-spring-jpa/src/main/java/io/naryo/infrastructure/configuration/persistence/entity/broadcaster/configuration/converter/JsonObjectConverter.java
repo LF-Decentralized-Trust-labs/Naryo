@@ -1,4 +1,4 @@
-package io.naryo.infrastructure.configuration.persistence.entity.broadcaster.util;
+package io.naryo.infrastructure.configuration.persistence.entity.broadcaster.configuration.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

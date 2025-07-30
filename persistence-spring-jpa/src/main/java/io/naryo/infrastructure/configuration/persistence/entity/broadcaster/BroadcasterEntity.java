@@ -1,4 +1,4 @@
-package io.naryo.infrastructure.configuration.persistence.entity.broadcaster.target;
+package io.naryo.infrastructure.configuration.persistence.entity.broadcaster;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -10,6 +10,7 @@ import io.naryo.application.configuration.source.model.broadcaster.target.Broadc
 import io.naryo.application.configuration.source.model.broadcaster.target.ContractEventBroadcasterTargetDescriptor;
 import io.naryo.application.configuration.source.model.broadcaster.target.FilterBroadcasterTargetDescriptor;
 import io.naryo.application.configuration.source.model.broadcaster.target.TransactionBroadcasterTargetDescriptor;
+import io.naryo.infrastructure.configuration.persistence.entity.broadcaster.target.*;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -23,23 +24,21 @@ import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 @NoArgsConstructor
 public final class BroadcasterEntity implements BroadcasterDescriptor {
 
-    private @Id String id;
+    private @Id UUID id;
 
-    private @Column(name = "configuration_id") String configurationId;
+    private @Column(name = "configuration_id") UUID configurationId;
 
     private @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true) @JoinColumn(
             name = "target_id") @Valid BroadcasterTargetEntity target;
 
     @Override
     public UUID getId() {
-        return UUID.fromString(this.id);
+        return this.id;
     }
 
     @Override
     public Optional<UUID> getConfigurationId() {
-        return this.configurationId == null
-                ? Optional.empty()
-                : Optional.of(UUID.fromString(this.configurationId));
+        return Optional.ofNullable(this.configurationId);
     }
 
     @Override
@@ -49,7 +48,7 @@ public final class BroadcasterEntity implements BroadcasterDescriptor {
 
     @Override
     public void setConfigurationId(UUID configurationId) {
-        this.configurationId = configurationId.toString();
+        this.configurationId = configurationId;
     }
 
     @Override
