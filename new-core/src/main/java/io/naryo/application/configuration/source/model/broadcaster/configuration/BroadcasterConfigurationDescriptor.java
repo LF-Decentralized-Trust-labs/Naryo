@@ -8,8 +8,7 @@ import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.model.MergeableDescriptor;
 import io.naryo.domain.broadcaster.BroadcasterType;
 
-import static io.naryo.application.common.util.MergeUtil.mergeDescriptors;
-import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
+import static io.naryo.application.common.util.MergeUtil.*;
 
 public interface BroadcasterConfigurationDescriptor
         extends MergeableDescriptor<BroadcasterConfigurationDescriptor> {
@@ -20,7 +19,7 @@ public interface BroadcasterConfigurationDescriptor
 
     <T extends BroadcasterCacheConfigurationDescriptor> Optional<T> getCache();
 
-    Optional<Map<String, Object>> getAdditionalProperties();
+    Map<String, Object> getAdditionalProperties();
 
     <T extends ConfigurationSchema> Optional<T> getPropertiesSchema();
 
@@ -32,8 +31,12 @@ public interface BroadcasterConfigurationDescriptor
 
     @Override
     default BroadcasterConfigurationDescriptor merge(BroadcasterConfigurationDescriptor other) {
+        if (!this.getType().getName().equals(other.getType().getName())) {
+            return this;
+        }
+
         mergeDescriptors(this::setCache, this.getCache(), other.getCache());
-        mergeOptionals(
+        mergeMaps(
                 this::setAdditionalProperties,
                 this.getAdditionalProperties(),
                 other.getAdditionalProperties());

@@ -9,6 +9,7 @@ import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
+import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -98,6 +99,47 @@ class MergeUtilTest {
         MergeUtil.mergeCollections(testSetter, original, other);
 
         assertNull(result.get(), "Setter should not be called when original is not empty");
+    }
+
+    @Test
+    void testMergeMaps_bothEmpty() {
+        Map<String, String> original = new HashMap<>();
+        Map<String, String> other = new HashMap<>();
+
+        AtomicReference<Map<String, String>> result = new AtomicReference<>();
+        Consumer<Map<String, String>> testSetter = result::set;
+
+        MergeUtil.mergeMaps(testSetter, original, other);
+
+        assertNull(result.get(), "Setter should not be called when both maps are empty");
+    }
+
+    @Test
+    void testMergeMaps_originalEmptyOtherNotEmpty() {
+        Map<String, String> original = new HashMap<>();
+        Map<String, String> other = Instancio.createMap(String.class, String.class);
+
+        AtomicReference<Map<String, String>> result = new AtomicReference<>();
+        Consumer<Map<String, String>> testSetter = result::set;
+
+        MergeUtil.mergeMaps(testSetter, original, other);
+
+        assertEquals(other, result.get(), "Setter should be called with the value from 'other'");
+    }
+
+    @Test
+    void testMergeMaps_originalNotEmptyOtherEmpty() {
+        Map<String, String> original = Instancio.createMap(String.class, String.class);
+        Map<String, String> other = new HashMap<>();
+
+        AtomicReference<Map<String, String>> result = new AtomicReference<>();
+        Consumer<Map<String, String>> testSetter = result::set;
+
+        MergeUtil.mergeMaps(testSetter, original, other);
+
+        assertNull(
+                result.get(),
+                "Setter should not be called when original is not empty and other is empty");
     }
 
     @Test

@@ -50,8 +50,8 @@ public final class BroadcasterConfigurationEntryProperties
     }
 
     @Override
-    public Optional<Map<String, Object>> getAdditionalProperties() {
-        return Optional.ofNullable(additionalProperties);
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties == null ? Map.of() : this.additionalProperties;
     }
 
     @Override
