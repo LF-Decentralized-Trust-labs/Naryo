@@ -4,7 +4,6 @@ import java.math.BigInteger;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collector;
-import javax.annotation.Nullable;
 
 import io.naryo.application.configuration.manager.BaseCollectionConfigurationManager;
 import io.naryo.application.configuration.source.model.filter.FilterDescriptor;
@@ -26,6 +25,7 @@ import io.naryo.domain.filter.event.sync.NoSyncState;
 import io.naryo.domain.filter.event.sync.block.BlockActiveSyncState;
 import io.naryo.domain.filter.transaction.IdentifierType;
 import io.naryo.domain.filter.transaction.TransactionFilter;
+import jakarta.annotation.Nullable;
 
 import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 import static java.util.stream.Collectors.toMap;

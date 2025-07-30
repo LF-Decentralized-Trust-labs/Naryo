@@ -5,10 +5,10 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 import io.naryo.application.configuration.source.model.MergeableDescriptor;
+import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
-import org.gradle.internal.impldep.org.testng.internal.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
