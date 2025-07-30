@@ -1,9 +1,6 @@
 package io.naryo.infrastructure.configuration.persistence.document.broadcaster.configuration;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.mongodb.lang.Nullable;
@@ -40,7 +37,7 @@ public final class BroadcasterConfigurationDocument implements BroadcasterConfig
 
     @Override
     public BroadcasterType getType() {
-        return () -> this.type.toLowerCase();
+        return this.type::toLowerCase;
     }
 
     @Override
@@ -49,8 +46,8 @@ public final class BroadcasterConfigurationDocument implements BroadcasterConfig
     }
 
     @Override
-    public Optional<Map<String, Object>> getAdditionalProperties() {
-        return Optional.ofNullable(this.additionalProperties);
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties == null ? Map.of() : this.additionalProperties;
     }
 
     @Override
