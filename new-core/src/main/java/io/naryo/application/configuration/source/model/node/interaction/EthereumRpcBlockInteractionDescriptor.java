@@ -8,4 +8,15 @@ public interface EthereumRpcBlockInteractionDescriptor extends BlockInteractionD
     default InteractionMode getMode() {
         return InteractionMode.ETHEREUM_RPC;
     }
+
+    @Override
+    default InteractionDescriptor merge(InteractionDescriptor other) {
+        if (!(other
+                instanceof
+                EthereumRpcBlockInteractionDescriptor otherEthereumRpcBlockBlockInteraction)) {
+            return this;
+        }
+
+        return BlockInteractionDescriptor.super.merge(otherEthereumRpcBlockBlockInteraction);
+    }
 }
