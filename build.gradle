@@ -7,7 +7,7 @@ plugins {
     id 'org.springframework.boot' version '3.3.1'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'io.freefair.lombok' version '8.12.1'
-    id 'com.gradle.plugin-publish' version '1.2.1'
+    id 'maven-publish'
 }
 
 description = 'Naryo base project'
@@ -27,8 +27,25 @@ allprojects {
 
     tasks.withType(Test).tap {
         configureEach {
-            reports.html.destination = file("${reporting.baseDir}/${name}")
+            reports.html.destination(file("${reporting.baseDir}/${name}"))
             useJUnitPlatform()
+        }
+    }
+
+    plugins.withType(PublishingPlugin).tap {
+        configureEach {
+            publishing {
+                repositories {
+                    maven {
+                        name = "GitHubPackages"
+                        url = uri("ghcr.io/lf-decentralized-trust-labs/naryo")
+                        credentials {
+                            username = System.getenv("GITHUB_ACTOR")
+                            password = System.getenv("GITHUB_TOKEN")
+                        }
+                    }
+                }
+            }
         }
     }
 }
