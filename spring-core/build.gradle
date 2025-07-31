@@ -19,7 +19,7 @@ ext {
 }
 
 dependencies {
-    implementation project(':new-core')
+    implementation project(':core')
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation "com.squareup.okhttp3:okhttp:$okHttpVersion"
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
