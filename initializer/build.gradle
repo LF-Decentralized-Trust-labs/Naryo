@@ -1,6 +1,6 @@
 plugins {
-    id 'java-library'
     id 'application'
+    id 'maven-publish'
 }
 
 ext {
@@ -29,4 +29,20 @@ application {
 
 tasks.named("spotlessJava").configure {
     dependsOn("spotlessGroovyGradle", "compileJava", "compileTestJava", "javadoc")
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'io.naryo.cli.Initializer'
+                )
+    }
+}
+
+publishing {
+    publications {
+        cliJar(MavenPublication) {
+            artifact(jar)
+        }
+    }
 }
