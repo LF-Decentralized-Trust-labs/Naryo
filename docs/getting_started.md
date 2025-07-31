@@ -41,7 +41,7 @@ ext {
 
 dependencies {
     // Core module
-    implementation("io.naryo:new-core:${naryoVersion}")
+    implementation("io.naryo:core:${naryoVersion}")
 
     // Spring Boot integration
     implementation("io.naryo:core-spring:${naryoVersion}")
@@ -70,7 +70,7 @@ dependencies {
 <!-- Core module -->
 <dependency>
     <groupId>io.naryo</groupId>
-    <artifactId>new-core</artifactId>
+    <artifactId>core</artifactId>
     <version>${naryoVersion}</version>
 </dependency>
 

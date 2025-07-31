@@ -1,6 +1,6 @@
 # 🎉 Naryo Configuration
 
-Naryo supports flexible configuration mechanisms. The new-core module requires manual configuration through custom
+Naryo supports flexible configuration mechanisms. The core module requires manual configuration through custom
 implementation due to its framework-agnostic design and wide configuration domain. In contrast, the `core-spring` module
 allows traditional Spring Boot configuration using YAML or `.properties` files, based on the `EnvironmentProperties`
 model.

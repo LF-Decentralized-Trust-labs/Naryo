@@ -578,5 +578,5 @@ build/
 
 !gradle/wrapper/gradle-wrapper.jar
 
-!new-core/**/broadcaster/target
+!core/**/broadcaster/target
 !spring-core/**/broadcaster/target
