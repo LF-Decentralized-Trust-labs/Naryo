@@ -3,7 +3,7 @@
     {
       "id": "core",
       "groupId": "io.naryo",
-      "artifactId": "new-core",
+      "artifactId": "core",
       "version": "0.1.0",
       "description": "Naryo core support",
       "required": true

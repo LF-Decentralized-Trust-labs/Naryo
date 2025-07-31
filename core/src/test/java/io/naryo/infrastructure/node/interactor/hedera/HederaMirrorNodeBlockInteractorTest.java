@@ -156,8 +156,8 @@ class HederaMirrorNodeBlockInteractorTest {
                             if (typeRef.getType()
                                     == new TypeReference<
                                             ContractResultListResponseModel>() {}.getType()) {
-                                doReturn(List.of(model)).when(list).getResults();
-                                doReturn(Map.of()).when(list).getLinks();
+                                lenient().doReturn(List.of(model)).when(list).getResults();
+                                lenient().doReturn(Map.of()).when(list).getLinks();
                                 when(model.hash()).thenReturn("0xabc");
                                 when(model.nonce()).thenReturn(BigInteger.ZERO);
                                 when(model.blockNumber()).thenReturn("1");
