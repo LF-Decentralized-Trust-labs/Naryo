@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaRegistry;
 import io.naryo.infrastructure.configuration.source.env.model.EnvironmentProperties;
 import io.naryo.infrastructure.util.serialization.CamelCaseNormalizer;
 import jakarta.validation.Validator;
@@ -23,6 +24,11 @@ public class EnvironmentAutoConfiguration {
     static final String ROOT_PROP_KEY = "naryo";
 
     @Autowired private Validator validator;
+
+    @Bean
+    public ConfigurationSchemaRegistry configurationSchemaRegistry() {
+        return new ConfigurationSchemaRegistry();
+    }
 
     @Bean
     public EnvironmentProperties mainProperties(

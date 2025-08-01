@@ -1,4 +1,4 @@
-package io.naryo.infrastructure.configuration.persistence.document.broadcaster.configuration;
+package io.naryo.infrastructure.configuration.persistence.document.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
