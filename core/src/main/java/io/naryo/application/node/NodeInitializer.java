@@ -11,6 +11,7 @@ import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.event.store.EventStore;
 import io.naryo.application.event.store.block.BlockEventStore;
 import io.naryo.application.filter.block.NodeSynchronizer;
+import io.naryo.application.node.calculator.EventStoreStartBlockCalculator;
 import io.naryo.application.node.calculator.StartBlockCalculator;
 import io.naryo.application.node.dispatch.block.EventDispatcher;
 import io.naryo.application.node.helper.ContractEventDispatcherHelper;
@@ -23,8 +24,8 @@ import io.naryo.application.node.trigger.Trigger;
 import io.naryo.application.node.trigger.permanent.EventBroadcasterPermanentTrigger;
 import io.naryo.application.node.trigger.permanent.EventStoreBroadcasterPermanentTrigger;
 import io.naryo.application.node.trigger.permanent.block.ProcessorTriggerFactory;
-import io.naryo.domain.configuration.eventstore.BlockEventStoreConfiguration;
 import io.naryo.domain.configuration.eventstore.EventStoreConfiguration;
+import io.naryo.domain.configuration.eventstore.active.block.BlockEventStoreConfiguration;
 import io.naryo.domain.event.Event;
 import io.naryo.domain.filter.Filter;
 import io.naryo.domain.filter.FilterType;
@@ -116,13 +117,14 @@ public class NodeInitializer {
                         transactionEventHelper);
         dispatcher.addTrigger(transactionTrigger);
 
-        var subscriber =
-                subscriberFactory.create(
-                        interactor, dispatcher, node, eventStoreConfiguration, eventStores);
+        StartBlockCalculator calculator =
+                createStartBlockCalculator(node, interactor, eventStoreConfiguration);
+
+        var subscriber = subscriberFactory.create(interactor, dispatcher, node, calculator);
         var synchronizer =
                 new NodeSynchronizer(
                         node,
-                        createStartBlockCalculator(node, interactor, eventStoreConfiguration),
+                        calculator,
                         interactor,
                         nodeFilters,
                         decoder,
@@ -171,12 +173,9 @@ public class NodeInitializer {
                 && configuration
                         instanceof BlockEventStoreConfiguration blockEventStoreConfiguration) {
 
-            return new StartBlockCalculator(
+            return new EventStoreStartBlockCalculator(
                     node, interactor, blockEventStore, blockEventStoreConfiguration);
-        } else {
-            throw new IllegalArgumentException(
-                    "Unsupported event store for type: "
-                            + node.getSubscriptionConfiguration().getStrategy().name());
         }
+        return new StartBlockCalculator(node, interactor);
     }
 }

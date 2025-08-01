@@ -4,30 +4,30 @@ import java.util.*;
 
 import io.naryo.application.configuration.mapper.ConfigurationMapper;
 import io.naryo.application.configuration.mapper.ConfigurationMapperRegistry;
-import io.naryo.domain.configuration.eventstore.EventStoreConfiguration;
+import io.naryo.domain.configuration.eventstore.active.ActiveEventStoreConfiguration;
 
-public final class EventStoreConfigurationMapperRegistry
-        implements ConfigurationMapperRegistry<EventStoreConfiguration> {
+public final class ActiveEventStoreConfigurationMapperRegistry
+        implements ConfigurationMapperRegistry<ActiveEventStoreConfiguration> {
 
-    private final Map<String, Map<Class<?>, ConfigurationMapper<EventStoreConfiguration, ?>>>
+    private final Map<String, Map<Class<?>, ConfigurationMapper<ActiveEventStoreConfiguration, ?>>>
             registry = new HashMap<>();
 
     @Override
     public <S> void register(
             String type,
             Class<S> sourceClass,
-            ConfigurationMapper<EventStoreConfiguration, S> mapper) {
+            ConfigurationMapper<ActiveEventStoreConfiguration, S> mapper) {
         registry.computeIfAbsent(type.toLowerCase(), __ -> new HashMap<>())
                 .put(sourceClass, mapper);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <S> EventStoreConfiguration map(String type, S source) {
+    public <S> ActiveEventStoreConfiguration map(String type, S source) {
         var typeRegistry = registry.getOrDefault(type.toLowerCase(), Map.of());
         Class<?> sourceClass = source.getClass();
 
-        ConfigurationMapper<EventStoreConfiguration, ?> mapper =
+        ConfigurationMapper<ActiveEventStoreConfiguration, ?> mapper =
                 findCompatibleMapper(typeRegistry, sourceClass);
 
         if (mapper == null) {
@@ -35,14 +35,15 @@ public final class EventStoreConfigurationMapperRegistry
                     "No mapper registered for type " + type + " and source " + sourceClass);
         }
 
-        return ((ConfigurationMapper<EventStoreConfiguration, S>) mapper).map(source);
+        return ((ConfigurationMapper<ActiveEventStoreConfiguration, S>) mapper).map(source);
     }
 
-    private ConfigurationMapper<EventStoreConfiguration, ?> findCompatibleMapper(
-            Map<Class<?>, ConfigurationMapper<EventStoreConfiguration, ?>> typeRegistry,
+    private ConfigurationMapper<ActiveEventStoreConfiguration, ?> findCompatibleMapper(
+            Map<Class<?>, ConfigurationMapper<ActiveEventStoreConfiguration, ?>> typeRegistry,
             Class<?> sourceClass) {
 
-        ConfigurationMapper<EventStoreConfiguration, ?> mapper = typeRegistry.get(sourceClass);
+        ConfigurationMapper<ActiveEventStoreConfiguration, ?> mapper =
+                typeRegistry.get(sourceClass);
         if (mapper != null) return mapper;
 
         for (Class<?> clazz : getAllTypes(sourceClass)) {

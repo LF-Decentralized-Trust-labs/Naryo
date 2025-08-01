@@ -7,7 +7,7 @@ import java.util.Optional;
 import io.naryo.application.event.store.block.BlockEventStore;
 import io.naryo.application.node.interactor.block.BlockInteractor;
 import io.naryo.domain.common.NonNegativeBlockNumber;
-import io.naryo.domain.configuration.eventstore.BlockEventStoreConfiguration;
+import io.naryo.domain.configuration.eventstore.active.block.BlockEventStoreConfiguration;
 import io.naryo.domain.node.Node;
 import io.naryo.domain.node.subscription.block.BlockSubscriptionConfiguration;
 import org.junit.jupiter.api.Test;
@@ -33,12 +33,7 @@ class StartBlockCalculatorTest {
         NullPointerException ex =
                 assertThrows(
                         NullPointerException.class,
-                        () ->
-                                new StartBlockCalculator(
-                                        null,
-                                        interactor,
-                                        blockEventStore,
-                                        eventStoreConfiguration));
+                        () -> new StartBlockCalculator(null, interactor));
         assertEquals("node must not be null", ex.getMessage());
     }
 
@@ -46,10 +41,7 @@ class StartBlockCalculatorTest {
     void testConstructorWithNullInteractor() {
         NullPointerException ex =
                 assertThrows(
-                        NullPointerException.class,
-                        () ->
-                                new StartBlockCalculator(
-                                        node, null, blockEventStore, eventStoreConfiguration));
+                        NullPointerException.class, () -> new StartBlockCalculator(node, null));
         assertEquals("interactor must not be null", ex.getMessage());
     }
 
@@ -60,7 +52,7 @@ class StartBlockCalculatorTest {
                 .thenReturn(Optional.of(BigInteger.ZERO));
         when(configuration.getInitialBlock()).thenReturn(BigInteger.TEN);
         StartBlockCalculator calculator =
-                new StartBlockCalculator(
+                new EventStoreStartBlockCalculator(
                         node, interactor, blockEventStore, eventStoreConfiguration);
         BigInteger startBlock = calculator.getStartBlock();
         assertEquals(BigInteger.TEN, startBlock);
@@ -74,7 +66,7 @@ class StartBlockCalculatorTest {
         when(configuration.getInitialBlock()).thenReturn(BigInteger.valueOf(-1));
         when(interactor.getCurrentBlockNumber()).thenReturn(BigInteger.TWO);
         StartBlockCalculator calculator =
-                new StartBlockCalculator(
+                new EventStoreStartBlockCalculator(
                         node, interactor, blockEventStore, eventStoreConfiguration);
         BigInteger startBlock = calculator.getStartBlock();
         assertEquals(BigInteger.TWO, startBlock);
@@ -90,7 +82,7 @@ class StartBlockCalculatorTest {
         when(configuration.getSyncBlockLimit())
                 .thenReturn(new NonNegativeBlockNumber(BigInteger.ZERO));
         StartBlockCalculator calculator =
-                new StartBlockCalculator(
+                new EventStoreStartBlockCalculator(
                         node, interactor, blockEventStore, eventStoreConfiguration);
         BigInteger startBlock = calculator.getStartBlock();
         assertEquals(BigInteger.valueOf(8), startBlock);
@@ -107,7 +99,7 @@ class StartBlockCalculatorTest {
                 .thenReturn(new NonNegativeBlockNumber(BigInteger.valueOf(100)));
         when(interactor.getCurrentBlockNumber()).thenReturn(BigInteger.valueOf(200));
         StartBlockCalculator calculator =
-                new StartBlockCalculator(
+                new EventStoreStartBlockCalculator(
                         node, interactor, blockEventStore, eventStoreConfiguration);
         BigInteger startBlock = calculator.getStartBlock();
         assertEquals(BigInteger.valueOf(100), startBlock);
@@ -124,7 +116,7 @@ class StartBlockCalculatorTest {
         when(configuration.getSyncBlockLimit())
                 .thenReturn(new NonNegativeBlockNumber(BigInteger.valueOf(10)));
         StartBlockCalculator calculator =
-                new StartBlockCalculator(
+                new EventStoreStartBlockCalculator(
                         node, interactor, blockEventStore, eventStoreConfiguration);
         BigInteger startBlock = calculator.getStartBlock();
         assertEquals(BigInteger.valueOf(100), startBlock);
@@ -140,7 +132,7 @@ class StartBlockCalculatorTest {
         when(configuration.getSyncBlockLimit())
                 .thenReturn(new NonNegativeBlockNumber(BigInteger.ZERO));
         StartBlockCalculator calculator =
-                new StartBlockCalculator(
+                new EventStoreStartBlockCalculator(
                         node, interactor, blockEventStore, eventStoreConfiguration);
         BigInteger startBlock = calculator.getStartBlock();
         assertEquals(BigInteger.ZERO, startBlock);

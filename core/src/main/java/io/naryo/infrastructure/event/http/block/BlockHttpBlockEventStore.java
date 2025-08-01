@@ -5,9 +5,10 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.naryo.application.event.store.block.BlockEventStore;
-import io.naryo.domain.configuration.eventstore.block.EventStoreTarget;
-import io.naryo.domain.configuration.eventstore.block.TargetType;
-import io.naryo.domain.configuration.eventstore.block.server.http.HttpBlockEventStoreConfiguration;
+import io.naryo.domain.configuration.eventstore.EventStoreConfiguration;
+import io.naryo.domain.configuration.eventstore.active.block.EventStoreTarget;
+import io.naryo.domain.configuration.eventstore.active.block.TargetType;
+import io.naryo.domain.configuration.eventstore.active.block.http.HttpBlockEventStoreConfiguration;
 import io.naryo.domain.event.Event;
 import io.naryo.domain.event.block.BlockEvent;
 import io.naryo.infrastructure.event.http.HttpBlockEventStore;
@@ -47,7 +48,8 @@ public final class BlockHttpBlockEventStore extends HttpBlockEventStore<BlockEve
     }
 
     @Override
-    public boolean supports(Event event) {
-        return event instanceof BlockEvent;
+    public boolean supports(Event event, EventStoreConfiguration configuration) {
+        return event instanceof BlockEvent
+                && configuration instanceof HttpBlockEventStoreConfiguration;
     }
 }
