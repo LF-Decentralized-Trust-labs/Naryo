@@ -2,11 +2,14 @@ package io.naryo.infrastructure.configuration.persistence.entity.node.interactio
 
 import io.naryo.application.configuration.source.model.node.interaction.BlockInteractionDescriptor;
 import io.naryo.domain.node.interaction.InteractionStrategy;
-import io.naryo.domain.node.interaction.block.InteractionMode;
 import io.naryo.infrastructure.configuration.persistence.entity.node.interaction.InteractionEntity;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 
-public abstract class BlockInteractionEntity extends InteractionEntity implements BlockInteractionDescriptor {
-
+@Entity
+@DiscriminatorValue("block")
+public abstract class BlockInteractionEntity extends InteractionEntity
+        implements BlockInteractionDescriptor {
     @Override
     public InteractionStrategy getStrategy() {
         return InteractionStrategy.BLOCK_BASED;

@@ -1,5 +1,8 @@
 package io.naryo.infrastructure.configuration.persistence.entity.node;
 
+import java.util.Optional;
+import java.util.UUID;
+
 import io.naryo.application.configuration.source.model.node.NodeDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.HttpNodeConnectionDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.NodeConnectionDescriptor;
@@ -23,9 +26,6 @@ import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
-import java.util.Optional;
-import java.util.UUID;
-
 import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 
 @Entity
@@ -39,17 +39,21 @@ public abstract class NodeEntity implements NodeDescriptor {
 
     private @Nullable @Column(name = "name") String name;
 
-    private @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "subscription_id")
-    @Nullable SubscriptionEntity subscription;
+    private @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true) @JoinColumn(
+            name = "subscription_id") @Nullable SubscriptionEntity subscription;
 
-    private @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true) @JoinColumn(name = "interaction_id") @Nullable InteractionEntity interaction;
+    private @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true) @JoinColumn(
+            name = "interaction_id") @Nullable InteractionEntity interaction;
 
-    private @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true) @JoinColumn(name = "connection_id") @Nullable ConnectionEntity connection;
+    private @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true) @JoinColumn(
+            name = "connection_id") @Nullable ConnectionEntity connection;
 
-    protected NodeEntity(UUID id, @Nullable String name, @Nullable SubscriptionEntity subscription,
-                         @Nullable InteractionEntity interaction,
-                         @Nullable ConnectionEntity connection) {
+    protected NodeEntity(
+            UUID id,
+            @Nullable String name,
+            @Nullable SubscriptionEntity subscription,
+            @Nullable InteractionEntity interaction,
+            @Nullable ConnectionEntity connection) {
         this.id = id;
         this.name = name;
         this.subscription = subscription;
@@ -68,7 +72,7 @@ public abstract class NodeEntity implements NodeDescriptor {
     }
 
     @Override
-    public void setName(@Nullable String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -81,28 +85,28 @@ public abstract class NodeEntity implements NodeDescriptor {
     public void setSubscription(SubscriptionDescriptor subscription) {
         switch (subscription) {
             case PubsubBlockSubscriptionDescriptor pubsub ->
-                this.subscription =
-                    new PubSubBlockSubscriptionEntity(
-                        valueOrNull(pubsub.getInitialBlock()),
-                        valueOrNull(pubsub.getConfirmationBlocks()),
-                        valueOrNull(pubsub.getMissingTxRetryBlocks()),
-                        valueOrNull(pubsub.getEventInvalidationBlockThreshold()),
-                        valueOrNull(pubsub.getReplayBlockOffset()),
-                        valueOrNull(pubsub.getSyncBlockLimit()));
+                    this.subscription =
+                            new PubSubBlockSubscriptionEntity(
+                                    valueOrNull(pubsub.getInitialBlock()),
+                                    valueOrNull(pubsub.getConfirmationBlocks()),
+                                    valueOrNull(pubsub.getMissingTxRetryBlocks()),
+                                    valueOrNull(pubsub.getEventInvalidationBlockThreshold()),
+                                    valueOrNull(pubsub.getReplayBlockOffset()),
+                                    valueOrNull(pubsub.getSyncBlockLimit()));
             case PollBlockSubscriptionDescriptor poll ->
-                this.subscription =
-                    new PollBlockSubscriptionEntity(
-                        valueOrNull(poll.getInitialBlock()),
-                        valueOrNull(poll.getConfirmationBlocks()),
-                        valueOrNull(poll.getMissingTxRetryBlocks()),
-                        valueOrNull(poll.getEventInvalidationBlockThreshold()),
-                        valueOrNull(poll.getReplayBlockOffset()),
-                        valueOrNull(poll.getSyncBlockLimit()),
-                        valueOrNull(poll.getInterval()));
+                    this.subscription =
+                            new PollBlockSubscriptionEntity(
+                                    valueOrNull(poll.getInitialBlock()),
+                                    valueOrNull(poll.getConfirmationBlocks()),
+                                    valueOrNull(poll.getMissingTxRetryBlocks()),
+                                    valueOrNull(poll.getEventInvalidationBlockThreshold()),
+                                    valueOrNull(poll.getReplayBlockOffset()),
+                                    valueOrNull(poll.getSyncBlockLimit()),
+                                    valueOrNull(poll.getInterval()));
             default ->
-                throw new IllegalArgumentException(
-                    "Unsupported subscription type: "
-                        + subscription.getClass().getSimpleName());
+                    throw new IllegalArgumentException(
+                            "Unsupported subscription type: "
+                                    + subscription.getClass().getSimpleName());
         }
     }
 
@@ -115,15 +119,16 @@ public abstract class NodeEntity implements NodeDescriptor {
     public void setInteraction(InteractionDescriptor interaction) {
         switch (interaction) {
             case EthereumRpcBlockInteractionDescriptor ethereum ->
-                this.interaction = new EthereumRpcBlockInteractionEntity();
+                    this.interaction = new EthereumRpcBlockInteractionEntity();
             case HederaMirrorNodeBlockInteractionDescriptor hedera ->
-                this.interaction = new HederaMirrorNodeBlockInteractionEntity(
-                        valueOrNull(hedera.getLimitPerRequest()),
-                        valueOrNull(hedera.getRetriesPerRequest()));
+                    this.interaction =
+                            new HederaMirrorNodeBlockInteractionEntity(
+                                    valueOrNull(hedera.getLimitPerRequest()),
+                                    valueOrNull(hedera.getRetriesPerRequest()));
             default ->
-                throw new IllegalArgumentException(
-                    "Unsupported interaction type: "
-                        + interaction.getClass().getSimpleName());
+                    throw new IllegalArgumentException(
+                            "Unsupported interaction type: "
+                                    + interaction.getClass().getSimpleName());
         }
     }
 
@@ -136,25 +141,22 @@ public abstract class NodeEntity implements NodeDescriptor {
     public void setConnection(NodeConnectionDescriptor connection) {
         switch (connection) {
             case HttpNodeConnectionDescriptor http ->
-                this.connection = new HttpConnectionEntity(
-                        valueOrNull(http.getRetry()),
-                        valueOrNull(http.getEndpoint()),
-                        valueOrNull(http.getMaxIdleConnections()),
-                        valueOrNull(http.getKeepAliveDuration()),
-                        valueOrNull(http.getConnectionTimeout()),
-                        valueOrNull(http.getReadTimeout()));
+                    this.connection =
+                            new HttpConnectionEntity(
+                                    valueOrNull(http.getRetry()),
+                                    valueOrNull(http.getEndpoint()),
+                                    valueOrNull(http.getMaxIdleConnections()),
+                                    valueOrNull(http.getKeepAliveDuration()),
+                                    valueOrNull(http.getConnectionTimeout()),
+                                    valueOrNull(http.getReadTimeout()));
             case WsNodeConnectionDescriptor ws ->
-                this.connection = new WsConnectionEntity(
-                        valueOrNull(ws.getRetry()), valueOrNull(ws.getEndpoint()));
+                    this.connection =
+                            new WsConnectionEntity(
+                                    valueOrNull(ws.getRetry()), valueOrNull(ws.getEndpoint()));
             default ->
-                throw new IllegalArgumentException(
-                    "Unsupported connection type: "
-                        + connection.getClass().getSimpleName());
+                    throw new IllegalArgumentException(
+                            "Unsupported connection type: "
+                                    + connection.getClass().getSimpleName());
         }
     }
-
-
-
-
-
 }

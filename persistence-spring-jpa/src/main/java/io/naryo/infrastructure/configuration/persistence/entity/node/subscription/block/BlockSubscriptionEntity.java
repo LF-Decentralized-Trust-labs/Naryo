@@ -1,8 +1,9 @@
 package io.naryo.infrastructure.configuration.persistence.entity.node.subscription.block;
 
+import java.math.BigInteger;
+import java.util.Optional;
+
 import io.naryo.application.configuration.source.model.node.subscription.BlockSubscriptionDescriptor;
-import io.naryo.domain.node.subscription.SubscriptionStrategy;
-import io.naryo.domain.node.subscription.block.method.BlockSubscriptionMethod;
 import io.naryo.infrastructure.configuration.persistence.entity.node.subscription.SubscriptionEntity;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
@@ -11,14 +12,12 @@ import jakarta.persistence.Entity;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigInteger;
-import java.util.Optional;
-
 @Entity
 @DiscriminatorValue("block")
 @Setter
 @NoArgsConstructor
-public abstract class BlockSubscriptionEntity extends SubscriptionEntity implements BlockSubscriptionDescriptor {
+public abstract class BlockSubscriptionEntity extends SubscriptionEntity
+        implements BlockSubscriptionDescriptor {
 
     private static final BigInteger DEFAULT_INITIAL_BLOCK = BigInteger.valueOf(-1);
     private static final BigInteger DEFAULT_CONFIRMATION_BLOCKS = BigInteger.valueOf(12);
@@ -97,5 +96,4 @@ public abstract class BlockSubscriptionEntity extends SubscriptionEntity impleme
     public Optional<BigInteger> getSyncBlockLimit() {
         return Optional.ofNullable(syncBlockLimit);
     }
-
 }
