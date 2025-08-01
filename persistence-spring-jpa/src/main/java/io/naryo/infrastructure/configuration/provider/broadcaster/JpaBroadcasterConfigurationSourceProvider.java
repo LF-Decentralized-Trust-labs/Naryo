@@ -1,4 +1,4 @@
-package io.naryo.infrastructure.configuration.provider;
+package io.naryo.infrastructure.configuration.provider.broadcaster;
 
 import java.util.Collection;
 import java.util.HashSet;
