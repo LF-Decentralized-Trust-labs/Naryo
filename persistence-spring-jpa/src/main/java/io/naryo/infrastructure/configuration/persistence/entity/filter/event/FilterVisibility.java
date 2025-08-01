@@ -13,9 +13,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class FilterVisibility implements FilterVisibilityDescriptor {
 
-    private @Column(name = "visibility_visible") @Nullable Boolean visible;
+    private @Column(name = "visible") @Nullable Boolean visible;
 
-    private @Column(name = "visibility_privacy_group_id") @Nullable String privacyGroupId;
+    private @Column(name = "privacy_group_id") @Nullable String privacyGroupId;
 
     public FilterVisibility(Boolean visible, String privacyGroupId) {
         this.visible = visible;

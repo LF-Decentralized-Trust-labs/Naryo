@@ -13,7 +13,7 @@ import io.naryo.application.configuration.source.model.filter.event.sync.FilterS
 import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.infrastructure.configuration.persistence.entity.filter.FilterEntity;
 import io.naryo.infrastructure.configuration.persistence.entity.filter.event.sync.BlockFilterSyncEntity;
-import io.naryo.infrastructure.configuration.persistence.entity.filter.event.sync.FilterSync;
+import io.naryo.infrastructure.configuration.persistence.entity.filter.event.sync.FilterSyncEntity;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -23,7 +23,6 @@ import lombok.Setter;
 import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 
 @Entity
-@DiscriminatorValue("event")
 @NoArgsConstructor
 public abstract class EventFilterEntity extends FilterEntity implements EventFilterDescriptor {
 
@@ -32,8 +31,8 @@ public abstract class EventFilterEntity extends FilterEntity implements EventFil
     private @ElementCollection(fetch = FetchType.EAGER) @Enumerated(EnumType.STRING) @Setter @Getter
     Set<ContractEventStatus> statuses;
 
-    private @ManyToOne(cascade = CascadeType.ALL) @JoinColumn(name = "sync_id") @Nullable FilterSync
-            sync;
+    private @ManyToOne(cascade = CascadeType.ALL) @JoinColumn(name = "sync_id") @Nullable
+    FilterSyncEntity sync;
 
     private @Embedded @Nullable FilterVisibility visibility;
 
@@ -43,7 +42,7 @@ public abstract class EventFilterEntity extends FilterEntity implements EventFil
             UUID nodeId,
             EventSpecification specification,
             Set<ContractEventStatus> statuses,
-            FilterSync sync,
+            FilterSyncEntity sync,
             FilterVisibility visibility) {
         super(id, name, nodeId);
         this.specification = specification;
@@ -85,7 +84,7 @@ public abstract class EventFilterEntity extends FilterEntity implements EventFil
     }
 
     @Override
-    public Optional<FilterSync> getSync() {
+    public Optional<FilterSyncEntity> getSync() {
         return Optional.ofNullable(sync);
     }
 

@@ -13,10 +13,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class EventSpecification implements EventSpecificationDescriptor {
 
-    @Column(name = "specification_signature")
+    @Column(name = "signature")
     private @Nullable String signature;
 
-    @Column(name = "specification_correlation_id")
+    @Column(name = "correlation_id")
     private @Nullable Integer correlationId;
 
     public EventSpecification(String signature, Integer correlationId) {

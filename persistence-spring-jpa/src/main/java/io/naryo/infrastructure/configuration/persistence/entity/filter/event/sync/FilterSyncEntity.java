@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @DiscriminatorColumn(name = "sync_type")
 @NoArgsConstructor
 @Getter
-public abstract class FilterSync implements FilterSyncDescriptor {
+public abstract class FilterSyncEntity implements FilterSyncDescriptor {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

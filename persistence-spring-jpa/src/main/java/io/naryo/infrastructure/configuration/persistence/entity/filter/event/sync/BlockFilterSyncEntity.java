@@ -15,9 +15,9 @@ import lombok.Setter;
 @DiscriminatorValue("block")
 @Setter
 @NoArgsConstructor
-public class BlockFilterSyncEntity extends FilterSync implements BlockFilterSyncDescriptor {
+public class BlockFilterSyncEntity extends FilterSyncEntity implements BlockFilterSyncDescriptor {
 
-    @Column(name = "sync_initial_block")
+    @Column(name = "initial_block")
     private @Nullable BigInteger initialBlock;
 
     public BlockFilterSyncEntity(BigInteger initialBlock) {
