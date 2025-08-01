@@ -62,10 +62,7 @@ public final class MongoEventStoreSourceProvider implements EventStoreSourceProv
                     serverEventStore.getNodeId().toString(),
                     serverEventStore.getTargets(),
                     getAdditionalConfiguration(serverEventStore.getAdditionalProperties(), schema),
-                    serverEventStore.getPropertiesSchema().isPresent()
-                        ? ConfigurationSchemaDocument.toDocument(
-                        serverEventStore.getPropertiesSchema().get())
-                        : null,
+                    ConfigurationSchemaDocument.toDocument(schema),
                     serverEventStore.getServerType().getName());
             }
             case DatabaseBlockEventStoreConfigurationPropertiesDocument databaseEventStore -> {
@@ -76,10 +73,7 @@ public final class MongoEventStoreSourceProvider implements EventStoreSourceProv
                     databaseEventStore.getNodeId().toString(),
                     databaseEventStore.getTargets(),
                     getAdditionalConfiguration(databaseEventStore.getAdditionalProperties(), schema),
-                    databaseEventStore.getPropertiesSchema().isPresent()
-                        ? ConfigurationSchemaDocument.toDocument(
-                        databaseEventStore.getPropertiesSchema().get())
-                        : null,
+                    ConfigurationSchemaDocument.toDocument(schema),
                     databaseEventStore.getEngine().getName());
             }
             default -> throw new IllegalStateException("Unexpected value: " + document);
