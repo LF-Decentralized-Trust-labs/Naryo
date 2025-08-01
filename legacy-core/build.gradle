@@ -19,6 +19,7 @@ ext {
     joolVersion = '0.9.14'
     jakartaVersion = '4.0.2'
     flapdoodleVersion = '3.4.8'
+    okHttpVersion = '4.12.0'
 }
 
 dependencies {
@@ -36,7 +37,7 @@ dependencies {
     implementation "org.modelmapper:modelmapper:${modelMapperVersion}"
     implementation 'io.micrometer:micrometer-registry-prometheus'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'com.squareup.okhttp3:okhttp-urlconnection'
+    implementation "com.squareup.okhttp3:okhttp-urlconnection:${okHttpVersion}"
     implementation "org.reflections:reflections:${reflectionsVersion}"
     implementation "com.google.guava:guava:${guavaVersion}"
     implementation "com.hedera.hashgraph:sdk-jdk7:${hashgraphVersion}"
