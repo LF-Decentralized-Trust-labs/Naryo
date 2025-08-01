@@ -12,16 +12,15 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "filters")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "filter_type")
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class FilterEntity implements FilterDescriptor {
 
-    private @Id UUID id;
+    private @Column(name = "id") @Id UUID id;
 
-    private @Nullable String name;
+    private @Column(name = "name") @Nullable String name;
 
-    private @Nullable UUID nodeId;
+    private @Column(name = "node_id") @Nullable UUID nodeId;
 
     @Override
     public void setName(String name) {

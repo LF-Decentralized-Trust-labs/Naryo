@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "sync_type")
 @NoArgsConstructor
 @Getter
 public abstract class FilterSyncEntity implements FilterSyncDescriptor {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+
+    private @Id @GeneratedValue(strategy = GenerationType.UUID) @Column(name = "id") UUID id;
 }

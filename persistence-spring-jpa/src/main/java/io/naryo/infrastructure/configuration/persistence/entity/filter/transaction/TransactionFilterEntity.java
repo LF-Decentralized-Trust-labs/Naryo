@@ -19,11 +19,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class TransactionFilterEntity extends FilterEntity implements TransactionFilterDescriptor {
 
-    private @Nullable @Setter IdentifierType identifierType;
-    private @Nullable @Setter String value;
-    private @ElementCollection(fetch = FetchType.EAGER) @Enumerated(EnumType.STRING) @Setter Set<
-                    TransactionStatus>
-            statuses;
+    private @Column(name = "identifier_type") @Nullable @Setter IdentifierType identifierType;
+    private @Column(name = "value") @Nullable @Setter String value;
+    private @Column(name = "statuses") @ElementCollection(fetch = FetchType.EAGER) @Enumerated(
+            EnumType.STRING) @Setter Set<TransactionStatus> statuses;
 
     public TransactionFilterEntity(
             UUID id,

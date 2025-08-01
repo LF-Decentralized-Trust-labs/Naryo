@@ -17,8 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class BlockFilterSyncEntity extends FilterSyncEntity implements BlockFilterSyncDescriptor {
 
-    @Column(name = "initial_block")
-    private @Nullable BigInteger initialBlock;
+    private @Column(name = "initial_block") @Nullable BigInteger initialBlock;
 
     public BlockFilterSyncEntity(BigInteger initialBlock) {
         super();
