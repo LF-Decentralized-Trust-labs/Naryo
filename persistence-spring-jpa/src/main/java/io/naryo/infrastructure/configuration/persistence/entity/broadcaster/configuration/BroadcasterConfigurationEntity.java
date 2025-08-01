@@ -27,9 +27,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public final class BroadcasterConfigurationEntity implements BroadcasterConfigurationDescriptor {
 
-    private @Id UUID id;
+    private @Column(name = "id") @Id UUID id;
 
-    private @NotNull @NotBlank String type;
+    private @Column(name = "type") @NotNull @NotBlank String type;
 
     private @Embedded @Valid BroadcasterCacheEntity cache;
 
