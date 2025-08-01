@@ -10,6 +10,8 @@ import io.naryo.application.configuration.source.model.node.connection.WsNodeCon
 import io.naryo.application.configuration.source.model.node.interaction.EthereumRpcBlockInteractionDescriptor;
 import io.naryo.application.configuration.source.model.node.interaction.HederaMirrorNodeBlockInteractionDescriptor;
 import io.naryo.application.configuration.source.model.node.interaction.InteractionDescriptor;
+import io.naryo.application.configuration.source.model.node.subscription.PollBlockSubscriptionDescriptor;
+import io.naryo.application.configuration.source.model.node.subscription.PubsubBlockSubscriptionDescriptor;
 import io.naryo.application.configuration.source.model.node.subscription.SubscriptionDescriptor;
 import io.naryo.infrastructure.configuration.persistence.document.node.connection.ConnectionPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.connection.http.HttpConnectionPropertiesDocument;
@@ -69,7 +71,7 @@ public abstract class NodePropertiesDocument implements NodeDescriptor {
     @Override
     public void setSubscription(SubscriptionDescriptor subscription) {
         switch (subscription) {
-            case PubSubBlockSubscriptionPropertiesDocument pubsub ->
+            case PubsubBlockSubscriptionDescriptor pubsub ->
                     this.subscription =
                             new PubSubBlockSubscriptionPropertiesDocument(
                                     valueOrNull(pubsub.getInitialBlock()),
@@ -78,7 +80,7 @@ public abstract class NodePropertiesDocument implements NodeDescriptor {
                                     valueOrNull(pubsub.getEventInvalidationBlockThreshold()),
                                     valueOrNull(pubsub.getReplayBlockOffset()),
                                     valueOrNull(pubsub.getSyncBlockLimit()));
-            case PollBlockSubscriptionPropertiesDocument poll ->
+            case PollBlockSubscriptionDescriptor poll ->
                     this.subscription =
                             new PollBlockSubscriptionPropertiesDocument(
                                     valueOrNull(poll.getInitialBlock()),
