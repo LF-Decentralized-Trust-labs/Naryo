@@ -81,7 +81,7 @@ jobs:
   test-modules:
     runs-on: ubuntu-latest
     needs: [detect-changes, build-and-check]
-    if: needs.detect-changes.outputs.modules != ''
+    if: needs.detect-changes.outputs.modules != '[]' && needs.detect-changes.outputs.modules != ''
     strategy:
       matrix:
         module: ${{ fromJson(needs.detect-changes.outputs.modules) }}
@@ -146,7 +146,7 @@ jobs:
   publish-packages:
     runs-on: ubuntu-latest
     needs: [ test-modules, integration-tests-on-main ]
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && success()
     permissions:
       packages: write
       contents: read
