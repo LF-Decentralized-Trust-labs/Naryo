@@ -34,6 +34,6 @@ public final class DatabaseBlockEventStoreConfigurationPropertiesDocument
 
     @Override
     public DatabaseEngine getEngine() {
-        return () -> engine.toLowerCase();
+        return this.engine::toLowerCase;
     }
 }

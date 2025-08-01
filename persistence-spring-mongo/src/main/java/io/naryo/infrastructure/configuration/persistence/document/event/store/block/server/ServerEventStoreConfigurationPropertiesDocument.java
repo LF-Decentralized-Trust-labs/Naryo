@@ -34,6 +34,6 @@ public final class ServerEventStoreConfigurationPropertiesDocument
 
     @Override
     public ServerType getServerType() {
-        return () -> serverType.toLowerCase();
+        return this.serverType::toLowerCase;
     }
 }

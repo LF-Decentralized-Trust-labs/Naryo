@@ -35,22 +35,22 @@ public abstract class EventStoreConfigurationPropertiesDocument implements Event
 
     @Override
     public UUID getNodeId() {
-        return UUID.fromString(nodeId);
+        return UUID.fromString(this.nodeId);
     }
 
     @Override
     public EventStoreType getType() {
-        return type;
+        return this.type;
     }
 
     @Override
     public EventStoreStrategy getStrategy() {
-        return strategy;
+        return this.strategy;
     }
 
     @Override
     public Map<String, Object> getAdditionalProperties() {
-        return additionalProperties;
+        return this.additionalProperties;
     }
 
     @Override
@@ -60,7 +60,7 @@ public abstract class EventStoreConfigurationPropertiesDocument implements Event
 
     @Override
     public Optional<ConfigurationSchema> getPropertiesSchema() {
-        return Optional.ofNullable(ConfigurationSchemaDocument.fromDocument(propertiesSchema));
+        return Optional.ofNullable(ConfigurationSchemaDocument.fromDocument(this.propertiesSchema));
     }
 
     @Override
