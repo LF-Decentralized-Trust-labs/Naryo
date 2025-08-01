@@ -22,22 +22,22 @@ public class ConfigurationSchemaDocument {
         if (doc == null) return null;
 
         List<FieldDefinition> fields =
-            doc.getFields().stream()
-                .map(
-                    fd -> {
-                        try {
-                            Class<?> clazz = Class.forName(fd.getTypeName());
-                            return new FieldDefinition(
-                                fd.getName(),
-                                clazz,
-                                fd.isRequired(),
-                                fd.getDefaultValue());
-                        } catch (ClassNotFoundException e) {
-                            throw new RuntimeException(
-                                "Class not found: " + fd.getTypeName(), e);
-                        }
-                    })
-                .collect(Collectors.toList());
+                doc.getFields().stream()
+                        .map(
+                                fd -> {
+                                    try {
+                                        Class<?> clazz = Class.forName(fd.getTypeName());
+                                        return new FieldDefinition(
+                                                fd.getName(),
+                                                clazz,
+                                                fd.isRequired(),
+                                                fd.getDefaultValue());
+                                    } catch (ClassNotFoundException e) {
+                                        throw new RuntimeException(
+                                                "Class not found: " + fd.getTypeName(), e);
+                                    }
+                                })
+                        .collect(Collectors.toList());
 
         return new ConfigurationSchema(doc.getType(), fields);
     }
@@ -46,15 +46,15 @@ public class ConfigurationSchemaDocument {
         if (schema == null) return null;
 
         List<FieldDefinitionDocument> fieldDocs =
-            schema.fields().stream()
-                .map(
-                    f ->
-                        new FieldDefinitionDocument(
-                            f.name(),
-                            f.type().getName(),
-                            f.required(),
-                            f.defaultValue()))
-                .collect(Collectors.toList());
+                schema.fields().stream()
+                        .map(
+                                f ->
+                                        new FieldDefinitionDocument(
+                                                f.name(),
+                                                f.type().getName(),
+                                                f.required(),
+                                                f.defaultValue()))
+                        .collect(Collectors.toList());
 
         return new ConfigurationSchemaDocument(schema.type(), fieldDocs);
     }

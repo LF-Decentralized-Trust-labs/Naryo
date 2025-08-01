@@ -1,5 +1,9 @@
 package io.naryo.infrastructure.configuration.persistence.document.event.store;
 
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.model.event.EventStoreConfigurationDescriptor;
 import io.naryo.domain.configuration.eventstore.EventStoreStrategy;
@@ -11,21 +15,22 @@ import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-
 @Document(collection = "event_stores")
 @Setter
-public abstract class EventStoreConfigurationPropertiesDocument implements EventStoreConfigurationDescriptor {
+public abstract class EventStoreConfigurationPropertiesDocument
+        implements EventStoreConfigurationDescriptor {
     private @MongoId String nodeId;
     private @NotNull EventStoreType type;
     private @NotNull EventStoreStrategy strategy;
     private Map<String, Object> additionalProperties;
     private @Nullable ConfigurationSchemaDocument propertiesSchema;
 
-    public EventStoreConfigurationPropertiesDocument(String nodeId, EventStoreType type, EventStoreStrategy strategy, @Nullable Map<String, Object> additionalProperties,
-                                                     @Nullable ConfigurationSchemaDocument propertiesSchema) {
+    public EventStoreConfigurationPropertiesDocument(
+            String nodeId,
+            EventStoreType type,
+            EventStoreStrategy strategy,
+            @Nullable Map<String, Object> additionalProperties,
+            @Nullable ConfigurationSchemaDocument propertiesSchema) {
         this.nodeId = nodeId;
         this.type = type;
         this.strategy = strategy;

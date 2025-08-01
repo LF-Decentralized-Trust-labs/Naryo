@@ -27,8 +27,8 @@ public final class MongoEventStoreSourceProvider implements EventStoreSourceProv
     private final ConfigurationSchemaRegistry schemaRegistry;
 
     public MongoEventStoreSourceProvider(
-        EventStorePropertiesDocumentRepository repository,
-        ConfigurationSchemaRegistry schemaRegistry) {
+            EventStorePropertiesDocumentRepository repository,
+            ConfigurationSchemaRegistry schemaRegistry) {
         this.repository = repository;
         this.schemaRegistry = schemaRegistry;
     }
@@ -37,13 +37,13 @@ public final class MongoEventStoreSourceProvider implements EventStoreSourceProv
     public Collection<EventStoreConfigurationDescriptor> load() {
         List<EventStoreConfigurationPropertiesDocument> eventStores = this.repository.findAll();
         return new HashSet<>(
-            eventStores.stream()
-                .map(
-                    eventStore ->
-                        fromDocument(
-                            (BlockEventStoreConfigurationPropertiesDocument)
-                                eventStore))
-                .toList());
+                eventStores.stream()
+                        .map(
+                                eventStore ->
+                                        fromDocument(
+                                                (BlockEventStoreConfigurationPropertiesDocument)
+                                                        eventStore))
+                        .toList());
     }
 
     @Override
@@ -52,53 +52,55 @@ public final class MongoEventStoreSourceProvider implements EventStoreSourceProv
     }
 
     private EventStoreConfigurationDescriptor fromDocument(
-        BlockEventStoreConfigurationPropertiesDocument document) {
+            BlockEventStoreConfigurationPropertiesDocument document) {
         return switch (document) {
             case ServerEventStoreConfigurationPropertiesDocument serverEventStore -> {
                 ServerType serverType = serverEventStore.getServerType();
                 ConfigurationSchema schema =
-                    schemaRegistry.getSchema(PREFIX_EVENT_STORE_SCHEMA + serverType.getName());
+                        schemaRegistry.getSchema(PREFIX_EVENT_STORE_SCHEMA + serverType.getName());
                 yield new ServerEventStoreConfigurationPropertiesDocument(
-                    serverEventStore.getNodeId().toString(),
-                    serverEventStore.getTargets(),
-                    getAdditionalConfiguration(serverEventStore.getAdditionalProperties(), schema),
-                    ConfigurationSchemaDocument.toDocument(schema),
-                    serverEventStore.getServerType().getName());
+                        serverEventStore.getNodeId().toString(),
+                        serverEventStore.getTargets(),
+                        getAdditionalConfiguration(
+                                serverEventStore.getAdditionalProperties(), schema),
+                        ConfigurationSchemaDocument.toDocument(schema),
+                        serverEventStore.getServerType().getName());
             }
             case DatabaseBlockEventStoreConfigurationPropertiesDocument databaseEventStore -> {
                 DatabaseEngine databaseEngine = databaseEventStore.getEngine();
                 ConfigurationSchema schema =
-                    schemaRegistry.getSchema(PREFIX_EVENT_STORE_SCHEMA + databaseEngine.getName());
+                        schemaRegistry.getSchema(
+                                PREFIX_EVENT_STORE_SCHEMA + databaseEngine.getName());
                 yield new DatabaseBlockEventStoreConfigurationPropertiesDocument(
-                    databaseEventStore.getNodeId().toString(),
-                    databaseEventStore.getTargets(),
-                    getAdditionalConfiguration(databaseEventStore.getAdditionalProperties(), schema),
-                    ConfigurationSchemaDocument.toDocument(schema),
-                    databaseEventStore.getEngine().getName());
+                        databaseEventStore.getNodeId().toString(),
+                        databaseEventStore.getTargets(),
+                        getAdditionalConfiguration(
+                                databaseEventStore.getAdditionalProperties(), schema),
+                        ConfigurationSchemaDocument.toDocument(schema),
+                        databaseEventStore.getEngine().getName());
             }
             default -> throw new IllegalStateException("Unexpected value: " + document);
         };
     }
 
     private Map<String, Object> getAdditionalConfiguration(
-        Map<String, Object> additionalProperties, ConfigurationSchema schema) {
+            Map<String, Object> additionalProperties, ConfigurationSchema schema) {
         Map<String, Object> additionalConfiguration = new HashMap<>();
 
         if (!additionalProperties.isEmpty()) {
             for (Map.Entry<String, Object> entry : additionalProperties.entrySet()) {
                 Optional<FieldDefinition> field =
-                    schema.fields().stream()
-                        .filter(f -> f.name().equals(entry.getKey()))
-                        .findFirst();
+                        schema.fields().stream()
+                                .filter(f -> f.name().equals(entry.getKey()))
+                                .findFirst();
                 if (field.isPresent()) {
                     Object value = TypeConverter.castToType(entry.getValue(), field.get().type());
                     additionalConfiguration.put(
-                        entry.getKey(), value != null ? value : field.get().defaultValue());
+                            entry.getKey(), value != null ? value : field.get().defaultValue());
                 }
             }
         }
 
         return additionalConfiguration;
     }
-
 }
