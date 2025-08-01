@@ -50,7 +50,7 @@ public abstract class EventStoreConfigurationPropertiesDocument implements Event
 
     @Override
     public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+        return this.additionalProperties == null ? Map.of() : this.additionalProperties;
     }
 
     @Override
