@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 @Getter
 public class FieldDefinitionEntity {
 
-    private String name;
+    private @Column(name = "name") String name;
 
-    private String typeName;
+    private @Column(name = "type_name") String typeName;
 
-    private boolean required;
+    private @Column(name = "required") boolean required;
 
     @Column(name = "default_value", columnDefinition = "TEXT")
     @Convert(converter = JsonObjectConverter.class)

@@ -24,7 +24,7 @@ import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 @NoArgsConstructor
 public final class BroadcasterEntity implements BroadcasterDescriptor {
 
-    private @Id UUID id;
+    private @Column(name = "id") @Id UUID id;
 
     private @Column(name = "configuration_id") UUID configurationId;
 

@@ -17,9 +17,9 @@ import lombok.NoArgsConstructor;
 @Getter
 public abstract class BroadcasterTargetEntity implements BroadcasterTargetDescriptor {
 
-    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
+    private @Id @Column(name = "id") @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
 
-    private @Nullable @NotBlank String destination;
+    private @Column(name = "destination") @Nullable @NotBlank String destination;
 
     public BroadcasterTargetEntity(String destination) {
         this.destination = destination;
