@@ -7,10 +7,12 @@ import io.naryo.application.configuration.source.definition.FieldDefinition;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaRegistry;
 import io.naryo.application.configuration.source.model.event.EventStoreConfigurationDescriptor;
 import io.naryo.application.event.store.configuration.provider.EventStoreSourceProvider;
+import io.naryo.domain.configuration.eventstore.database.DatabaseEngine;
 import io.naryo.domain.configuration.eventstore.server.ServerType;
 import io.naryo.infrastructure.configuration.persistence.document.common.ConfigurationSchemaDocument;
 import io.naryo.infrastructure.configuration.persistence.document.event.store.EventStoreConfigurationPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.event.store.block.BlockEventStoreConfigurationPropertiesDocument;
+import io.naryo.infrastructure.configuration.persistence.document.event.store.block.database.DatabaseBlockEventStoreConfigurationPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.event.store.block.server.ServerEventStoreConfigurationPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.repository.event.store.EventStorePropertiesDocumentRepository;
 import io.naryo.infrastructure.util.serialization.TypeConverter;
@@ -65,6 +67,20 @@ public final class MongoEventStoreSourceProvider implements EventStoreSourceProv
                         serverEventStore.getPropertiesSchema().get())
                         : null,
                     serverEventStore.getServerType().getName());
+            }
+            case DatabaseBlockEventStoreConfigurationPropertiesDocument databaseEventStore -> {
+                DatabaseEngine databaseEngine = databaseEventStore.getEngine();
+                ConfigurationSchema schema =
+                    schemaRegistry.getSchema(PREFIX_EVENT_STORE_SCHEMA + databaseEngine.getName());
+                yield new DatabaseBlockEventStoreConfigurationPropertiesDocument(
+                    databaseEventStore.getNodeId().toString(),
+                    databaseEventStore.getTargets(),
+                    getAdditionalConfiguration(databaseEventStore.getAdditionalProperties(), schema),
+                    databaseEventStore.getPropertiesSchema().isPresent()
+                        ? ConfigurationSchemaDocument.toDocument(
+                        databaseEventStore.getPropertiesSchema().get())
+                        : null,
+                    databaseEventStore.getEngine().getName());
             }
             default -> throw new IllegalStateException("Unexpected value: " + document);
         };

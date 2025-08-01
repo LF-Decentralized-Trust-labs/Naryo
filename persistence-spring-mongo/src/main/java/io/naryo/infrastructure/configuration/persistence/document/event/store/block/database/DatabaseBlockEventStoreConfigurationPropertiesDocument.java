@@ -9,9 +9,9 @@ import io.naryo.domain.configuration.eventstore.database.DatabaseEngine;
 import io.naryo.infrastructure.configuration.persistence.document.common.ConfigurationSchemaDocument;
 import io.naryo.infrastructure.configuration.persistence.document.event.store.block.BlockEventStoreConfigurationPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.event.store.block.EventStoreTargetPropertiesDocument;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import lombok.Setter;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.data.annotation.TypeAlias;
 
 @Setter
