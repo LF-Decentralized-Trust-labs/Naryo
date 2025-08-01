@@ -4,6 +4,7 @@ import java.util.List;
 
 import io.naryo.infrastructure.configuration.source.env.model.broadcaster.BroadcastingProperties;
 import io.naryo.infrastructure.configuration.source.env.model.event.store.EventStoreConfigurationProperties;
+import io.naryo.infrastructure.configuration.source.env.model.event.store.InactiveEventStoreConfigurationProperties;
 import io.naryo.infrastructure.configuration.source.env.model.filter.FilterProperties;
 import io.naryo.infrastructure.configuration.source.env.model.http.HttpClientProperties;
 import io.naryo.infrastructure.configuration.source.env.model.node.NodeProperties;
@@ -30,6 +31,23 @@ public record EnvironmentProperties(
                         : new BroadcastingProperties(List.of(), List.of());
         this.nodes = nodes != null ? nodes : List.of();
         this.filters = filters != null ? filters : List.of();
-        this.eventStores = eventStores != null ? eventStores : List.of();
+        this.eventStores = normalizes(eventStores != null ? eventStores : List.of());
+    }
+
+    private List<EventStoreConfigurationProperties> normalizes(
+            List<EventStoreConfigurationProperties> eventStores) {
+        return nodes.stream()
+                .map(
+                        node ->
+                                eventStores.stream()
+                                        .filter(
+                                                eventStore ->
+                                                        eventStore.getNodeId().equals(node.getId()))
+                                        .findFirst()
+                                        .orElseGet(
+                                                () ->
+                                                        new InactiveEventStoreConfigurationProperties(
+                                                                node.getId())))
+                .toList();
     }
 }

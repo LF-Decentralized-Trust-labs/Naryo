@@ -1,11 +1,12 @@
-package io.naryo.domain.configuration.eventstore;
+package io.naryo.domain.configuration.eventstore.active.block;
 
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.UUID;
 
-import io.naryo.domain.configuration.eventstore.block.EventStoreTarget;
-import io.naryo.domain.configuration.eventstore.block.TargetType;
+import io.naryo.domain.configuration.eventstore.active.ActiveEventStoreConfiguration;
+import io.naryo.domain.configuration.eventstore.active.EventStoreStrategy;
+import io.naryo.domain.configuration.eventstore.active.EventStoreType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -13,7 +14,7 @@ import lombok.ToString;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public abstract class BlockEventStoreConfiguration extends EventStoreConfiguration {
+public abstract class BlockEventStoreConfiguration extends ActiveEventStoreConfiguration {
 
     protected final Set<EventStoreTarget> targets;
 

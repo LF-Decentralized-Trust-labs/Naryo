@@ -4,7 +4,7 @@ import java.math.BigInteger;
 import java.util.Optional;
 
 import io.naryo.application.event.store.EventStore;
-import io.naryo.domain.configuration.eventstore.BlockEventStoreConfiguration;
+import io.naryo.domain.configuration.eventstore.active.block.BlockEventStoreConfiguration;
 import io.naryo.domain.event.block.BlockEvent;
 
 public interface BlockEventStore<C extends BlockEventStoreConfiguration>

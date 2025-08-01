@@ -2,7 +2,8 @@ package io.naryo.infrastructure.event.http.block;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.naryo.application.event.store.block.ContractEventEventStore;
-import io.naryo.domain.configuration.eventstore.block.server.http.HttpBlockEventStoreConfiguration;
+import io.naryo.domain.configuration.eventstore.EventStoreConfiguration;
+import io.naryo.domain.configuration.eventstore.active.block.http.HttpBlockEventStoreConfiguration;
 import io.naryo.domain.event.Event;
 import io.naryo.domain.event.contract.ContractEvent;
 import io.naryo.infrastructure.event.http.HttpBlockEventStore;
@@ -16,7 +17,8 @@ public final class ContractEventHttpBlockEventStore extends HttpBlockEventStore<
     }
 
     @Override
-    public boolean supports(Event event) {
-        return event instanceof ContractEvent;
+    public boolean supports(Event event, EventStoreConfiguration configuration) {
+        return event instanceof ContractEvent
+                && configuration instanceof HttpBlockEventStoreConfiguration;
     }
 }

@@ -9,16 +9,15 @@ import java.util.stream.Collectors;
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.model.event.BlockEventStoreConfigurationDescriptor;
 import io.naryo.application.configuration.source.model.event.EventStoreTargetDescriptor;
-import io.naryo.domain.configuration.eventstore.EventStoreStrategy;
-import io.naryo.domain.configuration.eventstore.EventStoreType;
-import io.naryo.infrastructure.configuration.source.env.model.event.store.EventStoreConfigurationProperties;
+import io.naryo.domain.configuration.eventstore.active.EventStoreStrategy;
+import io.naryo.domain.configuration.eventstore.active.EventStoreType;
+import io.naryo.infrastructure.configuration.source.env.model.event.store.ActiveEventStoreConfigurationProperties;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
-public abstract class BlockEventStoreConfigurationProperties
-        extends EventStoreConfigurationProperties
+public class BlockEventStoreConfigurationProperties extends ActiveEventStoreConfigurationProperties
         implements BlockEventStoreConfigurationDescriptor {
 
     private Set<EventStoreTargetProperties> targets;
