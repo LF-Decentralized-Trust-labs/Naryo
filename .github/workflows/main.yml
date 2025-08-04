@@ -24,12 +24,20 @@ jobs:
 
           BASE_BRANCH="${{ github.base_ref }}"
           if [ -z "$BASE_BRANCH" ]; then
-            echo "No base_ref detected (probably a push to main), using HEAD~1 as base"
-            git fetch origin main --depth=1
-            BASE=$(git merge-base origin/main HEAD)
+            echo "No base_ref (push to main). Detecting previous commit..."
+
+            if git log -1 --pretty=%P | grep -q " "; then
+              echo "Merge commit detected"
+              BASE=$(git rev-parse HEAD^1)
+            else
+              echo "Squash commit detected"
+              BASE=$(git rev-parse HEAD^)
+            fi
+
             FILES=$(git diff --name-only "$BASE"..HEAD || echo "")
           else
-            git fetch origin "$BASE_BRANCH"
+            echo "Pull request or branch push, comparing with base_ref: $BASE_BRANCH"
+            git fetch origin "$BASE_BRANCH" --depth=1
             FILES=$(git diff --name-only origin/"$BASE_BRANCH"..HEAD || echo "")
           fi
 
