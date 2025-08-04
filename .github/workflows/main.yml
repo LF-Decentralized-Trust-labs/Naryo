@@ -21,9 +21,18 @@ jobs:
         id: set-modules
         run: |
           echo "Fetching base branch..."
-          git fetch origin ${{ github.base_ref }}
 
-          FILES=$(git diff --name-only origin/${{ github.base_ref }}..HEAD || echo "")
+          BASE_BRANCH="${{ github.base_ref }}"
+          if [ -z "$BASE_BRANCH" ]; then
+            echo "No base_ref detected (probably a push to main), using HEAD~1 as base"
+            git fetch origin main --depth=1
+            BASE=$(git merge-base origin/main HEAD)
+            FILES=$(git diff --name-only "$BASE"..HEAD || echo "")
+          else
+            git fetch origin "$BASE_BRANCH"
+            FILES=$(git diff --name-only origin/"$BASE_BRANCH"..HEAD || echo "")
+          fi
+
           echo "Changed files:"
           echo "$FILES"
 
