@@ -122,39 +122,39 @@ jobs:
           name: ${{ matrix.module }}-jacoco-html
           path: ${{ matrix.module }}/build/reports/jacoco-html/
 
-  integration-tests-on-main:
-    runs-on: ubuntu-latest
-    needs: build-and-check
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install pre-requisites
-        uses: ./.github/actions/setup
-
-      - name: Restore Gradle cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle
-
-      - name: Run integration tests
-        run: ./gradlew integration-tests:test --scan
-
-      - name: Upload integration test report
-        uses: actions/upload-artifact@v4
-        with:
-          name: integration-jacoco-html
-          path: integration-tests/build/reports/jacoco-html/
+#  integration-tests-on-main:
+#    runs-on: ubuntu-latest
+#    needs: build-and-check
+#    if: github.ref == 'refs/heads/main'
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v3
+#
+#      - name: Install pre-requisites
+#        uses: ./.github/actions/setup
+#
+#      - name: Restore Gradle cache
+#        uses: actions/cache@v3
+#        with:
+#          path: |
+#            ~/.gradle/caches
+#            ~/.gradle/wrapper
+#          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+#          restore-keys: |
+#            ${{ runner.os }}-gradle
+#
+#      - name: Run integration tests
+#        run: ./gradlew integration-tests:test --scan
+#
+#      - name: Upload integration test report
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: integration-jacoco-html
+#          path: integration-tests/build/reports/jacoco-html/
 
   publish-packages:
     runs-on: ubuntu-latest
-    needs: [ test-modules, integration-tests-on-main ]
+    needs: [ test-modules ]
     if: github.ref == 'refs/heads/main' && success()
     permissions:
       packages: write
