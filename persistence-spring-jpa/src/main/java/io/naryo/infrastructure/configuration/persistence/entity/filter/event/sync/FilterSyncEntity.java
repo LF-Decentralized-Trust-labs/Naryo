@@ -8,7 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "filter_syncs")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "sync_type", discriminatorType = DiscriminatorType.STRING, length = 50)
 @NoArgsConstructor
 @Getter
 public abstract class FilterSyncEntity implements FilterSyncDescriptor {
