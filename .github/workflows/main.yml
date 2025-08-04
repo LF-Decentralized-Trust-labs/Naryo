@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
 
       - name: Fetch base branch for comparison
         run: git fetch origin ${{ github.base_ref }}
@@ -24,17 +26,21 @@ jobs:
 
           BASE_BRANCH="${{ github.base_ref }}"
           if [ -z "$BASE_BRANCH" ]; then
-            echo "No base_ref (push to main). Detecting previous commit..."
+            echo "No base_ref (push to main). Detecting commit type..."
 
-            if git log -1 --pretty=%P | grep -q " "; then
+            PARENTS=$(git log -1 --pretty=%P)
+            if [ -z "$PARENTS" ]; then
+              echo "No parent commit found. Possibly first commit. Skipping diff."
+            FILES=""
+            elif echo "$PARENTS" | grep -q " "; then
               echo "Merge commit detected"
               BASE=$(git rev-parse HEAD^1)
+              FILES=$(git diff --name-only "$BASE"..HEAD || echo "")
             else
-              echo "Squash commit detected"
+              echo "Squash commit or single-parent commit"
               BASE=$(git rev-parse HEAD^)
+              FILES=$(git diff --name-only "$BASE"..HEAD || echo "")
             fi
-
-            FILES=$(git diff --name-only "$BASE"..HEAD || echo "")
           else
             echo "Pull request or branch push, comparing with base_ref: $BASE_BRANCH"
             git fetch origin "$BASE_BRANCH" --depth=1
