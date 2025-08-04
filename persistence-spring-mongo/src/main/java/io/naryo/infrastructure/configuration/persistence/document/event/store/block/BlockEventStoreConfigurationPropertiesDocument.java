@@ -6,29 +6,30 @@ import java.util.Set;
 
 import io.naryo.application.configuration.source.model.event.BlockEventStoreConfigurationDescriptor;
 import io.naryo.application.configuration.source.model.event.EventStoreTargetDescriptor;
-import io.naryo.domain.configuration.eventstore.EventStoreStrategy;
-import io.naryo.domain.configuration.eventstore.EventStoreType;
+import io.naryo.domain.configuration.eventstore.active.EventStoreStrategy;
+import io.naryo.domain.configuration.eventstore.active.EventStoreType;
 import io.naryo.infrastructure.configuration.persistence.document.common.ConfigurationSchemaDocument;
-import io.naryo.infrastructure.configuration.persistence.document.event.store.EventStoreConfigurationPropertiesDocument;
+import io.naryo.infrastructure.configuration.persistence.document.event.store.ActiveEventStoreConfigurationPropertiesDocument;
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import org.springframework.data.annotation.TypeAlias;
 
 @Getter
-public abstract class BlockEventStoreConfigurationPropertiesDocument
-        extends EventStoreConfigurationPropertiesDocument
+@TypeAlias("block_event_store")
+public final class BlockEventStoreConfigurationPropertiesDocument
+        extends ActiveEventStoreConfigurationPropertiesDocument
         implements BlockEventStoreConfigurationDescriptor {
 
     private Set<EventStoreTargetPropertiesDocument> targets;
 
     public BlockEventStoreConfigurationPropertiesDocument(
-            @NotNull String nodeId,
-            @Nullable EventStoreType type,
-            Set<EventStoreTargetPropertiesDocument> targets,
+            String nodeId,
+            EventStoreType type,
             Map<String, Object> additionalProperties,
-            @Nullable ConfigurationSchemaDocument propertiesSchema) {
+            @Nullable ConfigurationSchemaDocument propertiesSchema,
+            Set<EventStoreTargetPropertiesDocument> targets) {
         super(nodeId, type, EventStoreStrategy.BLOCK_BASED, additionalProperties, propertiesSchema);
-        this.targets = new HashSet<>(targets);
+        this.targets = targets;
     }
 
     @Override
