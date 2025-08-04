@@ -30,28 +30,15 @@ public final class EventStoreBroadcasterPermanentTrigger implements PermanentTri
 
     @Override
     public void trigger(Event event) {
+        EventStoreConfiguration eventStoreConfiguration = findConfigurationForEvent(event);
         this.eventStores.stream()
-                .filter(eventStore -> eventStore.supports(event))
+                .filter(eventStore -> eventStore.supports(event, eventStoreConfiguration))
                 .forEach(
                         eventStore -> {
                             try {
                                 @SuppressWarnings("unchecked")
                                 EventStore<Event, EventStoreConfiguration> typedStore =
                                         (EventStore<Event, EventStoreConfiguration>) eventStore;
-                                EventStoreConfiguration eventStoreConfiguration =
-                                        configurations.stream()
-                                                .filter(
-                                                        configuration ->
-                                                                configuration
-                                                                        .getNodeId()
-                                                                        .equals(event.getNodeId()))
-                                                .findFirst()
-                                                .orElseThrow(
-                                                        () ->
-                                                                new IllegalStateException(
-                                                                        "No configuration found for node: "
-                                                                                + event
-                                                                                        .getNodeId()));
                                 typedStore.save(event, eventStoreConfiguration);
                             } catch (Exception e) {
                                 log.error(
@@ -78,5 +65,15 @@ public final class EventStoreBroadcasterPermanentTrigger implements PermanentTri
     @Override
     public boolean supports(Event event) {
         return true;
+    }
+
+    private EventStoreConfiguration findConfigurationForEvent(Event event) {
+        return configurations.stream()
+                .filter(configuration -> configuration.getNodeId().equals(event.getNodeId()))
+                .findFirst()
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "No configuration found for node: " + event.getNodeId()));
     }
 }

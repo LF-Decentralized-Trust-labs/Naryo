@@ -38,8 +38,8 @@ class EventStoreBroadcasterPermanentTriggerTest {
     @Test
     void trigger_savesOnlyToStoresThatSupportTheEvent() throws Exception {
         Event evt = mock(Event.class);
-        when(store1.supports(evt)).thenReturn(true);
-        when(store2.supports(evt)).thenReturn(false);
+        when(store1.supports(evt, configuration)).thenReturn(true);
+        when(store2.supports(evt, configuration)).thenReturn(false);
         UUID nodeId = UUID.randomUUID();
         when(evt.getNodeId()).thenReturn(nodeId);
         when(configuration.getNodeId()).thenReturn(nodeId);
@@ -53,8 +53,8 @@ class EventStoreBroadcasterPermanentTriggerTest {
     @Test
     void trigger_afterOnExecute_invokesConsumer() throws Exception {
         Event evt = mock(Event.class);
-        when(store1.supports(evt)).thenReturn(true);
-        when(store2.supports(evt)).thenReturn(false);
+        when(store1.supports(evt, configuration)).thenReturn(true);
+        when(store2.supports(evt, configuration)).thenReturn(false);
         UUID nodeId = UUID.randomUUID();
         when(evt.getNodeId()).thenReturn(nodeId);
         when(configuration.getNodeId()).thenReturn(nodeId);
@@ -69,7 +69,7 @@ class EventStoreBroadcasterPermanentTriggerTest {
     @Test
     void trigger_catchesExceptionsFromSaveAndContinues() throws Exception {
         Event evt = mock(Event.class);
-        when(store1.supports(evt)).thenReturn(true);
+        when(store1.supports(evt, configuration)).thenReturn(true);
         UUID nodeId = UUID.randomUUID();
         when(evt.getNodeId()).thenReturn(nodeId);
         when(configuration.getNodeId()).thenReturn(nodeId);
@@ -83,8 +83,11 @@ class EventStoreBroadcasterPermanentTriggerTest {
     @Test
     void trigger_catchesExceptionsFromConsumerAndContinues() throws Exception {
         Event evt = mock(Event.class);
-        when(store1.supports(evt)).thenReturn(false);
-        when(store2.supports(evt)).thenReturn(false);
+        when(store1.supports(evt, configuration)).thenReturn(false);
+        when(store2.supports(evt, configuration)).thenReturn(false);
+        UUID nodeId = UUID.randomUUID();
+        when(evt.getNodeId()).thenReturn(nodeId);
+        when(configuration.getNodeId()).thenReturn(nodeId);
 
         trigger.onExecute(consumer);
         doThrow(new Exception("boom")).when(consumer).accept(evt);

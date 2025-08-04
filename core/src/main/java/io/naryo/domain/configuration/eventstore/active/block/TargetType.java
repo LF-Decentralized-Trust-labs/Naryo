@@ -1,4 +1,4 @@
-package io.naryo.domain.configuration.eventstore.block;
+package io.naryo.domain.configuration.eventstore.active.block;
 
 public enum TargetType {
     BLOCK,

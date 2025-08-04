@@ -12,19 +12,18 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.definition.FieldDefinition;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaRegistry;
-import io.naryo.domain.configuration.eventstore.EventStoreStrategy;
-import io.naryo.domain.configuration.eventstore.EventStoreType;
-import io.naryo.infrastructure.configuration.source.env.model.event.store.EventStoreConfigurationProperties;
+import io.naryo.domain.configuration.eventstore.active.EventStoreStrategy;
+import io.naryo.domain.configuration.eventstore.active.EventStoreType;
+import io.naryo.infrastructure.configuration.source.env.model.event.store.ActiveEventStoreConfigurationProperties;
+import io.naryo.infrastructure.configuration.source.env.model.event.store.block.BlockEventStoreConfigurationProperties;
 import io.naryo.infrastructure.configuration.source.env.model.event.store.block.EventStoreTargetProperties;
-import io.naryo.infrastructure.configuration.source.env.model.event.store.block.database.DatabaseBlockEventStoreConfigurationProperties;
-import io.naryo.infrastructure.configuration.source.env.model.event.store.block.server.ServerEventStoreConfigurationProperties;
 import io.naryo.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class EventStoreConfigurationPropertiesDeserializer
-        extends EnvironmentDeserializer<EventStoreConfigurationProperties> {
+        extends EnvironmentDeserializer<ActiveEventStoreConfigurationProperties> {
 
     private static final String PREFIX_EVENT_STORE_SCHEMA = "event_store_";
     private final ConfigurationSchemaRegistry schemaRegistry;
@@ -35,7 +34,7 @@ public final class EventStoreConfigurationPropertiesDeserializer
     }
 
     @Override
-    public EventStoreConfigurationProperties deserialize(
+    public ActiveEventStoreConfigurationProperties deserialize(
             JsonParser p, DeserializationContext context) throws IOException, JacksonException {
         ObjectCodec codec = p.getCodec();
         JsonNode root = codec.readTree(p);
@@ -49,37 +48,16 @@ public final class EventStoreConfigurationPropertiesDeserializer
             case BLOCK_BASED -> {
                 List<EventStoreTargetProperties> targets =
                         safeTreeToList(root, "targets", codec, EventStoreTargetProperties.class);
-
-                Set<String> knownFields = new HashSet<>(Set.of("type", "strategy", "target"));
-
-                yield switch (type) {
-                    case SERVER -> {
-                        String serverType = getTextOrNull(root.get("serverType"));
-                        ConfigurationSchema schema =
-                                schemaRegistry.getSchema(
-                                        PREFIX_EVENT_STORE_SCHEMA + serverType.toLowerCase());
-                        knownFields.add("serverType");
-                        yield new ServerEventStoreConfigurationProperties(
-                                nodeId,
-                                new HashSet<>(targets),
-                                getAdditionalConfiguration(root, knownFields, codec, schema),
-                                schema,
-                                () -> serverType);
-                    }
-                    case DATABASE -> {
-                        String databaseEngine = getTextOrNull(root.get("databaseEngine"));
-                        ConfigurationSchema schema =
-                                schemaRegistry.getSchema(
-                                        PREFIX_EVENT_STORE_SCHEMA + databaseEngine.toLowerCase());
-                        knownFields.add("databaseEngine");
-                        yield new DatabaseBlockEventStoreConfigurationProperties(
-                                nodeId,
-                                new HashSet<>(targets),
-                                getAdditionalConfiguration(root, knownFields, codec, schema),
-                                schema,
-                                () -> databaseEngine);
-                    }
-                };
+                ConfigurationSchema schema =
+                        schemaRegistry.getSchema(
+                                PREFIX_EVENT_STORE_SCHEMA + type.getName().toLowerCase());
+                Set<String> knownFields = Set.of("type", "strategy", "target");
+                yield new BlockEventStoreConfigurationProperties(
+                        nodeId,
+                        type,
+                        new HashSet<>(targets),
+                        getAdditionalConfiguration(root, knownFields, codec, schema),
+                        schema);
             }
         };
     }

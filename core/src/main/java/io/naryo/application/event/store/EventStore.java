@@ -7,5 +7,5 @@ public interface EventStore<E extends Event, C extends EventStoreConfiguration> 
 
     void save(E event, C configuration);
 
-    boolean supports(Event event);
+    boolean supports(Event event, EventStoreConfiguration configuration);
 }

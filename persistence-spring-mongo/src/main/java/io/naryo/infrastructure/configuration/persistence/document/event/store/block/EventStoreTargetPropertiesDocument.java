@@ -1,7 +1,7 @@
 package io.naryo.infrastructure.configuration.persistence.document.event.store.block;
 
 import io.naryo.application.configuration.source.model.event.EventStoreTargetDescriptor;
-import io.naryo.domain.configuration.eventstore.block.TargetType;
+import io.naryo.domain.configuration.eventstore.active.block.TargetType;
 import jakarta.validation.constraints.NotNull;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;

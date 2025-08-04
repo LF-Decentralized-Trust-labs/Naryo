@@ -2,11 +2,12 @@ package io.naryo.application.configuration.source.model.event;
 
 import java.util.Set;
 
-import io.naryo.domain.configuration.eventstore.EventStoreStrategy;
+import io.naryo.domain.configuration.eventstore.active.EventStoreStrategy;
 
 import static io.naryo.application.common.util.MergeUtil.mergeCollections;
 
-public interface BlockEventStoreConfigurationDescriptor extends EventStoreConfigurationDescriptor {
+public interface BlockEventStoreConfigurationDescriptor
+        extends ActiveEventStoreConfigurationDescriptor {
 
     Set<? extends EventStoreTargetDescriptor> getTargets();
 
@@ -28,6 +29,6 @@ public interface BlockEventStoreConfigurationDescriptor extends EventStoreConfig
                 this::setTargets,
                 this.getTargets(),
                 otherBlockEventStoreConfiguration.getTargets());
-        return EventStoreConfigurationDescriptor.super.merge(other);
+        return ActiveEventStoreConfigurationDescriptor.super.merge(other);
     }
 }
