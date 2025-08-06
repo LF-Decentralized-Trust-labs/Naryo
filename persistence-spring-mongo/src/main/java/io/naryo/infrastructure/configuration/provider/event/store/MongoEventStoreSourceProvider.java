@@ -64,7 +64,7 @@ public final class MongoEventStoreSourceProvider implements EventStoreSourceProv
             Map<String, Object> additionalProperties, ConfigurationSchema schema) {
         Map<String, Object> additionalConfiguration = new HashMap<>();
 
-        if (!additionalProperties.isEmpty()) {
+        if (!additionalProperties.isEmpty() && schema != null) {
             for (Map.Entry<String, Object> entry : additionalProperties.entrySet()) {
                 Optional<FieldDefinition> field =
                         schema.fields().stream()
