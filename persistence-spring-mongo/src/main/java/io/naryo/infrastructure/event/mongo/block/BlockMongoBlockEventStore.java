@@ -1,5 +1,8 @@
 package io.naryo.infrastructure.event.mongo.block;
 
+import java.math.BigInteger;
+import java.util.Optional;
+
 import io.naryo.application.event.store.block.BlockEventStore;
 import io.naryo.domain.configuration.eventstore.EventStoreConfiguration;
 import io.naryo.domain.configuration.eventstore.active.block.EventStoreTarget;
@@ -13,16 +16,15 @@ import io.naryo.infrastructure.event.mongo.block.model.LatestBlockDocumentReposi
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
-import java.math.BigInteger;
-import java.util.Optional;
-
 @Slf4j
 public final class BlockMongoBlockEventStore extends MongoBlockEventStore<BlockEvent>
         implements BlockEventStore<MongoBlockEventStoreConfiguration> {
 
     private final LatestBlockDocumentRepository latestBlockDocumentRepository;
 
-    public BlockMongoBlockEventStore(MongoTemplate mongoTemplate, LatestBlockDocumentRepository latestBlockDocumentRepository) {
+    public BlockMongoBlockEventStore(
+            MongoTemplate mongoTemplate,
+            LatestBlockDocumentRepository latestBlockDocumentRepository) {
         super(mongoTemplate);
         this.latestBlockDocumentRepository = latestBlockDocumentRepository;
     }
@@ -35,7 +37,9 @@ public final class BlockMongoBlockEventStore extends MongoBlockEventStore<BlockE
             return defaultValue;
         }
         try {
-            Optional<LatestBlockDocument> latestBlockDocument = this.latestBlockDocumentRepository.findById(configuration.getNodeId().toString());
+            Optional<LatestBlockDocument> latestBlockDocument =
+                    this.latestBlockDocumentRepository.findById(
+                            configuration.getNodeId().toString());
             return latestBlockDocument.map(LatestBlockDocument::getBlockNumber).or(Optional::empty);
         } catch (Exception e) {
             log.error("Error while fetching latest block from MongoDB event store", e);

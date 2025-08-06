@@ -1,11 +1,11 @@
 package io.naryo.domain.configuration.eventstore.active.block;
 
+import java.util.Set;
+import java.util.UUID;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-
-import java.util.Set;
-import java.util.UUID;
 
 @Getter
 @ToString(callSuper = true)

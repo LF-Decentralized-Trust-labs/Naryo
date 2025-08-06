@@ -1,12 +1,12 @@
 package io.naryo.infrastructure.event.mongo.block.model;
 
+import java.math.BigInteger;
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
-
-import java.math.BigInteger;
 
 @Document(collection = "latest_blocks")
 @Data
@@ -18,11 +18,9 @@ public final class LatestBlockDocument {
         this.blockNumber = blockNumber;
     }
 
-    @MongoId
-    private String nodeId;
+    @MongoId private String nodeId;
 
-    @Getter
-    private BigInteger blockNumber;
+    @Getter private BigInteger blockNumber;
 
     private String hash;
 

@@ -7,7 +7,7 @@ import io.naryo.domain.event.Event;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 public abstract class MongoBlockEventStore<E extends Event>
-    implements EventStore<E, MongoBlockEventStoreConfiguration> {
+        implements EventStore<E, MongoBlockEventStoreConfiguration> {
 
     private final MongoTemplate mongoTemplate;
 
@@ -18,9 +18,7 @@ public abstract class MongoBlockEventStore<E extends Event>
     @Override
     public void save(E event, MongoBlockEventStoreConfiguration configuration) {
         TargetType targetType = map(event.getEventType());
-        findTarget(targetType, configuration).ifPresent(
-            target -> this.mongoTemplate.save(event, target.destination().value())
-        );
+        findTarget(targetType, configuration)
+                .ifPresent(target -> this.mongoTemplate.save(event, target.destination().value()));
     }
-
 }
