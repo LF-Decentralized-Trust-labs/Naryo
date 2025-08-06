@@ -7,8 +7,8 @@ import java.util.UUID;
 
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.model.event.ActiveEventStoreConfigurationDescriptor;
-import io.naryo.domain.configuration.eventstore.active.EventStoreStrategy;
-import io.naryo.domain.configuration.eventstore.active.EventStoreType;
+import io.naryo.domain.configuration.store.active.StoreType;
+import io.naryo.domain.configuration.store.active.feature.event.EventStoreStrategy;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import lombok.Setter;
@@ -18,14 +18,14 @@ public abstract class ActiveEventStoreConfigurationProperties
         extends EventStoreConfigurationProperties
         implements ActiveEventStoreConfigurationDescriptor {
 
-    private final @NotNull EventStoreType type;
+    private final @NotNull StoreType type;
     private final @NotNull EventStoreStrategy strategy;
     private Map<String, Object> additionalProperties;
     private @Nullable ConfigurationSchema propertiesSchema;
 
     public ActiveEventStoreConfigurationProperties(
             @NotNull UUID nodeId,
-            @NotNull EventStoreType type,
+            @NotNull StoreType type,
             @NotNull EventStoreStrategy strategy,
             Map<String, Object> additionalProperties,
             @Nullable ConfigurationSchema propertiesSchema) {
@@ -38,7 +38,7 @@ public abstract class ActiveEventStoreConfigurationProperties
     }
 
     @Override
-    public EventStoreType getType() {
+    public StoreType getType() {
         return type;
     }
 

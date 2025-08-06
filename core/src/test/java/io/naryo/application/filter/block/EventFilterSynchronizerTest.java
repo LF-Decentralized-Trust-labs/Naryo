@@ -170,10 +170,7 @@ class EventFilterSynchronizerTest {
                                 null,
                                 Set.of(new AddressParameterDefinition())));
         when(eventFilter.getSyncState())
-                .thenReturn(
-                        new BlockActiveSyncState(
-                                new NonNegativeBlockNumber(BigInteger.TEN),
-                                new NonNegativeBlockNumber(BigInteger.ZERO)));
+                .thenReturn(new BlockActiveSyncState(new NonNegativeBlockNumber(BigInteger.TEN)));
         when(startBlockCalculator.getStartBlock()).thenReturn(BigInteger.valueOf(100));
         when(blockInteractor.getLogs(any(), any(), anyList()))
                 .thenReturn(

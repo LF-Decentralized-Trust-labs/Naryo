@@ -1,6 +1,8 @@
 package io.naryo.infrastructure.configuration.beans.eventstore.configuration;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
@@ -9,10 +11,13 @@ import io.naryo.application.configuration.source.definition.registry.Configurati
 import io.naryo.application.configuration.source.model.event.ActiveEventStoreConfigurationDescriptor;
 import io.naryo.application.configuration.source.model.event.BlockEventStoreConfigurationDescriptor;
 import io.naryo.application.event.store.configuration.mapper.ActiveEventStoreConfigurationMapperRegistry;
-import io.naryo.domain.broadcaster.Destination;
+import io.naryo.domain.common.Destination;
 import io.naryo.domain.common.connection.endpoint.ConnectionEndpoint;
-import io.naryo.domain.configuration.eventstore.active.block.EventStoreTarget;
-import io.naryo.domain.configuration.eventstore.active.block.http.HttpBlockEventStoreConfiguration;
+import io.naryo.domain.configuration.store.active.feature.StoreFeatureConfiguration;
+import io.naryo.domain.configuration.store.active.feature.StoreFeatureType;
+import io.naryo.domain.configuration.store.active.feature.event.block.BlockEventStoreConfiguration;
+import io.naryo.domain.configuration.store.active.feature.event.block.EventStoreTarget;
+import io.naryo.domain.configuration.store.active.http.HttpStoreConfiguration;
 import io.naryo.infrastructure.configuration.beans.env.EnvironmentInitializer;
 import org.springframework.stereotype.Component;
 
@@ -40,15 +45,9 @@ public final class EventStoreInitializer implements EnvironmentInitializer {
                 properties -> {
                     BlockEventStoreConfigurationDescriptor descriptor =
                             (BlockEventStoreConfigurationDescriptor) properties;
-                    return new HttpBlockEventStoreConfiguration(
+                    return new HttpStoreConfiguration(
                             descriptor.getNodeId(),
-                            descriptor.getTargets().stream()
-                                    .map(
-                                            target ->
-                                                    new EventStoreTarget(
-                                                            target.type(),
-                                                            new Destination(target.destination())))
-                                    .collect(Collectors.toSet()),
+                            createFeatures(descriptor),
                             new ConnectionEndpoint(
                                     !descriptor.getAdditionalProperties().isEmpty()
                                             ? ((HttpBroadcasterEndpoint)
@@ -66,6 +65,23 @@ public final class EventStoreInitializer implements EnvironmentInitializer {
                         List.of(
                                 new FieldDefinition(
                                         "endpoint", HttpBroadcasterEndpoint.class, true, null))));
+    }
+
+    private Map<StoreFeatureType, StoreFeatureConfiguration> createFeatures(
+            BlockEventStoreConfigurationDescriptor descriptor) {
+        Map<StoreFeatureType, StoreFeatureConfiguration> features = new HashMap<>();
+        features.put(
+                StoreFeatureType.EVENT,
+                new BlockEventStoreConfiguration(
+                        descriptor.getTargets().stream()
+                                .map(
+                                        target ->
+                                                new EventStoreTarget(
+                                                        target.type(),
+                                                        new Destination(target.destination())))
+                                .collect(Collectors.toSet())));
+        // TODO: Include filter feature
+        return features;
     }
 
     public record HttpBroadcasterEndpoint(String url) {}

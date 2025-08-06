@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.model.event.BlockEventStoreConfigurationDescriptor;
 import io.naryo.application.configuration.source.model.event.EventStoreTargetDescriptor;
-import io.naryo.domain.configuration.eventstore.active.EventStoreStrategy;
-import io.naryo.domain.configuration.eventstore.active.EventStoreType;
+import io.naryo.domain.configuration.store.active.StoreType;
+import io.naryo.domain.configuration.store.active.feature.event.EventStoreStrategy;
 import io.naryo.infrastructure.configuration.source.env.model.event.store.ActiveEventStoreConfigurationProperties;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
@@ -24,7 +24,7 @@ public class BlockEventStoreConfigurationProperties extends ActiveEventStoreConf
 
     public BlockEventStoreConfigurationProperties(
             @NotNull UUID nodeId,
-            @Nullable EventStoreType type,
+            @Nullable StoreType type,
             Set<EventStoreTargetProperties> targets,
             @Nullable Map<String, Object> additionalProperties,
             @Nullable ConfigurationSchema propertiesSchema) {

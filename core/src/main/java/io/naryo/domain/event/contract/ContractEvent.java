@@ -17,7 +17,7 @@ import lombok.ToString;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public final class ContractEvent extends Event {
+public final class ContractEvent extends Event<String> {
 
     private final EventName name;
     private final Set<ContractEventParameter<?>> parameters;
@@ -85,5 +85,10 @@ public final class ContractEvent extends Event {
         if (timestamp.compareTo(BigInteger.ZERO) < 0) {
             throw new IllegalArgumentException("timestamp cannot be negative");
         }
+    }
+
+    @Override
+    public String getKey() {
+        return String.format("%s:%s", blockHash, logIndex);
     }
 }

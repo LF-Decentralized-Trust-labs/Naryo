@@ -138,9 +138,7 @@ class NodeSynchronizerTest {
                                 null,
                                 Set.of(new AddressParameterDefinition())),
                         Set.of(ContractEventStatus.CONFIRMED, ContractEventStatus.UNCONFIRMED),
-                        new BlockActiveSyncState(
-                                new NonNegativeBlockNumber(BigInteger.ZERO),
-                                new NonNegativeBlockNumber(BigInteger.ZERO)),
+                        new BlockActiveSyncState(new NonNegativeBlockNumber(BigInteger.ZERO)),
                         "0x1234567890abcdef1234567890abcdef12345678"));
         NodeSynchronizer synchronizer =
                 new NodeSynchronizer(
@@ -187,9 +185,7 @@ class NodeSynchronizerTest {
     void testSynchronize_filtersAlreadySynchronized() {
         UUID nodeId = UUID.randomUUID();
         BlockActiveSyncState syncState =
-                new BlockActiveSyncState(
-                        new NonNegativeBlockNumber(BigInteger.ZERO),
-                        new NonNegativeBlockNumber(BigInteger.ZERO));
+                new BlockActiveSyncState(new NonNegativeBlockNumber(BigInteger.ZERO));
         syncState.setSync(true);
         filters.add(
                 new ContractEventFilter(

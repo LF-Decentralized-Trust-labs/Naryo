@@ -15,14 +15,10 @@ import lombok.ToString;
 public final class BlockActiveSyncState extends ActiveSyncState {
 
     private final NonNegativeBlockNumber initialBlock;
-    private final NonNegativeBlockNumber lastBlockProcessed;
 
-    public BlockActiveSyncState(
-            NonNegativeBlockNumber initialBlock, NonNegativeBlockNumber lastBlockProcessed) {
+    public BlockActiveSyncState(NonNegativeBlockNumber initialBlock) {
         super(SyncStrategy.BLOCK_BASED);
         Objects.requireNonNull(initialBlock, "initialBlock cannot be null");
-        Objects.requireNonNull(lastBlockProcessed, "lastBlockProcessed cannot be null");
         this.initialBlock = initialBlock;
-        this.lastBlockProcessed = lastBlockProcessed;
     }
 }

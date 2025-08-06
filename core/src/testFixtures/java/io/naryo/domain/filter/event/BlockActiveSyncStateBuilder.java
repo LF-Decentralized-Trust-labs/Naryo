@@ -18,7 +18,7 @@ public class BlockActiveSyncStateBuilder
 
     @Override
     public BlockActiveSyncState build() {
-        return new BlockActiveSyncState(this.getInitialBlock(), this.getLastBlockProcessed());
+        return new BlockActiveSyncState(this.getInitialBlock());
     }
 
     public BlockActiveSyncStateBuilder withInitialBlock(NonNegativeBlockNumber initialBlock) {

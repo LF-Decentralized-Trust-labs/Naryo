@@ -14,12 +14,12 @@ import io.naryo.application.configuration.source.model.event.EventStoreConfigura
 import io.naryo.application.configuration.source.model.event.InactiveEventStoreConfigurationDescriptor;
 import io.naryo.application.event.store.configuration.mapper.ActiveEventStoreConfigurationMapperRegistry;
 import io.naryo.application.event.store.configuration.provider.EventStoreSourceProvider;
-import io.naryo.domain.configuration.eventstore.EventStoreConfiguration;
-import io.naryo.domain.configuration.eventstore.inactive.InactiveEventStoreConfiguration;
+import io.naryo.domain.configuration.store.StoreConfiguration;
+import io.naryo.domain.configuration.store.inactive.InactiveStoreConfiguration;
 
 public final class DefaultEventStoreConfigurationManager
         extends BaseCollectionConfigurationManager<
-                EventStoreConfiguration, EventStoreConfigurationDescriptor, UUID>
+                StoreConfiguration, EventStoreConfigurationDescriptor, UUID>
         implements EventStoreConfigurationManager {
 
     private final ActiveEventStoreConfigurationMapperRegistry registry;
@@ -45,10 +45,10 @@ public final class DefaultEventStoreConfigurationManager
     }
 
     @Override
-    protected EventStoreConfiguration map(EventStoreConfigurationDescriptor source) {
+    protected StoreConfiguration map(EventStoreConfigurationDescriptor source) {
         return switch (source) {
             case InactiveEventStoreConfigurationDescriptor ignored ->
-                    new InactiveEventStoreConfiguration(source.getNodeId());
+                    new InactiveStoreConfiguration(source.getNodeId());
             case ActiveEventStoreConfigurationDescriptor active ->
                     registry.map(active.getType().getName(), active);
             default -> throw new IllegalStateException("Unexpected value: " + source);

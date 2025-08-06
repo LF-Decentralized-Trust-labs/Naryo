@@ -5,9 +5,9 @@ import java.util.Optional;
 
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.model.event.ActiveEventStoreConfigurationDescriptor;
-import io.naryo.domain.configuration.eventstore.EventStoreState;
-import io.naryo.domain.configuration.eventstore.active.EventStoreStrategy;
-import io.naryo.domain.configuration.eventstore.active.EventStoreType;
+import io.naryo.domain.configuration.store.StoreState;
+import io.naryo.domain.configuration.store.active.StoreType;
+import io.naryo.domain.configuration.store.active.feature.event.EventStoreStrategy;
 import io.naryo.infrastructure.configuration.persistence.document.common.ConfigurationSchemaDocument;
 import jakarta.annotation.Nullable;
 
@@ -15,18 +15,18 @@ public class ActiveEventStoreConfigurationPropertiesDocument
         extends EventStoreConfigurationPropertiesDocument
         implements ActiveEventStoreConfigurationDescriptor {
 
-    private final EventStoreType type;
+    private final StoreType type;
     private final EventStoreStrategy strategy;
     private Map<String, Object> additionalProperties;
     private @Nullable ConfigurationSchemaDocument propertiesSchema;
 
     public ActiveEventStoreConfigurationPropertiesDocument(
             String nodeId,
-            EventStoreType type,
+            StoreType type,
             EventStoreStrategy strategy,
             Map<String, Object> additionalProperties,
             @Nullable ConfigurationSchemaDocument propertiesSchema) {
-        super(nodeId, EventStoreState.ACTIVE);
+        super(nodeId, StoreState.ACTIVE);
         this.type = type;
         this.strategy = strategy;
         this.additionalProperties = additionalProperties;
@@ -34,7 +34,7 @@ public class ActiveEventStoreConfigurationPropertiesDocument
     }
 
     @Override
-    public EventStoreType getType() {
+    public StoreType getType() {
         return this.type;
     }
 

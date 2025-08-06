@@ -4,15 +4,15 @@ import java.util.Map;
 import java.util.Optional;
 
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
-import io.naryo.domain.configuration.eventstore.EventStoreState;
-import io.naryo.domain.configuration.eventstore.active.EventStoreStrategy;
-import io.naryo.domain.configuration.eventstore.active.EventStoreType;
+import io.naryo.domain.configuration.store.StoreState;
+import io.naryo.domain.configuration.store.active.StoreType;
+import io.naryo.domain.configuration.store.active.feature.event.EventStoreStrategy;
 
 import static io.naryo.application.common.util.MergeUtil.*;
 
 public interface ActiveEventStoreConfigurationDescriptor extends EventStoreConfigurationDescriptor {
 
-    EventStoreType getType();
+    StoreType getType();
 
     EventStoreStrategy getStrategy();
 
@@ -25,8 +25,8 @@ public interface ActiveEventStoreConfigurationDescriptor extends EventStoreConfi
     void setPropertiesSchema(ConfigurationSchema propertiesSchema);
 
     @Override
-    default EventStoreState getState() {
-        return EventStoreState.ACTIVE;
+    default StoreState getState() {
+        return StoreState.ACTIVE;
     }
 
     @Override

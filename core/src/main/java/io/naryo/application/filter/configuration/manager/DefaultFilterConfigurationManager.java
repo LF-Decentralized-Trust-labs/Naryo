@@ -1,6 +1,5 @@
 package io.naryo.application.filter.configuration.manager;
 
-import java.math.BigInteger;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collector;
@@ -130,9 +129,7 @@ public final class DefaultFilterConfigurationManager
 
         if (descriptor instanceof BlockFilterSyncDescriptor blockSync) {
             return new BlockActiveSyncState(
-                    new NonNegativeBlockNumber(valueOrNull(blockSync.getInitialBlock())),
-                    new NonNegativeBlockNumber(BigInteger.ZERO) // TODO: Review last block
-                    );
+                    new NonNegativeBlockNumber(valueOrNull(blockSync.getInitialBlock())));
         }
 
         throw new IllegalArgumentException("Unknown sync strategy: " + descriptor.getStrategy());

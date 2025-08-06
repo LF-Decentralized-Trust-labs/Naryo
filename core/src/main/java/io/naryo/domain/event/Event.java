@@ -10,7 +10,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @EqualsAndHashCode
-public abstract class Event {
+public abstract class Event<K> {
 
     private final EventType eventType;
     private final UUID nodeId;
@@ -21,4 +21,6 @@ public abstract class Event {
         this.eventType = eventType;
         this.nodeId = nodeId;
     }
+
+    public abstract K getKey();
 }

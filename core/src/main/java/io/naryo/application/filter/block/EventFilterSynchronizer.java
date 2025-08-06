@@ -76,29 +76,35 @@ public final class EventFilterSynchronizer implements Synchronizer {
     public Disposable synchronize() throws IOException {
         String topic = sha3String(filter.getSpecification().getEventSignature());
 
-        return Flowable.fromIterable(extractLogsFromFilter(topic))
-                .subscribe(
-                        value -> {
-                            Block block = getBlock(value.blockNumber());
-                            TransactionReceipt transaction =
-                                    getTransactionReceipt(value.transactionHash());
+        return applyCircuitBreaker(
+                () ->
+                        Flowable.fromIterable(extractLogsFromFilter(topic))
+                                .subscribe(
+                                        value -> {
+                                            Block block = getBlock(value.blockNumber());
+                                            TransactionReceipt transaction =
+                                                    getTransactionReceipt(value.transactionHash());
 
-                            ContractEvent contractEvent =
-                                    new ContractEvent(
-                                            filter.getNodeId(),
-                                            filter.getSpecification().eventName(),
-                                            decoder.decode(filter.getSpecification(), value),
-                                            value.transactionHash(),
-                                            value.index(),
-                                            value.blockNumber(),
-                                            value.blockHash(),
-                                            value.address(),
-                                            transaction != null ? transaction.from() : null,
-                                            ContractEventStatus.CONFIRMED,
-                                            block.timestamp());
+                                            ContractEvent contractEvent =
+                                                    new ContractEvent(
+                                                            filter.getNodeId(),
+                                                            filter.getSpecification().eventName(),
+                                                            decoder.decode(
+                                                                    filter.getSpecification(),
+                                                                    value),
+                                                            value.transactionHash(),
+                                                            value.index(),
+                                                            value.blockNumber(),
+                                                            value.blockHash(),
+                                                            value.address(),
+                                                            transaction != null
+                                                                    ? transaction.from()
+                                                                    : null,
+                                                            ContractEventStatus.CONFIRMED,
+                                                            block.timestamp());
 
-                            helper.execute(node, filter, contractEvent);
-                        });
+                                            helper.execute(node, filter, contractEvent);
+                                        }));
     }
 
     private List<Log> extractLogsFromFilter(String topicHex) throws IOException {

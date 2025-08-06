@@ -2,7 +2,7 @@ package io.naryo.application.configuration.source.model.event;
 
 import java.util.Set;
 
-import io.naryo.domain.configuration.eventstore.active.EventStoreStrategy;
+import io.naryo.domain.configuration.store.active.feature.event.EventStoreStrategy;
 
 import static io.naryo.application.common.util.MergeUtil.mergeCollections;
 

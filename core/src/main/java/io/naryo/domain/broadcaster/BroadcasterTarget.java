@@ -2,6 +2,7 @@ package io.naryo.domain.broadcaster;
 
 import java.util.Objects;
 
+import io.naryo.domain.common.Destination;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;

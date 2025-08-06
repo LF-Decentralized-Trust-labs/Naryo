@@ -9,7 +9,7 @@ import io.naryo.application.filter.configuration.manager.FilterConfigurationMana
 import io.naryo.application.node.configuration.manager.NodeConfigurationManager;
 import io.naryo.domain.broadcaster.Broadcaster;
 import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;
-import io.naryo.domain.configuration.eventstore.EventStoreConfiguration;
+import io.naryo.domain.configuration.store.StoreConfiguration;
 import io.naryo.domain.filter.Filter;
 import io.naryo.domain.node.Node;
 
@@ -36,7 +36,7 @@ public record NodeConfigurationFacade(
         return List.copyOf(nodeConfigurationManager.load());
     }
 
-    public List<EventStoreConfiguration> getEventStoreConfigurations() {
+    public List<StoreConfiguration> getEventStoreConfigurations() {
         return List.copyOf(eventStoreConfigurationManager.load());
     }
 }

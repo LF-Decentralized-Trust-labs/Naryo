@@ -1,7 +1,7 @@
 package io.naryo.application.event.store.configuration.manager;
 
 import io.naryo.application.configuration.manager.CollectionConfigurationManager;
-import io.naryo.domain.configuration.eventstore.EventStoreConfiguration;
+import io.naryo.domain.configuration.store.StoreConfiguration;
 
 public interface EventStoreConfigurationManager
-        extends CollectionConfigurationManager<EventStoreConfiguration> {}
+        extends CollectionConfigurationManager<StoreConfiguration> {}

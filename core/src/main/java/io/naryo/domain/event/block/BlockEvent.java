@@ -16,7 +16,7 @@ import lombok.ToString;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public final class BlockEvent extends Event {
+public final class BlockEvent extends Event<BigInteger> {
 
     private final NonNegativeBlockNumber number;
     private final String hash;
@@ -66,5 +66,10 @@ public final class BlockEvent extends Event {
         if (timestamp.compareTo(BigInteger.ZERO) < 0) {
             throw new IllegalArgumentException("timestamp cannot be negative");
         }
+    }
+
+    @Override
+    public BigInteger getKey() {
+        return number.value();
     }
 }

@@ -12,8 +12,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.definition.FieldDefinition;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaRegistry;
-import io.naryo.domain.configuration.eventstore.active.EventStoreStrategy;
-import io.naryo.domain.configuration.eventstore.active.EventStoreType;
+import io.naryo.domain.configuration.store.active.StoreType;
+import io.naryo.domain.configuration.store.active.feature.event.EventStoreStrategy;
 import io.naryo.infrastructure.configuration.source.env.model.event.store.ActiveEventStoreConfigurationProperties;
 import io.naryo.infrastructure.configuration.source.env.model.event.store.block.BlockEventStoreConfigurationProperties;
 import io.naryo.infrastructure.configuration.source.env.model.event.store.block.EventStoreTargetProperties;
@@ -40,7 +40,7 @@ public final class EventStoreConfigurationPropertiesDeserializer
         JsonNode root = codec.readTree(p);
 
         UUID nodeId = getUuidOrNull(getTextOrNull(root.get("nodeId")));
-        EventStoreType type = safeTreeToValue(root, "type", codec, EventStoreType.class);
+        StoreType type = safeTreeToValue(root, "type", codec, StoreType.class);
         EventStoreStrategy strategy =
                 safeTreeToValue(root, "strategy", codec, EventStoreStrategy.class);
 
