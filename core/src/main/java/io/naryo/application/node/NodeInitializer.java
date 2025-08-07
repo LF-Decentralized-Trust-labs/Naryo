@@ -23,6 +23,8 @@ import io.naryo.application.node.trigger.permanent.EventBroadcasterPermanentTrig
 import io.naryo.application.node.trigger.permanent.block.ProcessorTriggerFactory;
 import io.naryo.application.store.Store;
 import io.naryo.application.store.event.block.BlockEventStore;
+import io.naryo.application.store.filter.FilterStore;
+import io.naryo.application.store.filter.model.FilterState;
 import io.naryo.domain.configuration.store.StoreConfiguration;
 import io.naryo.domain.configuration.store.StoreState;
 import io.naryo.domain.configuration.store.active.ActiveStoreConfiguration;
@@ -96,7 +98,7 @@ public class NodeInitializer {
 
     private NodeRunner initNode(Node node, List<Filter> allFilters) throws IOException {
         var interactor = interactorFactory.create(node);
-        var eventStoreConfiguration = filterForNode(node);
+        var storeConfiguration = filterForNode(node);
         var nodeFilters = filterForNode(allFilters, node.getId());
         var dispatcher = new EventDispatcher(resilienceRegistry, new HashSet<>(sharedTriggers));
         var contractEventHelper = new ContractEventDispatcherHelper(dispatcher, interactor);
@@ -116,7 +118,7 @@ public class NodeInitializer {
         dispatcher.addTrigger(transactionTrigger);
 
         StartBlockCalculator calculator =
-                createStartBlockCalculator(node, interactor, eventStoreConfiguration);
+                createStartBlockCalculator(node, interactor, storeConfiguration);
 
         var subscriber = subscriberFactory.create(interactor, dispatcher, node, calculator);
         var synchronizer =
@@ -127,12 +129,38 @@ public class NodeInitializer {
                         nodeFilters,
                         decoder,
                         contractEventHelper,
-                        resilienceRegistry);
+                        resilienceRegistry,
+                        storeForNode(FilterStore.class, FilterState.class, storeConfiguration)
+                                .orElse(null),
+                        storeConfiguration);
         return new DefaultNodeRunner(node, subscriber, synchronizer);
     }
 
+    @SuppressWarnings("unchecked")
+    private <S extends Store<?, ?, ?>> Optional<S> storeForNode(
+            Class<S> storeClass, Class<?> dataClass, StoreConfiguration configuration) {
+        List<S> eventStores =
+                stores.stream()
+                        .filter(store -> store.getClass().isAssignableFrom(storeClass))
+                        .map(store -> (S) store)
+                        .toList();
+        if (configuration.getState().equals(StoreState.ACTIVE) && !eventStores.isEmpty()) {
+            ActiveStoreConfiguration storeConfiguration =
+                    ((ActiveStoreConfiguration) configuration);
+            return Optional.of(
+                    eventStores.stream()
+                            .filter(
+                                    store ->
+                                            store.supports(storeConfiguration.getType(), dataClass))
+                            .findFirst()
+                            .orElseThrow(
+                                    () -> new IllegalArgumentException("No event store founded")));
+        }
+        return Optional.empty();
+    }
+
     private StoreConfiguration filterForNode(Node node) {
-        return config.getEventStoreConfigurations().stream()
+        return config.getStoreConfigurations().stream()
                 .filter(configuration -> configuration.getNodeId().equals(node.getId()))
                 .findFirst()
                 .orElseThrow(
@@ -162,28 +190,10 @@ public class NodeInitializer {
 
     private StartBlockCalculator createStartBlockCalculator(
             Node node, BlockInteractor interactor, StoreConfiguration configuration) {
-        List<? extends BlockEventStore<?>> eventStores =
-                stores.stream()
-                        .filter(store -> store instanceof BlockEventStore<?>)
-                        .map(store -> (BlockEventStore<?>) store)
-                        .toList();
-        if (configuration.getState().equals(StoreState.ACTIVE) && !eventStores.isEmpty()) {
-            ActiveStoreConfiguration storeConfiguration =
-                    ((ActiveStoreConfiguration) configuration);
-            BlockEventStore<?> eventStore =
-                    eventStores.stream()
-                            .filter(
-                                    store ->
-                                            store.supports(
-                                                    storeConfiguration.getType(), BlockEvent.class))
-                            .findFirst()
-                            .orElseThrow(
-                                    () ->
-                                            new IllegalArgumentException(
-                                                    "No block event store founded"));
-
+        var eventStore = storeForNode(BlockEventStore.class, BlockEvent.class, configuration);
+        if (eventStore.isPresent()) {
             return new EventStoreStartBlockCalculator(
-                    node, interactor, eventStore, storeConfiguration);
+                    node, interactor, eventStore.get(), (ActiveStoreConfiguration) configuration);
         }
         return new StartBlockCalculator(node, interactor);
     }

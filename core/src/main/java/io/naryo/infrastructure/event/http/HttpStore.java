@@ -1,15 +1,19 @@
 package io.naryo.infrastructure.event.http;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.naryo.application.store.Store;
 import io.naryo.domain.common.Destination;
+import io.naryo.domain.configuration.store.active.StoreType;
 import io.naryo.domain.configuration.store.active.http.HttpStoreConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
@@ -57,6 +61,38 @@ public abstract class HttpStore<K, D> implements Store<HttpStoreConfiguration, K
         }
     }
 
+    @Override
+    public List<D> get(HttpStoreConfiguration configuration, List<K> keys) {
+        try {
+            if (keys == null || keys.isEmpty()) {
+                log.warn("Keys list is null or empty. Returning an empty result.");
+                return List.of();
+            }
+
+            String joinedKeys =
+                    keys.stream()
+                            .filter(Objects::nonNull)
+                            .map(Object::toString)
+                            .collect(Collectors.joining(","));
+
+            return getList(
+                    makeUrl(getDestination(configuration), configuration)
+                            .newBuilder()
+                            .addQueryParameter("ids", joinedKeys)
+                            .build(),
+                    configuration.getEndpoint().getHeaders(),
+                    new TypeReference<>() {});
+        } catch (JsonProcessingException e) {
+            log.error("Error while processing JSON response", e);
+            return List.of();
+        }
+    }
+
+    @Override
+    public boolean supports(StoreType type, Class<?> clazz) {
+        return type.getName().equalsIgnoreCase("http") && clazz.isAssignableFrom(this.clazz);
+    }
+
     protected abstract Destination getDestination(HttpStoreConfiguration configuration);
 
     protected HttpUrl makeUrl(Destination destination, HttpStoreConfiguration configuration) {
@@ -66,6 +102,20 @@ public abstract class HttpStore<K, D> implements Store<HttpStoreConfiguration, K
             throw new IllegalArgumentException("Invalid URL: " + unparsedUrl);
         }
         return url;
+    }
+
+    protected <T> List<T> getList(
+            HttpUrl url, Map<String, String> headers, TypeReference<List<T>> typeRef)
+            throws JsonProcessingException {
+        return objectMapper.readValue(
+                this.makeCall(
+                        () ->
+                                new Request.Builder()
+                                        .url(url)
+                                        .headers(Headers.of(headers))
+                                        .get()
+                                        .build()),
+                typeRef);
     }
 
     protected <T> T get(HttpUrl url, Map<String, String> headers, Class<T> clazz)

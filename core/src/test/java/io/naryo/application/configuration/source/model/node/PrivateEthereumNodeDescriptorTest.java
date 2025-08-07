@@ -47,7 +47,7 @@ class PrivateEthereumNodeDescriptorTest extends EthereumNodeDescriptorTest {
         assertEquals(
                 Optional.ofNullable(expectedGroupId),
                 result.getGroupId(),
-                "Should merge the group id");
+                "Should merge the group filterId");
     }
 
     @ParameterizedTest

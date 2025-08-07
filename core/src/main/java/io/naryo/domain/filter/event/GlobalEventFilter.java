@@ -14,7 +14,7 @@ public class GlobalEventFilter extends EventFilter {
             UUID nodeId,
             EventFilterSpecification specification,
             Set<ContractEventStatus> statuses,
-            SyncState syncState,
+            FilterSyncState filterSyncState,
             EventFilterVisibilityConfiguration visibilityConfiguration) {
         super(
                 id,
@@ -23,7 +23,7 @@ public class GlobalEventFilter extends EventFilter {
                 EventFilterScope.GLOBAL,
                 specification,
                 statuses,
-                syncState,
+                filterSyncState,
                 visibilityConfiguration);
     }
 
@@ -33,7 +33,7 @@ public class GlobalEventFilter extends EventFilter {
             UUID nodeId,
             EventFilterSpecification specification,
             Set<ContractEventStatus> statuses,
-            SyncState syncState) {
+            FilterSyncState filterSyncState) {
         super(
                 id,
                 name,
@@ -41,7 +41,7 @@ public class GlobalEventFilter extends EventFilter {
                 EventFilterScope.GLOBAL,
                 specification,
                 statuses,
-                syncState,
+                filterSyncState,
                 EventFilterVisibilityConfiguration.visible());
     }
 }

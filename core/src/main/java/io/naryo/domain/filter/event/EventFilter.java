@@ -20,7 +20,7 @@ public abstract class EventFilter extends Filter {
     private final EventFilterScope scope;
     private final EventFilterSpecification specification;
     private final Set<ContractEventStatus> statuses;
-    private final SyncState syncState;
+    private final FilterSyncState filterSyncState;
     private final EventFilterVisibilityConfiguration visibilityConfiguration;
 
     protected EventFilter(
@@ -30,17 +30,17 @@ public abstract class EventFilter extends Filter {
             EventFilterScope scope,
             EventFilterSpecification specification,
             Set<ContractEventStatus> statuses,
-            SyncState syncState,
+            FilterSyncState filterSyncState,
             EventFilterVisibilityConfiguration visibilityConfiguration) {
         super(id, name, FilterType.EVENT, nodeId);
         Objects.requireNonNull(specification, "Specification cannot be null");
         Objects.requireNonNull(statuses, "Statuses cannot be null");
-        Objects.requireNonNull(syncState, "SyncState cannot be null");
+        Objects.requireNonNull(filterSyncState, "SyncState cannot be null");
         Objects.requireNonNull(visibilityConfiguration, "VisibilityConfiguration cannot be null");
         this.scope = scope;
         this.specification = specification;
         this.statuses = statuses.isEmpty() ? Set.of(ContractEventStatus.values()) : statuses;
-        this.syncState = syncState;
+        this.filterSyncState = filterSyncState;
         this.visibilityConfiguration = visibilityConfiguration;
     }
 }

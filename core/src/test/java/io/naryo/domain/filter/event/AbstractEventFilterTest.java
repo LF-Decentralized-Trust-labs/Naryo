@@ -10,7 +10,7 @@ import io.naryo.domain.filter.AbstractFilterTest;
 import io.naryo.domain.filter.Filter;
 import io.naryo.domain.filter.FilterName;
 import io.naryo.domain.filter.event.parameter.BoolParameterDefinition;
-import io.naryo.domain.filter.event.sync.NoSyncState;
+import io.naryo.domain.filter.event.sync.NoFilterSyncState;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,7 +24,7 @@ abstract class AbstractEventFilterTest extends AbstractFilterTest {
             UUID nodeId,
             EventFilterSpecification specification,
             Set<ContractEventStatus> statuses,
-            SyncState syncState);
+            FilterSyncState filterSyncState);
 
     @Override
     protected Filter createFilter(UUID id, FilterName name, UUID nodeId) {
@@ -47,17 +47,17 @@ abstract class AbstractEventFilterTest extends AbstractFilterTest {
                 new EventFilterSpecification(
                         new EventName("Test"), new CorrelationId(0), parameters);
         Set<ContractEventStatus> statuses = Set.of(ContractEventStatus.CONFIRMED);
-        SyncState syncState = new NoSyncState();
+        FilterSyncState filterSyncState = new NoFilterSyncState();
 
         EventFilter eventFilter =
-                createEventFilter(id, name, nodeId, specification, statuses, syncState);
+                createEventFilter(id, name, nodeId, specification, statuses, filterSyncState);
 
         assertEquals(id, eventFilter.getId());
         assertEquals(name, eventFilter.getName());
         assertEquals(nodeId, eventFilter.getNodeId());
         assertEquals(specification, eventFilter.getSpecification());
         assertEquals(statuses, eventFilter.getStatuses());
-        assertEquals(syncState, eventFilter.getSyncState());
+        assertEquals(filterSyncState, eventFilter.getFilterSyncState());
     }
 
     @Test
@@ -66,12 +66,12 @@ abstract class AbstractEventFilterTest extends AbstractFilterTest {
         FilterName name = new FilterName("Test Filter");
         UUID nodeId = UUID.randomUUID();
         Set<ContractEventStatus> statuses = Set.of(ContractEventStatus.CONFIRMED);
-        SyncState syncState = new NoSyncState();
+        FilterSyncState filterSyncState = new NoFilterSyncState();
 
         assertThrows(
                 NullPointerException.class,
                 () -> {
-                    createEventFilter(id, name, nodeId, null, statuses, syncState);
+                    createEventFilter(id, name, nodeId, null, statuses, filterSyncState);
                 });
     }
 
@@ -85,17 +85,17 @@ abstract class AbstractEventFilterTest extends AbstractFilterTest {
                 new EventFilterSpecification(
                         new EventName("Test"), new CorrelationId(0), parameters);
         Set<ContractEventStatus> statuses = new HashSet<>();
-        SyncState syncState = new NoSyncState();
+        FilterSyncState filterSyncState = new NoFilterSyncState();
 
         EventFilter eventFilter =
-                createEventFilter(id, name, nodeId, specification, statuses, syncState);
+                createEventFilter(id, name, nodeId, specification, statuses, filterSyncState);
 
         assertEquals(id, eventFilter.getId());
         assertEquals(name, eventFilter.getName());
         assertEquals(nodeId, eventFilter.getNodeId());
         assertEquals(specification, eventFilter.getSpecification());
         assertEquals(Set.of(ContractEventStatus.values()), eventFilter.getStatuses());
-        assertEquals(syncState, eventFilter.getSyncState());
+        assertEquals(filterSyncState, eventFilter.getFilterSyncState());
     }
 
     @Test
@@ -107,12 +107,12 @@ abstract class AbstractEventFilterTest extends AbstractFilterTest {
         EventFilterSpecification specification =
                 new EventFilterSpecification(
                         new EventName("Test"), new CorrelationId(0), parameters);
-        SyncState syncState = new NoSyncState();
+        FilterSyncState filterSyncState = new NoFilterSyncState();
 
         assertThrows(
                 NullPointerException.class,
                 () -> {
-                    createEventFilter(id, name, nodeId, specification, null, syncState);
+                    createEventFilter(id, name, nodeId, specification, null, filterSyncState);
                 });
     }
 

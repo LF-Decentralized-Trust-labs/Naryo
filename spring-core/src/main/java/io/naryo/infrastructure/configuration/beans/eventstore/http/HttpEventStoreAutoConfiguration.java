@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.naryo.infrastructure.event.http.event.block.BlockHttpEventStore;
 import io.naryo.infrastructure.event.http.event.block.ContractEventHttpEventStore;
 import io.naryo.infrastructure.event.http.event.block.TransactionHttpEventStore;
+import io.naryo.infrastructure.event.http.filter.HttpFilterStore;
 import okhttp3.OkHttpClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -31,5 +32,11 @@ public class HttpEventStoreAutoConfiguration {
     ContractEventHttpEventStore contractEventHttpBlockEventStore(
             OkHttpClient httpClient, ObjectMapper objectMapper) {
         return new ContractEventHttpEventStore(httpClient, objectMapper);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(HttpFilterStore.class)
+    HttpFilterStore filterStore(OkHttpClient httpClient, ObjectMapper objectMapper) {
+        return new HttpFilterStore(httpClient, objectMapper);
     }
 }

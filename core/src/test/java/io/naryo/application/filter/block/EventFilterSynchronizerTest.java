@@ -15,12 +15,16 @@ import io.naryo.application.node.interactor.block.BlockInteractor;
 import io.naryo.application.node.interactor.block.dto.Block;
 import io.naryo.application.node.interactor.block.dto.Log;
 import io.naryo.application.node.interactor.block.dto.TransactionReceipt;
+import io.naryo.application.store.filter.FilterStore;
+import io.naryo.application.store.filter.model.FilterState;
 import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.common.event.EventName;
+import io.naryo.domain.configuration.store.StoreConfiguration;
+import io.naryo.domain.configuration.store.StoreState;
 import io.naryo.domain.filter.event.EventFilter;
 import io.naryo.domain.filter.event.EventFilterSpecification;
 import io.naryo.domain.filter.event.parameter.AddressParameterDefinition;
-import io.naryo.domain.filter.event.sync.block.BlockActiveSyncState;
+import io.naryo.domain.filter.event.sync.block.BlockActiveFilterSyncState;
 import io.naryo.domain.node.Node;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,6 +48,9 @@ class EventFilterSynchronizerTest {
     private @Mock ContractEventDispatcherHelper contractEventDispatcherHelper;
     private CircuitBreaker circuitBreaker = CircuitBreaker.ofDefaults("test");
     private Retry retry = Retry.ofDefaults("test");
+    private @Mock FilterStore<?> store;
+    private @Mock StoreConfiguration storeConfiguration;
+    private @Mock FilterState state;
 
     @Test
     void testConstructor_nullValues() {
@@ -58,7 +65,10 @@ class EventFilterSynchronizerTest {
                             contractEventParameterDecoder,
                             contractEventDispatcherHelper,
                             circuitBreaker,
-                            retry);
+                            retry,
+                            store,
+                            storeConfiguration,
+                            state);
                 });
 
         assertThrows(
@@ -72,7 +82,10 @@ class EventFilterSynchronizerTest {
                             contractEventParameterDecoder,
                             contractEventDispatcherHelper,
                             circuitBreaker,
-                            retry);
+                            retry,
+                            store,
+                            storeConfiguration,
+                            state);
                 });
 
         assertThrows(
@@ -86,7 +99,10 @@ class EventFilterSynchronizerTest {
                             contractEventParameterDecoder,
                             contractEventDispatcherHelper,
                             circuitBreaker,
-                            retry);
+                            retry,
+                            store,
+                            storeConfiguration,
+                            state);
                 });
 
         assertThrows(
@@ -100,7 +116,10 @@ class EventFilterSynchronizerTest {
                             contractEventParameterDecoder,
                             contractEventDispatcherHelper,
                             circuitBreaker,
-                            retry);
+                            retry,
+                            store,
+                            storeConfiguration,
+                            state);
                 });
 
         assertThrows(
@@ -114,7 +133,10 @@ class EventFilterSynchronizerTest {
                             null,
                             contractEventDispatcherHelper,
                             circuitBreaker,
-                            retry);
+                            retry,
+                            store,
+                            storeConfiguration,
+                            state);
                 });
 
         assertThrows(
@@ -128,7 +150,10 @@ class EventFilterSynchronizerTest {
                             contractEventParameterDecoder,
                             null,
                             circuitBreaker,
-                            retry);
+                            retry,
+                            store,
+                            storeConfiguration,
+                            state);
                 });
 
         assertThrows(
@@ -142,7 +167,10 @@ class EventFilterSynchronizerTest {
                             contractEventParameterDecoder,
                             contractEventDispatcherHelper,
                             null,
-                            retry);
+                            retry,
+                            store,
+                            storeConfiguration,
+                            state);
                 });
 
         assertThrows(
@@ -156,7 +184,27 @@ class EventFilterSynchronizerTest {
                             contractEventParameterDecoder,
                             contractEventDispatcherHelper,
                             circuitBreaker,
-                            null);
+                            null,
+                            store,
+                            storeConfiguration,
+                            state);
+                });
+
+        assertThrows(
+                NullPointerException.class,
+                () -> {
+                    new EventFilterSynchronizer(
+                            node,
+                            eventFilter,
+                            blockInteractor,
+                            startBlockCalculator,
+                            contractEventParameterDecoder,
+                            contractEventDispatcherHelper,
+                            circuitBreaker,
+                            retry,
+                            store,
+                            null,
+                            state);
                 });
     }
 
@@ -169,8 +217,9 @@ class EventFilterSynchronizerTest {
                                 new EventName("Test"),
                                 null,
                                 Set.of(new AddressParameterDefinition())));
-        when(eventFilter.getSyncState())
-                .thenReturn(new BlockActiveSyncState(new NonNegativeBlockNumber(BigInteger.TEN)));
+        when(eventFilter.getFilterSyncState())
+                .thenReturn(
+                        new BlockActiveFilterSyncState(new NonNegativeBlockNumber(BigInteger.TEN)));
         when(startBlockCalculator.getStartBlock()).thenReturn(BigInteger.valueOf(100));
         when(blockInteractor.getLogs(any(), any(), anyList()))
                 .thenReturn(
@@ -212,6 +261,7 @@ class EventFilterSynchronizerTest {
                                 BigInteger.TEN,
                                 BigInteger.TEN,
                                 List.of()));
+        when(storeConfiguration.getState()).thenReturn(StoreState.INACTIVE);
 
         EventFilterSynchronizer synchronizer =
                 new EventFilterSynchronizer(
@@ -222,7 +272,10 @@ class EventFilterSynchronizerTest {
                         contractEventParameterDecoder,
                         contractEventDispatcherHelper,
                         circuitBreaker,
-                        retry);
+                        retry,
+                        store,
+                        storeConfiguration,
+                        state);
         assertDoesNotThrow(synchronizer::synchronize);
     }
 }

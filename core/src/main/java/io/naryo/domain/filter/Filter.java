@@ -18,7 +18,7 @@ public abstract class Filter {
     protected final UUID nodeId;
 
     protected Filter(UUID id, FilterName name, FilterType type, UUID nodeId) {
-        Objects.requireNonNull(id, "id cannot be null");
+        Objects.requireNonNull(id, "filterId cannot be null");
         Objects.requireNonNull(name, "Name cannot be null");
         Objects.requireNonNull(type, "Type cannot be null");
         Objects.requireNonNull(nodeId, "NodeId cannot be null");

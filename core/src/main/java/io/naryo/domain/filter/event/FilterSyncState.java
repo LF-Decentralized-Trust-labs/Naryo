@@ -1,3 +1,3 @@
 package io.naryo.domain.filter.event;
 
-public interface SyncState {}
+public interface FilterSyncState {}

@@ -4,7 +4,7 @@ import java.util.List;
 
 import io.naryo.application.broadcaster.configuration.manager.BroadcasterConfigurationConfigurationManager;
 import io.naryo.application.broadcaster.configuration.manager.BroadcasterConfigurationManager;
-import io.naryo.application.event.store.configuration.manager.EventStoreConfigurationManager;
+import io.naryo.application.event.store.configuration.manager.StoreConfigurationManager;
 import io.naryo.application.filter.configuration.manager.FilterConfigurationManager;
 import io.naryo.application.node.configuration.manager.NodeConfigurationManager;
 import io.naryo.domain.broadcaster.Broadcaster;
@@ -18,7 +18,7 @@ public record NodeConfigurationFacade(
         BroadcasterConfigurationManager broadcasterConfigurationManager,
         FilterConfigurationManager filterConfigurationManager,
         NodeConfigurationManager nodeConfigurationManager,
-        EventStoreConfigurationManager eventStoreConfigurationManager) {
+        StoreConfigurationManager storeConfigurationManager) {
 
     public List<BroadcasterConfiguration> getBroadcasterConfigurations() {
         return List.copyOf(broadcasterConfigurationConfigurationManager.load());
@@ -36,7 +36,7 @@ public record NodeConfigurationFacade(
         return List.copyOf(nodeConfigurationManager.load());
     }
 
-    public List<StoreConfiguration> getEventStoreConfigurations() {
-        return List.copyOf(eventStoreConfigurationManager.load());
+    public List<StoreConfiguration> getStoreConfigurations() {
+        return List.copyOf(storeConfigurationManager.load());
     }
 }

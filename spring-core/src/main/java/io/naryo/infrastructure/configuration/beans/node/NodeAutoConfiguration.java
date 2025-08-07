@@ -12,7 +12,7 @@ import io.naryo.application.common.Mapper;
 import io.naryo.application.configuration.resilence.ResilienceRegistry;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.event.decoder.block.DefaultContractEventParameterDecoder;
-import io.naryo.application.event.store.configuration.manager.EventStoreConfigurationManager;
+import io.naryo.application.event.store.configuration.manager.StoreConfigurationManager;
 import io.naryo.application.filter.configuration.manager.FilterConfigurationManager;
 import io.naryo.application.node.NodeConfigurationFacade;
 import io.naryo.application.node.NodeInitializer;
@@ -94,13 +94,13 @@ public class NodeAutoConfiguration {
             BroadcasterConfigurationManager broadcasterConfigurationManager,
             FilterConfigurationManager filterConfigurationManager,
             NodeConfigurationManager nodeConfigurationManager,
-            EventStoreConfigurationManager eventStoreConfigurationManager) {
+            StoreConfigurationManager storeConfigurationManager) {
         return new NodeConfigurationFacade(
                 broadcasterConfigurationConfigurationManager,
                 broadcasterConfigurationManager,
                 filterConfigurationManager,
                 nodeConfigurationManager,
-                eventStoreConfigurationManager);
+                storeConfigurationManager);
     }
 
     @Bean

@@ -51,6 +51,6 @@ public interface ActiveStoreConfigurationDescriptor extends StoreConfigurationDe
                 this.getPropertiesSchema(),
                 otherActiveEventStoreConfiguration.getPropertiesSchema());
 
-        return this;
+        return StoreConfigurationDescriptor.super.merge(otherActiveEventStoreConfiguration);
     }
 }

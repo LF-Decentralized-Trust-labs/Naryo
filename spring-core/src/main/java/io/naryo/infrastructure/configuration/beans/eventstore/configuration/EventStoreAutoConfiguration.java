@@ -2,8 +2,8 @@ package io.naryo.infrastructure.configuration.beans.eventstore.configuration;
 
 import java.util.List;
 
-import io.naryo.application.event.store.configuration.manager.DefaultEventStoreConfigurationManager;
-import io.naryo.application.event.store.configuration.manager.EventStoreConfigurationManager;
+import io.naryo.application.event.store.configuration.manager.DefaultStoreConfigurationManager;
+import io.naryo.application.event.store.configuration.manager.StoreConfigurationManager;
 import io.naryo.application.event.store.configuration.mapper.ActiveEventStoreConfigurationMapperRegistry;
 import io.naryo.application.event.store.configuration.provider.EventStoreSourceProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -14,11 +14,11 @@ import org.springframework.context.annotation.Configuration;
 public class EventStoreAutoConfiguration {
 
     @Bean
-    @ConditionalOnMissingBean(EventStoreConfigurationManager.class)
-    public EventStoreConfigurationManager eventStoreConfigurationManager(
+    @ConditionalOnMissingBean(StoreConfigurationManager.class)
+    public StoreConfigurationManager eventStoreConfigurationManager(
             List<EventStoreSourceProvider> providers,
             ActiveEventStoreConfigurationMapperRegistry registry) {
-        return new DefaultEventStoreConfigurationManager(providers, registry);
+        return new DefaultStoreConfigurationManager(providers, registry);
     }
 
     @Bean

@@ -17,14 +17,14 @@ import io.naryo.application.event.store.configuration.provider.EventStoreSourceP
 import io.naryo.domain.configuration.store.StoreConfiguration;
 import io.naryo.domain.configuration.store.inactive.InactiveStoreConfiguration;
 
-public final class DefaultEventStoreConfigurationManager
+public final class DefaultStoreConfigurationManager
         extends BaseCollectionConfigurationManager<
                 StoreConfiguration, StoreConfigurationDescriptor, UUID>
-        implements EventStoreConfigurationManager {
+        implements StoreConfigurationManager {
 
     private final ActiveEventStoreConfigurationMapperRegistry registry;
 
-    public DefaultEventStoreConfigurationManager(
+    public DefaultStoreConfigurationManager(
             List<EventStoreSourceProvider> sourceProviders,
             ActiveEventStoreConfigurationMapperRegistry registry) {
         super(sourceProviders);

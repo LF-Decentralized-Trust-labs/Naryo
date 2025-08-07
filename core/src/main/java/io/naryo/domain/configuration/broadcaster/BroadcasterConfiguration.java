@@ -19,7 +19,7 @@ public abstract class BroadcasterConfiguration implements Configuration {
     protected BroadcasterCache cache;
 
     protected BroadcasterConfiguration(UUID id, BroadcasterType type, BroadcasterCache cache) {
-        Objects.requireNonNull(id, "id must not be null");
+        Objects.requireNonNull(id, "filterId must not be null");
         Objects.requireNonNull(type, "type must not be null");
         Objects.requireNonNull(cache, "cache must not be null");
         this.id = id;

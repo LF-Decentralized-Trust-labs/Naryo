@@ -5,7 +5,6 @@ import java.util.Optional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.naryo.application.store.event.EventStore;
 import io.naryo.domain.common.Destination;
-import io.naryo.domain.configuration.store.active.StoreType;
 import io.naryo.domain.configuration.store.active.feature.StoreFeatureType;
 import io.naryo.domain.configuration.store.active.feature.event.block.BlockEventStoreConfiguration;
 import io.naryo.domain.configuration.store.active.feature.event.block.EventStoreTarget;
@@ -23,11 +22,6 @@ public abstract class HttpEventStore<K, D extends Event> extends HttpStore<K, D>
 
     public HttpEventStore(Class<D> clazz, OkHttpClient httpClient, ObjectMapper objectMapper) {
         super(clazz, httpClient, objectMapper);
-    }
-
-    @Override
-    public boolean supports(StoreType type, Class<?> clazz) {
-        return type.getName().equalsIgnoreCase("http") && clazz.isAssignableFrom(this.clazz);
     }
 
     @Override

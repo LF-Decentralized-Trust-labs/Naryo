@@ -11,7 +11,7 @@ public abstract class EventFilterBuilder<T extends EventFilterBuilder<T, Y>, Y e
 
     private EventFilterSpecification specification;
     private Set<ContractEventStatus> statuses;
-    private SyncState syncState;
+    private FilterSyncState filterSyncState;
     private EventFilterVisibilityConfiguration visibilityConfiguration;
 
     public T withSpecification(EventFilterSpecification specification) {
@@ -24,8 +24,8 @@ public abstract class EventFilterBuilder<T extends EventFilterBuilder<T, Y>, Y e
         return this.self();
     }
 
-    public T withSyncState(SyncState syncState) {
-        this.syncState = syncState;
+    public T withSyncState(FilterSyncState filterSyncState) {
+        this.filterSyncState = filterSyncState;
         return this.self();
     }
 
@@ -47,8 +47,10 @@ public abstract class EventFilterBuilder<T extends EventFilterBuilder<T, Y>, Y e
                 : this.statuses;
     }
 
-    protected SyncState getSyncState() {
-        return this.syncState == null ? new BlockActiveSyncStateBuilder().build() : this.syncState;
+    protected FilterSyncState getSyncState() {
+        return this.filterSyncState == null
+                ? new BlockActiveSyncStateBuilder().build()
+                : this.filterSyncState;
     }
 
     protected EventFilterVisibilityConfiguration getVisibilityConfiguration() {

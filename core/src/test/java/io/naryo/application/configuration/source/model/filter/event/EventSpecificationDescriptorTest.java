@@ -48,7 +48,7 @@ public class EventSpecificationDescriptorTest {
         assertEquals(
                 Optional.ofNullable(expectedCorrelationId),
                 result.getCorrelationId(),
-                "Should merge the correlation id");
+                "Should merge the correlation filterId");
     }
 
     @Setter

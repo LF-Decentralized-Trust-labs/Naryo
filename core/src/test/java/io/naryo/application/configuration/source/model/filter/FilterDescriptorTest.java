@@ -72,7 +72,7 @@ public abstract class FilterDescriptorTest {
         assertEquals(
                 Optional.ofNullable(expectedNodeId),
                 result.getNodeId(),
-                "Should merge the node id");
+                "Should merge the node filterId");
     }
 
     public abstract static class DummyFilterDescriptor implements FilterDescriptor {
