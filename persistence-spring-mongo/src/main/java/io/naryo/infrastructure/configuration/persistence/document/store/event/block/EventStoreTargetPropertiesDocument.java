@@ -1,6 +1,6 @@
-package io.naryo.infrastructure.configuration.persistence.document.event.store.block;
+package io.naryo.infrastructure.configuration.persistence.document.store.event.block;
 
-import io.naryo.application.configuration.source.model.event.EventStoreTargetDescriptor;
+import io.naryo.application.configuration.source.model.store.event.EventStoreTargetDescriptor;
 import io.naryo.domain.configuration.store.active.feature.event.block.TargetType;
 import jakarta.validation.constraints.NotNull;
 import lombok.Setter;

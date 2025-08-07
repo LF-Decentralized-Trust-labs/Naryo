@@ -2,7 +2,7 @@ package io.naryo.infrastructure.configuration.provider.event.store;
 
 import java.util.List;
 
-import io.naryo.application.configuration.source.model.event.EventStoreConfigurationDescriptor;
+import io.naryo.application.configuration.source.model.store.StoreConfigurationDescriptor;
 import io.naryo.application.event.store.configuration.provider.EventStoreSourceProvider;
 import io.naryo.infrastructure.configuration.source.env.model.EnvironmentProperties;
 import org.springframework.stereotype.Component;
@@ -17,8 +17,8 @@ public final class EnvEventStoreSourceProvider implements EventStoreSourceProvid
     }
 
     @Override
-    public List<EventStoreConfigurationDescriptor> load() {
-        return List.copyOf(properties.eventStores());
+    public List<StoreConfigurationDescriptor> load() {
+        return List.copyOf(properties.stores());
     }
 
     @Override

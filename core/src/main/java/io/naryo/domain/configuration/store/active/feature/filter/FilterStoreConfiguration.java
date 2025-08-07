@@ -14,7 +14,7 @@ public final class FilterStoreConfiguration extends StoreFeatureConfiguration {
 
     private final Destination destination;
 
-    FilterStoreConfiguration(Destination destination) {
+    public FilterStoreConfiguration(Destination destination) {
         super(StoreFeatureType.FILTER_SYNC);
         this.destination = destination;
     }

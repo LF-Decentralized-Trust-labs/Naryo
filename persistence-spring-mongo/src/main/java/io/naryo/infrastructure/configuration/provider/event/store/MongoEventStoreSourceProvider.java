@@ -5,12 +5,12 @@ import java.util.*;
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.definition.FieldDefinition;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaRegistry;
-import io.naryo.application.configuration.source.model.event.EventStoreConfigurationDescriptor;
+import io.naryo.application.configuration.source.model.store.StoreConfigurationDescriptor;
 import io.naryo.application.event.store.configuration.provider.EventStoreSourceProvider;
 import io.naryo.infrastructure.configuration.persistence.document.common.ConfigurationSchemaDocument;
-import io.naryo.infrastructure.configuration.persistence.document.event.store.EventStoreConfigurationPropertiesDocument;
-import io.naryo.infrastructure.configuration.persistence.document.event.store.InactiveEventStoreConfigurationPropertiesDocument;
-import io.naryo.infrastructure.configuration.persistence.document.event.store.block.BlockEventStoreConfigurationPropertiesDocument;
+import io.naryo.infrastructure.configuration.persistence.document.store.ActiveStoreConfigurationPropertiesDocument;
+import io.naryo.infrastructure.configuration.persistence.document.store.InactiveStoreConfigurationPropertiesDocument;
+import io.naryo.infrastructure.configuration.persistence.document.store.StoreConfigurationPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.repository.event.store.EventStorePropertiesDocumentRepository;
 import io.naryo.infrastructure.util.serialization.TypeConverter;
 import org.springframework.stereotype.Component;
@@ -31,8 +31,8 @@ public final class MongoEventStoreSourceProvider implements EventStoreSourceProv
     }
 
     @Override
-    public Collection<EventStoreConfigurationDescriptor> load() {
-        List<EventStoreConfigurationPropertiesDocument> eventStores = this.repository.findAll();
+    public Collection<StoreConfigurationDescriptor> load() {
+        List<StoreConfigurationPropertiesDocument> eventStores = this.repository.findAll();
         return new HashSet<>(eventStores.stream().map(this::fromDocument).toList());
     }
 
@@ -41,21 +41,21 @@ public final class MongoEventStoreSourceProvider implements EventStoreSourceProv
         return 0;
     }
 
-    private EventStoreConfigurationDescriptor fromDocument(
-            EventStoreConfigurationPropertiesDocument document) {
+    private StoreConfigurationDescriptor fromDocument(
+            StoreConfigurationPropertiesDocument document) {
         return switch (document) {
-            case BlockEventStoreConfigurationPropertiesDocument block -> {
+            case ActiveStoreConfigurationPropertiesDocument active -> {
                 ConfigurationSchema schema =
                         schemaRegistry.getSchema(
-                                PREFIX_EVENT_STORE_SCHEMA + block.getType().getName());
-                yield new BlockEventStoreConfigurationPropertiesDocument(
-                        block.getNodeId().toString(),
-                        block.getType(),
-                        getAdditionalConfiguration(block.getAdditionalProperties(), schema),
-                        ConfigurationSchemaDocument.toDocument(schema),
-                        block.getTargets());
+                                PREFIX_EVENT_STORE_SCHEMA + active.getType().getName());
+                yield new ActiveStoreConfigurationPropertiesDocument(
+                        active.getNodeId().toString(),
+                        active.getType(),
+                        active.getFeatures(),
+                        getAdditionalConfiguration(active.getAdditionalProperties(), schema),
+                        ConfigurationSchemaDocument.toDocument(schema));
             }
-            case InactiveEventStoreConfigurationPropertiesDocument inactive -> inactive;
+            case InactiveStoreConfigurationPropertiesDocument inactive -> inactive;
             default -> throw new IllegalStateException("Unexpected value: " + document);
         };
     }

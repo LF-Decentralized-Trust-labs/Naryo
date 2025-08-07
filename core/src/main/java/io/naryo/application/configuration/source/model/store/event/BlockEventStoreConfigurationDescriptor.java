@@ -1,13 +1,13 @@
-package io.naryo.application.configuration.source.model.event;
+package io.naryo.application.configuration.source.model.store.event;
 
 import java.util.Set;
 
+import io.naryo.application.configuration.source.model.store.StoreFeatureConfigurationDescriptor;
 import io.naryo.domain.configuration.store.active.feature.event.EventStoreStrategy;
 
 import static io.naryo.application.common.util.MergeUtil.mergeCollections;
 
-public interface BlockEventStoreConfigurationDescriptor
-        extends ActiveEventStoreConfigurationDescriptor {
+public interface BlockEventStoreConfigurationDescriptor extends EventStoreConfigurationDescriptor {
 
     Set<? extends EventStoreTargetDescriptor> getTargets();
 
@@ -19,7 +19,7 @@ public interface BlockEventStoreConfigurationDescriptor
     }
 
     @Override
-    default EventStoreConfigurationDescriptor merge(EventStoreConfigurationDescriptor other) {
+    default StoreFeatureConfigurationDescriptor merge(StoreFeatureConfigurationDescriptor other) {
         if (!(other
                 instanceof
                 BlockEventStoreConfigurationDescriptor otherBlockEventStoreConfiguration)) {
@@ -29,6 +29,6 @@ public interface BlockEventStoreConfigurationDescriptor
                 this::setTargets,
                 this.getTargets(),
                 otherBlockEventStoreConfiguration.getTargets());
-        return ActiveEventStoreConfigurationDescriptor.super.merge(other);
+        return this;
     }
 }

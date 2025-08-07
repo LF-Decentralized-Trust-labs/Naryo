@@ -1,19 +1,19 @@
-package io.naryo.application.configuration.source.model.event;
+package io.naryo.application.configuration.source.model.store;
 
 import java.util.UUID;
 
 import io.naryo.application.configuration.source.model.MergeableDescriptor;
 import io.naryo.domain.configuration.store.StoreState;
 
-public interface EventStoreConfigurationDescriptor
-        extends MergeableDescriptor<EventStoreConfigurationDescriptor> {
+public interface StoreConfigurationDescriptor
+        extends MergeableDescriptor<StoreConfigurationDescriptor> {
 
     UUID getNodeId();
 
     StoreState getState();
 
     @Override
-    default EventStoreConfigurationDescriptor merge(EventStoreConfigurationDescriptor other) {
+    default StoreConfigurationDescriptor merge(StoreConfigurationDescriptor other) {
         if (other == null) {
             return this;
         }

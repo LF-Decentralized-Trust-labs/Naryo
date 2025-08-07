@@ -1,7 +1,8 @@
-package io.naryo.infrastructure.configuration.source.env.serialization.event.store;
+package io.naryo.infrastructure.configuration.source.env.serialization.store;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
@@ -13,53 +14,54 @@ import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.definition.FieldDefinition;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaRegistry;
 import io.naryo.domain.configuration.store.active.StoreType;
-import io.naryo.domain.configuration.store.active.feature.event.EventStoreStrategy;
-import io.naryo.infrastructure.configuration.source.env.model.event.store.ActiveEventStoreConfigurationProperties;
-import io.naryo.infrastructure.configuration.source.env.model.event.store.block.BlockEventStoreConfigurationProperties;
-import io.naryo.infrastructure.configuration.source.env.model.event.store.block.EventStoreTargetProperties;
+import io.naryo.domain.configuration.store.active.feature.StoreFeatureType;
+import io.naryo.infrastructure.configuration.source.env.model.store.ActiveStoreConfigurationProperties;
+import io.naryo.infrastructure.configuration.source.env.model.store.StoreFeatureConfigurationProperties;
 import io.naryo.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class EventStoreConfigurationPropertiesDeserializer
-        extends EnvironmentDeserializer<ActiveEventStoreConfigurationProperties> {
+public final class ActiveStoreConfigurationPropertiesDeserializer
+        extends EnvironmentDeserializer<ActiveStoreConfigurationProperties> {
 
     private static final String PREFIX_EVENT_STORE_SCHEMA = "event_store_";
     private final ConfigurationSchemaRegistry schemaRegistry;
 
-    public EventStoreConfigurationPropertiesDeserializer(
+    public ActiveStoreConfigurationPropertiesDeserializer(
             ConfigurationSchemaRegistry schemaRegistry) {
         this.schemaRegistry = schemaRegistry;
     }
 
     @Override
-    public ActiveEventStoreConfigurationProperties deserialize(
+    public ActiveStoreConfigurationProperties deserialize(
             JsonParser p, DeserializationContext context) throws IOException, JacksonException {
         ObjectCodec codec = p.getCodec();
         JsonNode root = codec.readTree(p);
 
         UUID nodeId = getUuidOrNull(getTextOrNull(root.get("nodeId")));
         StoreType type = safeTreeToValue(root, "type", codec, StoreType.class);
-        EventStoreStrategy strategy =
-                safeTreeToValue(root, "strategy", codec, EventStoreStrategy.class);
 
-        return switch (strategy) {
-            case BLOCK_BASED -> {
-                List<EventStoreTargetProperties> targets =
-                        safeTreeToList(root, "targets", codec, EventStoreTargetProperties.class);
-                ConfigurationSchema schema =
-                        schemaRegistry.getSchema(
-                                PREFIX_EVENT_STORE_SCHEMA + type.getName().toLowerCase());
-                Set<String> knownFields = Set.of("type", "strategy", "target");
-                yield new BlockEventStoreConfigurationProperties(
-                        nodeId,
-                        type,
-                        new HashSet<>(targets),
-                        getAdditionalConfiguration(root, knownFields, codec, schema),
-                        schema);
-            }
-        };
+        ConfigurationSchema schema =
+                schemaRegistry.getSchema(PREFIX_EVENT_STORE_SCHEMA + type.getName().toLowerCase());
+        Set<String> knownFields = Set.of("type", "strategy", "target");
+        return new ActiveStoreConfigurationProperties(
+                nodeId,
+                type,
+                getFeatures(root, codec),
+                getAdditionalConfiguration(root, knownFields, codec, schema),
+                schema);
+    }
+
+    private @NotNull Map<StoreFeatureType, StoreFeatureConfigurationProperties> getFeatures(
+            JsonNode root, ObjectCodec codec) throws IOException {
+        List<StoreFeatureConfigurationProperties> featurePropertiesList =
+                safeTreeToList(root, "features", codec, StoreFeatureConfigurationProperties.class);
+
+        return featurePropertiesList.stream()
+                .collect(
+                        Collectors.toMap(
+                                StoreFeatureConfigurationProperties::getType, feature -> feature));
     }
 
     private static @NotNull Map<String, Object> getAdditionalConfiguration(
