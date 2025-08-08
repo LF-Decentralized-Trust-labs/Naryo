@@ -5,7 +5,6 @@ import io.naryo.application.store.event.block.TransactionEventStore;
 import io.naryo.domain.configuration.eventstore.active.block.MongoStoreConfiguration;
 import io.naryo.domain.event.transaction.TransactionEvent;
 import io.naryo.infrastructure.event.mongo.event.MongoEventStore;
-import io.naryo.infrastructure.event.mongo.event.block.model.TransactionEventDocument;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -33,12 +32,12 @@ public final class TransactionMongoEventStore extends MongoEventStore<String, Tr
             query.with(Sort.by(Sort.Direction.DESC, getKeyFieldName()));
             query.limit(1);
 
-            TransactionEventDocument latest = mongoTemplate.findOne(
+            TransactionEvent latest = mongoTemplate.findOne(
                 query,
-                TransactionEventDocument.class,
+                clazz,
                 getDestination(configuration).value());
 
-            return Optional.ofNullable(latest).map(TransactionEventDocument::getHash);
+            return Optional.ofNullable(latest).map(TransactionEvent::getHash);
         } catch (Exception e) {
             log.error("Error while fetching latest transaction event from MongoDB event store", e);
             return Optional.empty();

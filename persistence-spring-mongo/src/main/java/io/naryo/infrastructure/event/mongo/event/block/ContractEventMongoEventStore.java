@@ -4,7 +4,6 @@ import io.naryo.application.store.event.block.ContractEventEventStore;
 import io.naryo.domain.configuration.eventstore.active.block.MongoStoreConfiguration;
 import io.naryo.domain.event.contract.ContractEvent;
 import io.naryo.infrastructure.event.mongo.event.MongoEventStore;
-import io.naryo.infrastructure.event.mongo.event.block.model.ContractEventDocument;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -32,12 +31,12 @@ public final class ContractEventMongoEventStore extends MongoEventStore<String, 
             query.with(Sort.by(Sort.Direction.DESC, getKeyFieldName()));
             query.limit(1);
 
-            ContractEventDocument latest = mongoTemplate.findOne(
+            ContractEvent latest = mongoTemplate.findOne(
                 query,
-                ContractEventDocument.class,
+                clazz,
                 getDestination(configuration).value());
 
-            return Optional.ofNullable(latest).map(ContractEventDocument::getTransactionHash);
+            return Optional.ofNullable(latest).map(ContractEvent::getTransactionHash);
         } catch (Exception e) {
             log.error("Error while fetching latest contract event from MongoDB event store", e);
             return Optional.empty();
