@@ -6,13 +6,9 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 @Configuration
 @EnableMongoRepositories(
-        basePackages = {
-            "io.naryo.infrastructure.event.mongo.block.model",
-            "io.naryo.infrastructure.configuration.persistence.repository"
-        })
-@EntityScan(
-        basePackages = {
-            "io.naryo.infrastructure.event.mongo.block.model",
-            "io.naryo.infrastructure.configuration.persistence.document",
-        })
+        basePackages = "io.naryo.infrastructure.configuration.persistence.repository")
+@EntityScan(basePackages = {
+    "io.naryo.infrastructure.event.mongo.model",
+    "io.naryo.infrastructure.configuration.persistence.document"
+})
 public class MongoRepositoryConfig {}

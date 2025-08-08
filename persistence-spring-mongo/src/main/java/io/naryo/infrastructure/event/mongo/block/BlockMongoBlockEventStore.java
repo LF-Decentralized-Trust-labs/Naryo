@@ -11,36 +11,40 @@ import io.naryo.domain.configuration.eventstore.active.block.TargetType;
 import io.naryo.domain.event.Event;
 import io.naryo.domain.event.block.BlockEvent;
 import io.naryo.infrastructure.event.mongo.MongoBlockEventStore;
-import io.naryo.infrastructure.event.mongo.block.model.LatestBlockDocument;
-import io.naryo.infrastructure.event.mongo.block.model.LatestBlockDocumentRepository;
+import io.naryo.infrastructure.event.mongo.model.BlockEventDocument;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 
 @Slf4j
 public final class BlockMongoBlockEventStore extends MongoBlockEventStore<BlockEvent>
         implements BlockEventStore<MongoBlockEventStoreConfiguration> {
 
-    private final LatestBlockDocumentRepository latestBlockDocumentRepository;
-
     public BlockMongoBlockEventStore(
-            MongoTemplate mongoTemplate,
-            LatestBlockDocumentRepository latestBlockDocumentRepository) {
+            MongoTemplate mongoTemplate) {
         super(mongoTemplate);
-        this.latestBlockDocumentRepository = latestBlockDocumentRepository;
     }
 
     @Override
     public Optional<BigInteger> getLatestBlock(MongoBlockEventStoreConfiguration configuration) {
         Optional<EventStoreTarget> target = findTarget(TargetType.BLOCK, configuration);
         Optional<BigInteger> defaultValue = Optional.of(BigInteger.valueOf(-1));
-        if (target.isEmpty()) {
-            return defaultValue;
-        }
         try {
-            Optional<LatestBlockDocument> latestBlockDocument =
-                    this.latestBlockDocumentRepository.findById(
-                            configuration.getNodeId().toString());
-            return latestBlockDocument.map(LatestBlockDocument::getBlockNumber).or(Optional::empty);
+            BigInteger latestBlock =  target.map(
+                    t -> {
+                        Query query = new Query();
+                        query.with(Sort.by(Sort.Direction.DESC, "number"));
+                        query.limit(1);
+
+                        BlockEventDocument lastBlock = this.mongoTemplate.findOne(query, BlockEventDocument.class, t.destination().value());
+
+                        return Optional.ofNullable(lastBlock)
+                                .map(BlockEventDocument::getNumber)
+                                .orElse(defaultValue.get());
+                    }
+            ).orElse(defaultValue.get());
+            return Optional.of(latestBlock);
         } catch (Exception e) {
             log.error("Error while fetching latest block from MongoDB event store", e);
             return defaultValue;
