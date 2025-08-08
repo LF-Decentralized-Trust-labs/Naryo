@@ -4,7 +4,7 @@
       "id": "core",
       "groupId": "io.naryo",
       "artifactId": "core",
-      "version": "0.1.0-beta",
+      "version": "0.1.0-SNAPSHOT",
       "description": "Naryo core support",
       "required": true
     },
@@ -12,7 +12,7 @@
       "id": "spring",
       "groupId": "io.naryo",
       "artifactId": "spring-core",
-      "version": "0.1.0-beta",
+      "version": "0.1.0-SNAPSHOT",
       "description": "Naryo spring core support",
       "required": true
     },
@@ -20,7 +20,7 @@
       "id": "mongo",
       "groupId": "io.naryo",
       "artifactId": "persistence-spring-mongo",
-      "version": "0.1.0-beta",
+      "version": "0.1.0-SNAPSHOT",
       "description": "Naryo mongo support",
       "required": false
     }
