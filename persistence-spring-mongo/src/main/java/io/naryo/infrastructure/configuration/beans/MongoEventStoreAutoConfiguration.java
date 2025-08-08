@@ -1,8 +1,8 @@
 package io.naryo.infrastructure.configuration.beans;
 
-import io.naryo.infrastructure.event.mongo.block.BlockMongoBlockEventStore;
-import io.naryo.infrastructure.event.mongo.block.ContractEventMongoBlockEventStore;
-import io.naryo.infrastructure.event.mongo.block.TransactionMongoBlockEventStore;
+import io.naryo.infrastructure.event.mongo.event.block.BlockMongoEventStore;
+import io.naryo.infrastructure.event.mongo.event.block.ContractEventMongoEventStore;
+import io.naryo.infrastructure.event.mongo.event.block.TransactionMongoEventStore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,22 +12,22 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 public class MongoEventStoreAutoConfiguration {
 
     @Bean
-    @ConditionalOnMissingBean(BlockMongoBlockEventStore.class)
-    BlockMongoBlockEventStore blockMongoBlockEventStore(
+    @ConditionalOnMissingBean(BlockMongoEventStore.class)
+    BlockMongoEventStore blockMongoBlockEventStore(
             MongoTemplate mongoTemplate) {
-        return new BlockMongoBlockEventStore(mongoTemplate);
+        return new BlockMongoEventStore(mongoTemplate);
     }
 
     @Bean
-    @ConditionalOnMissingBean(TransactionMongoBlockEventStore.class)
-    TransactionMongoBlockEventStore transactionMongoBlockEventStore(MongoTemplate mongoTemplate) {
-        return new TransactionMongoBlockEventStore(mongoTemplate);
+    @ConditionalOnMissingBean(TransactionMongoEventStore.class)
+    TransactionMongoEventStore transactionMongoBlockEventStore(MongoTemplate mongoTemplate) {
+        return new TransactionMongoEventStore(mongoTemplate);
     }
 
     @Bean
-    @ConditionalOnMissingBean(ContractEventMongoBlockEventStore.class)
-    ContractEventMongoBlockEventStore contractEventMongoBlockEventStore(
+    @ConditionalOnMissingBean(ContractEventMongoEventStore.class)
+    ContractEventMongoEventStore contractEventMongoBlockEventStore(
             MongoTemplate mongoTemplate) {
-        return new ContractEventMongoBlockEventStore(mongoTemplate);
+        return new ContractEventMongoEventStore(mongoTemplate);
     }
 }

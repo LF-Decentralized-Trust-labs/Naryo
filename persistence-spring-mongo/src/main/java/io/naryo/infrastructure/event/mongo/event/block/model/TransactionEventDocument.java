@@ -1,10 +1,9 @@
-package io.naryo.infrastructure.event.mongo.model;
+package io.naryo.infrastructure.event.mongo.event.block.model;
 
-import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.event.transaction.TransactionEvent;
 import lombok.AllArgsConstructor;
-import lombok.Setter;
+import lombok.Getter;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
@@ -12,6 +11,7 @@ import java.math.BigInteger;
 
 @Document
 @AllArgsConstructor
+@Getter
 public final class TransactionEventDocument {
 
     private final String nodeId;

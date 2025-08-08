@@ -50,7 +50,7 @@ public final class MongoEventStoreSourceProvider implements EventStoreSourceProv
                                 PREFIX_EVENT_STORE_SCHEMA + active.getType().getName());
                 yield new ActiveStoreConfigurationPropertiesDocument(
                         active.getNodeId().toString(),
-                        active.getType(),
+                        active.getType().getName(),
                         active.getFeatures(),
                         getAdditionalConfiguration(active.getAdditionalProperties(), schema),
                         ConfigurationSchemaDocument.toDocument(schema));

@@ -1,4 +1,4 @@
-package io.naryo.infrastructure.event.mongo.model;
+package io.naryo.infrastructure.event.mongo.event.block.model;
 
 import io.naryo.application.node.interactor.block.dto.Transaction;
 import io.naryo.domain.event.block.BlockEvent;

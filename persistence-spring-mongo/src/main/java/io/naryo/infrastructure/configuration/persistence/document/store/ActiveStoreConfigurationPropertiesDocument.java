@@ -18,14 +18,14 @@ import org.springframework.data.annotation.TypeAlias;
 public class ActiveStoreConfigurationPropertiesDocument extends StoreConfigurationPropertiesDocument
         implements ActiveStoreConfigurationDescriptor {
 
-    private final StoreType type;
+    private final String type;
     private Map<StoreFeatureType, StoreFeatureConfigurationPropertiesDocument> features;
     private Map<String, Object> additionalProperties;
     private @Nullable ConfigurationSchemaDocument propertiesSchema;
 
     public ActiveStoreConfigurationPropertiesDocument(
             String nodeId,
-            StoreType type,
+            String type,
             Map<StoreFeatureType, StoreFeatureConfigurationPropertiesDocument> features,
             Map<String, Object> additionalProperties,
             @Nullable ConfigurationSchemaDocument propertiesSchema) {
@@ -38,7 +38,7 @@ public class ActiveStoreConfigurationPropertiesDocument extends StoreConfigurati
 
     @Override
     public StoreType getType() {
-        return this.type;
+        return this.type::toLowerCase;
     }
 
     @Override

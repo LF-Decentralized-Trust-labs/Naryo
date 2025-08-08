@@ -1,10 +1,11 @@
-package io.naryo.infrastructure.event.mongo.model;
+package io.naryo.infrastructure.event.mongo.event.block.model;
 
 import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.common.event.EventName;
 import io.naryo.domain.event.contract.ContractEvent;
 import io.naryo.domain.event.contract.ContractEventParameter;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
@@ -13,6 +14,7 @@ import java.util.Set;
 
 @Document
 @AllArgsConstructor
+@Getter
 public final class ContractEventDocument {
     private final String nodeId;
     private final EventName name;
