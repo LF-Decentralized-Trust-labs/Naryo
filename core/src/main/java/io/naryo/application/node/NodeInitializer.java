@@ -141,7 +141,7 @@ public class NodeInitializer {
             Class<S> storeClass, Class<?> dataClass, StoreConfiguration configuration) {
         List<S> eventStores =
                 stores.stream()
-                        .filter(store -> store.getClass().isAssignableFrom(storeClass))
+                        .filter(store -> storeClass.isAssignableFrom(store.getClass()))
                         .map(store -> (S) store)
                         .toList();
         if (configuration.getState().equals(StoreState.ACTIVE) && !eventStores.isEmpty()) {
