@@ -9,8 +9,10 @@ import io.naryo.domain.configuration.store.active.feature.event.EventStoreStrate
 import io.naryo.infrastructure.configuration.persistence.document.store.event.EventStoreConfigurationPropertiesDocument;
 import lombok.Getter;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
+@Document
 @TypeAlias("block_event_store")
 public final class BlockStoreConfigurationPropertiesDocument
         extends EventStoreConfigurationPropertiesDocument
