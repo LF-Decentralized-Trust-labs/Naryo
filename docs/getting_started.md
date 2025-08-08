@@ -6,19 +6,71 @@ main ways** to use this library:
 * ✅ **Spring Boot integration (recommended)** — Simplifies setup using Spring context and YAML configuration.
 * ⚙️ **Core module (framework-agnostic)** — Gives you full control but requires manual instantiation and wiring.
 
-> 📦 This library is not yet published to any public registry, so you will need to build and publish it locally first.
-
 ---
 
-### 1. Build & Publish Locally
+### 1. Setting up GitHub Packages Authentication
 
-Before adding the dependency, publish the library to your local Maven repository:
+Since our artifacts are hosted on GitHub Package Registry, you'll need to configure authentication in your Gradle or
+Maven settings. Please refer to
+the [GitHub documentation](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
+to configure the access token.
 
-```bash
-  ./gradlew publishToMavenLocal
+#### For Gradle:
+
+Add the following to your `settings.gradle` or `build.gradle` file:
+
+```groovy
+repositories {
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/LF-Decentralized-Trust-labs/Naryo")
+        credentials {
+            username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USERNAME")
+            password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
+    mavenCentral()
+}
 ```
 
-> This will install the library to your local Maven repository (`~/.m2/repository`).
+You can provide your GitHub credentials either through environment variables or Gradle properties in your
+`gradle.properties` file:
+
+```properties
+gpr.user=YOUR_GITHUB_USERNAME
+gpr.key=YOUR_GITHUB_PERSONAL_ACCESS_TOKEN
+```
+
+> Make sure your GitHub token has the `read:packages` scope.
+
+#### For Maven:
+
+Add the following to your `settings.xml` file:
+
+```xml
+
+<settings>
+    <servers>
+        <server>
+            <id>github</id>
+            <username>${env.GITHUB_USERNAME}</username>
+            <password>${env.GITHUB_TOKEN}</password>
+        </server>
+    </servers>
+</settings>
+```
+
+And add this repository to your `pom.xml`:
+
+```xml
+
+<repositories>
+    <repository>
+        <id>github</id>
+        <url>https://maven.pkg.github.com/LF-Decentralized-Trust-labs/Naryo</url>
+    </repository>
+</repositories>
+```
 
 ---
 
@@ -28,13 +80,6 @@ Before adding the dependency, publish the library to your local Maven repository
 <summary>Gradle</summary>
 
 ```groovy
-dependencyResolutionManagement {
-    repositories {
-        mavenLocal()
-        mavenCentral()
-    }
-}
-
 ext {
     naryoVersion = "0.0.1" // Replace with the actual version
 }
@@ -55,15 +100,8 @@ dependencies {
 
 ```xml
 
-<repositories>
-    <repository>
-        <id>local</id>
-        <url>file://${user.home}/.m2/repository</url>
-    </repository>
-</repositories>
-
 <variables>
-<naryoVersion>0.0.1</naryoVersion>
+    <naryoVersion>0.0.1</naryoVersion>
 </variables>
 
 <dependencies>
