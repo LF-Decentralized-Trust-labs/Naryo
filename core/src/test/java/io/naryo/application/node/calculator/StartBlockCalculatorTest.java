@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Optional;
 
-import io.naryo.application.event.store.block.BlockEventStore;
 import io.naryo.application.node.interactor.block.BlockInteractor;
+import io.naryo.application.store.event.block.BlockEventStore;
 import io.naryo.domain.common.NonNegativeBlockNumber;
-import io.naryo.domain.configuration.eventstore.active.block.BlockEventStoreConfiguration;
+import io.naryo.domain.configuration.store.active.ActiveStoreConfiguration;
 import io.naryo.domain.node.Node;
 import io.naryo.domain.node.subscription.block.BlockSubscriptionConfiguration;
 import org.junit.jupiter.api.Test;
@@ -25,8 +25,8 @@ class StartBlockCalculatorTest {
     @Mock private BlockInteractor interactor;
     @Mock private Node node;
     @Mock private BlockSubscriptionConfiguration configuration;
-    @Mock private BlockEventStoreConfiguration eventStoreConfiguration;
-    @Mock private BlockEventStore<BlockEventStoreConfiguration> blockEventStore;
+    @Mock private ActiveStoreConfiguration eventStoreConfiguration;
+    @Mock private BlockEventStore<ActiveStoreConfiguration> blockEventStore;
 
     @Test
     void testConstructorWithNullNode() {
@@ -48,7 +48,7 @@ class StartBlockCalculatorTest {
     @Test
     void testGetStartBlockWithZeroLatestBlock() throws IOException {
         when(node.getSubscriptionConfiguration()).thenReturn(configuration);
-        when(blockEventStore.getLastestBlock(eventStoreConfiguration))
+        when(blockEventStore.getLatest(eventStoreConfiguration))
                 .thenReturn(Optional.of(BigInteger.ZERO));
         when(configuration.getInitialBlock()).thenReturn(BigInteger.TEN);
         StartBlockCalculator calculator =
@@ -61,7 +61,7 @@ class StartBlockCalculatorTest {
     @Test
     void testGetStartBlockWithCurrentBlock() throws IOException {
         when(node.getSubscriptionConfiguration()).thenReturn(configuration);
-        when(blockEventStore.getLastestBlock(eventStoreConfiguration))
+        when(blockEventStore.getLatest(eventStoreConfiguration))
                 .thenReturn(Optional.of(BigInteger.ZERO));
         when(configuration.getInitialBlock()).thenReturn(BigInteger.valueOf(-1));
         when(interactor.getCurrentBlockNumber()).thenReturn(BigInteger.TWO);
@@ -75,7 +75,7 @@ class StartBlockCalculatorTest {
     @Test
     void testGetStartBlockWithNonZeroLatestBlock() throws IOException {
         when(node.getSubscriptionConfiguration()).thenReturn(configuration);
-        when(blockEventStore.getLastestBlock(eventStoreConfiguration))
+        when(blockEventStore.getLatest(eventStoreConfiguration))
                 .thenReturn(Optional.of(BigInteger.TEN));
         when(configuration.getReplayBlockOffset())
                 .thenReturn(new NonNegativeBlockNumber(BigInteger.TWO));
@@ -91,7 +91,7 @@ class StartBlockCalculatorTest {
     @Test
     void testGetStartBlockWithSyncBlockLimit() throws IOException {
         when(node.getSubscriptionConfiguration()).thenReturn(configuration);
-        when(blockEventStore.getLastestBlock(eventStoreConfiguration))
+        when(blockEventStore.getLatest(eventStoreConfiguration))
                 .thenReturn(Optional.of(BigInteger.TEN));
         when(configuration.getReplayBlockOffset())
                 .thenReturn(new NonNegativeBlockNumber(BigInteger.ZERO));
@@ -109,7 +109,7 @@ class StartBlockCalculatorTest {
     void testGetStartBlockWithSyncLimitExceedCurrentBlock() throws IOException {
         when(node.getSubscriptionConfiguration()).thenReturn(configuration);
         when(interactor.getCurrentBlockNumber()).thenReturn(BigInteger.valueOf(101));
-        when(blockEventStore.getLastestBlock(eventStoreConfiguration))
+        when(blockEventStore.getLatest(eventStoreConfiguration))
                 .thenReturn(Optional.of(BigInteger.valueOf(100)));
         when(configuration.getReplayBlockOffset())
                 .thenReturn(new NonNegativeBlockNumber(BigInteger.ZERO));
@@ -125,7 +125,7 @@ class StartBlockCalculatorTest {
     @Test
     void testGetStartBlockWithReplayOffsetExceeding() throws IOException {
         when(node.getSubscriptionConfiguration()).thenReturn(configuration);
-        when(blockEventStore.getLastestBlock(eventStoreConfiguration))
+        when(blockEventStore.getLatest(eventStoreConfiguration))
                 .thenReturn(Optional.of(BigInteger.valueOf(100)));
         when(configuration.getReplayBlockOffset())
                 .thenReturn(new NonNegativeBlockNumber(BigInteger.valueOf(1000)));

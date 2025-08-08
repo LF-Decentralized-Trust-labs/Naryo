@@ -1,6 +1,5 @@
 package io.naryo.application.filter.configuration.manager;
 
-import java.math.BigInteger;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collector;
@@ -21,8 +20,8 @@ import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.filter.Filter;
 import io.naryo.domain.filter.FilterName;
 import io.naryo.domain.filter.event.*;
-import io.naryo.domain.filter.event.sync.NoSyncState;
-import io.naryo.domain.filter.event.sync.block.BlockActiveSyncState;
+import io.naryo.domain.filter.event.sync.NoFilterSyncState;
+import io.naryo.domain.filter.event.sync.block.BlockActiveFilterSyncState;
 import io.naryo.domain.filter.transaction.IdentifierType;
 import io.naryo.domain.filter.transaction.TransactionFilter;
 import jakarta.annotation.Nullable;
@@ -79,7 +78,7 @@ public final class DefaultFilterConfigurationManager
         EventFilterSpecification specification =
                 getFilterSpecificationFromDescriptor(
                         valueOrNull(EventFilterDescriptor::getSpecification, descriptor));
-        SyncState syncState =
+        FilterSyncState filterSyncState =
                 getSyncStateFromDescriptor(valueOrNull(EventFilterDescriptor::getSync, descriptor));
         EventFilterVisibilityConfiguration visibilityConfiguration =
                 getVisibilityConfigurationFromDescriptor(
@@ -93,7 +92,7 @@ public final class DefaultFilterConfigurationManager
                             nodeId,
                             specification,
                             descriptor.getStatuses(),
-                            syncState,
+                            filterSyncState,
                             visibilityConfiguration);
             case ContractEventFilterDescriptor contractDescriptor -> {
                 String address =
@@ -104,7 +103,7 @@ public final class DefaultFilterConfigurationManager
                         nodeId,
                         specification,
                         descriptor.getStatuses(),
-                        syncState,
+                        filterSyncState,
                         visibilityConfiguration,
                         address);
             }
@@ -123,16 +122,14 @@ public final class DefaultFilterConfigurationManager
         return new EventFilterSpecification(signature, correlationId);
     }
 
-    private SyncState getSyncStateFromDescriptor(@Nullable FilterSyncDescriptor descriptor) {
+    private FilterSyncState getSyncStateFromDescriptor(@Nullable FilterSyncDescriptor descriptor) {
         if (descriptor == null) {
-            return new NoSyncState();
+            return new NoFilterSyncState();
         }
 
         if (descriptor instanceof BlockFilterSyncDescriptor blockSync) {
-            return new BlockActiveSyncState(
-                    new NonNegativeBlockNumber(valueOrNull(blockSync.getInitialBlock())),
-                    new NonNegativeBlockNumber(BigInteger.ZERO) // TODO: Review last block
-                    );
+            return new BlockActiveFilterSyncState(
+                    new NonNegativeBlockNumber(valueOrNull(blockSync.getInitialBlock())));
         }
 
         throw new IllegalArgumentException("Unknown sync strategy: " + descriptor.getStrategy());

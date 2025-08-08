@@ -6,7 +6,7 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.naryo.domain.broadcaster.Broadcaster;
 import io.naryo.domain.broadcaster.BroadcasterTarget;
-import io.naryo.domain.broadcaster.Destination;
+import io.naryo.domain.common.Destination;
 import io.naryo.domain.common.connection.endpoint.ConnectionEndpoint;
 import io.naryo.domain.configuration.broadcaster.http.HttpBroadcasterConfiguration;
 import okhttp3.Call;

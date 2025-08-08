@@ -16,7 +16,7 @@ import lombok.ToString;
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class TransactionEvent extends Event {
+public class TransactionEvent extends Event<String> {
 
     private final String hash;
     private final NonNegativeBlockNumber nonce;
@@ -96,5 +96,10 @@ public class TransactionEvent extends Event {
         if (transactionIndex.compareTo(BigInteger.ZERO) < 0) {
             throw new IllegalArgumentException("transactionIndex cannot be negative");
         }
+    }
+
+    @Override
+    public String getKey() {
+        return hash;
     }
 }

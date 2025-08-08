@@ -3,6 +3,7 @@ package io.naryo.domain.broadcaster;
 import java.util.UUID;
 
 import io.naryo.domain.broadcaster.target.AllBroadcasterTarget;
+import io.naryo.domain.common.Destination;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

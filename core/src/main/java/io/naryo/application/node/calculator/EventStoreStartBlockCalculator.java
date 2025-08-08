@@ -1,32 +1,34 @@
 package io.naryo.application.node.calculator;
 
 import java.math.BigInteger;
+import java.util.Optional;
 
-import io.naryo.application.event.store.block.BlockEventStore;
 import io.naryo.application.node.interactor.block.BlockInteractor;
-import io.naryo.domain.configuration.eventstore.active.block.BlockEventStoreConfiguration;
+import io.naryo.application.store.event.block.BlockEventStore;
+import io.naryo.domain.configuration.store.active.ActiveStoreConfiguration;
 import io.naryo.domain.node.Node;
 
 public final class EventStoreStartBlockCalculator extends StartBlockCalculator {
 
-    private final BlockEventStore<?> blockEventStore;
-    private final BlockEventStoreConfiguration blockEventStoreConfiguration;
+    private final BlockEventStore<?> eventStore;
+    private final ActiveStoreConfiguration storeConfiguration;
 
     public EventStoreStartBlockCalculator(
             Node node,
             BlockInteractor interactor,
-            BlockEventStore<?> blockEventStore,
-            BlockEventStoreConfiguration blockEventStoreConfiguration) {
+            BlockEventStore<?> eventStore,
+            ActiveStoreConfiguration storeConfiguration) {
         super(node, interactor);
-        this.blockEventStore = blockEventStore;
-        this.blockEventStoreConfiguration = blockEventStoreConfiguration;
+        this.eventStore = eventStore;
+        this.storeConfiguration = storeConfiguration;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     protected BigInteger calculateLatestBlock() {
-        return ((BlockEventStore<BlockEventStoreConfiguration>) blockEventStore)
-                .getLastestBlock(blockEventStoreConfiguration)
-                .orElse(BigInteger.valueOf(-1));
+        @SuppressWarnings("unchecked")
+        BlockEventStore<ActiveStoreConfiguration> typedStore =
+                (BlockEventStore<ActiveStoreConfiguration>) eventStore;
+        Optional<BigInteger> event = typedStore.getLatest(storeConfiguration);
+        return event.orElseGet(() -> BigInteger.valueOf(-1));
     }
 }

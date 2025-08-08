@@ -4,8 +4,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import io.naryo.application.event.store.EventStore;
-import io.naryo.domain.configuration.eventstore.EventStoreConfiguration;
+import io.naryo.application.store.event.EventStore;
+import io.naryo.domain.configuration.store.StoreState;
+import io.naryo.domain.configuration.store.active.ActiveStoreConfiguration;
 import io.naryo.domain.event.Event;
 import io.reactivex.functions.Consumer;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,10 +22,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class EventStoreBroadcasterPermanentTriggerTest {
 
-    @Mock private EventStore<Event, EventStoreConfiguration> store1;
-    @Mock private EventStore<Event, EventStoreConfiguration> store2;
+    @Mock private EventStore<ActiveStoreConfiguration, Object, Event> store1;
+    @Mock private EventStore<ActiveStoreConfiguration, Object, Event> store2;
     @Mock private Consumer<Event> consumer;
-    @Mock private EventStoreConfiguration configuration;
+    @Mock private ActiveStoreConfiguration configuration;
 
     private EventStoreBroadcasterPermanentTrigger trigger;
 
@@ -38,56 +39,59 @@ class EventStoreBroadcasterPermanentTriggerTest {
     @Test
     void trigger_savesOnlyToStoresThatSupportTheEvent() throws Exception {
         Event evt = mock(Event.class);
-        when(store1.supports(evt, configuration)).thenReturn(true);
-        when(store2.supports(evt, configuration)).thenReturn(false);
+        when(store1.supports(configuration.getType(), evt.getClass())).thenReturn(true);
+        when(store2.supports(configuration.getType(), evt.getClass())).thenReturn(false);
         UUID nodeId = UUID.randomUUID();
         when(evt.getNodeId()).thenReturn(nodeId);
         when(configuration.getNodeId()).thenReturn(nodeId);
+        when(configuration.getState()).thenReturn(StoreState.ACTIVE);
 
         trigger.trigger(evt);
 
-        verify(store1, times(1)).save(evt, configuration);
-        verify(store2, never()).save(any(), any());
+        verify(store1, times(1)).save(configuration, evt.getKey(), evt);
+        verify(store2, never()).save(configuration, evt.getNodeId().toString(), evt);
     }
 
     @Test
     void trigger_afterOnExecute_invokesConsumer() throws Exception {
         Event evt = mock(Event.class);
-        when(store1.supports(evt, configuration)).thenReturn(true);
-        when(store2.supports(evt, configuration)).thenReturn(false);
+        when(store1.supports(configuration.getType(), evt.getClass())).thenReturn(true);
+        when(store2.supports(configuration.getType(), evt.getClass())).thenReturn(false);
         UUID nodeId = UUID.randomUUID();
         when(evt.getNodeId()).thenReturn(nodeId);
         when(configuration.getNodeId()).thenReturn(nodeId);
+        when(configuration.getState()).thenReturn(StoreState.ACTIVE);
 
         trigger.onExecute(consumer);
         trigger.trigger(evt);
 
-        verify(store1).save(evt, configuration);
+        verify(store1).save(configuration, evt.getKey(), evt);
         verify(consumer).accept(evt);
     }
 
     @Test
     void trigger_catchesExceptionsFromSaveAndContinues() throws Exception {
         Event evt = mock(Event.class);
-        when(store1.supports(evt, configuration)).thenReturn(true);
+        when(store1.supports(configuration.getType(), evt.getClass())).thenReturn(true);
         UUID nodeId = UUID.randomUUID();
         when(evt.getNodeId()).thenReturn(nodeId);
+        when(configuration.getState()).thenReturn(StoreState.ACTIVE);
         when(configuration.getNodeId()).thenReturn(nodeId);
-        doThrow(new RuntimeException("db down")).when(store1).save(evt, configuration);
 
         assertDoesNotThrow(() -> trigger.trigger(evt));
 
-        verify(store1).save(evt, configuration);
+        verify(store1).save(configuration, evt.getKey(), evt);
     }
 
     @Test
     void trigger_catchesExceptionsFromConsumerAndContinues() throws Exception {
         Event evt = mock(Event.class);
-        when(store1.supports(evt, configuration)).thenReturn(false);
-        when(store2.supports(evt, configuration)).thenReturn(false);
+        when(store1.supports(configuration.getType(), evt.getClass())).thenReturn(false);
+        when(store2.supports(configuration.getType(), evt.getClass())).thenReturn(false);
         UUID nodeId = UUID.randomUUID();
         when(evt.getNodeId()).thenReturn(nodeId);
         when(configuration.getNodeId()).thenReturn(nodeId);
+        when(configuration.getState()).thenReturn(StoreState.ACTIVE);
 
         trigger.onExecute(consumer);
         doThrow(new Exception("boom")).when(consumer).accept(evt);

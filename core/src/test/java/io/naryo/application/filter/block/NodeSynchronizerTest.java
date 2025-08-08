@@ -11,16 +11,19 @@ import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.node.calculator.StartBlockCalculator;
 import io.naryo.application.node.helper.ContractEventDispatcherHelper;
 import io.naryo.application.node.interactor.block.BlockInteractor;
+import io.naryo.application.store.filter.FilterStore;
 import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.common.event.EventName;
+import io.naryo.domain.configuration.store.StoreConfiguration;
+import io.naryo.domain.configuration.store.StoreState;
 import io.naryo.domain.filter.Filter;
 import io.naryo.domain.filter.FilterName;
 import io.naryo.domain.filter.event.ContractEventFilter;
 import io.naryo.domain.filter.event.EventFilterSpecification;
 import io.naryo.domain.filter.event.parameter.AddressParameterDefinition;
-import io.naryo.domain.filter.event.sync.block.BlockActiveSyncState;
+import io.naryo.domain.filter.event.sync.block.BlockActiveFilterSyncState;
 import io.naryo.domain.filter.transaction.IdentifierType;
 import io.naryo.domain.filter.transaction.TransactionFilter;
 import io.naryo.domain.node.Node;
@@ -32,6 +35,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class NodeSynchronizerTest {
@@ -43,6 +47,8 @@ class NodeSynchronizerTest {
     @Mock private BlockInteractor blockInteractor;
     @Mock private ContractEventParameterDecoder decoder;
     @Mock private ContractEventDispatcherHelper helper;
+    private @Mock FilterStore<?> store;
+    private @Mock StoreConfiguration storeConfiguration;
 
     @AfterEach
     void cleanUp() {
@@ -61,7 +67,9 @@ class NodeSynchronizerTest {
                                 filters,
                                 decoder,
                                 helper,
-                                resilienceRegistry));
+                                resilienceRegistry,
+                                store,
+                                storeConfiguration));
         assertThrows(
                 NullPointerException.class,
                 () ->
@@ -72,7 +80,9 @@ class NodeSynchronizerTest {
                                 filters,
                                 decoder,
                                 helper,
-                                resilienceRegistry));
+                                resilienceRegistry,
+                                store,
+                                storeConfiguration));
         assertThrows(
                 NullPointerException.class,
                 () ->
@@ -83,7 +93,9 @@ class NodeSynchronizerTest {
                                 filters,
                                 decoder,
                                 helper,
-                                resilienceRegistry));
+                                resilienceRegistry,
+                                store,
+                                storeConfiguration));
         assertThrows(
                 NullPointerException.class,
                 () ->
@@ -94,7 +106,9 @@ class NodeSynchronizerTest {
                                 null,
                                 decoder,
                                 helper,
-                                resilienceRegistry));
+                                resilienceRegistry,
+                                store,
+                                storeConfiguration));
         assertThrows(
                 NullPointerException.class,
                 () ->
@@ -105,7 +119,9 @@ class NodeSynchronizerTest {
                                 filters,
                                 null,
                                 helper,
-                                resilienceRegistry));
+                                resilienceRegistry,
+                                store,
+                                storeConfiguration));
         assertThrows(
                 NullPointerException.class,
                 () ->
@@ -116,13 +132,23 @@ class NodeSynchronizerTest {
                                 filters,
                                 decoder,
                                 null,
-                                resilienceRegistry));
+                                resilienceRegistry,
+                                store,
+                                storeConfiguration));
 
         assertThrows(
                 NullPointerException.class,
                 () ->
                         new NodeSynchronizer(
-                                node, calculator, blockInteractor, filters, decoder, helper, null));
+                                node,
+                                calculator,
+                                blockInteractor,
+                                filters,
+                                decoder,
+                                helper,
+                                null,
+                                store,
+                                storeConfiguration));
     }
 
     @Test
@@ -138,9 +164,7 @@ class NodeSynchronizerTest {
                                 null,
                                 Set.of(new AddressParameterDefinition())),
                         Set.of(ContractEventStatus.CONFIRMED, ContractEventStatus.UNCONFIRMED),
-                        new BlockActiveSyncState(
-                                new NonNegativeBlockNumber(BigInteger.ZERO),
-                                new NonNegativeBlockNumber(BigInteger.ZERO)),
+                        new BlockActiveFilterSyncState(new NonNegativeBlockNumber(BigInteger.ZERO)),
                         "0x1234567890abcdef1234567890abcdef12345678"));
         NodeSynchronizer synchronizer =
                 new NodeSynchronizer(
@@ -150,7 +174,10 @@ class NodeSynchronizerTest {
                         filters,
                         decoder,
                         helper,
-                        resilienceRegistry);
+                        resilienceRegistry,
+                        store,
+                        storeConfiguration);
+        when(storeConfiguration.getState()).thenReturn(StoreState.INACTIVE);
         assertDoesNotThrow(
                 () -> {
                     synchronizer.synchronize();
@@ -176,7 +203,11 @@ class NodeSynchronizerTest {
                         filters,
                         decoder,
                         helper,
-                        resilienceRegistry);
+                        resilienceRegistry,
+                        store,
+                        storeConfiguration);
+        when(storeConfiguration.getState()).thenReturn(StoreState.INACTIVE);
+
         assertDoesNotThrow(
                 () -> {
                     synchronizer.synchronize();
@@ -186,11 +217,8 @@ class NodeSynchronizerTest {
     @Test
     void testSynchronize_filtersAlreadySynchronized() {
         UUID nodeId = UUID.randomUUID();
-        BlockActiveSyncState syncState =
-                new BlockActiveSyncState(
-                        new NonNegativeBlockNumber(BigInteger.ZERO),
-                        new NonNegativeBlockNumber(BigInteger.ZERO));
-        syncState.setSync(true);
+        BlockActiveFilterSyncState syncState =
+                new BlockActiveFilterSyncState(new NonNegativeBlockNumber(BigInteger.ZERO));
         filters.add(
                 new ContractEventFilter(
                         UUID.randomUUID(),
@@ -211,7 +239,10 @@ class NodeSynchronizerTest {
                         filters,
                         decoder,
                         helper,
-                        resilienceRegistry);
+                        resilienceRegistry,
+                        store,
+                        storeConfiguration);
+        when(storeConfiguration.getState()).thenReturn(StoreState.INACTIVE);
         assertDoesNotThrow(
                 () -> {
                     synchronizer.synchronize();

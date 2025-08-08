@@ -31,7 +31,7 @@ import io.naryo.domain.filter.event.ContractEventFilter;
 import io.naryo.domain.filter.event.EventFilterSpecification;
 import io.naryo.domain.filter.event.GlobalEventFilter;
 import io.naryo.domain.filter.event.parameter.AddressParameterDefinition;
-import io.naryo.domain.filter.event.sync.NoSyncState;
+import io.naryo.domain.filter.event.sync.NoFilterSyncState;
 import io.naryo.domain.node.Node;
 import io.naryo.domain.node.NodeName;
 import io.naryo.domain.node.NodeType;
@@ -249,7 +249,7 @@ class BlockProcessorPermanentTriggerTest {
                                                 null,
                                                 Set.of(new AddressParameterDefinition(0, false))),
                                         Set.of(ContractEventStatus.CONFIRMED),
-                                        new NoSyncState(),
+                                        new NoFilterSyncState(),
                                         "0xa6c9f780caeafc2b8e83469a8b6422c22fa39ba1")),
                         interactor,
                         decoder,
@@ -276,7 +276,7 @@ class BlockProcessorPermanentTriggerTest {
                                                 null,
                                                 Set.of(new AddressParameterDefinition(0, false))),
                                         Set.of(ContractEventStatus.CONFIRMED),
-                                        new NoSyncState(),
+                                        new NoFilterSyncState(),
                                         "0xa6c9f780caeafc2b8e83469a8b6422c22fa39ba1")),
                         new MockBlockInteractor(),
                         decoder,
@@ -312,7 +312,7 @@ class BlockProcessorPermanentTriggerTest {
                                 null,
                                 Set.of(new AddressParameterDefinition(0, false))),
                         Set.of(ContractEventStatus.UNCONFIRMED, ContractEventStatus.CONFIRMED),
-                        new NoSyncState());
+                        new NoFilterSyncState());
         BlockProcessorPermanentTrigger<Node, BlockInteractor> trigger =
                 new BlockProcessorPermanentTrigger<>(
                         node,
@@ -352,7 +352,7 @@ class BlockProcessorPermanentTriggerTest {
                                 null,
                                 Set.of(new AddressParameterDefinition(0, false))),
                         Set.of(ContractEventStatus.UNCONFIRMED, ContractEventStatus.CONFIRMED),
-                        new NoSyncState());
+                        new NoFilterSyncState());
         BlockProcessorPermanentTrigger<Node, BlockInteractor> trigger =
                 new BlockProcessorPermanentTrigger<>(
                         node,
@@ -392,7 +392,7 @@ class BlockProcessorPermanentTriggerTest {
                                 null,
                                 Set.of(new AddressParameterDefinition(0, false))),
                         Set.of(ContractEventStatus.UNCONFIRMED, ContractEventStatus.CONFIRMED),
-                        new NoSyncState());
+                        new NoFilterSyncState());
         BlockProcessorPermanentTrigger<Node, BlockInteractor> trigger =
                 new BlockProcessorPermanentTrigger<>(
                         node,

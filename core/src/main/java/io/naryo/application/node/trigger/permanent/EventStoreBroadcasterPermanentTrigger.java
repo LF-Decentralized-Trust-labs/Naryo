@@ -1,10 +1,13 @@
 package io.naryo.application.node.trigger.permanent;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
-import io.naryo.application.event.store.EventStore;
-import io.naryo.domain.configuration.eventstore.EventStoreConfiguration;
+import io.naryo.application.store.event.EventStore;
+import io.naryo.domain.configuration.store.StoreConfiguration;
+import io.naryo.domain.configuration.store.StoreState;
+import io.naryo.domain.configuration.store.active.ActiveStoreConfiguration;
 import io.naryo.domain.event.Event;
 import io.reactivex.functions.Consumer;
 import lombok.extern.slf4j.Slf4j;
@@ -12,15 +15,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public final class EventStoreBroadcasterPermanentTrigger implements PermanentTrigger<Event> {
 
-    private final Set<EventStore<? extends Event, ? extends EventStoreConfiguration>> eventStores;
-    private final List<EventStoreConfiguration> configurations;
+    private final Set<EventStore<?, ?, Event>> eventStores;
+    private final List<StoreConfiguration> storeConfigurations;
     private Consumer<Event> consumer;
 
-    public <C extends EventStoreConfiguration> EventStoreBroadcasterPermanentTrigger(
-            Set<EventStore<? extends Event, ? extends EventStoreConfiguration>> eventStores,
-            List<EventStoreConfiguration> configurations) {
+    public <C extends StoreConfiguration> EventStoreBroadcasterPermanentTrigger(
+            Set<EventStore<?, ?, Event>> eventStores,
+            List<StoreConfiguration> storeConfigurations) {
         this.eventStores = eventStores;
-        this.configurations = configurations;
+        this.storeConfigurations = storeConfigurations;
     }
 
     @Override
@@ -30,16 +33,23 @@ public final class EventStoreBroadcasterPermanentTrigger implements PermanentTri
 
     @Override
     public void trigger(Event event) {
-        EventStoreConfiguration eventStoreConfiguration = findConfigurationForEvent(event);
+        Optional<ActiveStoreConfiguration> storeConfiguration = findConfigurationForEvent(event);
+        if (storeConfiguration.isEmpty()) {
+            return;
+        }
         this.eventStores.stream()
-                .filter(eventStore -> eventStore.supports(event, eventStoreConfiguration))
+                .filter(
+                        eventStore ->
+                                eventStore.supports(
+                                        storeConfiguration.get().getType(), event.getClass()))
                 .forEach(
                         eventStore -> {
                             try {
                                 @SuppressWarnings("unchecked")
-                                EventStore<Event, EventStoreConfiguration> typedStore =
-                                        (EventStore<Event, EventStoreConfiguration>) eventStore;
-                                typedStore.save(event, eventStoreConfiguration);
+                                EventStore<ActiveStoreConfiguration, Object, Event> typedStore =
+                                        (EventStore<ActiveStoreConfiguration, Object, Event>)
+                                                eventStore;
+                                typedStore.save(storeConfiguration.get(), event.getKey(), event);
                             } catch (Exception e) {
                                 log.error(
                                         "Error while saving event {} to event store: {}",
@@ -67,13 +77,13 @@ public final class EventStoreBroadcasterPermanentTrigger implements PermanentTri
         return true;
     }
 
-    private EventStoreConfiguration findConfigurationForEvent(Event event) {
-        return configurations.stream()
-                .filter(configuration -> configuration.getNodeId().equals(event.getNodeId()))
-                .findFirst()
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "No configuration found for node: " + event.getNodeId()));
+    private Optional<ActiveStoreConfiguration> findConfigurationForEvent(Event event) {
+        return storeConfigurations.stream()
+                .filter(
+                        configuration ->
+                                configuration.getNodeId().equals(event.getNodeId())
+                                        && configuration.getState().equals(StoreState.ACTIVE))
+                .map(configuration -> (ActiveStoreConfiguration) configuration)
+                .findFirst();
     }
 }

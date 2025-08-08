@@ -7,7 +7,7 @@ import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.common.event.EventName;
 import io.naryo.domain.filter.FilterName;
 import io.naryo.domain.filter.event.parameter.BoolParameterDefinition;
-import io.naryo.domain.filter.event.sync.NoSyncState;
+import io.naryo.domain.filter.event.sync.NoFilterSyncState;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -21,8 +21,9 @@ class ContractEventFilterTest extends AbstractEventFilterTest {
             UUID nodeId,
             EventFilterSpecification specification,
             Set<ContractEventStatus> statuses,
-            SyncState syncState) {
-        return new ContractEventFilter(id, name, nodeId, specification, statuses, syncState, "0x0");
+            FilterSyncState filterSyncState) {
+        return new ContractEventFilter(
+                id, name, nodeId, specification, statuses, filterSyncState, "0x0");
     }
 
     @Test
@@ -40,7 +41,7 @@ class ContractEventFilterTest extends AbstractEventFilterTest {
                                         new CorrelationId(0),
                                         Set.of(new BoolParameterDefinition(0, false))),
                                 Set.of(ContractEventStatus.CONFIRMED),
-                                new NoSyncState(),
+                                new NoFilterSyncState(),
                                 null));
     }
 
@@ -59,7 +60,7 @@ class ContractEventFilterTest extends AbstractEventFilterTest {
                                         new CorrelationId(0),
                                         Set.of(new BoolParameterDefinition(0, false))),
                                 Set.of(ContractEventStatus.CONFIRMED),
-                                new NoSyncState(),
+                                new NoFilterSyncState(),
                                 ""));
     }
 }

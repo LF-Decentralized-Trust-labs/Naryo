@@ -36,7 +36,7 @@ public abstract class Node {
         this.interactionConfiguration = interactionConfiguration;
         this.connection = connection;
 
-        Objects.requireNonNull(id, "id cannot be null");
+        Objects.requireNonNull(id, "filterId cannot be null");
         Objects.requireNonNull(name, "Name cannot be null");
         Objects.requireNonNull(type, "Type cannot be null");
         Objects.requireNonNull(

@@ -14,8 +14,8 @@ import io.naryo.application.configuration.source.model.broadcaster.target.Broadc
 import io.naryo.application.configuration.source.model.broadcaster.target.FilterBroadcasterTargetDescriptor;
 import io.naryo.domain.broadcaster.Broadcaster;
 import io.naryo.domain.broadcaster.BroadcasterTarget;
-import io.naryo.domain.broadcaster.Destination;
 import io.naryo.domain.broadcaster.target.*;
+import io.naryo.domain.common.Destination;
 
 import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 import static java.util.stream.Collectors.toMap;

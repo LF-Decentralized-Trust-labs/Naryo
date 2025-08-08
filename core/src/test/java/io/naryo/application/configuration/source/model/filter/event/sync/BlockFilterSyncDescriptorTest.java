@@ -31,7 +31,7 @@ public class BlockFilterSyncDescriptorTest extends FilterSyncDescriptorTest {
         assertEquals(
                 Optional.ofNullable(expectedInitialBlock),
                 result.getInitialBlock(),
-                "Should merge the correlation id");
+                "Should merge the correlation filterId");
     }
 
     @Setter

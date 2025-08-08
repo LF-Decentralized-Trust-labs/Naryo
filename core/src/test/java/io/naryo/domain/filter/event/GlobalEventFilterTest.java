@@ -15,7 +15,7 @@ class GlobalEventFilterTest extends AbstractEventFilterTest {
             UUID nodeId,
             EventFilterSpecification specification,
             Set<ContractEventStatus> statuses,
-            SyncState syncState) {
-        return new GlobalEventFilter(id, name, nodeId, specification, statuses, syncState);
+            FilterSyncState filterSyncState) {
+        return new GlobalEventFilter(id, name, nodeId, specification, statuses, filterSyncState);
     }
 }

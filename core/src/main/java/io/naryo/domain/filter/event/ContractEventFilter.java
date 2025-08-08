@@ -23,7 +23,7 @@ public class ContractEventFilter extends EventFilter {
             UUID nodeId,
             EventFilterSpecification specification,
             Set<ContractEventStatus> statuses,
-            SyncState syncState,
+            FilterSyncState filterSyncState,
             EventFilterVisibilityConfiguration visibilityConfiguration,
             String contractAddress) {
         super(
@@ -33,7 +33,7 @@ public class ContractEventFilter extends EventFilter {
                 EventFilterScope.CONTRACT,
                 specification,
                 statuses,
-                syncState,
+                filterSyncState,
                 visibilityConfiguration);
         Objects.requireNonNull(contractAddress, "Contract address cannot be null");
         if (contractAddress.isEmpty()) {
@@ -48,7 +48,7 @@ public class ContractEventFilter extends EventFilter {
             UUID nodeId,
             EventFilterSpecification specification,
             Set<ContractEventStatus> statuses,
-            SyncState syncState,
+            FilterSyncState filterSyncState,
             String contractAddress) {
         super(
                 id,
@@ -57,7 +57,7 @@ public class ContractEventFilter extends EventFilter {
                 EventFilterScope.CONTRACT,
                 specification,
                 statuses,
-                syncState,
+                filterSyncState,
                 EventFilterVisibilityConfiguration.visible());
         Objects.requireNonNull(contractAddress, "Contract address cannot be null");
         if (contractAddress.isEmpty()) {

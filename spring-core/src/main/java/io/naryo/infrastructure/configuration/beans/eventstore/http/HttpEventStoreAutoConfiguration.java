@@ -1,9 +1,10 @@
 package io.naryo.infrastructure.configuration.beans.eventstore.http;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.naryo.infrastructure.event.http.block.BlockHttpBlockEventStore;
-import io.naryo.infrastructure.event.http.block.ContractEventHttpBlockEventStore;
-import io.naryo.infrastructure.event.http.block.TransactionHttpBlockEventStore;
+import io.naryo.infrastructure.event.http.event.block.BlockHttpEventStore;
+import io.naryo.infrastructure.event.http.event.block.ContractEventHttpEventStore;
+import io.naryo.infrastructure.event.http.event.block.TransactionHttpEventStore;
+import io.naryo.infrastructure.event.http.filter.HttpFilterStore;
 import okhttp3.OkHttpClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -13,23 +14,29 @@ import org.springframework.context.annotation.Configuration;
 public class HttpEventStoreAutoConfiguration {
 
     @Bean
-    @ConditionalOnMissingBean(BlockHttpBlockEventStore.class)
-    BlockHttpBlockEventStore blockHttpBlockEventStore(
+    @ConditionalOnMissingBean(BlockHttpEventStore.class)
+    BlockHttpEventStore blockHttpBlockEventStore(
             OkHttpClient httpClient, ObjectMapper objectMapper) {
-        return new BlockHttpBlockEventStore(httpClient, objectMapper);
+        return new BlockHttpEventStore(httpClient, objectMapper);
     }
 
     @Bean
-    @ConditionalOnMissingBean(TransactionHttpBlockEventStore.class)
-    TransactionHttpBlockEventStore transactionHttpBlockEventStore(
+    @ConditionalOnMissingBean(TransactionHttpEventStore.class)
+    TransactionHttpEventStore transactionHttpBlockEventStore(
             OkHttpClient httpClient, ObjectMapper objectMapper) {
-        return new TransactionHttpBlockEventStore(httpClient, objectMapper);
+        return new TransactionHttpEventStore(httpClient, objectMapper);
     }
 
     @Bean
-    @ConditionalOnMissingBean(ContractEventHttpBlockEventStore.class)
-    ContractEventHttpBlockEventStore contractEventHttpBlockEventStore(
+    @ConditionalOnMissingBean(ContractEventHttpEventStore.class)
+    ContractEventHttpEventStore contractEventHttpBlockEventStore(
             OkHttpClient httpClient, ObjectMapper objectMapper) {
-        return new ContractEventHttpBlockEventStore(httpClient, objectMapper);
+        return new ContractEventHttpEventStore(httpClient, objectMapper);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(HttpFilterStore.class)
+    HttpFilterStore filterStore(OkHttpClient httpClient, ObjectMapper objectMapper) {
+        return new HttpFilterStore(httpClient, objectMapper);
     }
 }

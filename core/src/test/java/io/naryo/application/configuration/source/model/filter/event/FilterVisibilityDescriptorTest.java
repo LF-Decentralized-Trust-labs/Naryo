@@ -47,7 +47,7 @@ public class FilterVisibilityDescriptorTest {
         assertEquals(
                 Optional.ofNullable(expectedPrivacyGroupId),
                 result.getPrivacyGroupId(),
-                "Should merge the privacy group id");
+                "Should merge the privacy group filterId");
     }
 
     @Setter
