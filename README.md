@@ -11,14 +11,14 @@ enterprise-grade systems.
 > some features might not be fully implemented, and certain parts of the documentation may not reflect the latest
 > changes.
 
-## ⛑️ How it works
+## 🚀 How it works
 
 Naryo configures filters that are used to determine which events to capture and process. These filters can be based on
 smart contract events, transaction fields, or any other criteria you may need to define. Naryo then connects to a DLT
 node and captures events that match the configured filters. These events are then processed and broadcast to the
 specified recipients, such as endpoints, queues, or databases.
 
-## 🚀 Features
+## 🧬 Features
 
 * Supports multiple DLT protocols, including Ethereum, Hedera, and others.
 * Supports Ethereum RPC and Hedera Mirror nodes.
@@ -37,7 +37,7 @@ specified recipients, such as endpoints, queues, or databases.
 * Supports event invalidation, allowing you to invalidate events that have not been processed for a certain number of
   blocks.
 
-## 🌳 Architecture
+## 🏛️ Architecture
 
 ![Naryo Architecture](./docs/images/naryo_architecture.png)
 
