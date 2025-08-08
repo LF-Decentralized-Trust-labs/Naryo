@@ -13,8 +13,7 @@ public class MongoEventStoreAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(BlockMongoEventStore.class)
-    BlockMongoEventStore blockMongoBlockEventStore(
-            MongoTemplate mongoTemplate) {
+    BlockMongoEventStore blockMongoBlockEventStore(MongoTemplate mongoTemplate) {
         return new BlockMongoEventStore(mongoTemplate);
     }
 
@@ -26,8 +25,7 @@ public class MongoEventStoreAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(ContractEventMongoEventStore.class)
-    ContractEventMongoEventStore contractEventMongoBlockEventStore(
-            MongoTemplate mongoTemplate) {
+    ContractEventMongoEventStore contractEventMongoBlockEventStore(MongoTemplate mongoTemplate) {
         return new ContractEventMongoEventStore(mongoTemplate);
     }
 }

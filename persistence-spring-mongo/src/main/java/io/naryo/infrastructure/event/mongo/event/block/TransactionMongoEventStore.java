@@ -1,5 +1,6 @@
 package io.naryo.infrastructure.event.mongo.event.block;
 
+import java.util.Optional;
 
 import io.naryo.application.store.event.block.TransactionEventStore;
 import io.naryo.domain.configuration.eventstore.active.block.MongoStoreConfiguration;
@@ -9,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
-
-import java.util.Optional;
 
 @Slf4j
 public final class TransactionMongoEventStore extends MongoEventStore<String, TransactionEvent>
@@ -32,10 +31,8 @@ public final class TransactionMongoEventStore extends MongoEventStore<String, Tr
             query.with(Sort.by(Sort.Direction.DESC, getKeyFieldName()));
             query.limit(1);
 
-            TransactionEvent latest = mongoTemplate.findOne(
-                query,
-                clazz,
-                getDestination(configuration).value());
+            TransactionEvent latest =
+                    mongoTemplate.findOne(query, clazz, getDestination(configuration).value());
 
             return Optional.ofNullable(latest).map(TransactionEvent::getHash);
         } catch (Exception e) {

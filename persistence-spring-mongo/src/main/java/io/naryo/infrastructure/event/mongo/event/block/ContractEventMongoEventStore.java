@@ -1,5 +1,7 @@
 package io.naryo.infrastructure.event.mongo.event.block;
 
+import java.util.Optional;
+
 import io.naryo.application.store.event.block.ContractEventEventStore;
 import io.naryo.domain.configuration.eventstore.active.block.MongoStoreConfiguration;
 import io.naryo.domain.event.contract.ContractEvent;
@@ -9,11 +11,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 
-import java.util.Optional;
-
 @Slf4j
 public final class ContractEventMongoEventStore extends MongoEventStore<String, ContractEvent>
-    implements ContractEventEventStore<MongoStoreConfiguration> {
+        implements ContractEventEventStore<MongoStoreConfiguration> {
 
     public ContractEventMongoEventStore(MongoTemplate mongoTemplate) {
         super(ContractEvent.class, mongoTemplate);
@@ -31,10 +31,8 @@ public final class ContractEventMongoEventStore extends MongoEventStore<String, 
             query.with(Sort.by(Sort.Direction.DESC, getKeyFieldName()));
             query.limit(1);
 
-            ContractEvent latest = mongoTemplate.findOne(
-                query,
-                clazz,
-                getDestination(configuration).value());
+            ContractEvent latest =
+                    mongoTemplate.findOne(query, clazz, getDestination(configuration).value());
 
             return Optional.ofNullable(latest).map(ContractEvent::getTransactionHash);
         } catch (Exception e) {

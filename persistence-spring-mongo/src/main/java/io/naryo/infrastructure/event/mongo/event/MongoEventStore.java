@@ -1,5 +1,7 @@
 package io.naryo.infrastructure.event.mongo.event;
 
+import java.util.Optional;
+
 import io.naryo.application.store.event.EventStore;
 import io.naryo.domain.common.Destination;
 import io.naryo.domain.configuration.eventstore.active.block.MongoStoreConfiguration;
@@ -14,10 +16,8 @@ import io.naryo.domain.event.transaction.TransactionEvent;
 import io.naryo.infrastructure.event.mongo.MongoStore;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
-import java.util.Optional;
-
-public abstract class MongoEventStore<K, D extends Event>  extends MongoStore<K, D>
-    implements EventStore<MongoStoreConfiguration, K, D> {
+public abstract class MongoEventStore<K, D extends Event> extends MongoStore<K, D>
+        implements EventStore<MongoStoreConfiguration, K, D> {
 
     public MongoEventStore(Class<D> clazz, MongoTemplate mongoTemplate) {
         super(clazz, mongoTemplate);
@@ -27,17 +27,17 @@ public abstract class MongoEventStore<K, D extends Event>  extends MongoStore<K,
     protected Destination getDestination(MongoStoreConfiguration configuration) {
         TargetType targetType = resolveTargetType(clazz);
         return findTarget(targetType, configuration)
-            .orElseThrow(
-                () -> new IllegalArgumentException("Target not found for: " + targetType))
-            .destination();
+                .orElseThrow(
+                        () -> new IllegalArgumentException("Target not found for: " + targetType))
+                .destination();
     }
 
     private Optional<EventStoreTarget> findTarget(
-        TargetType targetType, MongoStoreConfiguration configuration) {
+            TargetType targetType, MongoStoreConfiguration configuration) {
         BlockEventStoreConfiguration blockConfig = configuration.getFeature(StoreFeatureType.EVENT);
         return blockConfig.getTargets().stream()
-            .filter(target -> target.type().equals(targetType))
-            .findFirst();
+                .filter(target -> target.type().equals(targetType))
+                .findFirst();
     }
 
     private TargetType resolveTargetType(Class<? extends Event> eventClass) {

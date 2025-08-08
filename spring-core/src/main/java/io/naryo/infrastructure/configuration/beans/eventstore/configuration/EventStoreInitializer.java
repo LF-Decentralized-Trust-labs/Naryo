@@ -43,17 +43,18 @@ public final class EventStoreInitializer implements EnvironmentInitializer {
         mapperRegistry.register(
                 EVENT_STORE_TYPE,
                 ActiveStoreConfigurationDescriptor.class,
-                properties -> new HttpStoreConfiguration(
-                        properties.getNodeId(),
-                        createFeatures(properties),
-                        new ConnectionEndpoint(
-                                !properties.getAdditionalProperties().isEmpty()
-                                        ? ((HttpBroadcasterEndpoint)
-                                                        properties
-                                                                .getAdditionalProperties()
-                                                                .get("endpoint"))
-                                                .url()
-                                        : null)));
+                properties ->
+                        new HttpStoreConfiguration(
+                                properties.getNodeId(),
+                                createFeatures(properties),
+                                new ConnectionEndpoint(
+                                        !properties.getAdditionalProperties().isEmpty()
+                                                ? ((HttpBroadcasterEndpoint)
+                                                                properties
+                                                                        .getAdditionalProperties()
+                                                                        .get("endpoint"))
+                                                        .url()
+                                                : null)));
 
         schemaRegistry.register(
                 EVENT_STORE_SCHEMA_NAME,

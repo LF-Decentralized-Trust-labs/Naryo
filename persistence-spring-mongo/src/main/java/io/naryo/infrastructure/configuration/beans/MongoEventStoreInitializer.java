@@ -32,9 +32,9 @@ public final class MongoEventStoreInitializer implements EnvironmentInitializer 
         mapperRegistry.register(
                 EVENT_STORE_TYPE,
                 ActiveStoreConfigurationDescriptor.class,
-                properties -> new MongoStoreConfiguration(
-                        properties.getNodeId(),
-                        createFeatures(properties)));
+                properties ->
+                        new MongoStoreConfiguration(
+                                properties.getNodeId(), createFeatures(properties)));
     }
 
     private Map<StoreFeatureType, StoreFeatureConfiguration> createFeatures(
@@ -56,7 +56,10 @@ public final class MongoEventStoreInitializer implements EnvironmentInitializer 
                                                                                 new EventStoreTarget(
                                                                                         target
                                                                                                 .type(),
-                                                                                        new io.naryo.domain.common.Destination(
+                                                                                        new io.naryo
+                                                                                                .domain
+                                                                                                .common
+                                                                                                .Destination(
                                                                                                 target
                                                                                                         .destination())))
                                                                 .collect(Collectors.toSet()));
@@ -67,9 +70,10 @@ public final class MongoEventStoreInitializer implements EnvironmentInitializer 
                                                                 value.getValue();
                                                 yield new FilterStoreConfiguration(
                                                         filter.getDestination().isPresent()
-                                                                ? new io.naryo.domain.common.Destination(
-                                                                filter.getDestination()
-                                                                        .get())
+                                                                ? new io.naryo.domain.common
+                                                                        .Destination(
+                                                                        filter.getDestination()
+                                                                                .get())
                                                                 : null);
                                             }
                                         }));

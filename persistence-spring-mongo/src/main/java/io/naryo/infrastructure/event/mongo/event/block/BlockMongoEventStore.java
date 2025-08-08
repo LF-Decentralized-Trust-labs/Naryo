@@ -15,10 +15,9 @@ import org.springframework.data.mongodb.core.query.Query;
 
 @Slf4j
 public final class BlockMongoEventStore extends MongoEventStore<BigInteger, BlockEvent>
-    implements BlockEventStore<MongoStoreConfiguration> {
+        implements BlockEventStore<MongoStoreConfiguration> {
 
-    public BlockMongoEventStore(
-        MongoTemplate mongoTemplate) {
+    public BlockMongoEventStore(MongoTemplate mongoTemplate) {
         super(BlockEvent.class, mongoTemplate);
     }
 
@@ -34,16 +33,15 @@ public final class BlockMongoEventStore extends MongoEventStore<BigInteger, Bloc
             query.with(Sort.by(Sort.Direction.DESC, getKeyFieldName()));
             query.limit(1);
 
-            BlockEvent latestBlock = mongoTemplate.findOne(
-                query,
-                clazz,
-                getDestination(configuration).value());
+            BlockEvent latestBlock =
+                    mongoTemplate.findOne(query, clazz, getDestination(configuration).value());
 
-            return Optional.ofNullable(latestBlock).map(BlockEvent::getNumber).map(NonNegativeBlockNumber::value);
+            return Optional.ofNullable(latestBlock)
+                    .map(BlockEvent::getNumber)
+                    .map(NonNegativeBlockNumber::value);
         } catch (Exception e) {
             log.error("Error while fetching latest block event from MongoDB event store", e);
             return Optional.empty();
         }
     }
-
 }

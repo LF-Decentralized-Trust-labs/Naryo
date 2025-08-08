@@ -1,5 +1,8 @@
 package io.naryo.infrastructure.event.mongo;
 
+import java.util.List;
+import java.util.Optional;
+
 import io.naryo.application.store.Store;
 import io.naryo.domain.common.Destination;
 import io.naryo.domain.configuration.eventstore.active.block.MongoStoreConfiguration;
@@ -9,14 +12,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 @Slf4j
-public abstract class MongoStore<K, D>
-    implements Store<MongoStoreConfiguration, K, D> {
+public abstract class MongoStore<K, D> implements Store<MongoStoreConfiguration, K, D> {
 
     protected final Class<D> clazz;
     protected final MongoTemplate mongoTemplate;
@@ -39,12 +36,10 @@ public abstract class MongoStore<K, D>
     public Optional<D> get(MongoStoreConfiguration configuration, K key) {
         try {
             return Optional.ofNullable(
-                mongoTemplate.findOne(
-                    Query.query(Criteria.where(getKeyFieldName()).is(key)),
-                    clazz,
-                    getDestination(configuration).value()
-                )
-            );
+                    mongoTemplate.findOne(
+                            Query.query(Criteria.where(getKeyFieldName()).is(key)),
+                            clazz,
+                            getDestination(configuration).value()));
         } catch (Exception e) {
             log.error("Error while processing getting from mongoDB", e);
             return Optional.empty();
@@ -60,10 +55,9 @@ public abstract class MongoStore<K, D>
             }
 
             return mongoTemplate.find(
-                Query.query(Criteria.where(getKeyFieldName()).in(keys)),
-                clazz,
-                getDestination(configuration).value()
-            );
+                    Query.query(Criteria.where(getKeyFieldName()).in(keys)),
+                    clazz,
+                    getDestination(configuration).value());
         } catch (Exception e) {
             log.error("Error while processing getting from mongoDB", e);
             return List.of();
@@ -74,5 +68,4 @@ public abstract class MongoStore<K, D>
     public boolean supports(StoreType type, Class<?> clazz) {
         return type.getName().equalsIgnoreCase("mongo") && clazz.isAssignableFrom(this.clazz);
     }
-
 }
