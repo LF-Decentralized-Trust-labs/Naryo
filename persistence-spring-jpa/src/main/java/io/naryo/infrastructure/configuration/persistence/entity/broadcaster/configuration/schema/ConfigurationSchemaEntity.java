@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ConfigurationSchemaEntity {
 
-    private @Column(name = "type") String type;
+    private @Column(name = "schema_type") String type;
 
     private @ElementCollection(fetch = FetchType.EAGER) @CollectionTable(
             name = "broadcasters_configuration_fields",
