@@ -29,7 +29,7 @@ public final class BroadcasterConfigurationEntity implements BroadcasterConfigur
 
     private @Column(name = "id") @Id UUID id;
 
-    private @Column(name = "type") @NotNull @NotBlank String type;
+    private @Column(name = "broadcaster_type") @NotNull @NotBlank String type;
 
     private @Embedded @Valid BroadcasterCacheEntity cache;
 
