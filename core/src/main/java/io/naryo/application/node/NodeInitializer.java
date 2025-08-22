@@ -20,8 +20,10 @@ import io.naryo.application.node.routing.EventRoutingService;
 import io.naryo.application.node.subscription.block.factory.BlockSubscriberFactory;
 import io.naryo.application.node.trigger.Trigger;
 import io.naryo.application.node.trigger.permanent.EventBroadcasterPermanentTrigger;
+import io.naryo.application.node.trigger.permanent.EventStoreBroadcasterPermanentTrigger;
 import io.naryo.application.node.trigger.permanent.block.ProcessorTriggerFactory;
 import io.naryo.application.store.Store;
+import io.naryo.application.store.event.EventStore;
 import io.naryo.application.store.event.block.BlockEventStore;
 import io.naryo.application.store.filter.FilterStore;
 import io.naryo.application.store.filter.model.FilterState;
@@ -103,6 +105,14 @@ public class NodeInitializer {
         var dispatcher = new EventDispatcher(resilienceRegistry, new HashSet<>(sharedTriggers));
         var contractEventHelper = new ContractEventDispatcherHelper(dispatcher, interactor);
         var transactionEventHelper = new TransactionEventDispatcherHelper(dispatcher, interactor);
+
+        storeForNode(EventStore.class, BlockEvent.class, storeConfiguration)
+                .ifPresent(
+                        store -> {
+                            dispatcher.addTrigger(
+                                    new EventStoreBroadcasterPermanentTrigger(
+                                            Set.of(store), List.of(storeConfiguration)));
+                        });
 
         var blockTrigger =
                 processorFactory.createBlockTrigger(

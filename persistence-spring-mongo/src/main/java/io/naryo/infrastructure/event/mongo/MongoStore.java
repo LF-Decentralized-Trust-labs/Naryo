@@ -7,6 +7,12 @@ import io.naryo.application.store.Store;
 import io.naryo.domain.common.Destination;
 import io.naryo.domain.configuration.eventstore.active.block.MongoStoreConfiguration;
 import io.naryo.domain.configuration.store.active.StoreType;
+import io.naryo.domain.event.block.BlockEvent;
+import io.naryo.domain.event.contract.ContractEvent;
+import io.naryo.domain.event.transaction.TransactionEvent;
+import io.naryo.infrastructure.event.mongo.event.block.model.BlockEventDocument;
+import io.naryo.infrastructure.event.mongo.event.block.model.ContractEventDocument;
+import io.naryo.infrastructure.event.mongo.event.block.model.TransactionEventDocument;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -29,7 +35,21 @@ public abstract class MongoStore<K, D> implements Store<MongoStoreConfiguration,
 
     @Override
     public void save(MongoStoreConfiguration configuration, K key, D data) {
-        mongoTemplate.save(data, getDestination(configuration).value());
+        if (this.clazz.isAssignableFrom(BlockEvent.class)) {
+            mongoTemplate.save(
+                    BlockEventDocument.from((BlockEvent) data),
+                    getDestination(configuration).value());
+        } else if (this.clazz.isAssignableFrom(ContractEvent.class)) {
+            mongoTemplate.save(
+                    ContractEventDocument.from((ContractEvent) data),
+                    getDestination(configuration).value());
+        } else if (this.clazz.isAssignableFrom(TransactionEvent.class)) {
+            mongoTemplate.save(
+                    TransactionEventDocument.from((TransactionEvent) data),
+                    getDestination(configuration).value());
+        } else {
+            throw new IllegalArgumentException("Unsupported type: " + this.clazz);
+        }
     }
 
     @Override

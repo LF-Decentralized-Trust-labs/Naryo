@@ -13,41 +13,40 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.definition.FieldDefinition;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaRegistry;
-import io.naryo.domain.configuration.store.active.StoreType;
 import io.naryo.domain.configuration.store.active.feature.StoreFeatureType;
 import io.naryo.infrastructure.configuration.source.env.model.store.ActiveStoreConfigurationProperties;
+import io.naryo.infrastructure.configuration.source.env.model.store.StoreConfigurationProperties;
 import io.naryo.infrastructure.configuration.source.env.model.store.StoreFeatureConfigurationProperties;
 import io.naryo.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ActiveStoreConfigurationPropertiesDeserializer
-        extends EnvironmentDeserializer<ActiveStoreConfigurationProperties> {
+public final class StoreConfigurationPropertiesDeserializer
+        extends EnvironmentDeserializer<StoreConfigurationProperties> {
 
     private static final String PREFIX_EVENT_STORE_SCHEMA = "event_store_";
     private final ConfigurationSchemaRegistry schemaRegistry;
 
-    public ActiveStoreConfigurationPropertiesDeserializer(
-            ConfigurationSchemaRegistry schemaRegistry) {
+    public StoreConfigurationPropertiesDeserializer(ConfigurationSchemaRegistry schemaRegistry) {
         this.schemaRegistry = schemaRegistry;
     }
 
     @Override
-    public ActiveStoreConfigurationProperties deserialize(
-            JsonParser p, DeserializationContext context) throws IOException, JacksonException {
+    public StoreConfigurationProperties deserialize(JsonParser p, DeserializationContext context)
+            throws IOException, JacksonException {
         ObjectCodec codec = p.getCodec();
         JsonNode root = codec.readTree(p);
 
         UUID nodeId = getUuidOrNull(getTextOrNull(root.get("nodeId")));
-        StoreType type = safeTreeToValue(root, "type", codec, StoreType.class);
+        String type = getTextOrNull(root.get("type"));
 
         ConfigurationSchema schema =
-                schemaRegistry.getSchema(PREFIX_EVENT_STORE_SCHEMA + type.getName().toLowerCase());
-        Set<String> knownFields = Set.of("type", "strategy", "target");
+                schemaRegistry.getSchema(PREFIX_EVENT_STORE_SCHEMA + type.toLowerCase());
+        Set<String> knownFields = Set.of("type", "strategy", "targets");
         return new ActiveStoreConfigurationProperties(
                 nodeId,
-                type,
+                () -> type,
                 getFeatures(root, codec),
                 getAdditionalConfiguration(root, knownFields, codec, schema),
                 schema);
