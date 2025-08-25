@@ -50,7 +50,7 @@ public final class MongoEventStoreSourceProvider implements EventStoreSourceProv
                                 PREFIX_EVENT_STORE_SCHEMA + active.getType().getName());
                 yield new ActiveStoreConfigurationPropertiesDocument(
                         active.getNodeId().toString(),
-                        active.getType(),
+                        active.getType().getName(),
                         active.getFeatures(),
                         getAdditionalConfiguration(active.getAdditionalProperties(), schema),
                         ConfigurationSchemaDocument.toDocument(schema));
@@ -64,7 +64,7 @@ public final class MongoEventStoreSourceProvider implements EventStoreSourceProv
             Map<String, Object> additionalProperties, ConfigurationSchema schema) {
         Map<String, Object> additionalConfiguration = new HashMap<>();
 
-        if (!additionalProperties.isEmpty()) {
+        if (!additionalProperties.isEmpty() && schema != null) {
             for (Map.Entry<String, Object> entry : additionalProperties.entrySet()) {
                 Optional<FieldDefinition> field =
                         schema.fields().stream()
