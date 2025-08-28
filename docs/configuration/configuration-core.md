@@ -1,16 +1,9 @@
-# 🎉 Naryo Configuration
-
-Naryo supports flexible configuration mechanisms. The core module requires manual configuration through custom
-implementation due to its framework-agnostic design and wide configuration domain. In contrast, the `core-spring` module
-allows traditional Spring Boot configuration using YAML or `.properties` files, based on the `EnvironmentProperties`
-model.
-
-## 📚 Overview
+# 📚 Core Configuration Overview
 
 The following sections describe the YAML configuration structure for the core-spring module. All configuration must be
 placed under the root key `naryo` in the `application.yml` file.
 
-### 🔗️ 1. HTTP Client Configuration
+## 🔗️ 1. HTTP Client Configuration
 
 ```yaml
 httpClient:
@@ -35,7 +28,7 @@ httpClient:
 | `pingInterval`             | The interval at which the connection should be pinged.                 | Duration   | 15s           |
 | `retryOnConnectionFailure` | Whether to retry on connection failure.                                | Boolean    | true          |
 
-### 📡 2. Broadcasting Configuration
+## 📡 2. Broadcasting Configuration
 
 ```yaml
 broadcasting:
@@ -80,7 +73,7 @@ broadcasting:
 > - `TRANSACTION`: Broadcasts all transaction events.
 > - `CONTRACT_EVENT`: Broadcasts all contract events.
 
-### 🌐️ 3. Node Configuration
+## 🌐️ 3. Node Configuration
 
 ```yaml
 nodes:
@@ -160,7 +153,7 @@ nodes:
 >
 > Make sure to configure each component appropriately based on your specific setup.
 
-### ☁️ 4. Filter Configuration
+## ☁️ 4. Filter Configuration
 
 ```yaml
 filters:
@@ -221,8 +214,9 @@ filters:
 
 ## 👈 Previous steps
 
-1. [Getting Started](./getting_started.md)
+1. [Getting Started](../getting_started.md)
+2. [Naryo Configuration](./index.md)
 
 ## 👉 Next steps
 
-1. [Tutorials](./tutorials/index.md)
+1. [Tutorials](../tutorials/index.md)
