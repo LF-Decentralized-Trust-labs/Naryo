@@ -219,4 +219,5 @@ filters:
 
 ## 👉 Next steps
 
-1. [Tutorials](../tutorials/index.md)
+1. [Core Configuration Overview](./configuration-mongo.md)
+2. [Tutorials](../tutorials/index.md)

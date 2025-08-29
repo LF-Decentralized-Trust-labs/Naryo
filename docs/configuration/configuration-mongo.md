@@ -90,12 +90,6 @@ Stored document excerpt:
 }
 ```
 
-**Guidelines**
-
-- Every persisted subtype must define a **unique** alias.
-- **Do not rename** aliases once documents exist; it will break deserialization.
-- The type key defaults to `_class`. If you customize it via your Mongo converter, update this doc accordingly.
-
 ---
 
 ## 🌐️ Node Configuration
@@ -109,9 +103,6 @@ The `persistence-spring-mongo` module retrieves node configuration from the **`n
 - **Subscription types** (`subscription._class`): `poll_block_subscription`, `pub_sub_block_subscription`
 - **Interaction types** (`interaction._class`): `ethereum_rpc_block_interaction`, `hedera_mirror_node_block_interaction`
 - **Connection types** (`connection._class`): `http_connection`, `ws_connection`
-
-> **Durations** are serialized as ISO-8601 (e.g., `PT5S`, `PT5M`).
-> **Partial configuration** is supported and will be merged with `spring-core`, honoring source priority.
 
 ### Minimal document
 
