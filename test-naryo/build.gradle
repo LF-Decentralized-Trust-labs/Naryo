@@ -1,0 +1,45 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.1'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.example.test-naryo'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'io.naryo:spring-core:0.1.0'
+    implementation 'io.naryo:new-core:0.1.0'
+
+    implementation('io.naryo:persistence-spring-jpa:0.1.0')
+    implementation('io.naryo:persistence-spring-mongo:0.1.0')
+
+    implementation('org.springframework.boot:spring-boot-starter-data-mongodb')
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    implementation 'org.postgresql:postgresql:42.7.2'
+
+
+    implementation 'org.springframework.boot:spring-boot-starter'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test', Test) {
+    useJUnitPlatform()
+}
+
+tasks.named("spotlessJava").configure {
+    dependsOn("spotlessGroovyGradle", "compileJava", "compileTestJava", "javadoc")
+}

@@ -1,4 +1,4 @@
-package io.naryo.infrastructure.configuration.persistence.entity.broadcaster.configuration.converter;
+package io.naryo.infrastructure.configuration.persistence.entity.common.converter;
 
 import java.util.HashMap;
 import java.util.Map;
