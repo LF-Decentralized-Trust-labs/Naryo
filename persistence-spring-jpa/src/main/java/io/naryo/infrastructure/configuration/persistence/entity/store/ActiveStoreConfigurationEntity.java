@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.model.store.ActiveStoreConfigurationDescriptor;
 import io.naryo.application.configuration.source.model.store.StoreFeatureConfigurationDescriptor;
-import io.naryo.domain.configuration.store.StoreState;
 import io.naryo.domain.configuration.store.active.StoreType;
 import io.naryo.domain.configuration.store.active.feature.StoreFeatureType;
 import io.naryo.infrastructure.configuration.persistence.entity.common.converter.JsonMapConverter;

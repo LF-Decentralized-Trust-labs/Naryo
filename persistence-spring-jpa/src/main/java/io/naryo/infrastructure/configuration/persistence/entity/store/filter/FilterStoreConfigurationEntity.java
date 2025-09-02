@@ -3,7 +3,6 @@ package io.naryo.infrastructure.configuration.persistence.entity.store.filter;
 import java.util.Optional;
 
 import io.naryo.application.configuration.source.model.store.filter.FilterStoreConfigurationDescriptor;
-import io.naryo.domain.configuration.store.active.feature.StoreFeatureType;
 import io.naryo.infrastructure.configuration.persistence.entity.store.StoreFeatureConfigurationEntity;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
