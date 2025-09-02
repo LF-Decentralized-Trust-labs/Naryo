@@ -22,7 +22,7 @@ public final class FilterStoreConfigurationEntity extends StoreFeatureConfigurat
     private @Column(name = "filter_store_destination", nullable = false) String destination;
 
     public FilterStoreConfigurationEntity(String destination) {
-        super(StoreFeatureType.FILTER_SYNC);
+        super();
         this.destination = destination;
     }
 

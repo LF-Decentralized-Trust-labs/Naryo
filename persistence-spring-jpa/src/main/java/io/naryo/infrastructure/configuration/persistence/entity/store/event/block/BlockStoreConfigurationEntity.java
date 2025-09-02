@@ -4,14 +4,13 @@ import java.util.Set;
 
 import io.naryo.application.configuration.source.model.store.event.BlockEventStoreConfigurationDescriptor;
 import io.naryo.application.configuration.source.model.store.event.EventStoreTargetDescriptor;
-import io.naryo.domain.configuration.store.active.feature.event.EventStoreStrategy;
 import io.naryo.infrastructure.configuration.persistence.entity.store.event.EventStoreConfigurationEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@DiscriminatorValue("block")
+@DiscriminatorValue("event_block")
 @Getter
 @NoArgsConstructor
 public final class BlockStoreConfigurationEntity extends EventStoreConfigurationEntity
@@ -21,7 +20,7 @@ public final class BlockStoreConfigurationEntity extends EventStoreConfiguration
             name = "block_store_id") Set<EventStoreTargetEntity> targets;
 
     public BlockStoreConfigurationEntity(Set<EventStoreTargetEntity> targets) {
-        super(EventStoreStrategy.BLOCK_BASED);
+        super();
         this.targets = targets;
     }
 

@@ -15,6 +15,6 @@ public final class InactiveStoreConfigurationEntity extends StoreConfigurationEn
         implements InactiveStoreConfigurationDescriptor {
 
     public InactiveStoreConfigurationEntity(UUID nodeId) {
-        super(nodeId, StoreState.INACTIVE);
+        super(nodeId);
     }
 }

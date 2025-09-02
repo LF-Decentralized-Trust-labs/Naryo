@@ -1,5 +1,6 @@
 package io.naryo.infrastructure.configuration.persistence.entity.store.event;
 
+import io.naryo.application.configuration.source.model.store.event.EventStoreConfigurationDescriptor;
 import io.naryo.domain.configuration.store.active.feature.StoreFeatureType;
 import io.naryo.domain.configuration.store.active.feature.event.EventStoreStrategy;
 import io.naryo.infrastructure.configuration.persistence.entity.store.StoreFeatureConfigurationEntity;
@@ -9,13 +10,10 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
-public abstract class EventStoreConfigurationEntity extends StoreFeatureConfigurationEntity {
+public abstract class EventStoreConfigurationEntity extends StoreFeatureConfigurationEntity
+        implements EventStoreConfigurationDescriptor {
 
-    private @Column(name = "strategy", nullable = false) EventStoreStrategy strategy;
-
-    protected EventStoreConfigurationEntity(EventStoreStrategy strategy) {
-        super(StoreFeatureType.EVENT);
-        this.strategy = strategy;
+    protected EventStoreConfigurationEntity() {
+        super();
     }
 }

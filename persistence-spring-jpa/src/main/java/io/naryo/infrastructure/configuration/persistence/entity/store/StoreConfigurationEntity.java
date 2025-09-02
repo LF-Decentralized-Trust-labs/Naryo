@@ -18,20 +18,13 @@ import lombok.Setter;
 public abstract class StoreConfigurationEntity implements StoreConfigurationDescriptor {
 
     private @Column(name = "node_id") @Id UUID nodeId;
-    private @Column(name = "state") @NotNull StoreState state;
 
-    public StoreConfigurationEntity(UUID nodeId, StoreState state) {
+    public StoreConfigurationEntity(UUID nodeId) {
         this.nodeId = nodeId;
-        this.state = state;
     }
 
     @Override
     public UUID getNodeId() {
         return this.nodeId;
-    }
-
-    @Override
-    public StoreState getState() {
-        return this.state;
     }
 }

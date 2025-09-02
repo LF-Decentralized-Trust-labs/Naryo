@@ -40,7 +40,7 @@ public class ActiveStoreConfigurationEntity extends StoreConfigurationEntity
             Map<StoreFeatureType, StoreFeatureConfigurationEntity> features,
             Map<String, Object> additionalProperties,
             ConfigurationSchemaEntity propertiesSchema) {
-        super(nodeId, StoreState.ACTIVE);
+        super(nodeId);
         this.type = type;
         this.features = features;
         this.additionalProperties = additionalProperties;
