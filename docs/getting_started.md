@@ -139,7 +139,7 @@ dependencies {
     #...
     ```
 
-   Please refer to the [Configuration Documentation](./configuration.md) for more details.
+   Please refer to the [Configuration Documentation](./configuration/index.md) for more details.
 
 3. Start naryo when your application starts:
 
@@ -187,5 +187,5 @@ Need help setting it up in your use case? Let us know or check out the [tutorial
 
 ## 👉 Next Steps
 
-1. [Configuration Documentation](./configuration.md)
+1. [Configuration Documentation](./configuration/index.md)
 2. [Tutorials](./tutorials/index.md)
