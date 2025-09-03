@@ -24,9 +24,9 @@ import static io.naryo.infrastructure.configuration.persistence.entity.common.sc
 public class ActiveStoreConfigurationEntity extends StoreConfigurationEntity
         implements ActiveStoreConfigurationDescriptor {
 
-    private @Column(name = "type", nullable = false) String type;
+    private @Column(name = "type") String type;
     private @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @JoinColumn(name = "store_id") @MapKeyEnumerated(EnumType.STRING) @MapKeyColumn(
+    @JoinColumn(name = "store_configuration_id") @MapKeyEnumerated(EnumType.STRING) @MapKeyColumn(
             name = "feature_type") Map<StoreFeatureType, StoreFeatureConfigurationEntity> features;
     private @Convert(converter = JsonMapConverter.class) @Column(
             name = "additional_properties",

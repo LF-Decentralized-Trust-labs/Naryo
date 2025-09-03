@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import io.naryo.application.configuration.source.model.node.subscription.SubscriptionDescriptor;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -16,9 +17,6 @@ public abstract class SubscriptionEntity implements SubscriptionDescriptor {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false, updatable = false)
+    @Getter
     private UUID id;
-
-    public java.util.UUID getId() {
-        return this.id;
-    }
 }

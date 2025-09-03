@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public final class FilterStoreConfigurationEntity extends StoreFeatureConfigurationEntity
         implements FilterStoreConfigurationDescriptor {
 
-    private @Column(name = "filter_store_destination", nullable = false) String destination;
+    private @Column(name = "filter_store_destination") String destination;
 
     public FilterStoreConfigurationEntity(String destination) {
         super();
