@@ -3,7 +3,6 @@ package io.naryo.infrastructure.configuration.persistence.document.store.filter;
 import java.util.Optional;
 
 import io.naryo.application.configuration.source.model.store.filter.FilterStoreConfigurationDescriptor;
-import io.naryo.domain.configuration.store.active.feature.StoreFeatureType;
 import io.naryo.infrastructure.configuration.persistence.document.store.StoreFeatureConfigurationPropertiesDocument;
 import jakarta.annotation.Nullable;
 import org.springframework.data.annotation.TypeAlias;
@@ -16,7 +15,6 @@ public final class FilterStoreConfigurationPropertiesDocument
     private @Nullable String destination;
 
     public FilterStoreConfigurationPropertiesDocument(@Nullable String destination) {
-        super(StoreFeatureType.FILTER_SYNC);
         this.destination = destination;
     }
 

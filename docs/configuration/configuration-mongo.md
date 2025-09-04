@@ -531,13 +531,10 @@ collection. Stores are **per node** (the document `_id` equals the **Node ID**).
 {
   "_class": "active_event_store",
   "_id": "550e8400-e29b-41d4-a716-446655440000",
-  "state": "ACTIVE",
   "type": "MONGO",
   "features": {
     "EVENT": {
       "_class": "block_event_store",
-      "type": "EVENT",
-      "strategy": "BLOCK",
       "targets": [
         {
           "type": "BLOCK",
@@ -551,7 +548,6 @@ collection. Stores are **per node** (the document `_id` equals the **Node ID**).
     },
     "FILTER_SYNC": {
       "_class": "filter_store",
-      "type": "FILTER_SYNC",
       "destination": "/filters"
     }
   },
@@ -579,8 +575,7 @@ collection. Stores are **per node** (the document `_id` equals the **Node ID**).
 ```json
 {
   "_class": "inactive_event_store",
-  "_id": "cad022c2-3e41-426f-bb82-c0b86d58d675",
-  "state": "INACTIVE"
+  "_id": "cad022c2-3e41-426f-bb82-c0b86d58d675"
 }
 ```
 
@@ -605,7 +600,6 @@ collection. Stores are **per node** (the document `_id` equals the **Node ID**).
 |-----------------------------------|---------------|:--------:|----------------------|------------------------------------------------------------|
 | `_class`                          | string        |    ✅     | —                    | `active_event_store` \| `inactive_event_store`             |
 | `_id`                             | string (UUID) |    ✅     | —                    | **Node ID**. Used as Mongo `_id`.                          |
-| `state`                           | string (enum) |    ✅     | —                    | `ACTIVE` \| `INACTIVE`.                                    |
 | `type` *(active)*                 | string        |    ✅     | —                    | Store type (string form of `StoreType`, e.g., `"MONGO"`).  |
 | `features` *(active)*             | object (map)  |    ❌     | —                    | Map `StoreFeatureType` → feature doc (see below).          |
 
@@ -616,8 +610,6 @@ collection. Stores are **per node** (the document `_id` equals the **Node ID**).
 | Path       | Type          | Required | Default (if omitted) | Notes                                     |
 |------------|---------------|:--------:|----------------------|-------------------------------------------|
 | `_class`   | string        |    ✅     | —                    | `block_event_store`.                      |
-| `type`     | string (enum) |    ✅     | —                    | Always `EVENT` (from `StoreFeatureType`). |
-| `strategy` | string (enum) |    ✅     | —                    | `EventStoreStrategy` (e.g., `BLOCK`).     |
 | `targets`  | array<object> |    ❌     | —                    | Set of target descriptors.                |
 
 **Target descriptor**
@@ -632,7 +624,6 @@ collection. Stores are **per node** (the document `_id` equals the **Node ID**).
 | Path          | Type          | Required | Default (if omitted) | Notes                                           |
 |---------------|---------------|:--------:|----------------------|-------------------------------------------------|
 | `_class`      | string        |    ✅     | —                    | `filter_store`.                                 |
-| `type`        | string (enum) |    ✅     | —                    | Always `FILTER_SYNC` (from `StoreFeatureType`). |
 | `destination` | string        |    ❌     | —                    | Optional destination for filter-sync output.    |
 
 ---
