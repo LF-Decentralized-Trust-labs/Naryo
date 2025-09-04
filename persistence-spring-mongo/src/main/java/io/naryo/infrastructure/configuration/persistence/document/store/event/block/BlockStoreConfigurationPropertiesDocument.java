@@ -5,7 +5,6 @@ import java.util.Set;
 
 import io.naryo.application.configuration.source.model.store.event.BlockEventStoreConfigurationDescriptor;
 import io.naryo.application.configuration.source.model.store.event.EventStoreTargetDescriptor;
-import io.naryo.domain.configuration.store.active.feature.event.EventStoreStrategy;
 import io.naryo.infrastructure.configuration.persistence.document.store.event.EventStoreConfigurationPropertiesDocument;
 import lombok.Getter;
 import org.springframework.data.annotation.TypeAlias;
@@ -22,7 +21,6 @@ public final class BlockStoreConfigurationPropertiesDocument
 
     public BlockStoreConfigurationPropertiesDocument(
             Set<EventStoreTargetPropertiesDocument> targets) {
-        super(EventStoreStrategy.BLOCK_BASED);
         this.targets = targets;
     }
 
