@@ -16,7 +16,6 @@ import io.naryo.infrastructure.configuration.persistence.entity.filter.event.syn
 import io.naryo.infrastructure.configuration.persistence.entity.filter.event.sync.FilterSyncEntity;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
@@ -28,8 +27,10 @@ public abstract class EventFilterEntity extends FilterEntity implements EventFil
 
     private @Embedded @Nullable EventSpecification specification;
 
-    private @ElementCollection(fetch = FetchType.EAGER) @Enumerated(EnumType.STRING) @Setter @Getter
-    Set<ContractEventStatus> statuses;
+    private @ElementCollection(fetch = FetchType.EAGER) @CollectionTable(
+            name = "event_filter_statuses") @Enumerated(EnumType.STRING) @Setter Set<
+                    ContractEventStatus>
+            statuses;
 
     private @ManyToOne(cascade = CascadeType.ALL) @JoinColumn(name = "sync_id") @Nullable
     FilterSyncEntity sync;
@@ -91,5 +92,10 @@ public abstract class EventFilterEntity extends FilterEntity implements EventFil
     @Override
     public Optional<FilterVisibility> getVisibility() {
         return Optional.ofNullable(visibility);
+    }
+
+    @Override
+    public Set<ContractEventStatus> getStatuses() {
+        return statuses == null ? Set.of() : statuses;
     }
 }
