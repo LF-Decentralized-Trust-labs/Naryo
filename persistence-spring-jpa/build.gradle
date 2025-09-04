@@ -9,9 +9,6 @@ ext {
     mockitoVersion = '5.17.0'
 }
 
-group = 'io.naryo'
-version = '0.1.0'
-
 repositories {
     mavenCentral()
 }
@@ -45,4 +42,12 @@ tasks.named('bootJar') { enabled = false }
 
 tasks.named("spotlessJava").configure {
     dependsOn("spotlessGroovyGradle", "compileJava", "compileTestJava", "javadoc")
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
 }

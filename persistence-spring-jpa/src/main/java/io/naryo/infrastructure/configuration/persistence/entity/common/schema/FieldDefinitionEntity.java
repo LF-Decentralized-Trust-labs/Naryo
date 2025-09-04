@@ -1,6 +1,6 @@
-package io.naryo.infrastructure.configuration.persistence.entity.broadcaster.configuration.schema;
+package io.naryo.infrastructure.configuration.persistence.entity.common.schema;
 
-import io.naryo.infrastructure.configuration.persistence.entity.broadcaster.configuration.converter.JsonObjectConverter;
+import io.naryo.infrastructure.configuration.persistence.entity.common.converter.JsonObjectConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "filters")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type")
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class FilterEntity implements FilterDescriptor {
