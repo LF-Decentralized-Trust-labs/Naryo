@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
-@EntityScan(basePackages = "io.naryo.infrastructure.configuration.persistence.entity")
-@EnableJpaRepositories(
-        basePackages = "io.naryo.infrastructure.configuration.persistence.repository")
+@EntityScan(basePackages = "io.naryo.infrastructure")
+@EnableJpaRepositories(basePackages = "io.naryo.infrastructure")
 public class JpaPersistenceConfig {}

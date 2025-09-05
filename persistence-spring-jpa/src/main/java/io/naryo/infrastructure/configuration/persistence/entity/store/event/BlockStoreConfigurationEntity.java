@@ -1,10 +1,9 @@
-package io.naryo.infrastructure.configuration.persistence.entity.store.event.block;
+package io.naryo.infrastructure.configuration.persistence.entity.store.event;
 
 import java.util.Set;
 
 import io.naryo.application.configuration.source.model.store.event.BlockEventStoreConfigurationDescriptor;
 import io.naryo.application.configuration.source.model.store.event.EventStoreTargetDescriptor;
-import io.naryo.infrastructure.configuration.persistence.entity.store.event.EventStoreConfigurationEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +16,7 @@ public final class BlockStoreConfigurationEntity extends EventStoreConfiguration
         implements BlockEventStoreConfigurationDescriptor {
 
     private @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) @JoinColumn(
-            name = "block_store_id") Set<EventStoreTargetEntity> targets;
+            name = "event_store_id") Set<EventStoreTargetEntity> targets;
 
     public BlockStoreConfigurationEntity(Set<EventStoreTargetEntity> targets) {
         super();
