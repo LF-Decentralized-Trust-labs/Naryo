@@ -1,4 +1,4 @@
-package io.naryo.infrastructure.configuration.persistence.entity.store.event.block;
+package io.naryo.infrastructure.configuration.persistence.entity.store.event;
 
 import java.util.UUID;
 
