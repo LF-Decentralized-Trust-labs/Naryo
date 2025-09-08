@@ -3,6 +3,7 @@ package io.naryo.infrastructure.store.event.persistence.entity.transaction;
 import java.math.BigInteger;
 import java.util.UUID;
 
+import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.event.transaction.TransactionEvent;
 import jakarta.persistence.*;
@@ -19,7 +20,7 @@ public final class TransactionEventEntity {
 
     private @Column(name = "node_id", nullable = false) String nodeId;
 
-    private @Column(name = "transaction_hash", nullable = false) String hash;
+    private @Column(name = "transaction_hash", nullable = false, unique = true) String hash;
 
     private @Column(name = "nonce", nullable = false) BigInteger nonce;
 
@@ -72,7 +73,7 @@ public final class TransactionEventEntity {
         this.status = status;
     }
 
-    public static TransactionEventEntity from(TransactionEvent event) {
+    public static TransactionEventEntity fromTransactionEvent(TransactionEvent event) {
         return new TransactionEventEntity(
                 event.getNodeId().toString(),
                 event.getHash(),
@@ -87,5 +88,22 @@ public final class TransactionEventEntity {
                 event.getInput(),
                 event.getRevertReason(),
                 event.getStatus());
+    }
+
+    public TransactionEvent toTransactionEvent() {
+        return new TransactionEvent(
+                UUID.fromString(nodeId),
+                hash,
+                status,
+                new NonNegativeBlockNumber(nonce),
+                blockHash,
+                new NonNegativeBlockNumber(blockNumber),
+                blockTimestamp,
+                transactionIndex,
+                sender,
+                receiver,
+                value,
+                input,
+                revertReason);
     }
 }

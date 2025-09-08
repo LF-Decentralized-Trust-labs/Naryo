@@ -5,13 +5,14 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.event.block.BlockEvent;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "block_event")
+@Table(name = "block_event", indexes = @Index(name = "ux_number", columnList = "number DESC"))
 @Getter
 @NoArgsConstructor
 public final class BlockEventEntity {
@@ -20,11 +21,11 @@ public final class BlockEventEntity {
 
     private @Column(name = "node_id", nullable = false) String nodeId;
 
-    private @Column(name = "number", nullable = false) String number;
+    private @Column(name = "number", nullable = false) BigInteger number;
 
-    private @Column(name = "hash", nullable = false) String hash;
+    private @Column(name = "hash", nullable = false, unique = true) String hash;
 
-    private @Column(name = "logs_bloom", nullable = false) String logsBloom;
+    private @Column(name = "logs_bloom", nullable = false, length = 1024) String logsBloom;
 
     private @Column(name = "size", nullable = false) BigInteger size;
 
@@ -37,7 +38,7 @@ public final class BlockEventEntity {
 
     private BlockEventEntity(
             String nodeId,
-            String number,
+            BigInteger number,
             String hash,
             String logsBloom,
             BigInteger size,
@@ -54,17 +55,29 @@ public final class BlockEventEntity {
         this.transactions = transactions;
     }
 
-    public static BlockEventEntity from(BlockEvent blockEvent) {
+    public static BlockEventEntity fromBlockEvent(BlockEvent blockEvent) {
         return new BlockEventEntity(
                 blockEvent.getNodeId().toString(),
-                blockEvent.getNumber().value().toString(),
+                blockEvent.getNumber().value(),
                 blockEvent.getHash(),
                 blockEvent.getLogsBloom(),
                 blockEvent.getSize(),
                 blockEvent.getGasUsed(),
                 blockEvent.getTimestamp(),
                 blockEvent.getTransactions().stream()
-                        .map(BlockEventTransactionEntity::from)
+                        .map(BlockEventTransactionEntity::fromTransaction)
                         .collect(Collectors.toList()));
+    }
+
+    public BlockEvent toBlockEvent() {
+        return new BlockEvent(
+                UUID.fromString(nodeId),
+                new NonNegativeBlockNumber(number),
+                hash,
+                logsBloom,
+                size,
+                gasUsed,
+                timestamp,
+                transactions.stream().map(BlockEventTransactionEntity::toTransaction).toList());
     }
 }

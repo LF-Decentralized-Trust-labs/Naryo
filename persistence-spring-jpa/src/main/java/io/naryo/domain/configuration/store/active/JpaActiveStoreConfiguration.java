@@ -14,8 +14,10 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 public final class JpaActiveStoreConfiguration extends ActiveStoreConfiguration {
 
+    public static String JPA_STORE_TYPE = "jpa";
+
     public JpaActiveStoreConfiguration(
             UUID nodeId, Map<StoreFeatureType, StoreFeatureConfiguration> features) {
-        super(nodeId, () -> "jpa", features);
+        super(nodeId, () -> JPA_STORE_TYPE, features);
     }
 }

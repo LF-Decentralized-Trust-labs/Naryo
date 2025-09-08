@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public final class BytesFixedParameterEntity extends ContractEventParameterEntity<byte[]> {
+public final class BytesFixedParameterEntity
+        extends ContractEventParameterEntity<byte[], BytesFixedParameter> {
 
     private int byteLength;
 
@@ -17,12 +18,17 @@ public final class BytesFixedParameterEntity extends ContractEventParameterEntit
         this.byteLength = byteLength;
     }
 
-    public static ContractEventParameterEntity<?> from(BytesFixedParameter bytesFixedParameter) {
+    public static BytesFixedParameterEntity from(BytesFixedParameter bytesFixedParameter) {
         return new BytesFixedParameterEntity(
                 bytesFixedParameter.getType(),
                 bytesFixedParameter.isIndexed(),
                 bytesFixedParameter.getPosition(),
                 bytesFixedParameter.getValue(),
                 bytesFixedParameter.getByteLength());
+    }
+
+    @Override
+    public BytesFixedParameter toDomain() {
+        return new BytesFixedParameter(isIndexed(), getPosition(), getValue(), getByteLength());
     }
 }

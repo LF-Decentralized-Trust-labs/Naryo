@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import io.naryo.domain.common.event.ContractEventStatus;
+import io.naryo.domain.common.event.EventName;
 import io.naryo.domain.event.contract.ContractEvent;
 import io.naryo.infrastructure.store.event.persistence.entity.contract.parameter.ContractEventParameterEntity;
 import jakarta.persistence.*;
@@ -27,7 +28,7 @@ public final class ContractEventEntity {
     private @Column(name = "name", nullable = false) String name;
 
     private @Column(name = "parameters", nullable = false) @JdbcTypeCode(SqlTypes.JSON) Set<
-                    ContractEventParameterEntity<?>>
+                    ContractEventParameterEntity<?, ?>>
             parameters;
 
     private @Column(name = "transaction_hash", nullable = false) String transactionHash;
@@ -36,7 +37,7 @@ public final class ContractEventEntity {
 
     private @Column(name = "block_number", nullable = false) BigInteger blockNumber;
 
-    private @Column(name = "block_hash", nullable = false) String blockHash;
+    private @Column(name = "block_hash", nullable = false, unique = true) String blockHash;
 
     private @Column(name = "contract_address", nullable = false) String contractAddress;
 
@@ -49,7 +50,7 @@ public final class ContractEventEntity {
     private ContractEventEntity(
             String nodeId,
             String name,
-            Set<ContractEventParameterEntity<?>> parameters,
+            Set<ContractEventParameterEntity<?, ?>> parameters,
             String transactionHash,
             BigInteger logIndex,
             BigInteger blockNumber,
@@ -71,12 +72,12 @@ public final class ContractEventEntity {
         this.status = status;
     }
 
-    public static ContractEventEntity from(ContractEvent event) {
+    public static ContractEventEntity fromContractEvent(ContractEvent event) {
         return new ContractEventEntity(
                 event.getNodeId().toString(),
                 event.getName().value(),
                 event.getParameters().stream()
-                        .map(ContractEventParameterEntity::from)
+                        .map(ContractEventParameterEntity::fromDomain)
                         .collect(Collectors.toSet()),
                 event.getTransactionHash(),
                 event.getLogIndex(),
@@ -86,5 +87,22 @@ public final class ContractEventEntity {
                 event.getSender(),
                 event.getTimestamp(),
                 event.getStatus());
+    }
+
+    public ContractEvent toContractEvent() {
+        return new ContractEvent(
+                UUID.fromString(nodeId),
+                new EventName(name),
+                parameters.stream()
+                        .map(ContractEventParameterEntity::toDomain)
+                        .collect(Collectors.toSet()),
+                transactionHash,
+                logIndex,
+                blockNumber,
+                blockHash,
+                contractAddress,
+                sender,
+                status,
+                timestamp);
     }
 }

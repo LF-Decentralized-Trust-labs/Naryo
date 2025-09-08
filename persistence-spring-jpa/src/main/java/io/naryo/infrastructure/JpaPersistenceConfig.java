@@ -1,4 +1,4 @@
-package io.naryo.infrastructure.configuration;
+package io.naryo.infrastructure;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Configuration;

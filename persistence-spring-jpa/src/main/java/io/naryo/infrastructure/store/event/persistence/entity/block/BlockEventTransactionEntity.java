@@ -67,7 +67,7 @@ public final class BlockEventTransactionEntity {
         this.revertReason = revertReason;
     }
 
-    public static BlockEventTransactionEntity from(Transaction transaction) {
+    public static BlockEventTransactionEntity fromTransaction(Transaction transaction) {
         return new BlockEventTransactionEntity(
                 transaction.hash(),
                 transaction.index(),
@@ -81,5 +81,21 @@ public final class BlockEventTransactionEntity {
                 transaction.input(),
                 transaction.logBloom(),
                 transaction.revertReason());
+    }
+
+    public Transaction toTransaction() {
+        return new Transaction(
+                hash,
+                index,
+                nonce,
+                blockNumber,
+                blockHash,
+                status,
+                from,
+                to,
+                value,
+                input,
+                logBloom,
+                revertReason);
     }
 }

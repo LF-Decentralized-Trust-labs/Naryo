@@ -5,16 +5,21 @@ import io.naryo.domain.event.contract.parameter.IntParameter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public final class IntParameterEntity extends ContractEventParameterEntity<Integer> {
+public final class IntParameterEntity extends ContractEventParameterEntity<Integer, IntParameter> {
     private IntParameterEntity(ParameterType type, boolean indexed, int position, Integer value) {
         super(type, indexed, position, value);
     }
 
-    public static ContractEventParameterEntity<?> from(IntParameter intParameter) {
+    public static IntParameterEntity from(IntParameter intParameter) {
         return new IntParameterEntity(
                 intParameter.getType(),
                 intParameter.isIndexed(),
                 intParameter.getPosition(),
                 intParameter.getValue());
+    }
+
+    @Override
+    public IntParameter toDomain() {
+        return new IntParameter(isIndexed(), getPosition(), getValue());
     }
 }
