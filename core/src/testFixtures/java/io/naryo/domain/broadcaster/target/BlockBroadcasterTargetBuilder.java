@@ -9,6 +9,6 @@ public class BlockBroadcasterTargetBuilder
 
     @Override
     public BlockBroadcasterTarget build() {
-        return new BlockBroadcasterTarget(this.getDestination());
+        return new BlockBroadcasterTarget(this.getDestinations());
     }
 }

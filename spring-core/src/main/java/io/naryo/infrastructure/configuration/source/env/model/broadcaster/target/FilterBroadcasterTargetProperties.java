@@ -1,5 +1,6 @@
 package io.naryo.infrastructure.configuration.source.env.model.broadcaster.target;
 
+import java.util.List;
 import java.util.UUID;
 
 import io.naryo.application.configuration.source.model.broadcaster.target.FilterBroadcasterTargetDescriptor;
@@ -16,8 +17,8 @@ public class FilterBroadcasterTargetProperties extends BroadcasterTargetProperti
 
     private @NotNull UUID filterId;
 
-    protected FilterBroadcasterTargetProperties(String destination, UUID filterId) {
-        super(destination);
+    public FilterBroadcasterTargetProperties(List<String> destinations, UUID filterId) {
+        super(destinations);
         this.filterId = filterId;
     }
 }

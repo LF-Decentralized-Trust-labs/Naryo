@@ -48,16 +48,17 @@ public final class DefaultBroadcasterConfigurationManager
     }
 
     private BroadcasterTarget buildTarget(BroadcasterTargetDescriptor descriptor) {
-        Destination destination = new Destination(valueOrNull(descriptor.getDestination()));
+        List<Destination> destinations =
+                descriptor.getDestinations().stream().map(Destination::new).toList();
         return switch (descriptor.getType()) {
-            case ALL -> new AllBroadcasterTarget(destination);
-            case BLOCK -> new BlockBroadcasterTarget(destination);
-            case TRANSACTION -> new TransactionBroadcasterTarget(destination);
-            case CONTRACT_EVENT -> new ContractEventBroadcasterTarget(destination);
+            case ALL -> new AllBroadcasterTarget(destinations);
+            case BLOCK -> new BlockBroadcasterTarget(destinations);
+            case TRANSACTION -> new TransactionBroadcasterTarget(destinations);
+            case CONTRACT_EVENT -> new ContractEventBroadcasterTarget(destinations);
             case FILTER -> {
                 var filterDescriptor = (FilterBroadcasterTargetDescriptor) descriptor;
                 UUID filterId = filterDescriptor.getFilterId();
-                yield new FilterEventBroadcasterTarget(destination, filterId);
+                yield new FilterEventBroadcasterTarget(destinations, filterId);
             }
         };
     }

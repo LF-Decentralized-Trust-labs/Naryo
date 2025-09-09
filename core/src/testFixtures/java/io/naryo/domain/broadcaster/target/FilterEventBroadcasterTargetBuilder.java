@@ -15,7 +15,7 @@ public class FilterEventBroadcasterTargetBuilder
 
     @Override
     public FilterEventBroadcasterTarget build() {
-        return new FilterEventBroadcasterTarget(this.getDestination(), this.getFilterId());
+        return new FilterEventBroadcasterTarget(this.getDestinations(), this.getFilterId());
     }
 
     public FilterEventBroadcasterTargetBuilder withFilterId(UUID filterId) {

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.naryo.application.broadcaster.BroadcasterProducer;
 import io.naryo.domain.broadcaster.Broadcaster;
 import io.naryo.domain.broadcaster.BroadcasterType;
+import io.naryo.domain.common.Destination;
 import io.naryo.domain.common.connection.endpoint.ConnectionEndpoint;
 import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;
 import io.naryo.domain.configuration.broadcaster.http.HttpBroadcasterConfiguration;
@@ -34,8 +35,15 @@ public final class HttpBroadcasterProducer implements BroadcasterProducer {
             Broadcaster broadcaster, BroadcasterConfiguration configuration, Event event) {
         final ConnectionEndpoint endpoint =
                 ((HttpBroadcasterConfiguration) configuration).getEndpoint();
-        var unparsedUrl =
-                endpoint.getUrl() + cleanPath(broadcaster.getTarget().getDestination().value());
+
+        for (Destination destination : broadcaster.getTarget().getDestinations()) {
+            handleSingleDestination(event, endpoint, destination);
+        }
+    }
+
+    private void handleSingleDestination(
+            Event event, ConnectionEndpoint endpoint, Destination destination) {
+        var unparsedUrl = endpoint.getUrl() + cleanPath(destination.value());
         var url = HttpUrl.parse(unparsedUrl);
         if (url == null) {
             throw new IllegalArgumentException("Invalid URL: " + unparsedUrl);

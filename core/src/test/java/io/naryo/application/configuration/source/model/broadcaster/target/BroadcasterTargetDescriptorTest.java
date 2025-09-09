@@ -1,6 +1,6 @@
 package io.naryo.application.configuration.source.model.broadcaster.target;
 
-import java.util.Optional;
+import java.util.List;
 
 import io.naryo.application.configuration.source.model.DescriptorTestStringArgumentsProvider;
 import io.naryo.domain.broadcaster.BroadcasterTargetType;
@@ -48,26 +48,27 @@ public abstract class BroadcasterTargetDescriptorTest {
     void testMerge_destination(
             String originalDestination, String otherDestination, String expectedDestination) {
         BroadcasterTargetDescriptor original = this.getBroadcasterDescriptor();
-        original.setDestination(originalDestination);
+        original.setDestinations(
+                originalDestination == null ? List.of() : List.of(originalDestination));
         BroadcasterTargetDescriptor other = this.getBroadcasterDescriptor();
-        other.setDestination(otherDestination);
+        other.setDestinations(otherDestination == null ? List.of() : List.of(otherDestination));
 
         BroadcasterTargetDescriptor result = original.merge(other);
 
         assertEquals(
-                Optional.ofNullable(expectedDestination),
-                result.getDestination(),
+                expectedDestination == null ? List.of() : List.of(expectedDestination),
+                result.getDestinations(),
                 "Should merge the destination");
     }
 
     @Setter
     public abstract static class DummyBroadcasterTargetDescriptor
             implements BroadcasterTargetDescriptor {
-        private String destination;
+        private List<String> destinations;
 
         @Override
-        public Optional<String> getDestination() {
-            return Optional.ofNullable(destination);
+        public List<String> getDestinations() {
+            return destinations;
         }
     }
 }

@@ -91,7 +91,8 @@ class EventRoutingServiceTest {
         when(wrapperContractEvent.getTarget())
                 .thenReturn(new DummyTarget(BroadcasterTargetType.CONTRACT_EVENT));
         UUID filterId = UUID.randomUUID();
-        var filterTarget = new FilterEventBroadcasterTarget(new Destination("d"), filterId);
+        var filterTarget =
+                new FilterEventBroadcasterTarget(List.of(new Destination("d")), filterId);
         when(wrapperFilter.getTarget()).thenReturn(filterTarget);
 
         EventFilter evtFilter = mock(EventFilter.class);
@@ -124,7 +125,7 @@ class EventRoutingServiceTest {
 
     private static class DummyTarget extends BroadcasterTarget {
         DummyTarget(BroadcasterTargetType type) {
-            super(type, new Destination("dummy"));
+            super(type, List.of(new Destination("dummy")));
         }
     }
 }

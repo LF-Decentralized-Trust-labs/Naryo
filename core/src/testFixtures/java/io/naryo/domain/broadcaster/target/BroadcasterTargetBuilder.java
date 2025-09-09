@@ -1,5 +1,8 @@
 package io.naryo.domain.broadcaster.target;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.naryo.domain.DomainBuilder;
 import io.naryo.domain.broadcaster.BroadcasterTarget;
 import io.naryo.domain.common.Destination;
@@ -9,14 +12,16 @@ public abstract class BroadcasterTargetBuilder<
                 T extends BroadcasterTargetBuilder<T, Y>, Y extends BroadcasterTarget>
         implements DomainBuilder<T, Y> {
 
-    private Destination destination;
+    private List<Destination> destinations;
 
     public T withDestination(Destination destination) {
-        this.destination = destination;
+        this.destinations = new ArrayList<>(List.of(destination));
         return self();
     }
 
-    protected Destination getDestination() {
-        return this.destination == null ? Instancio.create(Destination.class) : this.destination;
+    protected List<Destination> getDestinations() {
+        return this.destinations == null
+                ? new ArrayList<>(List.of(Instancio.create(Destination.class)))
+                : this.destinations;
     }
 }

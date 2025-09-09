@@ -10,6 +10,6 @@ public class AllBroadcasterTargetBuilder
 
     @Override
     public AllBroadcasterTarget build() {
-        return new AllBroadcasterTarget(this.getDestination());
+        return new AllBroadcasterTarget(this.getDestinations());
     }
 }

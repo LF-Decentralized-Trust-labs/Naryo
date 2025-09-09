@@ -1,5 +1,7 @@
 package io.naryo.infrastructure.configuration.source.env.model.broadcaster.target;
 
+import java.util.List;
+
 import io.naryo.application.configuration.source.model.broadcaster.target.AllBroadcasterTargetDescriptor;
 import lombok.NoArgsConstructor;
 
@@ -7,7 +9,7 @@ import lombok.NoArgsConstructor;
 public final class AllBroadcasterTargetProperties extends BroadcasterTargetProperties
         implements AllBroadcasterTargetDescriptor {
 
-    public AllBroadcasterTargetProperties(String destination) {
-        super(destination);
+    public AllBroadcasterTargetProperties(List<String> destinations) {
+        super(destinations);
     }
 }

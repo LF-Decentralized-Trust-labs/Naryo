@@ -1,20 +1,20 @@
 package io.naryo.application.configuration.source.model.broadcaster.target;
 
-import java.util.Optional;
+import java.util.List;
 
 import io.naryo.application.configuration.source.model.MergeableDescriptor;
 import io.naryo.domain.broadcaster.BroadcasterTargetType;
 
-import static io.naryo.application.common.util.MergeUtil.mergeOptionals;
+import static io.naryo.application.common.util.MergeUtil.mergeCollections;
 
 public interface BroadcasterTargetDescriptor
         extends MergeableDescriptor<BroadcasterTargetDescriptor> {
 
     BroadcasterTargetType getType();
 
-    Optional<String> getDestination();
+    List<String> getDestinations();
 
-    void setDestination(String destination);
+    void setDestinations(List<String> destinations);
 
     @Override
     default BroadcasterTargetDescriptor merge(BroadcasterTargetDescriptor other) {
@@ -22,7 +22,7 @@ public interface BroadcasterTargetDescriptor
             return this;
         }
 
-        mergeOptionals(this::setDestination, this.getDestination(), other.getDestination());
+        mergeCollections(this::setDestinations, this.getDestinations(), other.getDestinations());
 
         return this;
     }

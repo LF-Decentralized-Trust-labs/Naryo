@@ -11,8 +11,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
-
 @Document(collection = "broadcasters")
 @AllArgsConstructor
 public final class BroadcasterDocument implements BroadcasterDescriptor {
@@ -54,29 +52,24 @@ public final class BroadcasterDocument implements BroadcasterDescriptor {
 
         switch (target) {
             case BlockBroadcasterTargetDescriptor blockTarget ->
-                    this.target =
-                            new BlockBroadcasterTargetDocument(
-                                    valueOrNull(blockTarget.getDestination()));
+                    this.target = new BlockBroadcasterTargetDocument(blockTarget.getDestinations());
 
             case TransactionBroadcasterTargetDescriptor transactionTarget ->
                     this.target =
                             new TransactionBroadcasterTargetDocument(
-                                    valueOrNull(transactionTarget.getDestination()));
+                                    transactionTarget.getDestinations());
 
             case ContractEventBroadcasterTargetDescriptor contractEventTarget ->
                     this.target =
                             new ContractEventBroadcasterTargetDocument(
-                                    valueOrNull(contractEventTarget.getDestination()));
+                                    contractEventTarget.getDestinations());
 
             case FilterBroadcasterTargetDescriptor filterTarget ->
                     this.target =
                             new FilterBroadcasterTargetDocument(
-                                    valueOrNull(filterTarget.getDestination()),
-                                    filterTarget.getFilterId());
+                                    filterTarget.getDestinations(), filterTarget.getFilterId());
             case AllBroadcasterTargetDescriptor allTarget ->
-                    this.target =
-                            new AllBroadcasterTargetDocument(
-                                    valueOrNull(allTarget.getDestination()));
+                    this.target = new AllBroadcasterTargetDocument(allTarget.getDestinations());
             default ->
                     throw new IllegalArgumentException(
                             "Unsupported target type: " + target.getClass().getSimpleName());

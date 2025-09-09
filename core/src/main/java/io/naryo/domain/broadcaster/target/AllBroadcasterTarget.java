@@ -1,12 +1,14 @@
 package io.naryo.domain.broadcaster.target;
 
+import java.util.List;
+
 import io.naryo.domain.broadcaster.BroadcasterTarget;
 import io.naryo.domain.broadcaster.BroadcasterTargetType;
 import io.naryo.domain.common.Destination;
 
 public final class AllBroadcasterTarget extends BroadcasterTarget {
 
-    public AllBroadcasterTarget(Destination destination) {
-        super(BroadcasterTargetType.ALL, destination);
+    public AllBroadcasterTarget(List<Destination> destinations) {
+        super(BroadcasterTargetType.ALL, destinations);
     }
 }

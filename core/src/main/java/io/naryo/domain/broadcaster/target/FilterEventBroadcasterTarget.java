@@ -1,5 +1,6 @@
 package io.naryo.domain.broadcaster.target;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -17,8 +18,8 @@ public final class FilterEventBroadcasterTarget extends BroadcasterTarget {
 
     private final UUID filterId;
 
-    public FilterEventBroadcasterTarget(Destination destination, UUID filterId) {
-        super(BroadcasterTargetType.FILTER, destination);
+    public FilterEventBroadcasterTarget(List<Destination> destinations, UUID filterId) {
+        super(BroadcasterTargetType.FILTER, destinations);
         Objects.requireNonNull(filterId, "filterId cannot be null");
         this.filterId = filterId;
     }
