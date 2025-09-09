@@ -16,7 +16,9 @@ import io.naryo.infrastructure.configuration.source.env.model.store.event.EventS
 import io.naryo.infrastructure.configuration.source.env.model.store.event.block.BlockEventStoreConfigurationProperties;
 import io.naryo.infrastructure.configuration.source.env.model.store.filter.FilterStoreConfigurationProperties;
 import io.naryo.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
+import org.springframework.stereotype.Component;
 
+@Component
 public final class StoreFeatureConfigurationPropertiesDeserializer
         extends EnvironmentDeserializer<StoreFeatureConfigurationProperties> {
 
