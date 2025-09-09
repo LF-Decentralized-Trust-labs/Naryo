@@ -1,6 +1,7 @@
 package io.naryo.infrastructure.broadcaster.http.producer;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,7 +53,7 @@ class HttpBroadcasterProducerTest {
         doReturn(endpoint).when(configuration).getEndpoint();
         doReturn("invalid-url").when(endpoint).getUrl();
         doReturn(target).when(broadcaster).getTarget();
-        doReturn(new Destination("test")).when(target).getDestination();
+        doReturn(List.of(new Destination("test"))).when(target).getDestinations();
 
         HttpBroadcasterProducer producer = new HttpBroadcasterProducer(httpClient, objectMapper);
         assertThrows(
@@ -72,7 +73,7 @@ class HttpBroadcasterProducerTest {
         doReturn(Map.of()).when(endpoint).getHeaders();
         doReturn("http://localhost:8080").when(endpoint).getUrl();
         doReturn(target).when(broadcaster).getTarget();
-        doReturn(new Destination("test")).when(target).getDestination();
+        doReturn(List.of(new Destination("test"))).when(target).getDestinations();
         doReturn("").when(objectMapper).writeValueAsString(any());
         doReturn(call).when(httpClient).newCall(any());
         doReturn(null).when(call).execute();

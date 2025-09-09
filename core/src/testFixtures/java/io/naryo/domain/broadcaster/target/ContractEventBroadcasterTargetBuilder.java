@@ -10,6 +10,6 @@ public class ContractEventBroadcasterTargetBuilder
 
     @Override
     public ContractEventBroadcasterTarget build() {
-        return new ContractEventBroadcasterTarget(this.getDestination());
+        return new ContractEventBroadcasterTarget(this.getDestinations());
     }
 }

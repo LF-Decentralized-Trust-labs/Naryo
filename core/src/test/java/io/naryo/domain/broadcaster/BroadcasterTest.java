@@ -1,5 +1,6 @@
 package io.naryo.domain.broadcaster;
 
+import java.util.List;
 import java.util.UUID;
 
 import io.naryo.domain.broadcaster.target.AllBroadcasterTarget;
@@ -12,7 +13,7 @@ class BroadcasterTest {
 
     @Test
     void testBroadcasterCreation() {
-        AllBroadcasterTarget target = new AllBroadcasterTarget(new Destination("value"));
+        AllBroadcasterTarget target = new AllBroadcasterTarget(List.of(new Destination("value")));
         UUID configurationId = UUID.randomUUID();
         Broadcaster broadcaster = new Broadcaster(UUID.randomUUID(), target, configurationId);
 

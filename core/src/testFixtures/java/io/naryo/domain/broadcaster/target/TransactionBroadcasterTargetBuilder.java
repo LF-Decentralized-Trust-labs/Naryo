@@ -10,6 +10,6 @@ public class TransactionBroadcasterTargetBuilder
 
     @Override
     public TransactionBroadcasterTarget build() {
-        return new TransactionBroadcasterTarget(this.getDestination());
+        return new TransactionBroadcasterTarget(this.getDestinations());
     }
 }

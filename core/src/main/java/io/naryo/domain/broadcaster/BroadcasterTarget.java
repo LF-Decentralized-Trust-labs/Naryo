@@ -1,5 +1,6 @@
 package io.naryo.domain.broadcaster;
 
+import java.util.List;
 import java.util.Objects;
 
 import io.naryo.domain.common.Destination;
@@ -13,11 +14,14 @@ import lombok.ToString;
 public abstract class BroadcasterTarget {
 
     protected final BroadcasterTargetType type;
-    protected final Destination destination;
+    protected final List<Destination> destinations;
 
-    protected BroadcasterTarget(BroadcasterTargetType type, Destination destination) {
-        Objects.requireNonNull(destination, "destination must not be null");
+    protected BroadcasterTarget(BroadcasterTargetType type, List<Destination> destinations) {
+        Objects.requireNonNull(destinations, "destination must not be null");
+        if (destinations.isEmpty()) {
+            throw new IllegalArgumentException("destination must not be empty");
+        }
         this.type = type;
-        this.destination = destination;
+        this.destinations = destinations;
     }
 }

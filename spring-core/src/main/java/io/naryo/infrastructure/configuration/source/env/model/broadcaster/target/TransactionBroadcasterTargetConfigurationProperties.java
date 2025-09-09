@@ -1,5 +1,7 @@
 package io.naryo.infrastructure.configuration.source.env.model.broadcaster.target;
 
+import java.util.List;
+
 import io.naryo.application.configuration.source.model.broadcaster.target.TransactionBroadcasterTargetDescriptor;
 import lombok.NoArgsConstructor;
 
@@ -7,7 +9,7 @@ import lombok.NoArgsConstructor;
 public class TransactionBroadcasterTargetConfigurationProperties extends BroadcasterTargetProperties
         implements TransactionBroadcasterTargetDescriptor {
 
-    protected TransactionBroadcasterTargetConfigurationProperties(String destination) {
-        super(destination);
+    public TransactionBroadcasterTargetConfigurationProperties(List<String> destinations) {
+        super(destinations);
     }
 }
