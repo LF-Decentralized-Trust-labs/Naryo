@@ -1,7 +1,9 @@
-package io.naryo.infrastructure.event.mongo.event.block.model;
+package io.naryo.infrastructure.event.mongo.event.persistence.document;
 
 import java.math.BigInteger;
+import java.util.UUID;
 
+import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.event.transaction.TransactionEvent;
 import lombok.AllArgsConstructor;
@@ -26,7 +28,7 @@ public final class TransactionEventDocument {
     private String revertReason;
     private TransactionStatus status;
 
-    public static TransactionEventDocument from(TransactionEvent event) {
+    public static TransactionEventDocument fromTransactionEvent(TransactionEvent event) {
         return new TransactionEventDocument(
                 event.getNodeId().toString(),
                 event.getHash(),
@@ -41,5 +43,22 @@ public final class TransactionEventDocument {
                 event.getInput(),
                 event.getRevertReason(),
                 event.getStatus());
+    }
+
+    public TransactionEvent toTransactionEvent() {
+        return new TransactionEvent(
+                UUID.fromString(nodeId),
+                hash,
+                status,
+                new NonNegativeBlockNumber(nonce),
+                blockHash,
+                new NonNegativeBlockNumber(blockNumber),
+                blockTimestamp,
+                transactionIndex,
+                sender,
+                receiver,
+                value,
+                input,
+                revertReason);
     }
 }

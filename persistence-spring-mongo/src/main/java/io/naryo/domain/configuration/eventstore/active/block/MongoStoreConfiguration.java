@@ -15,8 +15,10 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 public final class MongoStoreConfiguration extends ActiveStoreConfiguration {
 
+    public static String MONGO_STORE_TYPE = "mongo";
+
     public MongoStoreConfiguration(
             UUID nodeId, Map<StoreFeatureType, StoreFeatureConfiguration> features) {
-        super(nodeId, () -> "mongo", features);
+        super(nodeId, () -> MONGO_STORE_TYPE, features);
     }
 }

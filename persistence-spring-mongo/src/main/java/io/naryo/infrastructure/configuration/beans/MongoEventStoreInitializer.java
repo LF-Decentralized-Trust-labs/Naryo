@@ -7,10 +7,10 @@ import io.naryo.domain.configuration.eventstore.active.block.MongoStoreConfigura
 import io.naryo.infrastructure.configuration.beans.env.EnvironmentInitializer;
 import org.springframework.stereotype.Component;
 
+import static io.naryo.domain.configuration.eventstore.active.block.MongoStoreConfiguration.MONGO_STORE_TYPE;
+
 @Component
 public final class MongoEventStoreInitializer implements EnvironmentInitializer {
-
-    private static final String EVENT_STORE_TYPE = "mongo";
 
     private final ActiveEventStoreConfigurationMapperRegistry mapperRegistry;
 
@@ -21,7 +21,7 @@ public final class MongoEventStoreInitializer implements EnvironmentInitializer 
     @Override
     public void initialize() {
         mapperRegistry.register(
-                EVENT_STORE_TYPE,
+                MONGO_STORE_TYPE,
                 ActiveStoreConfigurationDescriptor.class,
                 properties ->
                         new MongoStoreConfiguration(

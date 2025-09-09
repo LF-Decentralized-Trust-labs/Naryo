@@ -1,9 +1,11 @@
-package io.naryo.infrastructure.event.mongo.event.block.model;
+package io.naryo.infrastructure.event.mongo.event.persistence.document;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.UUID;
 
 import io.naryo.application.node.interactor.block.dto.Transaction;
+import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.event.block.BlockEvent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,7 +25,7 @@ public final class BlockEventDocument {
     private final BigInteger timestamp;
     private final List<Transaction> transactions;
 
-    public static BlockEventDocument from(BlockEvent blockEvent) {
+    public static BlockEventDocument fromBlockEvent(BlockEvent blockEvent) {
         return new BlockEventDocument(
                 blockEvent.getNodeId().toString(),
                 blockEvent.getNumber().value().toString(),
@@ -33,5 +35,17 @@ public final class BlockEventDocument {
                 blockEvent.getGasUsed(),
                 blockEvent.getTimestamp(),
                 blockEvent.getTransactions());
+    }
+
+    public BlockEvent toBlockEvent() {
+        return new BlockEvent(
+                UUID.fromString(nodeId),
+                new NonNegativeBlockNumber(new BigInteger(number)),
+                hash,
+                logsBloom,
+                size,
+                gasUsed,
+                timestamp,
+                transactions);
     }
 }
