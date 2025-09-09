@@ -1,14 +1,15 @@
 package io.naryo.infrastructure.store.event;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import io.naryo.application.store.event.block.ContractEventEventStore;
 import io.naryo.domain.configuration.store.active.JpaActiveStoreConfiguration;
 import io.naryo.domain.event.contract.ContractEvent;
 import io.naryo.infrastructure.store.event.persistence.entity.contract.ContractEventEntity;
+import io.naryo.infrastructure.store.event.persistence.entity.contract.ContractEventEntityId;
 import io.naryo.infrastructure.store.event.persistence.repository.ContractEventEntityRepository;
 import org.springframework.stereotype.Component;
 
@@ -34,35 +35,25 @@ public final class ContractJpaEventStore extends JpaEventStore<String, ContractE
 
     @Override
     public Optional<ContractEvent> get(JpaActiveStoreConfiguration configuration, String key) {
-        String[] parts = key.split(":", 2);
-
-        String blockHash = parts[0];
-        BigInteger logIndex = new BigInteger(parts[1]);
-
         return contractEventEntityRepository
-                .findByBlockHashAndLogIndex(blockHash, logIndex)
+                .findById(getIdFromKey(key))
                 .map(ContractEventEntity::toContractEvent);
     }
 
     @Override
     public List<ContractEvent> get(JpaActiveStoreConfiguration configuration, List<String> keys) {
-        List<ContractEvent> result = new ArrayList<>();
+        List<ContractEventEntityId> ids = keys.stream().map(this::getIdFromKey).toList();
 
-        keys.forEach(
-                key -> {
-                    String[] parts = key.split(":", 2);
-                    String blockHash = parts[0];
-                    BigInteger logIndex = new BigInteger(parts[1]);
+        return contractEventEntityRepository.findAllByIdIn(ids).stream()
+                .map(ContractEventEntity::toContractEvent)
+                .collect(Collectors.toList());
+    }
 
-                    contractEventEntityRepository
-                            .findByBlockHashAndLogIndex(blockHash, logIndex)
-                            .ifPresent(
-                                    entity -> {
-                                        ContractEvent contractEvent = entity.toContractEvent();
-                                        result.add(contractEvent);
-                                    });
-                });
+    private ContractEventEntityId getIdFromKey(String key) {
+        String[] parts = key.split(":", 2);
+        String transactionHash = parts[0];
+        BigInteger logIndex = new BigInteger(parts[1]);
 
-        return result;
+        return new ContractEventEntityId(transactionHash, logIndex);
     }
 }

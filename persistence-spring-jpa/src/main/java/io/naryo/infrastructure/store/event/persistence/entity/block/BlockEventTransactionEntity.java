@@ -1,7 +1,6 @@
 package io.naryo.infrastructure.store.event.persistence.entity.block;
 
 import java.math.BigInteger;
-import java.util.UUID;
 
 import io.naryo.application.node.interactor.block.dto.Transaction;
 import jakarta.persistence.*;
@@ -14,9 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public final class BlockEventTransactionEntity {
 
-    private @Id @GeneratedValue(strategy = GenerationType.UUID) @Column(name = "id") UUID id;
-
-    private @Column(name = "hash", nullable = false) String hash;
+    private @Id @Column(name = "hash", nullable = false) String hash;
 
     private @Column(name = "index", nullable = false) BigInteger index;
 

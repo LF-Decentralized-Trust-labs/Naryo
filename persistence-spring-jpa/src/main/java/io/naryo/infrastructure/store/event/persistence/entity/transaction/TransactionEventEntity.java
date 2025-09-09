@@ -16,11 +16,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public final class TransactionEventEntity {
 
-    private @Id @GeneratedValue(strategy = GenerationType.UUID) @Column(name = "id") UUID id;
+    private @Id @Column(name = "transaction_hash", nullable = false) String hash;
 
     private @Column(name = "node_id", nullable = false) String nodeId;
-
-    private @Column(name = "transaction_hash", nullable = false, unique = true) String hash;
 
     private @Column(name = "nonce", nullable = false) BigInteger nonce;
 

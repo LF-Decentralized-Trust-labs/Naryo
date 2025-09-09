@@ -17,13 +17,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public final class BlockEventEntity {
 
-    private @Id @GeneratedValue(strategy = GenerationType.UUID) @Column(name = "id") UUID id;
+    private @Id @Column(name = "hash", nullable = false) String hash;
 
     private @Column(name = "node_id", nullable = false) String nodeId;
 
     private @Column(name = "number", nullable = false) BigInteger number;
-
-    private @Column(name = "hash", nullable = false, unique = true) String hash;
 
     private @Column(name = "logs_bloom", nullable = false, length = 1024) String logsBloom;
 

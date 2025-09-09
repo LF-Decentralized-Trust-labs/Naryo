@@ -21,7 +21,7 @@ import org.hibernate.type.SqlTypes;
 @NoArgsConstructor
 public final class ContractEventEntity {
 
-    private @Id @GeneratedValue(strategy = GenerationType.UUID) @Column(name = "id") UUID id;
+    @EmbeddedId private ContractEventEntityId id;
 
     private @Column(name = "node_id", nullable = false) String nodeId;
 
@@ -31,13 +31,9 @@ public final class ContractEventEntity {
                     ContractEventParameterEntity<?, ?>>
             parameters;
 
-    private @Column(name = "transaction_hash", nullable = false) String transactionHash;
-
-    private @Column(name = "log_index", nullable = false) BigInteger logIndex;
-
     private @Column(name = "block_number", nullable = false) BigInteger blockNumber;
 
-    private @Column(name = "block_hash", nullable = false, unique = true) String blockHash;
+    private @Column(name = "block_hash", nullable = false) String blockHash;
 
     private @Column(name = "contract_address", nullable = false) String contractAddress;
 
@@ -48,24 +44,22 @@ public final class ContractEventEntity {
     private @Column(name = "status", nullable = false) ContractEventStatus status;
 
     private ContractEventEntity(
+            ContractEventEntityId id,
             String nodeId,
             String name,
             Set<ContractEventParameterEntity<?, ?>> parameters,
-            String transactionHash,
-            BigInteger logIndex,
-            BigInteger blockNumber,
             String blockHash,
+            BigInteger blockNumber,
             String contractAddress,
             String sender,
             BigInteger timestamp,
             ContractEventStatus status) {
+        this.id = id;
         this.nodeId = nodeId;
         this.name = name;
         this.parameters = parameters;
-        this.transactionHash = transactionHash;
-        this.logIndex = logIndex;
-        this.blockNumber = blockNumber;
         this.blockHash = blockHash;
+        this.blockNumber = blockNumber;
         this.contractAddress = contractAddress;
         this.sender = sender;
         this.timestamp = timestamp;
@@ -74,15 +68,14 @@ public final class ContractEventEntity {
 
     public static ContractEventEntity fromContractEvent(ContractEvent event) {
         return new ContractEventEntity(
+                new ContractEventEntityId(event.getTransactionHash(), event.getLogIndex()),
                 event.getNodeId().toString(),
                 event.getName().value(),
                 event.getParameters().stream()
                         .map(ContractEventParameterEntity::fromDomain)
                         .collect(Collectors.toSet()),
-                event.getTransactionHash(),
-                event.getLogIndex(),
-                event.getBlockNumber(),
                 event.getBlockHash(),
+                event.getBlockNumber(),
                 event.getContractAddress(),
                 event.getSender(),
                 event.getTimestamp(),
@@ -96,8 +89,8 @@ public final class ContractEventEntity {
                 parameters.stream()
                         .map(ContractEventParameterEntity::toDomain)
                         .collect(Collectors.toSet()),
-                transactionHash,
-                logIndex,
+                id.getTransactionHash(),
+                id.getLogIndex(),
                 blockNumber,
                 blockHash,
                 contractAddress,
