@@ -89,6 +89,6 @@ public final class ContractEvent extends Event<String> {
 
     @Override
     public String getKey() {
-        return String.format("%s:%s", blockHash, logIndex);
+        return String.format("%s:%s", transactionHash, logIndex);
     }
 }
