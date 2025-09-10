@@ -1,24 +1,28 @@
-package io.naryo.infrastructure.event.mongo.event.persistence.document;
+package io.naryo.infrastructure.store.event.persistence.document.contract;
 
 import java.math.BigInteger;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.common.event.EventName;
 import io.naryo.domain.event.contract.ContractEvent;
-import io.naryo.domain.event.contract.ContractEventParameter;
+import io.naryo.infrastructure.store.event.persistence.document.contract.parameter.ContractEventParameterDocument;
 import lombok.AllArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-@Document
+@Document(collection = "contract_event")
+@CompoundIndex(name = "uk_transactionHash_logIndex", def = "{'transactionHash': 1, 'logIndex': 1}", unique = true)
 @AllArgsConstructor
 public final class ContractEventDocument {
     private final String nodeId;
     private final EventName name;
-    private final Set<ContractEventParameter<?>> parameters;
-    private final @MongoId String transactionHash;
+    private final Set<ContractEventParameterDocument<?, ?>> parameters;
+    private final String transactionHash;
     private final BigInteger logIndex;
     private final BigInteger blockNumber;
     private final String blockHash;
@@ -31,7 +35,7 @@ public final class ContractEventDocument {
         return new ContractEventDocument(
                 event.getNodeId().toString(),
                 event.getName(),
-                event.getParameters(),
+                event.getParameters().stream().map(ContractEventParameterDocument::fromDomain).collect(Collectors.toSet()),
                 event.getTransactionHash(),
                 event.getLogIndex(),
                 event.getBlockNumber(),
@@ -46,7 +50,7 @@ public final class ContractEventDocument {
         return new ContractEvent(
                 UUID.fromString(nodeId),
                 name,
-                parameters,
+                parameters.stream().map(ContractEventParameterDocument::toDomain).collect(Collectors.toSet()),
                 transactionHash,
                 logIndex,
                 blockNumber,
