@@ -1,7 +1,8 @@
-package io.naryo.infrastructure.event.mongo.event.block.model;
+package io.naryo.infrastructure.event.mongo.event.persistence.document;
 
 import java.math.BigInteger;
 import java.util.Set;
+import java.util.UUID;
 
 import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.common.event.EventName;
@@ -26,7 +27,7 @@ public final class ContractEventDocument {
     private final BigInteger timestamp;
     private ContractEventStatus status;
 
-    public static ContractEventDocument from(ContractEvent event) {
+    public static ContractEventDocument fromContractEvent(ContractEvent event) {
         return new ContractEventDocument(
                 event.getNodeId().toString(),
                 event.getName(),
@@ -39,5 +40,20 @@ public final class ContractEventDocument {
                 event.getSender(),
                 event.getTimestamp(),
                 event.getStatus());
+    }
+
+    public ContractEvent toContractEvent() {
+        return new ContractEvent(
+                UUID.fromString(nodeId),
+                name,
+                parameters,
+                transactionHash,
+                logIndex,
+                blockNumber,
+                blockHash,
+                contractAddress,
+                sender,
+                status,
+                timestamp);
     }
 }
