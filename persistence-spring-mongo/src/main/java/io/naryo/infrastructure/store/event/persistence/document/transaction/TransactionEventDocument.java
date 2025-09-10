@@ -1,4 +1,4 @@
-package io.naryo.infrastructure.event.mongo.event.persistence.document;
+package io.naryo.infrastructure.store.event.persistence.document.transaction;
 
 import java.math.BigInteger;
 import java.util.UUID;
@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-@Document
+@Document(collection = "transaction_event")
 @AllArgsConstructor
 public final class TransactionEventDocument {
 

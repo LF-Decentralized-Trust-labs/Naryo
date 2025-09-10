@@ -44,7 +44,7 @@ public final class ContractJpaEventStore extends JpaEventStore<String, ContractE
     public List<ContractEvent> get(JpaActiveStoreConfiguration configuration, List<String> keys) {
         List<ContractEventEntityId> ids = keys.stream().map(this::getIdFromKey).toList();
 
-        return contractEventEntityRepository.findAllByIdIn(ids).stream()
+        return contractEventEntityRepository.findAllById(ids).stream()
                 .map(ContractEventEntity::toContractEvent)
                 .collect(Collectors.toList());
     }
