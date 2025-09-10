@@ -32,7 +32,9 @@ public final class ContractEventDocument {
                 new ContractEventDocumentId(event.getTransactionHash(), event.getLogIndex()),
                 event.getNodeId().toString(),
                 event.getName(),
-                event.getParameters().stream().map(ContractEventParameterDocument::fromDomain).collect(Collectors.toSet()),
+                event.getParameters().stream()
+                        .map(ContractEventParameterDocument::fromDomain)
+                        .collect(Collectors.toSet()),
                 event.getBlockNumber(),
                 event.getBlockHash(),
                 event.getContractAddress(),
@@ -45,7 +47,9 @@ public final class ContractEventDocument {
         return new ContractEvent(
                 UUID.fromString(nodeId),
                 name,
-                parameters.stream().map(ContractEventParameterDocument::toDomain).collect(Collectors.toSet()),
+                parameters.stream()
+                        .map(ContractEventParameterDocument::toDomain)
+                        .collect(Collectors.toSet()),
                 id.getTransactionHash(),
                 id.getLogIndex(),
                 blockNumber,

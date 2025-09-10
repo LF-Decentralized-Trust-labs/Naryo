@@ -5,5 +5,4 @@ import io.naryo.infrastructure.store.event.persistence.document.contract.Contrac
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface ContractEventDocumentRepository
-        extends MongoRepository<ContractEventDocument, ContractEventDocumentId> {
-}
+        extends MongoRepository<ContractEventDocument, ContractEventDocumentId> {}

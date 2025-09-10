@@ -1,7 +1,6 @@
 package io.naryo.infrastructure.store.event;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
