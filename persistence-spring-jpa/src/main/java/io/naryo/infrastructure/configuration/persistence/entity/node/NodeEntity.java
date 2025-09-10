@@ -29,7 +29,7 @@ import lombok.NoArgsConstructor;
 import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 
 @Entity
-@Table(name = "nodes")
+@Table(name = "node")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "node_type")
 @NoArgsConstructor

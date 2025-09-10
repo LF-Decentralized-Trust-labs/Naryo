@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 @Entity
-@Table(name = "store_features")
+@Table(name = "store_feature")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "feature")
 @Getter

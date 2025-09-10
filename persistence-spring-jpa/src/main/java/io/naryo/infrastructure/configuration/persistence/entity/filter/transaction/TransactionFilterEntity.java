@@ -22,9 +22,8 @@ public class TransactionFilterEntity extends FilterEntity implements Transaction
     private @Column(name = "identifier_type") @Nullable @Setter IdentifierType identifierType;
     private @Column(name = "value") @Nullable @Setter String value;
     private @ElementCollection(fetch = FetchType.EAGER) @CollectionTable(
-            name = "transaction_filter_statuses") @Enumerated(EnumType.STRING) @Setter Set<
-                    TransactionStatus>
-            statuses;
+            name = "transaction_filter_status") @Enumerated(EnumType.STRING) @Column(
+            name = "status") @Setter Set<TransactionStatus> statuses;
 
     public TransactionFilterEntity(
             UUID id,

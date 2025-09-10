@@ -1,16 +1,14 @@
 package io.naryo.infrastructure.configuration.persistence.entity.broadcaster.target;
 
-import java.util.Optional;
+import java.util.List;
 
 import io.naryo.application.configuration.source.model.broadcaster.target.BroadcasterTargetDescriptor;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "broadcasters_target")
+@Table(name = "broadcaster_target")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "target_type")
 @NoArgsConstructor
@@ -19,19 +17,21 @@ public abstract class BroadcasterTargetEntity implements BroadcasterTargetDescri
 
     private @Id @Column(name = "id") @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
 
-    private @Column(name = "destination") @Nullable @NotBlank String destination;
+    private @ElementCollection(fetch = FetchType.EAGER) @CollectionTable(
+            name = "broadcaster_target_destination") @Column(name = "destination") List<String>
+            destinations;
 
-    public BroadcasterTargetEntity(String destination) {
-        this.destination = destination;
+    public BroadcasterTargetEntity(List<String> destinations) {
+        this.destinations = destinations;
     }
 
     @Override
-    public Optional<String> getDestination() {
-        return Optional.ofNullable(this.destination);
+    public List<String> getDestinations() {
+        return this.destinations != null ? destinations : List.of();
     }
 
     @Override
-    public void setDestination(String destination) {
-        this.destination = destination;
+    public void setDestinations(List<String> destinations) {
+        this.destinations = destinations;
     }
 }

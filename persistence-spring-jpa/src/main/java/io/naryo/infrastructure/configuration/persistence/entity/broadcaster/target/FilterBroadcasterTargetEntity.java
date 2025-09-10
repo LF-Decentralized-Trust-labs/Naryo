@@ -1,5 +1,6 @@
 package io.naryo.infrastructure.configuration.persistence.entity.broadcaster.target;
 
+import java.util.List;
 import java.util.UUID;
 
 import io.naryo.application.configuration.source.model.broadcaster.target.FilterBroadcasterTargetDescriptor;
@@ -19,8 +20,8 @@ public class FilterBroadcasterTargetEntity extends BroadcasterTargetEntity
 
     private @Column(name = "filter_id") @NotNull UUID filterId;
 
-    public FilterBroadcasterTargetEntity(String destination, UUID filterId) {
-        super(destination);
+    public FilterBroadcasterTargetEntity(List<String> destinations, UUID filterId) {
+        super(destinations);
         this.filterId = filterId;
     }
 }

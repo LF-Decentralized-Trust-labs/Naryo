@@ -1,5 +1,7 @@
 package io.naryo.infrastructure.configuration.persistence.entity.broadcaster.target;
 
+import java.util.List;
+
 import io.naryo.application.configuration.source.model.broadcaster.target.ContractEventBroadcasterTargetDescriptor;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -11,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class ContractEventBroadcasterTargetEntity extends BroadcasterTargetEntity
         implements ContractEventBroadcasterTargetDescriptor {
 
-    public ContractEventBroadcasterTargetEntity(String destination) {
-        super(destination);
+    public ContractEventBroadcasterTargetEntity(List<String> destinations) {
+        super(destinations);
     }
 }

@@ -21,7 +21,7 @@ import static io.naryo.infrastructure.configuration.persistence.entity.common.sc
 import static io.naryo.infrastructure.configuration.persistence.entity.common.schema.ConfigurationSchemaEntity.toEntity;
 
 @Entity
-@Table(name = "broadcasters_configuration")
+@Table(name = "broadcaster_configuration")
 @AllArgsConstructor
 @NoArgsConstructor
 public final class BroadcasterConfigurationEntity implements BroadcasterConfigurationDescriptor {

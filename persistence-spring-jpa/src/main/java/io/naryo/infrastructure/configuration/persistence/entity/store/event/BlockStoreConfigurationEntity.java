@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@DiscriminatorValue("block_event")
+@DiscriminatorValue("event_block")
 @Getter
 @NoArgsConstructor
 public final class BlockStoreConfigurationEntity extends EventStoreConfigurationEntity

@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "block_event_transactions")
+@Table(name = "block_event_transaction")
 @Getter
 @NoArgsConstructor
 public final class BlockEventTransactionEntity {

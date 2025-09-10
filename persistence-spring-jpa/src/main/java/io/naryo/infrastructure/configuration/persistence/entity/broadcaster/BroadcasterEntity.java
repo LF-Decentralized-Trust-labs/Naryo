@@ -16,10 +16,8 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
-
 @Entity
-@Table(name = "broadcasters")
+@Table(name = "broadcaster")
 @AllArgsConstructor
 @NoArgsConstructor
 public final class BroadcasterEntity implements BroadcasterDescriptor {
@@ -60,28 +58,26 @@ public final class BroadcasterEntity implements BroadcasterDescriptor {
 
         switch (target) {
             case BlockBroadcasterTargetDescriptor blockTarget ->
-                    this.target =
-                            new BlockBroadcasterTargetEntity(
-                                    valueOrNull(blockTarget.getDestination()));
+                    this.target = new BlockBroadcasterTargetEntity(blockTarget.getDestinations());
 
             case TransactionBroadcasterTargetDescriptor transactionTarget ->
                     this.target =
                             new TransactionBroadcasterTargetEntity(
-                                    valueOrNull(transactionTarget.getDestination()));
+                                    transactionTarget.getDestinations());
 
             case ContractEventBroadcasterTargetDescriptor contractEventTarget ->
                     this.target =
                             new ContractEventBroadcasterTargetEntity(
-                                    valueOrNull(contractEventTarget.getDestination()));
+                                    contractEventTarget.getDestinations());
 
             case FilterBroadcasterTargetDescriptor filterTarget ->
                     this.target =
                             new FilterBroadcasterTargetEntity(
-                                    valueOrNull(filterTarget.getDestination()),
-                                    filterTarget.getFilterId());
+                                    filterTarget.getDestinations(), filterTarget.getFilterId());
+
             case AllBroadcasterTargetDescriptor allTarget ->
-                    this.target =
-                            new AllBroadcasterTargetEntity(valueOrNull(allTarget.getDestination()));
+                    this.target = new AllBroadcasterTargetEntity(allTarget.getDestinations());
+
             default ->
                     throw new IllegalArgumentException(
                             "Unsupported target type: " + target.getClass().getSimpleName());

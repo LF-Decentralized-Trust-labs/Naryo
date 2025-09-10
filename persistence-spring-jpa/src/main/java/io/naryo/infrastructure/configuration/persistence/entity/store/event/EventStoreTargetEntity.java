@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "event_store_targets")
+@Table(name = "event_store_target")
 @NoArgsConstructor
 public final class EventStoreTargetEntity implements EventStoreTargetDescriptor {
 

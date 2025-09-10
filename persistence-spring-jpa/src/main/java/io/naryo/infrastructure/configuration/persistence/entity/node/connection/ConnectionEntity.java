@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 
 @Entity
-@Table(name = "connections")
+@Table(name = "connection")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "connection_type", discriminatorType = DiscriminatorType.STRING)
 @NoArgsConstructor
