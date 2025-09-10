@@ -23,6 +23,14 @@
       "version": "0.1.0-SNAPSHOT",
       "description": "Naryo mongo support",
       "required": false
+    },
+    {
+      "id": "rabbitmq",
+      "groupId": "io.naryo",
+      "artifactId": "broadcaster-spring-rabbitmq",
+      "version": "0.1.0-SNAPSHOT",
+      "description": "Naryo rabbitmq support",
+      "required": false
     }
   ]
 }
