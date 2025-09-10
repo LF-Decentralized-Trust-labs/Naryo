@@ -7,10 +7,12 @@ import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.event.transaction.TransactionEvent;
 import lombok.AllArgsConstructor;
+import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 @Document(collection = "transaction_event")
+@TypeAlias("transaction_event")
 @AllArgsConstructor
 public final class TransactionEventDocument {
 

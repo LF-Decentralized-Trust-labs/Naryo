@@ -6,10 +6,12 @@ import java.util.UUID;
 import io.naryo.application.store.filter.model.FilterState;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 @Document(collection = "filter_state")
+@TypeAlias("filter_state")
 @AllArgsConstructor
 @Getter
 public final class FilterStateDocument {

@@ -9,15 +9,17 @@ import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.event.block.BlockEvent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 @Document(collection = "block_event")
+@TypeAlias("block_event")
 @AllArgsConstructor
 @Getter
 public final class BlockEventDocument {
     private final String nodeId;
-    private final @MongoId BigInteger number;
+    private final @MongoId String number;
     private final String hash;
     private final String logsBloom;
     private final BigInteger size;
@@ -28,7 +30,7 @@ public final class BlockEventDocument {
     public static BlockEventDocument fromBlockEvent(BlockEvent blockEvent) {
         return new BlockEventDocument(
                 blockEvent.getNodeId().toString(),
-                blockEvent.getNumber().value(),
+                blockEvent.getNumber().value().toString(),
                 blockEvent.getHash(),
                 blockEvent.getLogsBloom(),
                 blockEvent.getSize(),
@@ -40,7 +42,7 @@ public final class BlockEventDocument {
     public BlockEvent toBlockEvent() {
         return new BlockEvent(
                 UUID.fromString(nodeId),
-                new NonNegativeBlockNumber(number),
+                new NonNegativeBlockNumber(new BigInteger(number)),
                 hash,
                 logsBloom,
                 size,

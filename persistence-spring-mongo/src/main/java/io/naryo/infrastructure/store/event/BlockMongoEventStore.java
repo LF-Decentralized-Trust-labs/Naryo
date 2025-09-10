@@ -31,7 +31,8 @@ public final class BlockMongoEventStore extends MongoEventStore<BigInteger, Bloc
     public Optional<BigInteger> getLatest(MongoStoreConfiguration configuration) {
         return blockEventDocumentRepository
                 .findFirstByOrderByNumberDesc()
-                .map(BlockEventDocument::getNumber);
+                .map(BlockEventDocument::getNumber)
+                .map(BigInteger::new);
     }
 
     @Override
@@ -41,12 +42,18 @@ public final class BlockMongoEventStore extends MongoEventStore<BigInteger, Bloc
 
     @Override
     public Optional<BlockEvent> get(MongoStoreConfiguration configuration, BigInteger key) {
-        return blockEventDocumentRepository.findByNumber(key).map(BlockEventDocument::toBlockEvent);
+        String number = key.toString();
+
+        return blockEventDocumentRepository
+                .findByNumber(number)
+                .map(BlockEventDocument::toBlockEvent);
     }
 
     @Override
     public List<BlockEvent> get(MongoStoreConfiguration configuration, List<BigInteger> keys) {
-        return blockEventDocumentRepository.findAllByNumberIn(keys).stream()
+        List<String> numbers = keys.stream().map(BigInteger::toString).toList();
+
+        return blockEventDocumentRepository.findAllByNumberIn(numbers).stream()
                 .map(BlockEventDocument::toBlockEvent)
                 .collect(Collectors.toList());
     }

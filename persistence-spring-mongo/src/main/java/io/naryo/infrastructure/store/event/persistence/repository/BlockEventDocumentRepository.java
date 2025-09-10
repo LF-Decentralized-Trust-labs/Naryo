@@ -1,6 +1,5 @@
 package io.naryo.infrastructure.store.event.persistence.repository;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,7 +10,7 @@ public interface BlockEventDocumentRepository extends MongoRepository<BlockEvent
 
     Optional<BlockEventDocument> findFirstByOrderByNumberDesc();
 
-    Optional<BlockEventDocument> findByNumber(BigInteger number);
+    Optional<BlockEventDocument> findByNumber(String number);
 
-    List<BlockEventDocument> findAllByNumberIn(List<BigInteger> numbers);
+    List<BlockEventDocument> findAllByNumberIn(List<String> numbers);
 }
