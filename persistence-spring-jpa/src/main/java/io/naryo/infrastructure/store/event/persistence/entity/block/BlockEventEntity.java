@@ -19,7 +19,7 @@ public final class BlockEventEntity {
 
     private @Id @Column(name = "hash", nullable = false) String hash;
 
-    private @Column(name = "node_id", nullable = false) String nodeId;
+    private @Column(name = "node_id", nullable = false) UUID nodeId;
 
     private @Column(name = "number", nullable = false) BigInteger number;
 
@@ -35,7 +35,7 @@ public final class BlockEventEntity {
     @JoinColumn(name = "block_id") List<BlockEventTransactionEntity> transactions;
 
     private BlockEventEntity(
-            String nodeId,
+            UUID nodeId,
             BigInteger number,
             String hash,
             String logsBloom,
@@ -55,7 +55,7 @@ public final class BlockEventEntity {
 
     public static BlockEventEntity fromBlockEvent(BlockEvent blockEvent) {
         return new BlockEventEntity(
-                blockEvent.getNodeId().toString(),
+                blockEvent.getNodeId(),
                 blockEvent.getNumber().value(),
                 blockEvent.getHash(),
                 blockEvent.getLogsBloom(),
@@ -69,7 +69,7 @@ public final class BlockEventEntity {
 
     public BlockEvent toBlockEvent() {
         return new BlockEvent(
-                UUID.fromString(nodeId),
+                nodeId,
                 new NonNegativeBlockNumber(number),
                 hash,
                 logsBloom,

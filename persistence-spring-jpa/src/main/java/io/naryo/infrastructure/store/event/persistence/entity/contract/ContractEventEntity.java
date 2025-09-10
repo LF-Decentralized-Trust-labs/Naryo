@@ -23,7 +23,7 @@ public final class ContractEventEntity {
 
     @EmbeddedId private ContractEventEntityId id;
 
-    private @Column(name = "node_id", nullable = false) String nodeId;
+    private @Column(name = "node_id", nullable = false) UUID nodeId;
 
     private @Column(name = "name", nullable = false) String name;
 
@@ -45,7 +45,7 @@ public final class ContractEventEntity {
 
     private ContractEventEntity(
             ContractEventEntityId id,
-            String nodeId,
+            UUID nodeId,
             String name,
             Set<ContractEventParameterEntity<?, ?>> parameters,
             String blockHash,
@@ -69,7 +69,7 @@ public final class ContractEventEntity {
     public static ContractEventEntity fromContractEvent(ContractEvent event) {
         return new ContractEventEntity(
                 new ContractEventEntityId(event.getTransactionHash(), event.getLogIndex()),
-                event.getNodeId().toString(),
+                event.getNodeId(),
                 event.getName().value(),
                 event.getParameters().stream()
                         .map(ContractEventParameterEntity::fromDomain)
@@ -84,7 +84,7 @@ public final class ContractEventEntity {
 
     public ContractEvent toContractEvent() {
         return new ContractEvent(
-                UUID.fromString(nodeId),
+                nodeId,
                 new EventName(name),
                 parameters.stream()
                         .map(ContractEventParameterEntity::toDomain)

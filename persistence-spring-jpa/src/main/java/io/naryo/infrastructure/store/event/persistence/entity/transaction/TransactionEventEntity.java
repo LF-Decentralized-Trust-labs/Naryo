@@ -18,7 +18,7 @@ public final class TransactionEventEntity {
 
     private @Id @Column(name = "transaction_hash", nullable = false) String hash;
 
-    private @Column(name = "node_id", nullable = false) String nodeId;
+    private @Column(name = "node_id", nullable = false) UUID nodeId;
 
     private @Column(name = "nonce", nullable = false) BigInteger nonce;
 
@@ -43,7 +43,7 @@ public final class TransactionEventEntity {
     private @Column(name = "status", nullable = false) TransactionStatus status;
 
     private TransactionEventEntity(
-            String nodeId,
+            UUID nodeId,
             String hash,
             BigInteger nonce,
             String blockHash,
@@ -73,7 +73,7 @@ public final class TransactionEventEntity {
 
     public static TransactionEventEntity fromTransactionEvent(TransactionEvent event) {
         return new TransactionEventEntity(
-                event.getNodeId().toString(),
+                event.getNodeId(),
                 event.getHash(),
                 event.getNonce().value(),
                 event.getBlockHash(),
@@ -90,7 +90,7 @@ public final class TransactionEventEntity {
 
     public TransactionEvent toTransactionEvent() {
         return new TransactionEvent(
-                UUID.fromString(nodeId),
+                nodeId,
                 hash,
                 status,
                 new NonNegativeBlockNumber(nonce),
