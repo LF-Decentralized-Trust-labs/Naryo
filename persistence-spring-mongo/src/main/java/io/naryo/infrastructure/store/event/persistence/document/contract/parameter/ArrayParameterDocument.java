@@ -1,20 +1,21 @@
 package io.naryo.infrastructure.store.event.persistence.document.contract.parameter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.naryo.domain.common.ParameterType;
 import io.naryo.domain.event.contract.ContractEventParameter;
 import io.naryo.domain.event.contract.parameter.ArrayParameter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.TypeAlias;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @NoArgsConstructor
 @TypeAlias("array")
 public final class ArrayParameterDocument<V extends ContractEventParameterDocument<?, ?>>
         extends ContractEventParameterDocument<List<V>, ArrayParameter<?>> {
 
-    private ArrayParameterDocument(ParameterType type, boolean indexed, int position, List<V> value) {
+    private ArrayParameterDocument(
+            ParameterType type, boolean indexed, int position, List<V> value) {
         super(type, indexed, position, value);
     }
 

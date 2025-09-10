@@ -10,7 +10,8 @@ import org.springframework.data.annotation.TypeAlias;
 public final class BoolParameterDocument
         extends ContractEventParameterDocument<Boolean, BoolParameter> {
 
-    private BoolParameterDocument(ParameterType type, boolean indexed, int position, Boolean value) {
+    private BoolParameterDocument(
+            ParameterType type, boolean indexed, int position, Boolean value) {
         super(type, indexed, position, value);
     }
 

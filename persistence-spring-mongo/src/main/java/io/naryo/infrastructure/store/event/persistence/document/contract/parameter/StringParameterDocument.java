@@ -9,7 +9,8 @@ import org.springframework.data.annotation.TypeAlias;
 @TypeAlias("string")
 public final class StringParameterDocument
         extends ContractEventParameterDocument<String, StringParameter> {
-    private StringParameterDocument(ParameterType type, boolean indexed, int position, String value) {
+    private StringParameterDocument(
+            ParameterType type, boolean indexed, int position, String value) {
         super(type, indexed, position, value);
     }
 

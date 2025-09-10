@@ -9,7 +9,8 @@ import org.springframework.data.annotation.TypeAlias;
 @TypeAlias("bytes")
 public final class BytesParameterDocument
         extends ContractEventParameterDocument<byte[], BytesParameter> {
-    private BytesParameterDocument(ParameterType type, boolean indexed, int position, byte[] value) {
+    private BytesParameterDocument(
+            ParameterType type, boolean indexed, int position, byte[] value) {
         super(type, indexed, position, value);
     }
 

@@ -1,18 +1,18 @@
 package io.naryo.infrastructure.store.event.persistence.document.contract.parameter;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import io.naryo.domain.common.ParameterType;
 import io.naryo.domain.event.contract.parameter.StructParameter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.TypeAlias;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @NoArgsConstructor
 @TypeAlias("struct")
 public final class StructParameterDocument
         extends ContractEventParameterDocument<
-                        List<ContractEventParameterDocument<?, ?>>, StructParameter> {
+                List<ContractEventParameterDocument<?, ?>>, StructParameter> {
 
     private StructParameterDocument(
             ParameterType type,

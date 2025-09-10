@@ -47,25 +47,6 @@ public final class ContractEventMongoEventStore extends MongoEventStore<String, 
 
     @Override
     public List<ContractEvent> get(MongoStoreConfiguration configuration, List<String> keys) {
-//        List<ContractEvent> result = new ArrayList<>();
-//
-//        keys.forEach(
-//                key -> {
-//                    String[] parts = key.split(":", 2);
-//                    String transactionHash = parts[0];
-//                    BigInteger logIndex = new BigInteger(parts[1]);
-//
-//                    contractEventDocumentRepository
-//                            .findByTransactionHashAndLogIndex(transactionHash, logIndex)
-//                            .ifPresent(
-//                                    entity -> {
-//                                        ContractEvent contractEvent = entity.toContractEvent();
-//                                        result.add(contractEvent);
-//                                    });
-//                });
-//
-//        return result;
-
         List<String> transactionHashes = new ArrayList<>();
         List<BigInteger> logIndexes = new ArrayList<>();
 

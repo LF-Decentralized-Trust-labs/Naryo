@@ -7,7 +7,8 @@ import org.springframework.data.annotation.TypeAlias;
 
 @NoArgsConstructor
 @TypeAlias("int")
-public final class IntParameterDocument extends ContractEventParameterDocument<Integer, IntParameter> {
+public final class IntParameterDocument
+        extends ContractEventParameterDocument<Integer, IntParameter> {
     private IntParameterDocument(ParameterType type, boolean indexed, int position, Integer value) {
         super(type, indexed, position, value);
     }

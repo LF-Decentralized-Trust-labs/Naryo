@@ -9,7 +9,8 @@ import org.springframework.data.annotation.TypeAlias;
 @TypeAlias("uint")
 public final class UintParameterDocument
         extends ContractEventParameterDocument<Integer, UintParameter> {
-    private UintParameterDocument(ParameterType type, boolean indexed, int position, Integer value) {
+    private UintParameterDocument(
+            ParameterType type, boolean indexed, int position, Integer value) {
         super(type, indexed, position, value);
     }
 
