@@ -7,7 +7,7 @@ import io.naryo.application.configuration.source.definition.registry.Configurati
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaType;
 import io.naryo.application.configuration.source.mapper.StoreConfigurationDescriptorMapper;
 import io.naryo.application.configuration.source.model.store.ActiveStoreConfigurationDescriptor;
-import io.naryo.application.event.store.configuration.mapper.ActiveStoreConfigurationMapperRegistry;
+import io.naryo.application.store.configuration.mapper.ActiveStoreConfigurationMapperRegistry;
 import io.naryo.domain.configuration.store.MongoStoreConfiguration;
 import io.naryo.infrastructure.configuration.beans.env.EnvironmentInitializer;
 import org.springframework.stereotype.Component;

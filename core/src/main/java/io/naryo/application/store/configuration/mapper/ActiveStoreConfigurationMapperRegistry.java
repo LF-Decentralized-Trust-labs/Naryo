@@ -1,4 +1,4 @@
-package io.naryo.application.event.store.configuration.mapper;
+package io.naryo.application.store.configuration.mapper;
 
 import java.util.*;
 

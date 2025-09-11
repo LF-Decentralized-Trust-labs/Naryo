@@ -3,7 +3,7 @@ package io.naryo.infrastructure.configuration.provider.event.store;
 import java.util.List;
 
 import io.naryo.application.configuration.source.model.store.StoreConfigurationDescriptor;
-import io.naryo.application.event.store.configuration.provider.StoreSourceProvider;
+import io.naryo.application.store.configuration.provider.StoreSourceProvider;
 import io.naryo.infrastructure.configuration.source.env.model.EnvironmentProperties;
 import org.springframework.stereotype.Component;
 

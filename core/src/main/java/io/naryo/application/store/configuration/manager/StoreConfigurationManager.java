@@ -1,4 +1,4 @@
-package io.naryo.application.event.store.configuration.manager;
+package io.naryo.application.store.configuration.manager;
 
 import io.naryo.application.configuration.manager.CollectionConfigurationManager;
 import io.naryo.domain.configuration.store.StoreConfiguration;

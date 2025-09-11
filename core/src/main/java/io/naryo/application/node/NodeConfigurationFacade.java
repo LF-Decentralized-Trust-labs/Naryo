@@ -4,7 +4,7 @@ import java.util.List;
 
 import io.naryo.application.broadcaster.configuration.manager.BroadcasterConfigurationConfigurationManager;
 import io.naryo.application.broadcaster.configuration.manager.BroadcasterConfigurationManager;
-import io.naryo.application.event.store.configuration.manager.StoreConfigurationManager;
+import io.naryo.application.store.configuration.manager.StoreConfigurationManager;
 import io.naryo.application.filter.configuration.manager.FilterConfigurationManager;
 import io.naryo.application.node.configuration.manager.NodeConfigurationManager;
 import io.naryo.domain.broadcaster.Broadcaster;

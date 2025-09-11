@@ -6,7 +6,7 @@ import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaRegistry;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaType;
 import io.naryo.application.configuration.source.model.store.StoreConfigurationDescriptor;
-import io.naryo.application.event.store.configuration.provider.StoreSourceProvider;
+import io.naryo.application.store.configuration.provider.StoreSourceProvider;
 import io.naryo.infrastructure.configuration.persistence.entity.store.ActiveStoreConfigurationEntity;
 import io.naryo.infrastructure.configuration.persistence.entity.store.InactiveStoreConfigurationEntity;
 import io.naryo.infrastructure.configuration.persistence.entity.store.StoreConfigurationEntity;

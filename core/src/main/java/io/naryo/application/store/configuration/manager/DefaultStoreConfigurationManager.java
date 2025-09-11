@@ -1,4 +1,4 @@
-package io.naryo.application.event.store.configuration.manager;
+package io.naryo.application.store.configuration.manager;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -12,8 +12,8 @@ import io.naryo.application.configuration.manager.BaseCollectionConfigurationMan
 import io.naryo.application.configuration.source.model.store.ActiveStoreConfigurationDescriptor;
 import io.naryo.application.configuration.source.model.store.InactiveStoreConfigurationDescriptor;
 import io.naryo.application.configuration.source.model.store.StoreConfigurationDescriptor;
-import io.naryo.application.event.store.configuration.mapper.ActiveStoreConfigurationMapperRegistry;
-import io.naryo.application.event.store.configuration.provider.StoreSourceProvider;
+import io.naryo.application.store.configuration.mapper.ActiveStoreConfigurationMapperRegistry;
+import io.naryo.application.store.configuration.provider.StoreSourceProvider;
 import io.naryo.domain.configuration.store.StoreConfiguration;
 import io.naryo.domain.configuration.store.inactive.InactiveStoreConfiguration;
 
