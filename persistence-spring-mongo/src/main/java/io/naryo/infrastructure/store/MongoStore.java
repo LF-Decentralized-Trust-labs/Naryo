@@ -4,7 +4,7 @@ import io.naryo.application.store.Store;
 import io.naryo.domain.configuration.store.MongoStoreConfiguration;
 import io.naryo.domain.configuration.store.active.StoreType;
 
-import static io.naryo.domain.configuration.store.MongoStoreConfiguration.MONGO_STORE_TYPE;
+import static io.naryo.domain.MongoConstants.MONGO_TYPE;
 
 public abstract class MongoStore<K, D> implements Store<MongoStoreConfiguration, K, D> {
 
@@ -12,7 +12,7 @@ public abstract class MongoStore<K, D> implements Store<MongoStoreConfiguration,
 
     @Override
     public boolean supports(StoreType type, Class<?> clazz) {
-        return type.getName().equalsIgnoreCase(MONGO_STORE_TYPE)
+        return type.getName().equalsIgnoreCase(MONGO_TYPE)
                 && clazz.isAssignableFrom(this.getTargetDataClass());
     }
 }

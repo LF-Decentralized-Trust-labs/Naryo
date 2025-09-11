@@ -13,7 +13,7 @@ import io.naryo.infrastructure.configuration.persistence.document.common.Configu
 import jakarta.annotation.Nullable;
 import org.springframework.data.annotation.TypeAlias;
 
-@TypeAlias("active_event_store")
+@TypeAlias("active_store")
 public class ActiveStoreConfigurationPropertiesDocument extends StoreConfigurationPropertiesDocument
         implements ActiveStoreConfigurationDescriptor {
 

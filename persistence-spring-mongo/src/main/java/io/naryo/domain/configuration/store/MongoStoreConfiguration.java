@@ -10,15 +10,15 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import static io.naryo.domain.MongoConstants.MONGO_TYPE;
+
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public final class MongoStoreConfiguration extends ActiveStoreConfiguration {
 
-    public static String MONGO_STORE_TYPE = "mongo";
-
     public MongoStoreConfiguration(
             UUID nodeId, Map<StoreFeatureType, StoreFeatureConfiguration> features) {
-        super(nodeId, () -> MONGO_STORE_TYPE, features);
+        super(nodeId, () -> MONGO_TYPE, features);
     }
 }

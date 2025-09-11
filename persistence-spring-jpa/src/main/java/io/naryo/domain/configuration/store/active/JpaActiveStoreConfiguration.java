@@ -9,15 +9,15 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import static io.naryo.domain.JpaConstants.JPA_TYPE;
+
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public final class JpaActiveStoreConfiguration extends ActiveStoreConfiguration {
 
-    public static String JPA_STORE_TYPE = "jpa";
-
     public JpaActiveStoreConfiguration(
             UUID nodeId, Map<StoreFeatureType, StoreFeatureConfiguration> features) {
-        super(nodeId, () -> JPA_STORE_TYPE, features);
+        super(nodeId, () -> JPA_TYPE, features);
     }
 }

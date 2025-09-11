@@ -7,6 +7,7 @@ import io.naryo.application.broadcaster.configuration.mapper.BroadcasterConfigur
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.definition.FieldDefinition;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaRegistry;
+import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaType;
 import io.naryo.application.configuration.source.model.broadcaster.configuration.BroadcasterConfigurationDescriptor;
 import io.naryo.domain.configuration.broadcaster.BroadcasterCache;
 import io.naryo.domain.configuration.broadcaster.rabbitmq.Exchange;
@@ -16,12 +17,10 @@ import io.naryo.infrastructure.configuration.beans.env.EnvironmentInitializer;
 import org.springframework.stereotype.Component;
 
 import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
-import static io.naryo.domain.configuration.broadcaster.rabbitmq.RabbitMqBroadcasterConfiguration.RABBITMQ_TYPE;
+import static io.naryo.domain.RabbitMqConstants.RABBITMQ_TYPE;
 
 @Component
 public final class RabbitMqBroadcasterInitializer implements EnvironmentInitializer {
-
-    private static final String RABBITMQ_BROADCASTER_SCHEMA_NAME = "broadcaster_" + RABBITMQ_TYPE;
 
     private final BroadcasterConfigurationMapperRegistry mapperRegistry;
     private final ConfigurationSchemaRegistry schemaRegistry;
@@ -52,7 +51,8 @@ public final class RabbitMqBroadcasterInitializer implements EnvironmentInitiali
                 });
 
         schemaRegistry.register(
-                RABBITMQ_BROADCASTER_SCHEMA_NAME,
+                ConfigurationSchemaType.BROADCASTER,
+                RABBITMQ_TYPE,
                 new ConfigurationSchema(
                         RABBITMQ_TYPE,
                         List.of(

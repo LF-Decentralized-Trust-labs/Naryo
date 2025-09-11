@@ -7,7 +7,7 @@ import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-@Document(collection = "event_stores")
+@Document(collection = "stores_configuration")
 @Setter
 public abstract class StoreConfigurationPropertiesDocument implements StoreConfigurationDescriptor {
     private @MongoId String nodeId;

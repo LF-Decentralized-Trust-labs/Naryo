@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
-import static io.naryo.domain.configuration.broadcaster.rabbitmq.RabbitMqBroadcasterConfiguration.RABBITMQ_TYPE;
+import static io.naryo.domain.RabbitMqConstants.RABBITMQ_TYPE;
 
 @Slf4j
 @Component

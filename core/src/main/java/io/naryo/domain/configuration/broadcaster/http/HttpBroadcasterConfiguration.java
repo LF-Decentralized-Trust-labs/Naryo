@@ -9,6 +9,8 @@ import io.naryo.domain.configuration.broadcaster.BroadcasterCache;
 import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;
 import lombok.Getter;
 
+import static io.naryo.domain.HttpConstants.HTTP_TYPE;
+
 @Getter
 public final class HttpBroadcasterConfiguration extends BroadcasterConfiguration {
 
@@ -16,7 +18,7 @@ public final class HttpBroadcasterConfiguration extends BroadcasterConfiguration
 
     public HttpBroadcasterConfiguration(
             UUID id, BroadcasterCache cache, ConnectionEndpoint endpoint) {
-        super(id, () -> "http", cache);
+        super(id, () -> HTTP_TYPE, cache);
         Objects.requireNonNull(endpoint, "endpoint must not be null");
         this.endpoint = endpoint;
     }
