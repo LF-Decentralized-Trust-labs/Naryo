@@ -1,9 +1,9 @@
-package io.naryo.infrastructure.event.mongo.event.persistence.repository;
+package io.naryo.infrastructure.store.event.persistence.repository;
 
 import java.util.List;
 import java.util.Optional;
 
-import io.naryo.infrastructure.event.mongo.event.persistence.document.TransactionEventDocument;
+import io.naryo.infrastructure.store.event.persistence.document.transaction.TransactionEventDocument;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface TransactionEventDocumentRepository

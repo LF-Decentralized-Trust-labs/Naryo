@@ -1,14 +1,14 @@
-package io.naryo.infrastructure.event.mongo.event;
+package io.naryo.infrastructure.store.event;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.naryo.application.store.event.block.TransactionEventStore;
-import io.naryo.domain.configuration.eventstore.active.block.MongoStoreConfiguration;
+import io.naryo.domain.configuration.store.MongoStoreConfiguration;
 import io.naryo.domain.event.transaction.TransactionEvent;
-import io.naryo.infrastructure.event.mongo.event.persistence.document.TransactionEventDocument;
-import io.naryo.infrastructure.event.mongo.event.persistence.repository.TransactionEventDocumentRepository;
+import io.naryo.infrastructure.store.event.persistence.document.transaction.TransactionEventDocument;
+import io.naryo.infrastructure.store.event.persistence.repository.TransactionEventDocumentRepository;
 import org.springframework.stereotype.Component;
 
 @Component

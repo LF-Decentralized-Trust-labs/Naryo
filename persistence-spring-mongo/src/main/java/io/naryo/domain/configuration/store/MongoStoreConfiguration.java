@@ -1,4 +1,4 @@
-package io.naryo.domain.configuration.eventstore.active.block;
+package io.naryo.domain.configuration.store;
 
 import java.util.Map;
 import java.util.UUID;

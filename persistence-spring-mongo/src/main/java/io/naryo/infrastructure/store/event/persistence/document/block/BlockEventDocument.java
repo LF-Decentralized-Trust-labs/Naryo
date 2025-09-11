@@ -1,4 +1,4 @@
-package io.naryo.infrastructure.event.mongo.event.persistence.document;
+package io.naryo.infrastructure.store.event.persistence.document.block;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -9,10 +9,12 @@ import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.event.block.BlockEvent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-@Document
+@Document(collection = "block_event")
+@TypeAlias("block_event")
 @AllArgsConstructor
 @Getter
 public final class BlockEventDocument {
