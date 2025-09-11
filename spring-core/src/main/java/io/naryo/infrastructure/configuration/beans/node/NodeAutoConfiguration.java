@@ -12,7 +12,6 @@ import io.naryo.application.common.Mapper;
 import io.naryo.application.configuration.resilence.ResilienceRegistry;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.event.decoder.block.DefaultContractEventParameterDecoder;
-import io.naryo.application.store.configuration.manager.StoreConfigurationManager;
 import io.naryo.application.filter.configuration.manager.FilterConfigurationManager;
 import io.naryo.application.node.NodeConfigurationFacade;
 import io.naryo.application.node.NodeInitializer;
@@ -29,6 +28,7 @@ import io.naryo.application.node.subscription.block.factory.BlockSubscriberFacto
 import io.naryo.application.node.subscription.block.factory.DefaultBlockSubscriberFactory;
 import io.naryo.application.node.trigger.permanent.block.ProcessorTriggerFactory;
 import io.naryo.application.store.Store;
+import io.naryo.application.store.configuration.manager.StoreConfigurationManager;
 import io.naryo.domain.event.block.BlockEvent;
 import okhttp3.OkHttpClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
