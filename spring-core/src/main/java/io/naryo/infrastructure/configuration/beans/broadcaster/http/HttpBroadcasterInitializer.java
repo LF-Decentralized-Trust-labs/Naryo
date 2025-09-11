@@ -7,6 +7,7 @@ import io.naryo.application.broadcaster.configuration.mapper.BroadcasterConfigur
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.definition.FieldDefinition;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaRegistry;
+import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaType;
 import io.naryo.application.configuration.source.model.broadcaster.configuration.BroadcasterConfigurationDescriptor;
 import io.naryo.domain.common.connection.endpoint.ConnectionEndpoint;
 import io.naryo.domain.configuration.broadcaster.BroadcasterCache;
@@ -15,18 +16,15 @@ import io.naryo.infrastructure.configuration.beans.env.EnvironmentInitializer;
 import org.springframework.stereotype.Component;
 
 import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
+import static io.naryo.domain.HttpConstants.HTTP_TYPE;
 
 @Component
-public final class BroadcasterInitializer implements EnvironmentInitializer {
-
-    private static final String HTTP_BROADCASTER_TYPE = "http";
-    private static final String HTTP_BROADCASTER_SCHEMA_NAME =
-            "broadcaster_" + HTTP_BROADCASTER_TYPE;
+public final class HttpBroadcasterInitializer implements EnvironmentInitializer {
 
     private final BroadcasterConfigurationMapperRegistry mapperRegistry;
     private final ConfigurationSchemaRegistry schemaRegistry;
 
-    public BroadcasterInitializer(
+    public HttpBroadcasterInitializer(
             BroadcasterConfigurationMapperRegistry mapperRegistry,
             ConfigurationSchemaRegistry schemaRegistry) {
         this.mapperRegistry = mapperRegistry;
@@ -36,7 +34,7 @@ public final class BroadcasterInitializer implements EnvironmentInitializer {
     @Override
     public void initialize() {
         mapperRegistry.register(
-                HTTP_BROADCASTER_TYPE,
+                HTTP_TYPE,
                 BroadcasterConfigurationDescriptor.class,
                 properties -> {
                     Map<String, Object> props = properties.getAdditionalProperties();
@@ -59,9 +57,10 @@ public final class BroadcasterInitializer implements EnvironmentInitializer {
                 });
 
         schemaRegistry.register(
-                HTTP_BROADCASTER_SCHEMA_NAME,
+                ConfigurationSchemaType.BROADCASTER,
+                HTTP_TYPE,
                 new ConfigurationSchema(
-                        HTTP_BROADCASTER_TYPE,
+                        HTTP_TYPE,
                         List.of(
                                 new FieldDefinition(
                                         "endpoint", HttpBroadcasterEndpoint.class, true, null))));

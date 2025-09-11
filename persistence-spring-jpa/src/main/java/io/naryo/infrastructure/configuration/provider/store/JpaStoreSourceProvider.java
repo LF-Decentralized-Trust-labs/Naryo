@@ -1,28 +1,28 @@
-package io.naryo.infrastructure.configuration.provider.event.store;
+package io.naryo.infrastructure.configuration.provider.store;
 
 import java.util.*;
 
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaRegistry;
+import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaType;
 import io.naryo.application.configuration.source.model.store.StoreConfigurationDescriptor;
-import io.naryo.application.event.store.configuration.provider.EventStoreSourceProvider;
+import io.naryo.application.store.configuration.provider.StoreSourceProvider;
 import io.naryo.infrastructure.configuration.persistence.entity.store.ActiveStoreConfigurationEntity;
 import io.naryo.infrastructure.configuration.persistence.entity.store.InactiveStoreConfigurationEntity;
 import io.naryo.infrastructure.configuration.persistence.entity.store.StoreConfigurationEntity;
-import io.naryo.infrastructure.configuration.persistence.repository.event.store.EventStoreEntityRepository;
+import io.naryo.infrastructure.configuration.persistence.repository.store.StoreConfigurationEntityRepository;
 import io.naryo.infrastructure.util.serialization.TypeConverter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class JpaEventStoreSourceProvider implements EventStoreSourceProvider {
+public class JpaStoreSourceProvider implements StoreSourceProvider {
 
-    private static final String PREFIX_EVENT_STORE_SCHEMA = "event_store_";
-
-    private final EventStoreEntityRepository repository;
+    private final StoreConfigurationEntityRepository repository;
     private final ConfigurationSchemaRegistry schemaRegistry;
 
-    public JpaEventStoreSourceProvider(
-            EventStoreEntityRepository repository, ConfigurationSchemaRegistry schemaRegistry) {
+    public JpaStoreSourceProvider(
+            StoreConfigurationEntityRepository repository,
+            ConfigurationSchemaRegistry schemaRegistry) {
         this.repository = repository;
         this.schemaRegistry = schemaRegistry;
     }
@@ -43,7 +43,7 @@ public class JpaEventStoreSourceProvider implements EventStoreSourceProvider {
             case ActiveStoreConfigurationEntity active -> {
                 var schema =
                         schemaRegistry.getSchema(
-                                PREFIX_EVENT_STORE_SCHEMA + active.getType().getName());
+                                ConfigurationSchemaType.STORE, active.getType().getName());
                 active.setAdditionalProperties(
                         getAdditionalConfiguration(active.getAdditionalProperties(), schema));
                 active.setPropertiesSchema(schema);

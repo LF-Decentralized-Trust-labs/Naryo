@@ -15,6 +15,7 @@ import io.naryo.domain.event.Event;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 
+import static io.naryo.domain.HttpConstants.HTTP_TYPE;
 import static io.naryo.domain.common.connection.endpoint.ConnectionEndpoint.cleanPath;
 
 @Slf4j
@@ -66,6 +67,6 @@ public final class HttpBroadcasterProducer implements BroadcasterProducer {
 
     @Override
     public boolean supports(BroadcasterType type) {
-        return type.getName().equals("http");
+        return type.getName().equals(HTTP_TYPE);
     }
 }

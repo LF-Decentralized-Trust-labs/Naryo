@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.definition.FieldDefinition;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaRegistry;
+import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaType;
 import io.naryo.domain.configuration.store.active.feature.StoreFeatureType;
 import io.naryo.infrastructure.configuration.source.env.model.store.ActiveStoreConfigurationProperties;
 import io.naryo.infrastructure.configuration.source.env.model.store.StoreConfigurationProperties;
@@ -25,7 +26,6 @@ import org.springframework.stereotype.Component;
 public final class StoreConfigurationPropertiesDeserializer
         extends EnvironmentDeserializer<StoreConfigurationProperties> {
 
-    private static final String PREFIX_EVENT_STORE_SCHEMA = "event_store_";
     private final ConfigurationSchemaRegistry schemaRegistry;
 
     public StoreConfigurationPropertiesDeserializer(ConfigurationSchemaRegistry schemaRegistry) {
@@ -41,8 +41,7 @@ public final class StoreConfigurationPropertiesDeserializer
         UUID nodeId = getUuidOrNull(getTextOrNull(root.get("nodeId")));
         String type = getTextOrNull(root.get("type"));
 
-        ConfigurationSchema schema =
-                schemaRegistry.getSchema(PREFIX_EVENT_STORE_SCHEMA + type.toLowerCase());
+        ConfigurationSchema schema = schemaRegistry.getSchema(ConfigurationSchemaType.STORE, type);
         Set<String> knownFields = Set.of("type", "strategy", "targets");
         return new ActiveStoreConfigurationProperties(
                 nodeId,

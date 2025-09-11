@@ -1,30 +1,29 @@
-package io.naryo.infrastructure.configuration.provider.event.store;
+package io.naryo.infrastructure.configuration.provider.store;
 
 import java.util.*;
 
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.definition.FieldDefinition;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaRegistry;
+import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaType;
 import io.naryo.application.configuration.source.model.store.StoreConfigurationDescriptor;
-import io.naryo.application.event.store.configuration.provider.EventStoreSourceProvider;
+import io.naryo.application.store.configuration.provider.StoreSourceProvider;
 import io.naryo.infrastructure.configuration.persistence.document.common.ConfigurationSchemaDocument;
 import io.naryo.infrastructure.configuration.persistence.document.store.ActiveStoreConfigurationPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.store.InactiveStoreConfigurationPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.store.StoreConfigurationPropertiesDocument;
-import io.naryo.infrastructure.configuration.persistence.repository.event.store.EventStorePropertiesDocumentRepository;
+import io.naryo.infrastructure.configuration.persistence.repository.store.StorePropertiesDocumentRepository;
 import io.naryo.infrastructure.util.serialization.TypeConverter;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class MongoEventStoreSourceProvider implements EventStoreSourceProvider {
+public final class MongoStoreSourceProvider implements StoreSourceProvider {
 
-    private static final String PREFIX_EVENT_STORE_SCHEMA = "event_store_";
-
-    private final EventStorePropertiesDocumentRepository repository;
+    private final StorePropertiesDocumentRepository repository;
     private final ConfigurationSchemaRegistry schemaRegistry;
 
-    public MongoEventStoreSourceProvider(
-            EventStorePropertiesDocumentRepository repository,
+    public MongoStoreSourceProvider(
+            StorePropertiesDocumentRepository repository,
             ConfigurationSchemaRegistry schemaRegistry) {
         this.repository = repository;
         this.schemaRegistry = schemaRegistry;
@@ -47,7 +46,7 @@ public final class MongoEventStoreSourceProvider implements EventStoreSourceProv
             case ActiveStoreConfigurationPropertiesDocument active -> {
                 ConfigurationSchema schema =
                         schemaRegistry.getSchema(
-                                PREFIX_EVENT_STORE_SCHEMA + active.getType().getName());
+                                ConfigurationSchemaType.STORE, active.getType().getName());
                 yield new ActiveStoreConfigurationPropertiesDocument(
                         active.getNodeId().toString(),
                         active.getType().getName(),

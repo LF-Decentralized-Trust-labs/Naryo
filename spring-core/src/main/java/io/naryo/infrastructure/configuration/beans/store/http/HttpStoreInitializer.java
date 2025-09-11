@@ -1,29 +1,29 @@
-package io.naryo.infrastructure.configuration.beans.eventstore.configuration;
+package io.naryo.infrastructure.configuration.beans.store.http;
 
 import java.util.List;
 
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.definition.FieldDefinition;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaRegistry;
+import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaType;
 import io.naryo.application.configuration.source.mapper.StoreConfigurationDescriptorMapper;
 import io.naryo.application.configuration.source.model.store.ActiveStoreConfigurationDescriptor;
-import io.naryo.application.event.store.configuration.mapper.ActiveEventStoreConfigurationMapperRegistry;
+import io.naryo.application.store.configuration.mapper.ActiveStoreConfigurationMapperRegistry;
 import io.naryo.domain.common.connection.endpoint.ConnectionEndpoint;
 import io.naryo.domain.configuration.store.active.http.HttpStoreConfiguration;
 import io.naryo.infrastructure.configuration.beans.env.EnvironmentInitializer;
 import org.springframework.stereotype.Component;
 
+import static io.naryo.domain.HttpConstants.HTTP_TYPE;
+
 @Component
-public final class EventStoreInitializer implements EnvironmentInitializer {
+public final class HttpStoreInitializer implements EnvironmentInitializer {
 
-    private static final String EVENT_STORE_TYPE = "http";
-    private static final String EVENT_STORE_SCHEMA_NAME = "event_store_" + EVENT_STORE_TYPE;
-
-    private final ActiveEventStoreConfigurationMapperRegistry mapperRegistry;
+    private final ActiveStoreConfigurationMapperRegistry mapperRegistry;
     private final ConfigurationSchemaRegistry schemaRegistry;
 
-    public EventStoreInitializer(
-            ActiveEventStoreConfigurationMapperRegistry mapperRegistry,
+    public HttpStoreInitializer(
+            ActiveStoreConfigurationMapperRegistry mapperRegistry,
             ConfigurationSchemaRegistry schemaRegistry) {
         this.mapperRegistry = mapperRegistry;
         this.schemaRegistry = schemaRegistry;
@@ -32,7 +32,7 @@ public final class EventStoreInitializer implements EnvironmentInitializer {
     @Override
     public void initialize() {
         mapperRegistry.register(
-                EVENT_STORE_TYPE,
+                HTTP_TYPE,
                 ActiveStoreConfigurationDescriptor.class,
                 properties ->
                         new HttpStoreConfiguration(
@@ -48,9 +48,10 @@ public final class EventStoreInitializer implements EnvironmentInitializer {
                                                 : null)));
 
         schemaRegistry.register(
-                EVENT_STORE_SCHEMA_NAME,
+                ConfigurationSchemaType.STORE,
+                HTTP_TYPE,
                 new ConfigurationSchema(
-                        EVENT_STORE_TYPE,
+                        HTTP_TYPE,
                         List.of(
                                 new FieldDefinition(
                                         "endpoint", HttpBroadcasterEndpoint.class, true, null))));

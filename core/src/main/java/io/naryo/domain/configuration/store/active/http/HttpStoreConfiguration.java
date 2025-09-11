@@ -11,6 +11,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import static io.naryo.domain.HttpConstants.HTTP_TYPE;
+
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
@@ -22,7 +24,7 @@ public final class HttpStoreConfiguration extends ActiveStoreConfiguration {
             UUID nodeId,
             Map<StoreFeatureType, StoreFeatureConfiguration> features,
             ConnectionEndpoint endpoint) {
-        super(nodeId, () -> "http", features);
+        super(nodeId, () -> HTTP_TYPE, features);
         this.endpoint = endpoint;
     }
 }

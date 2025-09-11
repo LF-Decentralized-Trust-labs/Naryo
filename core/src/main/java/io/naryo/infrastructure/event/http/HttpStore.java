@@ -18,6 +18,7 @@ import io.naryo.domain.configuration.store.active.http.HttpStoreConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 
+import static io.naryo.domain.HttpConstants.HTTP_TYPE;
 import static io.naryo.domain.common.connection.endpoint.ConnectionEndpoint.cleanPath;
 
 @Slf4j
@@ -90,7 +91,7 @@ public abstract class HttpStore<K, D> implements Store<HttpStoreConfiguration, K
 
     @Override
     public boolean supports(StoreType type, Class<?> clazz) {
-        return type.getName().equalsIgnoreCase("http") && clazz.isAssignableFrom(this.clazz);
+        return type.getName().equalsIgnoreCase(HTTP_TYPE) && clazz.isAssignableFrom(this.clazz);
     }
 
     protected abstract Destination getDestination(HttpStoreConfiguration configuration);

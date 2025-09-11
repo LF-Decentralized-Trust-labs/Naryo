@@ -1,4 +1,4 @@
-package io.naryo.application.event.store.configuration.mapper;
+package io.naryo.application.store.configuration.mapper;
 
 import java.util.*;
 
@@ -6,7 +6,7 @@ import io.naryo.application.configuration.mapper.ConfigurationMapper;
 import io.naryo.application.configuration.mapper.ConfigurationMapperRegistry;
 import io.naryo.domain.configuration.store.active.ActiveStoreConfiguration;
 
-public final class ActiveEventStoreConfigurationMapperRegistry
+public final class ActiveStoreConfigurationMapperRegistry
         implements ConfigurationMapperRegistry<ActiveStoreConfiguration> {
 
     private final Map<String, Map<Class<?>, ConfigurationMapper<ActiveStoreConfiguration, ?>>>

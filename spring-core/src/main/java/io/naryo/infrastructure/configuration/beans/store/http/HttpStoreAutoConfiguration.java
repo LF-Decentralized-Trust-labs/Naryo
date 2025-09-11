@@ -1,4 +1,4 @@
-package io.naryo.infrastructure.configuration.beans.eventstore.http;
+package io.naryo.infrastructure.configuration.beans.store.http;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.naryo.infrastructure.event.http.event.block.BlockHttpEventStore;
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class HttpEventStoreAutoConfiguration {
+public class HttpStoreAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(BlockHttpEventStore.class)

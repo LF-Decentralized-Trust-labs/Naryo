@@ -9,19 +9,19 @@ public final class ConfigurationSchemaRegistry {
 
     private final Map<String, ConfigurationSchema> schemas;
 
-    private ConfigurationSchemaRegistry(Map<String, ConfigurationSchema> schemas) {
-        this.schemas = new HashMap<>(schemas);
-    }
-
     public ConfigurationSchemaRegistry() {
-        this(Map.of());
+        this.schemas = new HashMap<>();
     }
 
-    public ConfigurationSchema getSchema(String type) {
-        return schemas.get(type.toLowerCase());
+    public ConfigurationSchema getSchema(ConfigurationSchemaType schemaType, String suffix) {
+        return schemas.get(getConfigurationSchemaKey(schemaType, suffix));
     }
 
-    public void register(String type, ConfigurationSchema schema) {
-        schemas.put(type.toLowerCase(), schema);
+    public void register(ConfigurationSchemaType type, String suffix, ConfigurationSchema schema) {
+        schemas.put(getConfigurationSchemaKey(type, suffix), schema);
+    }
+
+    private String getConfigurationSchemaKey(ConfigurationSchemaType type, String suffix) {
+        return (type + "_" + suffix).toLowerCase();
     }
 }

@@ -7,10 +7,10 @@ import io.naryo.domain.configuration.broadcaster.BroadcasterCache;
 import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;
 import lombok.Getter;
 
+import static io.naryo.domain.RabbitMqConstants.RABBITMQ_TYPE;
+
 @Getter
 public final class RabbitMqBroadcasterConfiguration extends BroadcasterConfiguration {
-
-    public static final String RABBITMQ_TYPE = "rabbitmq";
 
     private final Exchange exchange;
     private final RoutingKey routingKey;

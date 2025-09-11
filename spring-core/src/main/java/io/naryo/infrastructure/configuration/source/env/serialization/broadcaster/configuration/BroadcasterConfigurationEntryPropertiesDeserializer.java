@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.definition.FieldDefinition;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaRegistry;
+import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaType;
 import io.naryo.infrastructure.configuration.source.env.model.broadcaster.configuration.BroadcasterCacheProperties;
 import io.naryo.infrastructure.configuration.source.env.model.broadcaster.configuration.BroadcasterConfigurationEntryProperties;
 import io.naryo.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
@@ -19,7 +20,6 @@ import org.springframework.stereotype.Component;
 public final class BroadcasterConfigurationEntryPropertiesDeserializer
         extends EnvironmentDeserializer<BroadcasterConfigurationEntryProperties> {
 
-    private static final String PREFIX_CONFIGURATION_SCHEMA = "broadcaster_";
     private final ConfigurationSchemaRegistry schemaRegistry;
 
     public BroadcasterConfigurationEntryPropertiesDeserializer(
@@ -37,7 +37,8 @@ public final class BroadcasterConfigurationEntryPropertiesDeserializer
         String type = getTextOrNull(root.get("type"));
         BroadcasterCacheProperties cache =
                 safeTreeToValue(root, "cache", codec, BroadcasterCacheProperties.class);
-        ConfigurationSchema schema = schemaRegistry.getSchema(PREFIX_CONFIGURATION_SCHEMA + type);
+        ConfigurationSchema schema =
+                schemaRegistry.getSchema(ConfigurationSchemaType.BROADCASTER, type);
 
         Set<String> knownFields = Set.of("id", "type", "cache");
 
