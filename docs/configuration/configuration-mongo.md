@@ -39,7 +39,7 @@ then configure the MongoDB connection.
 Add the dependency to your `build.gradle` file with desired version:
 
 ```groovy
-pendencies {
+dependencies {
     implementation "io.naryo:persistence-spring-mongo:<version>"
 }
 ```
@@ -53,6 +53,7 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/naryo
+      auto-index-creation: true
       # Additional MongoDB-specific configurations can be added here
 ```
 
@@ -523,15 +524,15 @@ collection. Stores are **per node** (the document `_id` equals the **Node ID**).
 
 ### Collections & Repository
 
-- **Collection:** `event_stores`
+- **Collection:** `stores_configuration`
 
-### Example A — Active event store (with features)
+### Example A — Active store (with features)
 
 ```json
 {
-  "_class": "active_event_store",
+  "_class": "active_store",
   "_id": "550e8400-e29b-41d4-a716-446655440000",
-  "type": "MONGO",
+  "type": "http",
   "features": {
     "EVENT": {
       "_class": "block_event_store",
@@ -557,7 +558,7 @@ collection. Stores are **per node** (the document `_id` equals the **Node ID**).
     }
   },
   "propertiesSchema": {
-    "type": "mongo_event_store",
+    "type": "event_store_mongo",
     "fields": [
       {
         "name": "retention.days",
@@ -570,11 +571,11 @@ collection. Stores are **per node** (the document `_id` equals the **Node ID**).
 }
 ```
 
-### Example B — Inactive event store
+### Example B — Inactive store
 
 ```json
 {
-  "_class": "inactive_event_store",
+  "_class": "inactive_store",
   "_id": "cad022c2-3e41-426f-bb82-c0b86d58d675"
 }
 ```
@@ -583,7 +584,7 @@ collection. Stores are **per node** (the document `_id` equals the **Node ID**).
 
 ```json
 {
-  "_class": "active_event_store",
+  "_class": "active_store",
   "_id": "550e8400-e29b-41d4-a716-446655440000",
   "features": {
     "FILTER_SYNC": {
@@ -600,31 +601,31 @@ collection. Stores are **per node** (the document `_id` equals the **Node ID**).
 |-----------------------------------|---------------|:--------:|----------------------|------------------------------------------------------------|
 | `_class`                          | string        |    ✅     | —                    | `active_event_store` \| `inactive_event_store`             |
 | `_id`                             | string (UUID) |    ✅     | —                    | **Node ID**. Used as Mongo `_id`.                          |
-| `type` *(active)*                 | string        |    ✅     | —                    | Store type (string form of `StoreType`, e.g., `"MONGO"`).  |
+| `type` *(active)*                 | string        |    ✅     | —                    | Store type (string form of `StoreType`, e.g., `"mongo"`).  |
 | `features` *(active)*             | object (map)  |    ❌     | —                    | Map `StoreFeatureType` → feature doc (see below).          |
 
 ### Field reference — Feature documents
 
-#### `block_event_store` (Event feature)
+#### Event feature
 
-| Path       | Type          | Required | Default (if omitted) | Notes                                     |
-|------------|---------------|:--------:|----------------------|-------------------------------------------|
-| `_class`   | string        |    ✅     | —                    | `block_event_store`.                      |
-| `targets`  | array<object> |    ❌     | —                    | Set of target descriptors.                |
+| Path       | Type          | Required | Default (if omitted) | Notes                            |
+|------------|---------------|:--------:|----------------------|----------------------------------|
+| `_class`   | string        |    ✅     | —                    | `block_event_store`.             |
+| `targets`  | array<object> |    ❌     | —                    | Set of event target descriptors. |
 
-**Target descriptor**
+**Event target descriptor**
 
 | Path          | Type          | Required | Default (if omitted) | Notes                                                                           |
 |---------------|---------------|:--------:|----------------------|---------------------------------------------------------------------------------|
 | `type`        | string (enum) |    ✅     | —                    | `TargetType` (e.g., `BLOCK`, `TRANSACTION`, `CONTRACT_EVENT`, `FILTER`, `ALL`). |
 | `destination` | string        |    ✅     | —                    | Path/topic/queue to store/broadcast events.                                     |
 
-#### `filter_store` (Filter-sync feature)
+#### Filter-sync feature
 
-| Path          | Type          | Required | Default (if omitted) | Notes                                           |
-|---------------|---------------|:--------:|----------------------|-------------------------------------------------|
-| `_class`      | string        |    ✅     | —                    | `filter_store`.                                 |
-| `destination` | string        |    ❌     | —                    | Optional destination for filter-sync output.    |
+| Path          | Type   | Required | Default (if omitted) | Notes                                                                                                                                                    |
+|---------------|--------|:--------:|----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `_class`      | string |    ✅     | —                    | `filter_store`.                                                                                                                                          |
+| `destination` | string |    ❌     | —                    | Optional destination for filter-sync output.<br/>Ignored if store's `type` is `mongo` or `jpa`, as the db schema details are defined by the application. |
 
 ---
 

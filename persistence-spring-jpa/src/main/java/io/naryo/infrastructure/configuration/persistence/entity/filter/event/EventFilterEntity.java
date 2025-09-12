@@ -28,8 +28,9 @@ public abstract class EventFilterEntity extends FilterEntity implements EventFil
     private @Embedded @Nullable EventSpecification specification;
 
     private @ElementCollection(fetch = FetchType.EAGER) @CollectionTable(
-            name = "event_filter_status") @Enumerated(EnumType.STRING) @Column(name = "status")
-    @Setter Set<ContractEventStatus> statuses;
+            name = "event_filter_status",
+            joinColumns = @JoinColumn(name = "event_filter_id")) @Enumerated(EnumType.STRING)
+    @Column(name = "status") @Setter Set<ContractEventStatus> statuses;
 
     private @ManyToOne(cascade = CascadeType.ALL) @JoinColumn(name = "sync_id") @Nullable
     FilterSyncEntity sync;

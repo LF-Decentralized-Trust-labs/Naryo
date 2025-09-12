@@ -1,8 +1,7 @@
 package io.naryo.infrastructure.configuration.persistence.entity.store;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
@@ -10,10 +9,11 @@ import io.naryo.application.configuration.source.model.store.ActiveStoreConfigur
 import io.naryo.application.configuration.source.model.store.StoreFeatureConfigurationDescriptor;
 import io.naryo.domain.configuration.store.active.StoreType;
 import io.naryo.domain.configuration.store.active.feature.StoreFeatureType;
-import io.naryo.infrastructure.configuration.persistence.entity.common.converter.JsonMapConverter;
 import io.naryo.infrastructure.configuration.persistence.entity.common.schema.ConfigurationSchemaEntity;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import static io.naryo.infrastructure.configuration.persistence.entity.common.schema.ConfigurationSchemaEntity.fromEntity;
 import static io.naryo.infrastructure.configuration.persistence.entity.common.schema.ConfigurationSchemaEntity.toEntity;
@@ -26,17 +26,15 @@ public class ActiveStoreConfigurationEntity extends StoreConfigurationEntity
 
     private @Column(name = "type") String type;
     private @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @JoinColumn(name = "store_configuration_id") @MapKeyEnumerated(EnumType.STRING) @MapKeyColumn(
-            name = "feature_type") Map<StoreFeatureType, StoreFeatureConfigurationEntity> features;
-    private @Convert(converter = JsonMapConverter.class) @Column(
-            name = "additional_properties",
-            columnDefinition = "TEXT") Map<String, Object> additionalProperties;
+    @JoinColumn(name = "store_configuration_id") List<StoreFeatureConfigurationEntity> features;
+    private @Column(name = "additional_properties") @JdbcTypeCode(SqlTypes.JSON) Map<String, Object>
+            additionalProperties;
     private @Embedded ConfigurationSchemaEntity propertiesSchema;
 
     public ActiveStoreConfigurationEntity(
             UUID nodeId,
             String type,
-            Map<StoreFeatureType, StoreFeatureConfigurationEntity> features,
+            List<StoreFeatureConfigurationEntity> features,
             Map<String, Object> additionalProperties,
             ConfigurationSchemaEntity propertiesSchema) {
         super(nodeId);
@@ -53,7 +51,10 @@ public class ActiveStoreConfigurationEntity extends StoreConfigurationEntity
 
     @Override
     public Map<StoreFeatureType, ? extends StoreFeatureConfigurationDescriptor> getFeatures() {
-        return this.features;
+        return this.features.stream()
+                .collect(
+                        Collectors.toMap(
+                                StoreFeatureConfigurationEntity::getType, Function.identity()));
     }
 
     @Override
@@ -81,14 +82,7 @@ public class ActiveStoreConfigurationEntity extends StoreConfigurationEntity
             Map<StoreFeatureType, ? extends StoreFeatureConfigurationDescriptor> features) {
         if (features.values().stream()
                 .allMatch(f -> f instanceof StoreFeatureConfigurationEntity)) {
-            this.features =
-                    features.entrySet().stream()
-                            .collect(
-                                    Collectors.toMap(
-                                            Map.Entry::getKey,
-                                            entry ->
-                                                    (StoreFeatureConfigurationEntity)
-                                                            entry.getValue()));
+            this.features = (List<StoreFeatureConfigurationEntity>) features.values();
         } else {
             throw new IllegalArgumentException(
                     "Unsupported feature type for JPA entity: " + features.getClass());

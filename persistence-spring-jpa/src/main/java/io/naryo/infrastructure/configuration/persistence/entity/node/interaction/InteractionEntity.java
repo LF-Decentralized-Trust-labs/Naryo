@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "interaction")
+@Table(name = "node_interaction")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "interaction_type", discriminatorType = DiscriminatorType.STRING)
 @NoArgsConstructor

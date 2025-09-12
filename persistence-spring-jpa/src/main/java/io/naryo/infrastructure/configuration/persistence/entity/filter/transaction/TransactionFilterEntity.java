@@ -14,16 +14,19 @@ import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Setter
 @Entity
 @DiscriminatorValue("transaction")
 @NoArgsConstructor
 public class TransactionFilterEntity extends FilterEntity implements TransactionFilterDescriptor {
 
-    private @Column(name = "identifier_type") @Nullable @Setter IdentifierType identifierType;
-    private @Column(name = "value") @Nullable @Setter String value;
+    private @Column(name = "identifier_type") @Enumerated(EnumType.STRING) @Nullable IdentifierType
+            identifierType;
+    private @Column(name = "value") @Nullable String value;
     private @ElementCollection(fetch = FetchType.EAGER) @CollectionTable(
-            name = "transaction_filter_status") @Enumerated(EnumType.STRING) @Column(
-            name = "status") @Setter Set<TransactionStatus> statuses;
+            name = "transaction_filter_status",
+            joinColumns = @JoinColumn(name = "transaction_filter_id")) @Enumerated(EnumType.STRING)
+    @Column(name = "status") Set<TransactionStatus> statuses;
 
     public TransactionFilterEntity(
             UUID id,

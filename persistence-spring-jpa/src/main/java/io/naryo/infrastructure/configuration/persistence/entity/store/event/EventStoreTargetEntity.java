@@ -16,9 +16,8 @@ public final class EventStoreTargetEntity implements EventStoreTargetDescriptor 
             name = "id",
             nullable = false,
             updatable = false) UUID id;
-    private @Enumerated(EnumType.STRING) @Column(name = "target_type", nullable = false) TargetType
-            type;
-    private @Column(name = "target_destination", nullable = false) String destination;
+    private @Enumerated(EnumType.STRING) @Column(name = "type", nullable = false) TargetType type;
+    private @Column(name = "destination", nullable = false) String destination;
 
     public EventStoreTargetEntity(TargetType type, String destination) {
         this.type = type;

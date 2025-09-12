@@ -10,7 +10,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "store_configuration")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "store_type")
+@DiscriminatorColumn(name = "state")
 @NoArgsConstructor
 @Setter
 public abstract class StoreConfigurationEntity implements StoreConfigurationDescriptor {

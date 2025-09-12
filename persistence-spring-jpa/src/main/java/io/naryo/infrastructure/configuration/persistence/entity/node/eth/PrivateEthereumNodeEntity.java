@@ -16,7 +16,7 @@ import lombok.Setter;
 
 @Entity
 @Setter
-@DiscriminatorValue("private")
+@DiscriminatorValue("private_ethereum")
 @NoArgsConstructor
 public class PrivateEthereumNodeEntity extends EthereumNodeEntity
         implements PrivateEthereumNodeDescriptor {

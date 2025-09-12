@@ -1,6 +1,7 @@
 package io.naryo.infrastructure.configuration.persistence.entity.broadcaster.target;
 
 import java.util.List;
+import java.util.UUID;
 
 import io.naryo.application.configuration.source.model.broadcaster.target.BroadcasterTargetDescriptor;
 import jakarta.persistence.*;
@@ -15,11 +16,12 @@ import lombok.NoArgsConstructor;
 @Getter
 public abstract class BroadcasterTargetEntity implements BroadcasterTargetDescriptor {
 
-    private @Id @Column(name = "id") @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
+    private @Id @Column(name = "id") @GeneratedValue(strategy = GenerationType.UUID) UUID id;
 
     private @ElementCollection(fetch = FetchType.EAGER) @CollectionTable(
-            name = "broadcaster_target_destination") @Column(name = "destination") List<String>
-            destinations;
+            name = "broadcaster_target_destination",
+            joinColumns = @JoinColumn(name = "broadcaster_target_id")) @Column(name = "destination")
+    List<String> destinations;
 
     public BroadcasterTargetEntity(List<String> destinations) {
         this.destinations = destinations;

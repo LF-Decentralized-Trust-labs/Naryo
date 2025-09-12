@@ -9,11 +9,12 @@ import jakarta.persistence.Embeddable;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Setter
 @Embeddable
 @NoArgsConstructor
 public class ConnectionEndpointEntity implements ConnectionEndpointDescriptor {
 
-    private @Setter @Nullable @Column(name = "url") String url;
+    private @Nullable @Column(name = "url") String url;
 
     public ConnectionEndpointEntity(String url) {
         this.url = url;
