@@ -5,6 +5,7 @@ import java.util.UUID;
 import io.naryo.application.configuration.source.model.store.event.EventStoreTargetDescriptor;
 import io.naryo.domain.configuration.store.active.feature.event.block.TargetType;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -16,9 +17,9 @@ public final class EventStoreTargetEntity implements EventStoreTargetDescriptor 
             name = "id",
             nullable = false,
             updatable = false) UUID id;
-    private @Enumerated(EnumType.STRING) @Column(name = "target_type", nullable = false) TargetType
+    private @Enumerated(EnumType.STRING) @Column(name = "type", nullable = false) TargetType
             type;
-    private @Column(name = "target_destination", nullable = false) String destination;
+    private @Column(name = "destination", nullable = false) String destination;
 
     public EventStoreTargetEntity(TargetType type, String destination) {
         this.type = type;

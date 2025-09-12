@@ -17,7 +17,7 @@ public class ConfigurationSchemaEntity {
     private @Column(name = "schema_type") String type;
 
     private @ElementCollection(fetch = FetchType.EAGER) @CollectionTable(
-            name = "broadcasters_configuration_fields",
+            name = "broadcaster_configuration_field",
             joinColumns = @JoinColumn(name = "broadcaster_configuration_id")) List<
                     FieldDefinitionEntity>
             fields;
