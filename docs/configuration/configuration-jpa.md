@@ -1,4 +1,4 @@
-# 📚 Mongo Configuration Overview
+# 📚 JPA Configuration Overview
 
 This document describes how to configure **Naryo** using a **JPA-supported** database via the `persistence-spring-jpa` module.
 It complements the YAML-based configuration provided by **`spring-core`**, enabling **partial configuration** and
@@ -41,7 +41,18 @@ dependencies {
 }
 ```
 
-### 2) Configure Spring to connect to JPA
+### 2) Add JPA dependencies
+
+Add the JPA-related dependencies to your `build.gradle` file with desired version.
+
+```groovy
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'org.postgresql:postgresql' // Example for PostgreSQL, replace if using another SQL database
+}
+```
+
+### 3) Configure Spring to connect to JPA
 
 Add the following to your application.yaml:
 
