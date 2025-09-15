@@ -7,13 +7,11 @@ import io.naryo.application.configuration.source.model.node.subscription.BlockSu
 import io.naryo.infrastructure.configuration.persistence.entity.node.subscription.SubscriptionEntity;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@DiscriminatorValue("block")
 @Setter
 @NoArgsConstructor
 public abstract class BlockSubscriptionEntity extends SubscriptionEntity

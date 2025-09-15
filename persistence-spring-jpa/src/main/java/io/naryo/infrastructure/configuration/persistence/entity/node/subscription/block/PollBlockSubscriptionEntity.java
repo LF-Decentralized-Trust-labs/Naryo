@@ -5,10 +5,10 @@ import java.time.Duration;
 import java.util.Optional;
 
 import io.naryo.application.configuration.source.model.node.subscription.PollBlockSubscriptionDescriptor;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.validation.constraints.NotNull;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
@@ -20,7 +20,7 @@ public class PollBlockSubscriptionEntity extends BlockSubscriptionEntity
 
     private static final Duration DEFAULT_INTERVAL = Duration.ofSeconds(5);
 
-    private @Column(name = "interval") @Setter @NotNull Duration interval;
+    private @Column(name = "interval") @Setter @Nullable Duration interval;
 
     public PollBlockSubscriptionEntity(
             BigInteger initialBlock,

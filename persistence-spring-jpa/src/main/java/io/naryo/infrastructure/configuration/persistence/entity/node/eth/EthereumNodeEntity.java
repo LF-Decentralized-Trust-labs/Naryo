@@ -8,12 +8,10 @@ import io.naryo.infrastructure.configuration.persistence.entity.node.connection.
 import io.naryo.infrastructure.configuration.persistence.entity.node.interaction.InteractionEntity;
 import io.naryo.infrastructure.configuration.persistence.entity.node.subscription.SubscriptionEntity;
 import jakarta.annotation.Nullable;
-import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.NoArgsConstructor;
 
 @Entity
-@DiscriminatorValue("ethereum")
 @NoArgsConstructor
 public abstract class EthereumNodeEntity extends NodeEntity implements EthereumNodeDescriptor {
 

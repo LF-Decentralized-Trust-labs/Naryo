@@ -11,7 +11,7 @@ import jakarta.persistence.Entity;
 import lombok.NoArgsConstructor;
 
 @Entity
-@DiscriminatorValue("public")
+@DiscriminatorValue("public_ethereum")
 @NoArgsConstructor
 public class PublicEthereumNodeEntity extends EthereumNodeEntity
         implements PublicEthereumNodeDescriptor {

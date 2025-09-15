@@ -8,7 +8,6 @@ import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.model.broadcaster.configuration.BroadcasterCacheConfigurationDescriptor;
 import io.naryo.application.configuration.source.model.broadcaster.configuration.BroadcasterConfigurationDescriptor;
 import io.naryo.domain.broadcaster.BroadcasterType;
-import io.naryo.infrastructure.configuration.persistence.entity.common.converter.JsonMapConverter;
 import io.naryo.infrastructure.configuration.persistence.entity.common.schema.ConfigurationSchemaEntity;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -16,6 +15,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import static io.naryo.infrastructure.configuration.persistence.entity.common.schema.ConfigurationSchemaEntity.fromEntity;
 import static io.naryo.infrastructure.configuration.persistence.entity.common.schema.ConfigurationSchemaEntity.toEntity;
@@ -32,9 +33,8 @@ public final class BroadcasterConfigurationEntity implements BroadcasterConfigur
 
     private @Embedded @Valid BroadcasterCacheEntity cache;
 
-    private @Convert(converter = JsonMapConverter.class) @Column(
-            name = "additional_properties",
-            columnDefinition = "TEXT") Map<String, Object> additionalProperties;
+    private @Column(name = "additional_properties") @JdbcTypeCode(SqlTypes.JSON) Map<String, Object>
+            additionalProperties;
 
     private @Embedded ConfigurationSchemaEntity propertiesSchema;
 
