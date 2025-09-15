@@ -25,7 +25,6 @@ public final class PollBlockSubscriptionProperties extends BlockSubscriptionProp
             BigInteger syncBlockLimit,
             Duration interval) {
         super(
-                BlockSubscriptionMethod.POLL,
                 initialBlock,
                 confirmationBlocks,
                 missingTxRetryBlocks,

@@ -16,7 +16,6 @@ public final class PubsubBlockSubscriptionProperties extends BlockSubscriptionPr
             BigInteger replayBlockOffset,
             BigInteger syncBlockLimit) {
         super(
-                BlockSubscriptionMethod.PUBSUB,
                 initialBlock,
                 confirmationBlocks,
                 missingTxRetryBlocks,
