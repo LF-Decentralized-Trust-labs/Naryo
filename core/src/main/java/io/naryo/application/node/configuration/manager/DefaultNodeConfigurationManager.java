@@ -5,28 +5,24 @@ import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import io.naryo.application.configuration.source.model.node.subscription.factory.BlockSubscriptionFactory;
 import io.naryo.application.configuration.manager.BaseCollectionConfigurationManager;
 import io.naryo.application.configuration.provider.CollectionSourceProvider;
 import io.naryo.application.configuration.source.model.node.EthereumNodeDescriptor;
 import io.naryo.application.configuration.source.model.node.NodeDescriptor;
 import io.naryo.application.configuration.source.model.node.PrivateEthereumNodeDescriptor;
-import io.naryo.application.configuration.source.model.node.connection.HttpNodeConnectionDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.NodeConnectionDescriptor;
-import io.naryo.application.configuration.source.model.node.connection.endpoint.ConnectionEndpointDescriptor;
-import io.naryo.application.configuration.source.model.node.connection.retry.NodeConnectionRetryDescriptor;
+import io.naryo.application.configuration.source.model.node.connection.factory.DefaultNodeConnectionFactory;
+import io.naryo.application.configuration.source.model.node.connection.factory.NodeConnectionFactory;
 import io.naryo.application.configuration.source.model.node.interaction.BlockInteractionDescriptor;
 import io.naryo.application.configuration.source.model.node.interaction.HederaMirrorNodeBlockInteractionDescriptor;
 import io.naryo.application.configuration.source.model.node.interaction.InteractionDescriptor;
 import io.naryo.application.configuration.source.model.node.subscription.BlockSubscriptionDescriptor;
 import io.naryo.application.configuration.source.model.node.subscription.SubscriptionDescriptor;
-import io.naryo.domain.common.connection.endpoint.ConnectionEndpoint;
+import io.naryo.application.configuration.source.model.node.subscription.factory.BlockSubscriptionFactory;
 import io.naryo.domain.node.Node;
 import io.naryo.domain.node.NodeName;
 import io.naryo.domain.node.connection.NodeConnection;
-import io.naryo.domain.node.connection.RetryConfiguration;
 import io.naryo.domain.node.connection.http.*;
-import io.naryo.domain.node.connection.ws.WsNodeConnection;
 import io.naryo.domain.node.ethereum.priv.GroupId;
 import io.naryo.domain.node.ethereum.priv.PrecompiledAddress;
 import io.naryo.domain.node.ethereum.priv.PrivateEthereumNode;
@@ -46,6 +42,7 @@ public final class DefaultNodeConfigurationManager
         implements NodeConfigurationManager {
 
     private final BlockSubscriptionFactory blockSubscriptionFactory;
+    private final NodeConnectionFactory nodeConnectionFactory;
 
     public DefaultNodeConfigurationManager(
             List<? extends CollectionSourceProvider<NodeDescriptor>>
@@ -53,6 +50,7 @@ public final class DefaultNodeConfigurationManager
             BlockSubscriptionFactory blockSubscriptionFactory) {
         super(collectionConfigurationProviders);
         this.blockSubscriptionFactory = blockSubscriptionFactory;
+        this.nodeConnectionFactory = new DefaultNodeConnectionFactory();
     }
 
     @Override
@@ -134,34 +132,7 @@ public final class DefaultNodeConfigurationManager
     }
 
     private NodeConnection buildConnection(NodeConnectionDescriptor descriptor) {
-        var endpoint =
-                buildConnectionEndpoint(
-                        valueOrNull(NodeConnectionDescriptor::getEndpoint, descriptor));
-        var retry = buildRetry(valueOrNull(NodeConnectionDescriptor::getRetry, descriptor));
-        return switch (descriptor.getType()) {
-            case HTTP -> {
-                var httpDescriptor = (HttpNodeConnectionDescriptor) descriptor;
-                yield new HttpNodeConnection(
-                        endpoint,
-                        retry,
-                        new MaxIdleConnections(valueOrNull(httpDescriptor.getMaxIdleConnections())),
-                        new KeepAliveDuration(valueOrNull(httpDescriptor.getKeepAliveDuration())),
-                        new ConnectionTimeout(valueOrNull(httpDescriptor.getConnectionTimeout())),
-                        new ReadTimeout(valueOrNull(httpDescriptor.getReadTimeout())));
-            }
-            case WS -> new WsNodeConnection(endpoint, retry);
-        };
-    }
-
-    private ConnectionEndpoint buildConnectionEndpoint(ConnectionEndpointDescriptor descriptor) {
-        return descriptor != null ? new ConnectionEndpoint(valueOrNull(descriptor.getUrl())) : null;
-    }
-
-    private RetryConfiguration buildRetry(NodeConnectionRetryDescriptor descriptor) {
-        return descriptor != null
-                ? new RetryConfiguration(
-                        valueOrNull(descriptor.getTimes()), valueOrNull(descriptor.getBackoff()))
-                : null;
+        return this.nodeConnectionFactory.create(descriptor);
     }
 
     private record CommonParams(

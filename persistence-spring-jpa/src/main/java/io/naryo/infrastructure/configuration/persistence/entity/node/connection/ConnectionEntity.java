@@ -32,7 +32,7 @@ public abstract class ConnectionEntity implements NodeConnectionDescriptor {
     public ConnectionEntity(
             @Nullable NodeConnectionRetryEntity retry,
             @Nullable ConnectionEndpointEntity endpoint) {
-        this.retry = retry != null ? retry : new NodeConnectionRetryEntity();
+        this.retry = retry;
         this.endpoint = endpoint;
     }
 

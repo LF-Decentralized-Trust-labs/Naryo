@@ -7,24 +7,19 @@ import io.naryo.application.configuration.source.model.node.connection.retry.Nod
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Embeddable
+@NoArgsConstructor
 public class NodeConnectionRetryEntity implements NodeConnectionRetryDescriptor {
-
-    private static final int DEFAULT_RETRY_TIMES = 3;
-    private static final Duration DEFAULT_BACKOFF = Duration.ofSeconds(30);
 
     private @Setter @Nullable @Column(name = "times") Integer times;
     private @Setter @Nullable @Column(name = "backoff") Duration backoff;
 
     public NodeConnectionRetryEntity(@Nullable Integer times, @Nullable Duration backoff) {
-        this.times = times != null ? times : DEFAULT_RETRY_TIMES;
-        this.backoff = backoff != null ? backoff : DEFAULT_BACKOFF;
-    }
-
-    public NodeConnectionRetryEntity() {
-        this(DEFAULT_RETRY_TIMES, DEFAULT_BACKOFF);
+        this.times = times;
+        this.backoff = backoff;
     }
 
     @Override

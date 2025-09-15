@@ -1,6 +1,7 @@
 package io.naryo.application.configuration.source.model.node.subscription.factory;
 
 import java.math.BigInteger;
+import java.time.Duration;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -22,6 +23,9 @@ public final class DefaultBlockSubscriptionFactory implements BlockSubscriptionF
     public static final BigInteger REPLAY_BLOCK_OFFSET = BigInteger.valueOf(12);
     public static final BigInteger SYNC_BLOCK_LIMIT = BigInteger.valueOf(20_000);
 
+    private static final Duration DEFAULT_POLL_INTERVAL = Duration.ofSeconds(5);
+
+
     @Override
     public BlockSubscriptionConfiguration create(BlockSubscriptionDescriptor descriptor) {
 
@@ -31,6 +35,7 @@ public final class DefaultBlockSubscriptionFactory implements BlockSubscriptionF
                 switch (descriptor.getMethod()) {
                     case POLL -> {
                         var poll = (PollBlockSubscriptionDescriptor) descriptor;
+                        setDefault(poll::getInterval, poll::setInterval, DEFAULT_POLL_INTERVAL);
                         var interval = poll.getInterval().orElse(null);
                         yield new PollBlockSubscriptionMethodConfiguration(new Interval(interval));
                     }
