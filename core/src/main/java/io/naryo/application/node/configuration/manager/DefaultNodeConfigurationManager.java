@@ -5,6 +5,7 @@ import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import io.naryo.application.configuration.factory.BlockSubscriptionFactory;
 import io.naryo.application.configuration.manager.BaseCollectionConfigurationManager;
 import io.naryo.application.configuration.provider.CollectionSourceProvider;
 import io.naryo.application.configuration.source.model.node.EthereumNodeDescriptor;
@@ -18,9 +19,7 @@ import io.naryo.application.configuration.source.model.node.interaction.BlockInt
 import io.naryo.application.configuration.source.model.node.interaction.HederaMirrorNodeBlockInteractionDescriptor;
 import io.naryo.application.configuration.source.model.node.interaction.InteractionDescriptor;
 import io.naryo.application.configuration.source.model.node.subscription.BlockSubscriptionDescriptor;
-import io.naryo.application.configuration.source.model.node.subscription.PollBlockSubscriptionDescriptor;
 import io.naryo.application.configuration.source.model.node.subscription.SubscriptionDescriptor;
-import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.common.connection.endpoint.ConnectionEndpoint;
 import io.naryo.domain.node.Node;
 import io.naryo.domain.node.NodeName;
@@ -39,9 +38,6 @@ import io.naryo.domain.node.interaction.block.hedera.HederaMirrorNodeBlockIntera
 import io.naryo.domain.node.interaction.block.hedera.LimitPerRequest;
 import io.naryo.domain.node.interaction.block.hedera.RetriesPerRequest;
 import io.naryo.domain.node.subscription.block.BlockSubscriptionConfiguration;
-import io.naryo.domain.node.subscription.block.method.poll.Interval;
-import io.naryo.domain.node.subscription.block.method.poll.PollBlockSubscriptionMethodConfiguration;
-import io.naryo.domain.node.subscription.block.method.pubsub.PubSubBlockSubscriptionMethodConfiguration;
 
 import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 
@@ -49,10 +45,13 @@ public final class DefaultNodeConfigurationManager
         extends BaseCollectionConfigurationManager<Node, NodeDescriptor, UUID>
         implements NodeConfigurationManager {
 
+    private final BlockSubscriptionFactory blockSubscriptionFactory;
+
     public DefaultNodeConfigurationManager(
-            List<? extends CollectionSourceProvider<NodeDescriptor>>
-                    collectionConfigurationProviders) {
+        List<? extends CollectionSourceProvider<NodeDescriptor>>
+                    collectionConfigurationProviders, BlockSubscriptionFactory blockSubscriptionFactory) {
         super(collectionConfigurationProviders);
+        this.blockSubscriptionFactory = blockSubscriptionFactory;
     }
 
     @Override
@@ -117,26 +116,7 @@ public final class DefaultNodeConfigurationManager
                 (BlockSubscriptionDescriptor)
                         descriptor; // We assume this is the correct type because there's not more
         // at this moment
-        var method =
-                switch (blockDescriptor.getMethod()) {
-                    case POLL ->
-                            new PollBlockSubscriptionMethodConfiguration(
-                                    new Interval(
-                                            valueOrNull(
-                                                    ((PollBlockSubscriptionDescriptor)
-                                                                    blockDescriptor)
-                                                            .getInterval())));
-                    case PUBSUB -> new PubSubBlockSubscriptionMethodConfiguration();
-                };
-        return new BlockSubscriptionConfiguration(
-                method,
-                valueOrNull(blockDescriptor.getInitialBlock()),
-                new NonNegativeBlockNumber(valueOrNull(blockDescriptor.getConfirmationBlocks())),
-                new NonNegativeBlockNumber(valueOrNull(blockDescriptor.getMissingTxRetryBlocks())),
-                new NonNegativeBlockNumber(
-                        valueOrNull(blockDescriptor.getEventInvalidationBlockThreshold())),
-                new NonNegativeBlockNumber(valueOrNull(blockDescriptor.getReplayBlockOffset())),
-                new NonNegativeBlockNumber(valueOrNull(blockDescriptor.getSyncBlockLimit())));
+        return this.blockSubscriptionFactory.create(blockDescriptor);
     }
 
     private InteractionConfiguration buildInteraction(InteractionDescriptor cfg) {
