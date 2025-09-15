@@ -24,8 +24,7 @@ public abstract class BlockSubscriptionProperties extends SubscriptionProperties
             BigInteger missingTxRetryBlocks,
             BigInteger eventInvalidationBlockThreshold,
             BigInteger replayBlockOffset,
-            BigInteger syncBlockLimit
-    ) {
+            BigInteger syncBlockLimit) {
         this.initialBlock = initialBlock;
         this.confirmationBlocks = confirmationBlocks;
         this.missingTxRetryBlocks = missingTxRetryBlocks;

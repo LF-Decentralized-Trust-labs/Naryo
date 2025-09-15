@@ -9,8 +9,8 @@ import io.naryo.application.broadcaster.BroadcasterProducer;
 import io.naryo.application.broadcaster.configuration.manager.BroadcasterConfigurationConfigurationManager;
 import io.naryo.application.broadcaster.configuration.manager.BroadcasterConfigurationManager;
 import io.naryo.application.common.Mapper;
-import io.naryo.application.configuration.factory.BlockSubscriptionFactory;
-import io.naryo.application.configuration.factory.DefaultBlockSubscriptionFactory;
+import io.naryo.application.configuration.source.model.node.subscription.factory.BlockSubscriptionFactory;
+import io.naryo.application.configuration.source.model.node.subscription.factory.DefaultBlockSubscriptionFactory;
 import io.naryo.application.configuration.resilence.ResilienceRegistry;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.event.decoder.block.DefaultContractEventParameterDecoder;
@@ -54,8 +54,7 @@ public class NodeAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(NodeConfigurationManager.class)
     public NodeConfigurationManager nodeConfigurationManager(
-        List<NodeSourceProvider> providers,
-        BlockSubscriptionFactory blockSubscriptionFactory) {
+            List<NodeSourceProvider> providers, BlockSubscriptionFactory blockSubscriptionFactory) {
         return new DefaultNodeConfigurationManager(providers, blockSubscriptionFactory);
     }
 

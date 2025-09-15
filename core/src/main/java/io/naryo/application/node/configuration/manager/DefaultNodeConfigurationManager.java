@@ -5,7 +5,7 @@ import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import io.naryo.application.configuration.factory.BlockSubscriptionFactory;
+import io.naryo.application.configuration.source.model.node.subscription.factory.BlockSubscriptionFactory;
 import io.naryo.application.configuration.manager.BaseCollectionConfigurationManager;
 import io.naryo.application.configuration.provider.CollectionSourceProvider;
 import io.naryo.application.configuration.source.model.node.EthereumNodeDescriptor;
@@ -48,8 +48,9 @@ public final class DefaultNodeConfigurationManager
     private final BlockSubscriptionFactory blockSubscriptionFactory;
 
     public DefaultNodeConfigurationManager(
-        List<? extends CollectionSourceProvider<NodeDescriptor>>
-                    collectionConfigurationProviders, BlockSubscriptionFactory blockSubscriptionFactory) {
+            List<? extends CollectionSourceProvider<NodeDescriptor>>
+                    collectionConfigurationProviders,
+            BlockSubscriptionFactory blockSubscriptionFactory) {
         super(collectionConfigurationProviders);
         this.blockSubscriptionFactory = blockSubscriptionFactory;
     }

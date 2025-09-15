@@ -1,4 +1,4 @@
-package io.naryo.application.configuration.factory;
+package io.naryo.application.configuration.source.model.node.subscription.factory;
 
 import io.naryo.application.configuration.source.model.node.subscription.BlockSubscriptionDescriptor;
 import io.naryo.domain.node.subscription.block.BlockSubscriptionConfiguration;
