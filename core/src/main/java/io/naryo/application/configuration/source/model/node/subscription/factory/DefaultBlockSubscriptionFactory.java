@@ -25,7 +25,6 @@ public final class DefaultBlockSubscriptionFactory implements BlockSubscriptionF
 
     private static final Duration DEFAULT_POLL_INTERVAL = Duration.ofSeconds(5);
 
-
     @Override
     public BlockSubscriptionConfiguration create(BlockSubscriptionDescriptor descriptor) {
 

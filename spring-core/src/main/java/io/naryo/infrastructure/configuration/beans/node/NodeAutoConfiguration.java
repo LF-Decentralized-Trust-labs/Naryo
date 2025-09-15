@@ -10,6 +10,10 @@ import io.naryo.application.broadcaster.configuration.manager.BroadcasterConfigu
 import io.naryo.application.broadcaster.configuration.manager.BroadcasterConfigurationManager;
 import io.naryo.application.common.Mapper;
 import io.naryo.application.configuration.resilence.ResilienceRegistry;
+import io.naryo.application.configuration.source.model.node.connection.factory.DefaultNodeConnectionFactory;
+import io.naryo.application.configuration.source.model.node.connection.factory.NodeConnectionFactory;
+import io.naryo.application.configuration.source.model.node.interaction.factory.DefaultInteractionFactory;
+import io.naryo.application.configuration.source.model.node.interaction.factory.InteractionFactory;
 import io.naryo.application.configuration.source.model.node.subscription.factory.BlockSubscriptionFactory;
 import io.naryo.application.configuration.source.model.node.subscription.factory.DefaultBlockSubscriptionFactory;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
@@ -52,10 +56,26 @@ public class NodeAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(NodeConnectionFactory.class)
+    public NodeConnectionFactory nodeConnectionFactory() {
+        return new DefaultNodeConnectionFactory();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(InteractionFactory.class)
+    public InteractionFactory interactionFactory() {
+        return new DefaultInteractionFactory();
+    }
+
+    @Bean
     @ConditionalOnMissingBean(NodeConfigurationManager.class)
     public NodeConfigurationManager nodeConfigurationManager(
-            List<NodeSourceProvider> providers, BlockSubscriptionFactory blockSubscriptionFactory) {
-        return new DefaultNodeConfigurationManager(providers, blockSubscriptionFactory);
+            List<NodeSourceProvider> providers,
+            BlockSubscriptionFactory blockSubscriptionFactory,
+            NodeConnectionFactory nodeConnectionFactory,
+            InteractionFactory interactionFactory) {
+        return new DefaultNodeConfigurationManager(
+                providers, blockSubscriptionFactory, nodeConnectionFactory, interactionFactory);
     }
 
     @Bean

@@ -11,11 +11,9 @@ import io.naryo.application.configuration.source.model.node.EthereumNodeDescript
 import io.naryo.application.configuration.source.model.node.NodeDescriptor;
 import io.naryo.application.configuration.source.model.node.PrivateEthereumNodeDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.NodeConnectionDescriptor;
-import io.naryo.application.configuration.source.model.node.connection.factory.DefaultNodeConnectionFactory;
 import io.naryo.application.configuration.source.model.node.connection.factory.NodeConnectionFactory;
-import io.naryo.application.configuration.source.model.node.interaction.BlockInteractionDescriptor;
-import io.naryo.application.configuration.source.model.node.interaction.HederaMirrorNodeBlockInteractionDescriptor;
 import io.naryo.application.configuration.source.model.node.interaction.InteractionDescriptor;
+import io.naryo.application.configuration.source.model.node.interaction.factory.InteractionFactory;
 import io.naryo.application.configuration.source.model.node.subscription.BlockSubscriptionDescriptor;
 import io.naryo.application.configuration.source.model.node.subscription.SubscriptionDescriptor;
 import io.naryo.application.configuration.source.model.node.subscription.factory.BlockSubscriptionFactory;
@@ -29,10 +27,6 @@ import io.naryo.domain.node.ethereum.priv.PrivateEthereumNode;
 import io.naryo.domain.node.ethereum.pub.PublicEthereumNode;
 import io.naryo.domain.node.hedera.HederaNode;
 import io.naryo.domain.node.interaction.InteractionConfiguration;
-import io.naryo.domain.node.interaction.block.ethereum.EthereumRpcBlockInteractionConfiguration;
-import io.naryo.domain.node.interaction.block.hedera.HederaMirrorNodeBlockInteractionConfiguration;
-import io.naryo.domain.node.interaction.block.hedera.LimitPerRequest;
-import io.naryo.domain.node.interaction.block.hedera.RetriesPerRequest;
 import io.naryo.domain.node.subscription.block.BlockSubscriptionConfiguration;
 
 import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
@@ -43,14 +37,18 @@ public final class DefaultNodeConfigurationManager
 
     private final BlockSubscriptionFactory blockSubscriptionFactory;
     private final NodeConnectionFactory nodeConnectionFactory;
+    private final InteractionFactory interactionFactory;
 
     public DefaultNodeConfigurationManager(
             List<? extends CollectionSourceProvider<NodeDescriptor>>
                     collectionConfigurationProviders,
-            BlockSubscriptionFactory blockSubscriptionFactory) {
+            BlockSubscriptionFactory blockSubscriptionFactory,
+            NodeConnectionFactory nodeConnectionFactory,
+            InteractionFactory interactionFactory) {
         super(collectionConfigurationProviders);
         this.blockSubscriptionFactory = blockSubscriptionFactory;
-        this.nodeConnectionFactory = new DefaultNodeConnectionFactory();
+        this.nodeConnectionFactory = nodeConnectionFactory;
+        this.interactionFactory = interactionFactory;
     }
 
     @Override
@@ -119,16 +117,7 @@ public final class DefaultNodeConfigurationManager
     }
 
     private InteractionConfiguration buildInteraction(InteractionDescriptor cfg) {
-        var props = (BlockInteractionDescriptor) cfg;
-        return switch (props.getMode()) {
-            case ETHEREUM_RPC -> new EthereumRpcBlockInteractionConfiguration();
-            case HEDERA_MIRROR_NODE -> {
-                var mirCfg = (HederaMirrorNodeBlockInteractionDescriptor) props;
-                yield new HederaMirrorNodeBlockInteractionConfiguration(
-                        new LimitPerRequest(valueOrNull(mirCfg.getLimitPerRequest())),
-                        new RetriesPerRequest(valueOrNull(mirCfg.getRetriesPerRequest())));
-            }
-        };
+        return this.interactionFactory.create(cfg);
     }
 
     private NodeConnection buildConnection(NodeConnectionDescriptor descriptor) {

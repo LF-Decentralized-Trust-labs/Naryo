@@ -11,8 +11,6 @@ import lombok.Setter;
 public final class PollBlockSubscriptionProperties extends BlockSubscriptionProperties
         implements PollBlockSubscriptionDescriptor {
 
-    private static final Duration DEFAULT_INTERVAL = Duration.ofSeconds(5);
-
     private @Setter @NotNull Duration interval;
 
     public PollBlockSubscriptionProperties(
@@ -30,7 +28,7 @@ public final class PollBlockSubscriptionProperties extends BlockSubscriptionProp
                 eventInvalidationBlockThreshold,
                 replayBlockOffset,
                 syncBlockLimit);
-        this.interval = interval != null ? interval : DEFAULT_INTERVAL;
+        this.interval = interval;
     }
 
     @Override
