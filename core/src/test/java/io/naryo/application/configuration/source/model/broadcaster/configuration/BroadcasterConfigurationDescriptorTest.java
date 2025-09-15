@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.domain.broadcaster.BroadcasterType;
 import lombok.Getter;
 import lombok.Setter;
@@ -102,43 +101,12 @@ public class BroadcasterConfigurationDescriptorTest {
                 Arguments.of(empty, empty, empty));
     }
 
-    @ParameterizedTest
-    @MethodSource("propertiesSchemaParameters")
-    void testMerge_propertiesSchema(
-            ConfigurationSchema originalPropertiesSchema,
-            ConfigurationSchema otherPropertiesSchema,
-            ConfigurationSchema expectedPropertiesSchema) {
-        BroadcasterConfigurationDescriptor original = new DummyBroadcasterConfigurationDescriptor();
-        original.setPropertiesSchema(originalPropertiesSchema);
-        BroadcasterConfigurationDescriptor other = new DummyBroadcasterConfigurationDescriptor();
-        other.setPropertiesSchema(otherPropertiesSchema);
-
-        BroadcasterConfigurationDescriptor result = original.merge(other);
-
-        assertEquals(
-                Optional.ofNullable(expectedPropertiesSchema),
-                result.getPropertiesSchema(),
-                "Should merge the properties schema");
-    }
-
-    private static Stream<Arguments> propertiesSchemaParameters() {
-        ConfigurationSchema original = Instancio.create(ConfigurationSchema.class);
-        ConfigurationSchema other = Instancio.create(ConfigurationSchema.class);
-
-        return Stream.of(
-                Arguments.of(original, other, original),
-                Arguments.of(original, null, original),
-                Arguments.of(null, other, other),
-                Arguments.of(null, null, null));
-    }
-
     public static class DummyBroadcasterConfigurationDescriptor
             implements BroadcasterConfigurationDescriptor {
         private final @Getter UUID id;
         private final @Getter BroadcasterType type;
         private @Setter BroadcasterCacheConfigurationDescriptor cache;
         private @Setter Map<String, Object> additionalProperties;
-        private @Setter ConfigurationSchema propertiesSchema;
 
         protected DummyBroadcasterConfigurationDescriptor() {
             this("type");
@@ -157,11 +125,6 @@ public class BroadcasterConfigurationDescriptorTest {
         @Override
         public Map<String, Object> getAdditionalProperties() {
             return additionalProperties == null ? Map.of() : additionalProperties;
-        }
-
-        @Override
-        public Optional<ConfigurationSchema> getPropertiesSchema() {
-            return Optional.ofNullable(propertiesSchema);
         }
     }
 }

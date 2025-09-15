@@ -1,16 +1,12 @@
 package io.naryo.infrastructure.configuration.persistence.document.store;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.model.store.ActiveStoreConfigurationDescriptor;
 import io.naryo.application.configuration.source.model.store.StoreFeatureConfigurationDescriptor;
 import io.naryo.domain.configuration.store.active.StoreType;
 import io.naryo.domain.configuration.store.active.feature.StoreFeatureType;
-import io.naryo.infrastructure.configuration.persistence.document.common.ConfigurationSchemaDocument;
-import jakarta.annotation.Nullable;
 import org.springframework.data.annotation.TypeAlias;
 
 @TypeAlias("active_store")
@@ -20,19 +16,16 @@ public class ActiveStoreConfigurationPropertiesDocument extends StoreConfigurati
     private final String type;
     private Map<StoreFeatureType, StoreFeatureConfigurationPropertiesDocument> features;
     private Map<String, Object> additionalProperties;
-    private @Nullable ConfigurationSchemaDocument propertiesSchema;
 
     public ActiveStoreConfigurationPropertiesDocument(
             String nodeId,
             String type,
             Map<StoreFeatureType, StoreFeatureConfigurationPropertiesDocument> features,
-            Map<String, Object> additionalProperties,
-            @Nullable ConfigurationSchemaDocument propertiesSchema) {
+            Map<String, Object> additionalProperties) {
         super(nodeId);
         this.type = type;
         this.features = features;
         this.additionalProperties = additionalProperties;
-        this.propertiesSchema = propertiesSchema;
     }
 
     @Override
@@ -53,16 +46,6 @@ public class ActiveStoreConfigurationPropertiesDocument extends StoreConfigurati
     @Override
     public void setAdditionalProperties(Map<String, Object> additionalProperties) {
         this.additionalProperties = additionalProperties;
-    }
-
-    @Override
-    public Optional<ConfigurationSchema> getPropertiesSchema() {
-        return Optional.ofNullable(ConfigurationSchemaDocument.fromDocument(this.propertiesSchema));
-    }
-
-    @Override
-    public void setPropertiesSchema(ConfigurationSchema propertiesSchema) {
-        this.propertiesSchema = ConfigurationSchemaDocument.toDocument(propertiesSchema);
     }
 
     @Override

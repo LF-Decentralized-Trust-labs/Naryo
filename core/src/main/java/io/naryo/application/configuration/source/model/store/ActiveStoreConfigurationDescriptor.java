@@ -1,9 +1,7 @@
 package io.naryo.application.configuration.source.model.store;
 
 import java.util.Map;
-import java.util.Optional;
 
-import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.domain.configuration.store.StoreState;
 import io.naryo.domain.configuration.store.active.StoreType;
 import io.naryo.domain.configuration.store.active.feature.StoreFeatureType;
@@ -18,11 +16,7 @@ public interface ActiveStoreConfigurationDescriptor extends StoreConfigurationDe
 
     Map<String, Object> getAdditionalProperties();
 
-    Optional<ConfigurationSchema> getPropertiesSchema();
-
     void setAdditionalProperties(Map<String, Object> additionalProperties);
-
-    void setPropertiesSchema(ConfigurationSchema propertiesSchema);
 
     void setFeatures(Map<StoreFeatureType, ? extends StoreFeatureConfigurationDescriptor> features);
 
@@ -46,10 +40,6 @@ public interface ActiveStoreConfigurationDescriptor extends StoreConfigurationDe
                 this::setAdditionalProperties,
                 this.getAdditionalProperties(),
                 otherActiveEventStoreConfiguration.getAdditionalProperties());
-        mergeOptionals(
-                this::setPropertiesSchema,
-                this.getPropertiesSchema(),
-                otherActiveEventStoreConfiguration.getPropertiesSchema());
 
         return StoreConfigurationDescriptor.super.merge(otherActiveEventStoreConfiguration);
     }

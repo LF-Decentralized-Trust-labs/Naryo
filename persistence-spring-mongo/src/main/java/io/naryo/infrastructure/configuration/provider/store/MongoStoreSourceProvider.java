@@ -8,7 +8,6 @@ import io.naryo.application.configuration.source.definition.registry.Configurati
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaType;
 import io.naryo.application.configuration.source.model.store.StoreConfigurationDescriptor;
 import io.naryo.application.store.configuration.provider.StoreSourceProvider;
-import io.naryo.infrastructure.configuration.persistence.document.common.ConfigurationSchemaDocument;
 import io.naryo.infrastructure.configuration.persistence.document.store.ActiveStoreConfigurationPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.store.InactiveStoreConfigurationPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.store.StoreConfigurationPropertiesDocument;
@@ -47,12 +46,9 @@ public final class MongoStoreSourceProvider implements StoreSourceProvider {
                 ConfigurationSchema schema =
                         schemaRegistry.getSchema(
                                 ConfigurationSchemaType.STORE, active.getType().getName());
-                yield new ActiveStoreConfigurationPropertiesDocument(
-                        active.getNodeId().toString(),
-                        active.getType().getName(),
-                        active.getFeatures(),
-                        getAdditionalConfiguration(active.getAdditionalProperties(), schema),
-                        ConfigurationSchemaDocument.toDocument(schema));
+                active.setAdditionalProperties(
+                        getAdditionalConfiguration(active.getAdditionalProperties(), schema));
+                yield active;
             }
             case InactiveStoreConfigurationPropertiesDocument inactive -> inactive;
             default -> throw new IllegalStateException("Unexpected value: " + document);
