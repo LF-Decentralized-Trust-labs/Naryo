@@ -5,8 +5,10 @@ import java.util.Optional;
 
 import io.naryo.application.configuration.source.model.node.connection.retry.NodeConnectionRetryDescriptor;
 import jakarta.annotation.Nullable;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 public final class NodeConnectionRetryProperties implements NodeConnectionRetryDescriptor {
 
     private @Setter @Nullable Integer times;

@@ -4,8 +4,10 @@ import java.util.Optional;
 
 import io.naryo.application.configuration.source.model.node.interaction.HederaMirrorNodeBlockInteractionDescriptor;
 import jakarta.annotation.Nullable;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 public class HederaMirrorNodeBlockInteractionProperties extends BlockInteractionProperties
         implements HederaMirrorNodeBlockInteractionDescriptor {
 
