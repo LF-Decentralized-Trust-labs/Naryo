@@ -17,12 +17,12 @@ import static io.naryo.application.common.util.OptionalUtil.valueOrDefault;
 
 public final class DefaultBlockSubscriptionFactory implements BlockSubscriptionFactory {
 
-    public static final BigInteger INITIAL_BLOCK = BigInteger.valueOf(-1);
-    public static final BigInteger CONFIRMATION_BLOCKS = BigInteger.valueOf(12);
-    public static final BigInteger MISSING_TX_RETRY_BLOCKS = BigInteger.valueOf(200);
-    public static final BigInteger EVENT_INVALIDATION_BLOCK_THRESHOLD = BigInteger.TWO;
-    public static final BigInteger REPLAY_BLOCK_OFFSET = BigInteger.valueOf(12);
-    public static final BigInteger SYNC_BLOCK_LIMIT = BigInteger.valueOf(20_000);
+    public static final BigInteger DEFAULT_INITIAL_BLOCK = BigInteger.valueOf(-1);
+    public static final BigInteger DEFAULT_CONFIRMATION_BLOCKS = BigInteger.valueOf(12);
+    public static final BigInteger DEFAULT_MISSING_TX_RETRY_BLOCKS = BigInteger.valueOf(200);
+    public static final BigInteger DEFAULT_EVENT_INVALIDATION_BLOCK_THRESHOLD = BigInteger.TWO;
+    public static final BigInteger DEFAULT_REPLAY_BLOCK_OFFSET = BigInteger.valueOf(12);
+    public static final BigInteger DEFAULT_SYNC_BLOCK_LIMIT = BigInteger.valueOf(20_000);
 
     private static final Duration DEFAULT_POLL_INTERVAL = Duration.ofSeconds(5);
 
@@ -54,25 +54,29 @@ public final class DefaultBlockSubscriptionFactory implements BlockSubscriptionF
     private static BlockSubscriptionConfiguration buildConfig(
             BlockSubscriptionDescriptor descriptor, BlockSubscriptionMethodConfiguration method) {
 
-        BigInteger initialBlock = valueOrDefault(descriptor.getInitialBlock(), INITIAL_BLOCK);
+        BigInteger initialBlock =
+                valueOrDefault(descriptor.getInitialBlock(), DEFAULT_INITIAL_BLOCK);
         NonNegativeBlockNumber confirmationBlocks =
                 new NonNegativeBlockNumber(
-                        valueOrDefault(descriptor.getConfirmationBlocks(), CONFIRMATION_BLOCKS));
+                        valueOrDefault(
+                                descriptor.getConfirmationBlocks(), DEFAULT_CONFIRMATION_BLOCKS));
         NonNegativeBlockNumber missingTxRetryBlocks =
                 new NonNegativeBlockNumber(
                         valueOrDefault(
-                                descriptor.getMissingTxRetryBlocks(), MISSING_TX_RETRY_BLOCKS));
+                                descriptor.getMissingTxRetryBlocks(),
+                                DEFAULT_MISSING_TX_RETRY_BLOCKS));
         NonNegativeBlockNumber eventInvalidationBlockThreshold =
                 new NonNegativeBlockNumber(
                         valueOrDefault(
                                 descriptor.getEventInvalidationBlockThreshold(),
-                                EVENT_INVALIDATION_BLOCK_THRESHOLD));
+                                DEFAULT_EVENT_INVALIDATION_BLOCK_THRESHOLD));
         NonNegativeBlockNumber replayBlockOffset =
                 new NonNegativeBlockNumber(
-                        valueOrDefault(descriptor.getReplayBlockOffset(), REPLAY_BLOCK_OFFSET));
+                        valueOrDefault(
+                                descriptor.getReplayBlockOffset(), DEFAULT_REPLAY_BLOCK_OFFSET));
         NonNegativeBlockNumber syncBlockLimit =
                 new NonNegativeBlockNumber(
-                        valueOrDefault(descriptor.getSyncBlockLimit(), SYNC_BLOCK_LIMIT));
+                        valueOrDefault(descriptor.getSyncBlockLimit(), DEFAULT_SYNC_BLOCK_LIMIT));
 
         return new BlockSubscriptionConfiguration(
                 method,
