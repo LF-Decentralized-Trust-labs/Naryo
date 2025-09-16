@@ -39,6 +39,14 @@
       "version": "0.1.0-SNAPSHOT",
       "description": "Naryo rabbitmq support",
       "required": false
+    },
+    {
+      "id": "kafka",
+      "groupId": "io.naryo",
+      "artifactId": "broadcaster-spring-kafka",
+      "version": "0.1.0-SNAPSHOT",
+      "description": "Naryo Kafka support",
+      "required": false
     }
   ]
 }
