@@ -14,6 +14,7 @@ include 'initializer'
 include 'persistence-spring-mongo'
 include 'persistence-spring-jpa'
 include 'broadcaster-spring-rabbitmq'
+include 'broadcaster-spring-kafka'
 
 develocity {
     buildScan {

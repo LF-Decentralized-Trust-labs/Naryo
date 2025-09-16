@@ -24,7 +24,7 @@ import picocli.CommandLine;
             Init Naryo's project structure.
 
             Example:
-              init --name my-app --modules spring,mongo,rabbitmq --output .
+              init --name my-app --modules spring,mongo,rabbitmq,kafka --output .
             """)
 public final class Initializer implements Callable<Integer> {
 
