@@ -1,9 +1,6 @@
 package io.naryo.application.configuration.source.model.node.connection.factory;
 
 import java.time.Duration;
-import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import io.naryo.application.configuration.source.model.node.connection.HttpNodeConnectionDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.NodeConnectionDescriptor;
@@ -15,6 +12,7 @@ import io.naryo.domain.node.connection.RetryConfiguration;
 import io.naryo.domain.node.connection.http.*;
 import io.naryo.domain.node.connection.ws.WsNodeConnection;
 
+import static io.naryo.application.common.util.Defaults.setDefault;
 import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 
 public class DefaultNodeConnectionFactory implements NodeConnectionFactory {
@@ -90,10 +88,5 @@ public class DefaultNodeConnectionFactory implements NodeConnectionFactory {
                 ? new RetryConfiguration(
                         valueOrNull(descriptor.getTimes()), valueOrNull(descriptor.getBackoff()))
                 : null;
-    }
-
-    private static <T> void setDefault(
-            Supplier<Optional<T>> getter, Consumer<T> setter, T defaultValue) {
-        setter.accept(getter.get().orElse(defaultValue));
     }
 }

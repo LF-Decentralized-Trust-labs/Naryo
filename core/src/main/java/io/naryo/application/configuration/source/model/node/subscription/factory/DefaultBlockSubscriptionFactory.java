@@ -2,9 +2,6 @@ package io.naryo.application.configuration.source.model.node.subscription.factor
 
 import java.math.BigInteger;
 import java.time.Duration;
-import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import io.naryo.application.configuration.source.model.node.subscription.BlockSubscriptionDescriptor;
 import io.naryo.application.configuration.source.model.node.subscription.PollBlockSubscriptionDescriptor;
@@ -13,6 +10,8 @@ import io.naryo.domain.node.subscription.block.BlockSubscriptionConfiguration;
 import io.naryo.domain.node.subscription.block.method.poll.Interval;
 import io.naryo.domain.node.subscription.block.method.poll.PollBlockSubscriptionMethodConfiguration;
 import io.naryo.domain.node.subscription.block.method.pubsub.PubSubBlockSubscriptionMethodConfiguration;
+
+import static io.naryo.application.common.util.Defaults.setDefault;
 
 public final class DefaultBlockSubscriptionFactory implements BlockSubscriptionFactory {
 
@@ -62,10 +61,5 @@ public final class DefaultBlockSubscriptionFactory implements BlockSubscriptionF
                 EVENT_INVALIDATION_BLOCK_THRESHOLD);
         setDefault(d::getReplayBlockOffset, d::setReplayBlockOffset, REPLAY_BLOCK_OFFSET);
         setDefault(d::getSyncBlockLimit, d::setSyncBlockLimit, SYNC_BLOCK_LIMIT);
-    }
-
-    private static <T> void setDefault(
-            Supplier<Optional<T>> getter, Consumer<T> setter, T defaultValue) {
-        setter.accept(getter.get().orElse(defaultValue));
     }
 }
