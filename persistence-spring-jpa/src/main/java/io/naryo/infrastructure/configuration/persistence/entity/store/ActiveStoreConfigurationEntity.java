@@ -4,19 +4,14 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.model.store.ActiveStoreConfigurationDescriptor;
 import io.naryo.application.configuration.source.model.store.StoreFeatureConfigurationDescriptor;
 import io.naryo.domain.configuration.store.active.StoreType;
 import io.naryo.domain.configuration.store.active.feature.StoreFeatureType;
-import io.naryo.infrastructure.configuration.persistence.entity.common.schema.ConfigurationSchemaEntity;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-
-import static io.naryo.infrastructure.configuration.persistence.entity.common.schema.ConfigurationSchemaEntity.fromEntity;
-import static io.naryo.infrastructure.configuration.persistence.entity.common.schema.ConfigurationSchemaEntity.toEntity;
 
 @Entity
 @DiscriminatorValue("active")
@@ -29,19 +24,16 @@ public class ActiveStoreConfigurationEntity extends StoreConfigurationEntity
     @JoinColumn(name = "store_configuration_id") List<StoreFeatureConfigurationEntity> features;
     private @Column(name = "additional_properties") @JdbcTypeCode(SqlTypes.JSON) Map<String, Object>
             additionalProperties;
-    private @Embedded ConfigurationSchemaEntity propertiesSchema;
 
     public ActiveStoreConfigurationEntity(
             UUID nodeId,
             String type,
             List<StoreFeatureConfigurationEntity> features,
-            Map<String, Object> additionalProperties,
-            ConfigurationSchemaEntity propertiesSchema) {
+            Map<String, Object> additionalProperties) {
         super(nodeId);
         this.type = type;
         this.features = features;
         this.additionalProperties = additionalProperties;
-        this.propertiesSchema = propertiesSchema;
     }
 
     @Override
@@ -63,18 +55,8 @@ public class ActiveStoreConfigurationEntity extends StoreConfigurationEntity
     }
 
     @Override
-    public Optional<ConfigurationSchema> getPropertiesSchema() {
-        return Optional.ofNullable(fromEntity(this.propertiesSchema));
-    }
-
-    @Override
     public void setAdditionalProperties(Map<String, Object> additionalProperties) {
         this.additionalProperties = additionalProperties;
-    }
-
-    @Override
-    public void setPropertiesSchema(ConfigurationSchema propertiesSchema) {
-        this.propertiesSchema = toEntity(propertiesSchema);
     }
 
     @Override

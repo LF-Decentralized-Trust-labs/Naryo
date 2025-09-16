@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.ObjectCodec;
@@ -34,7 +33,7 @@ public final class StoreConfigurationPropertiesDeserializer
 
     @Override
     public StoreConfigurationProperties deserialize(JsonParser p, DeserializationContext context)
-            throws IOException, JacksonException {
+            throws IOException {
         ObjectCodec codec = p.getCodec();
         JsonNode root = codec.readTree(p);
 
@@ -47,8 +46,7 @@ public final class StoreConfigurationPropertiesDeserializer
                 nodeId,
                 () -> type,
                 getFeatures(root, codec),
-                getAdditionalConfiguration(root, knownFields, codec, schema),
-                schema);
+                getAdditionalConfiguration(root, knownFields, codec, schema));
     }
 
     private @NotNull Map<StoreFeatureType, StoreFeatureConfigurationProperties> getFeatures(

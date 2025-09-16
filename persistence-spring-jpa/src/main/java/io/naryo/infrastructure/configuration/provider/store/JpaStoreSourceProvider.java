@@ -46,7 +46,6 @@ public class JpaStoreSourceProvider implements StoreSourceProvider {
                                 ConfigurationSchemaType.STORE, active.getType().getName());
                 active.setAdditionalProperties(
                         getAdditionalConfiguration(active.getAdditionalProperties(), schema));
-                active.setPropertiesSchema(schema);
                 yield active;
             }
             case InactiveStoreConfigurationEntity inactive -> inactive;

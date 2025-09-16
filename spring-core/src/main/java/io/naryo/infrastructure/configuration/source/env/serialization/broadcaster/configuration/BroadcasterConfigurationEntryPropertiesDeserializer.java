@@ -61,6 +61,6 @@ public final class BroadcasterConfigurationEntryPropertiesDeserializer
         }
 
         return new BroadcasterConfigurationEntryProperties(
-                getUuidOrNull(id), () -> type, cache, additionalConfiguration, schema);
+                getUuidOrNull(id), () -> type, cache, additionalConfiguration);
     }
 }
