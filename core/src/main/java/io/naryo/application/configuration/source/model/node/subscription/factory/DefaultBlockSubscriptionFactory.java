@@ -5,13 +5,15 @@ import java.time.Duration;
 
 import io.naryo.application.configuration.source.model.node.subscription.BlockSubscriptionDescriptor;
 import io.naryo.application.configuration.source.model.node.subscription.PollBlockSubscriptionDescriptor;
+import io.naryo.application.configuration.source.model.node.subscription.PubsubBlockSubscriptionDescriptor;
 import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.node.subscription.block.BlockSubscriptionConfiguration;
+import io.naryo.domain.node.subscription.block.method.BlockSubscriptionMethodConfiguration;
 import io.naryo.domain.node.subscription.block.method.poll.Interval;
 import io.naryo.domain.node.subscription.block.method.poll.PollBlockSubscriptionMethodConfiguration;
 import io.naryo.domain.node.subscription.block.method.pubsub.PubSubBlockSubscriptionMethodConfiguration;
 
-import static io.naryo.application.common.util.Defaults.setDefault;
+import static io.naryo.application.common.util.OptionalUtil.valueOrDefault;
 
 public final class DefaultBlockSubscriptionFactory implements BlockSubscriptionFactory {
 
@@ -27,39 +29,58 @@ public final class DefaultBlockSubscriptionFactory implements BlockSubscriptionF
     @Override
     public BlockSubscriptionConfiguration create(BlockSubscriptionDescriptor descriptor) {
 
-        this.applyDefaults(descriptor);
+        return switch (descriptor) {
+            case PollBlockSubscriptionDescriptor poll -> buildPollBlockSubscription(poll);
+            case PubsubBlockSubscriptionDescriptor pubsub -> buildPubsubSubscription(pubsub);
+            default -> throw new IllegalStateException("Unexpected value: " + descriptor);
+        };
+    }
 
-        var method =
-                switch (descriptor.getMethod()) {
-                    case POLL -> {
-                        var poll = (PollBlockSubscriptionDescriptor) descriptor;
-                        setDefault(poll::getInterval, poll::setInterval, DEFAULT_POLL_INTERVAL);
-                        var interval = poll.getInterval().orElse(null);
-                        yield new PollBlockSubscriptionMethodConfiguration(new Interval(interval));
-                    }
-                    case PUBSUB -> new PubSubBlockSubscriptionMethodConfiguration();
-                };
+    private static BlockSubscriptionConfiguration buildPollBlockSubscription(
+            PollBlockSubscriptionDescriptor descriptor) {
+        Duration interval = valueOrDefault(descriptor.getInterval(), DEFAULT_POLL_INTERVAL);
+        BlockSubscriptionMethodConfiguration method =
+                new PollBlockSubscriptionMethodConfiguration(new Interval(interval));
+        return buildConfig(descriptor, method);
+    }
+
+    private static BlockSubscriptionConfiguration buildPubsubSubscription(
+            PubsubBlockSubscriptionDescriptor descriptor) {
+        BlockSubscriptionMethodConfiguration method =
+                new PubSubBlockSubscriptionMethodConfiguration();
+        return buildConfig(descriptor, method);
+    }
+
+    private static BlockSubscriptionConfiguration buildConfig(
+            BlockSubscriptionDescriptor descriptor, BlockSubscriptionMethodConfiguration method) {
+
+        BigInteger initialBlock = valueOrDefault(descriptor.getInitialBlock(), INITIAL_BLOCK);
+        NonNegativeBlockNumber confirmationBlocks =
+                new NonNegativeBlockNumber(
+                        valueOrDefault(descriptor.getConfirmationBlocks(), CONFIRMATION_BLOCKS));
+        NonNegativeBlockNumber missingTxRetryBlocks =
+                new NonNegativeBlockNumber(
+                        valueOrDefault(
+                                descriptor.getMissingTxRetryBlocks(), MISSING_TX_RETRY_BLOCKS));
+        NonNegativeBlockNumber eventInvalidationBlockThreshold =
+                new NonNegativeBlockNumber(
+                        valueOrDefault(
+                                descriptor.getEventInvalidationBlockThreshold(),
+                                EVENT_INVALIDATION_BLOCK_THRESHOLD));
+        NonNegativeBlockNumber replayBlockOffset =
+                new NonNegativeBlockNumber(
+                        valueOrDefault(descriptor.getReplayBlockOffset(), REPLAY_BLOCK_OFFSET));
+        NonNegativeBlockNumber syncBlockLimit =
+                new NonNegativeBlockNumber(
+                        valueOrDefault(descriptor.getSyncBlockLimit(), SYNC_BLOCK_LIMIT));
 
         return new BlockSubscriptionConfiguration(
                 method,
-                descriptor.getInitialBlock().orElseThrow(),
-                new NonNegativeBlockNumber(descriptor.getConfirmationBlocks().orElseThrow()),
-                new NonNegativeBlockNumber(descriptor.getMissingTxRetryBlocks().orElseThrow()),
-                new NonNegativeBlockNumber(
-                        descriptor.getEventInvalidationBlockThreshold().orElseThrow()),
-                new NonNegativeBlockNumber(descriptor.getReplayBlockOffset().orElseThrow()),
-                new NonNegativeBlockNumber(descriptor.getSyncBlockLimit().orElseThrow()));
-    }
-
-    public void applyDefaults(BlockSubscriptionDescriptor d) {
-        setDefault(d::getInitialBlock, d::setInitialBlock, INITIAL_BLOCK);
-        setDefault(d::getConfirmationBlocks, d::setConfirmationBlocks, CONFIRMATION_BLOCKS);
-        setDefault(d::getMissingTxRetryBlocks, d::setMissingTxRetryBlocks, MISSING_TX_RETRY_BLOCKS);
-        setDefault(
-                d::getEventInvalidationBlockThreshold,
-                d::setEventInvalidationBlockThreshold,
-                EVENT_INVALIDATION_BLOCK_THRESHOLD);
-        setDefault(d::getReplayBlockOffset, d::setReplayBlockOffset, REPLAY_BLOCK_OFFSET);
-        setDefault(d::getSyncBlockLimit, d::setSyncBlockLimit, SYNC_BLOCK_LIMIT);
+                initialBlock,
+                confirmationBlocks,
+                missingTxRetryBlocks,
+                eventInvalidationBlockThreshold,
+                replayBlockOffset,
+                syncBlockLimit);
     }
 }

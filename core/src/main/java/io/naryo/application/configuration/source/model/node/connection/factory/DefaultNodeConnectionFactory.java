@@ -1,9 +1,11 @@
 package io.naryo.application.configuration.source.model.node.connection.factory;
 
 import java.time.Duration;
+import java.util.Optional;
 
 import io.naryo.application.configuration.source.model.node.connection.HttpNodeConnectionDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.NodeConnectionDescriptor;
+import io.naryo.application.configuration.source.model.node.connection.WsNodeConnectionDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.endpoint.ConnectionEndpointDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.retry.NodeConnectionRetryDescriptor;
 import io.naryo.domain.common.connection.endpoint.ConnectionEndpoint;
@@ -12,81 +14,85 @@ import io.naryo.domain.node.connection.RetryConfiguration;
 import io.naryo.domain.node.connection.http.*;
 import io.naryo.domain.node.connection.ws.WsNodeConnection;
 
-import static io.naryo.application.common.util.Defaults.setDefault;
+import static io.naryo.application.common.util.OptionalUtil.valueOrDefault;
 import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 
 public class DefaultNodeConnectionFactory implements NodeConnectionFactory {
 
-    public static final int DEFAULT_MAX_IDLE_CONNECTIONS = 5;
-    public static final Duration DEFAULT_KEEP_ALIVE_DURATION = Duration.ofMinutes(5);
-    public static final Duration DEFAULT_CONNECTION_TIMEOUT = Duration.ofSeconds(10);
-    public static final Duration DEFAULT_READ_TIMEOUT = Duration.ofSeconds(30);
+    public static final int DEFAULT_HTTP_MAX_IDLE_CONNECTIONS = 5;
+    public static final Duration DEFAULT_HTTP_KEEP_ALIVE_DURATION = Duration.ofMinutes(5);
+    public static final Duration DEFAULT_HTTP_CONNECTION_TIMEOUT = Duration.ofSeconds(10);
+    public static final Duration DEFAULT_HTTP_READ_TIMEOUT = Duration.ofSeconds(30);
 
     public static final int DEFAULT_RETRY_TIMES = 3;
     public static final Duration DEFAULT_RETRY_BACKOFF = Duration.ofSeconds(30);
 
     @Override
     public NodeConnection create(NodeConnectionDescriptor descriptor) {
-
-        var endpoint =
-                buildConnectionEndpoint(
-                        valueOrNull(NodeConnectionDescriptor::getEndpoint, descriptor));
-        var retryDescriptor = valueOrNull(NodeConnectionDescriptor::getRetry, descriptor);
-
-        var retry =
-                (retryDescriptor == null)
-                        ? new RetryConfiguration(DEFAULT_RETRY_TIMES, DEFAULT_RETRY_BACKOFF)
-                        : buildRetry(applyRetryDefaults(retryDescriptor));
-
-        return switch (descriptor.getType()) {
-            case HTTP -> {
-                var httpConnection = (HttpNodeConnectionDescriptor) descriptor;
-                applyHttpDefaults(httpConnection);
-                yield new HttpNodeConnection(
-                        endpoint,
-                        retry,
-                        new MaxIdleConnections(
-                                httpConnection.getMaxIdleConnections().orElseThrow()),
-                        new KeepAliveDuration(httpConnection.getKeepAliveDuration().orElseThrow()),
-                        new ConnectionTimeout(httpConnection.getConnectionTimeout().orElseThrow()),
-                        new ReadTimeout(httpConnection.getReadTimeout().orElseThrow()));
-            }
-            case WS -> new WsNodeConnection(endpoint, retry);
+        return switch (descriptor) {
+            case HttpNodeConnectionDescriptor httpNodeConnectionDescriptor ->
+                    buildHttpNodeConnection(httpNodeConnectionDescriptor);
+            case WsNodeConnectionDescriptor wsNodeConnectionDescriptor ->
+                    buildWsNodeConnection(wsNodeConnectionDescriptor);
+            default -> throw new IllegalStateException("Unexpected value: " + descriptor);
         };
     }
 
-    private static void applyHttpDefaults(HttpNodeConnectionDescriptor descriptor) {
-        setDefault(
-                descriptor::getMaxIdleConnections,
-                descriptor::setMaxIdleConnections,
-                DEFAULT_MAX_IDLE_CONNECTIONS);
-        setDefault(
-                descriptor::getKeepAliveDuration,
-                descriptor::setKeepAliveDuration,
-                DEFAULT_KEEP_ALIVE_DURATION);
-        setDefault(
-                descriptor::getConnectionTimeout,
-                descriptor::setConnectionTimeout,
-                DEFAULT_CONNECTION_TIMEOUT);
-        setDefault(descriptor::getReadTimeout, descriptor::setReadTimeout, DEFAULT_READ_TIMEOUT);
+    private static HttpNodeConnection buildHttpNodeConnection(
+            HttpNodeConnectionDescriptor descriptor) {
+        ConnectionEndpoint endpoint = buildConnectionEndpoint(descriptor.getEndpoint());
+        RetryConfiguration retry = buildRetry(descriptor.getRetry());
+        MaxIdleConnections maxIdleConnections =
+                new MaxIdleConnections(
+                        valueOrDefault(
+                                descriptor.getMaxIdleConnections(),
+                                DEFAULT_HTTP_MAX_IDLE_CONNECTIONS));
+        KeepAliveDuration keepAliveDuration =
+                new KeepAliveDuration(
+                        valueOrDefault(
+                                descriptor.getKeepAliveDuration(),
+                                DEFAULT_HTTP_KEEP_ALIVE_DURATION));
+        ConnectionTimeout connectionTimeout =
+                new ConnectionTimeout(
+                        valueOrDefault(
+                                descriptor.getConnectionTimeout(),
+                                DEFAULT_HTTP_CONNECTION_TIMEOUT));
+        ReadTimeout readTimeout =
+                new ReadTimeout(
+                        valueOrDefault(descriptor.getReadTimeout(), DEFAULT_HTTP_READ_TIMEOUT));
+
+        return new HttpNodeConnection(
+                endpoint,
+                retry,
+                maxIdleConnections,
+                keepAliveDuration,
+                connectionTimeout,
+                readTimeout);
     }
 
-    private static NodeConnectionRetryDescriptor applyRetryDefaults(
-            NodeConnectionRetryDescriptor descriptor) {
-        setDefault(descriptor::getTimes, descriptor::setTimes, DEFAULT_RETRY_TIMES);
-        setDefault(descriptor::getBackoff, descriptor::setBackoff, DEFAULT_RETRY_BACKOFF);
-        return descriptor;
+    private static WsNodeConnection buildWsNodeConnection(WsNodeConnectionDescriptor descriptor) {
+        ConnectionEndpoint endpoint = buildConnectionEndpoint(descriptor.getEndpoint());
+        RetryConfiguration retry = buildRetry(descriptor.getRetry());
+
+        return new WsNodeConnection(endpoint, retry);
     }
 
     private static ConnectionEndpoint buildConnectionEndpoint(
-            ConnectionEndpointDescriptor descriptor) {
-        return descriptor != null ? new ConnectionEndpoint(valueOrNull(descriptor.getUrl())) : null;
+            Optional<ConnectionEndpointDescriptor> descriptor) {
+        return descriptor
+                .map(val -> new ConnectionEndpoint(valueOrNull(val.getUrl())))
+                .orElse(null);
     }
 
-    private static RetryConfiguration buildRetry(NodeConnectionRetryDescriptor descriptor) {
-        return descriptor != null
-                ? new RetryConfiguration(
-                        valueOrNull(descriptor.getTimes()), valueOrNull(descriptor.getBackoff()))
-                : null;
+    private static RetryConfiguration buildRetry(
+            Optional<NodeConnectionRetryDescriptor> descriptor) {
+        return descriptor
+                .map(
+                        val ->
+                                new RetryConfiguration(
+                                        valueOrDefault(val.getTimes(), DEFAULT_RETRY_TIMES),
+                                        valueOrDefault(val.getBackoff(), DEFAULT_RETRY_BACKOFF)))
+                .orElseGet(
+                        () -> new RetryConfiguration(DEFAULT_RETRY_TIMES, DEFAULT_RETRY_BACKOFF));
     }
 }
