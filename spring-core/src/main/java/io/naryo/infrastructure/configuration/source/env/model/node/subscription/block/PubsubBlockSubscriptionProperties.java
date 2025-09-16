@@ -3,7 +3,6 @@ package io.naryo.infrastructure.configuration.source.env.model.node.subscription
 import java.math.BigInteger;
 
 import io.naryo.application.configuration.source.model.node.subscription.PubsubBlockSubscriptionDescriptor;
-import io.naryo.domain.node.subscription.block.method.BlockSubscriptionMethod;
 
 public final class PubsubBlockSubscriptionProperties extends BlockSubscriptionProperties
         implements PubsubBlockSubscriptionDescriptor {
@@ -16,7 +15,6 @@ public final class PubsubBlockSubscriptionProperties extends BlockSubscriptionPr
             BigInteger replayBlockOffset,
             BigInteger syncBlockLimit) {
         super(
-                BlockSubscriptionMethod.PUBSUB,
                 initialBlock,
                 confirmationBlocks,
                 missingTxRetryBlocks,

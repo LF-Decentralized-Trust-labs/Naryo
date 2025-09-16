@@ -18,8 +18,6 @@ import lombok.Setter;
 public class PollBlockSubscriptionEntity extends BlockSubscriptionEntity
         implements PollBlockSubscriptionDescriptor {
 
-    private static final Duration DEFAULT_INTERVAL = Duration.ofSeconds(5);
-
     private @Column(name = "interval") @Setter @Nullable Duration interval;
 
     public PollBlockSubscriptionEntity(
@@ -37,7 +35,7 @@ public class PollBlockSubscriptionEntity extends BlockSubscriptionEntity
                 eventInvalidationBlockThreshold,
                 replayBlockOffset,
                 syncBlockLimit);
-        this.interval = interval != null ? interval : DEFAULT_INTERVAL;
+        this.interval = interval;
     }
 
     @Override

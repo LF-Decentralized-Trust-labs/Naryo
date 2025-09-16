@@ -5,14 +5,11 @@ import java.time.Duration;
 import java.util.Optional;
 
 import io.naryo.application.configuration.source.model.node.subscription.PollBlockSubscriptionDescriptor;
-import io.naryo.domain.node.subscription.block.method.BlockSubscriptionMethod;
 import jakarta.validation.constraints.NotNull;
 import lombok.Setter;
 
 public final class PollBlockSubscriptionProperties extends BlockSubscriptionProperties
         implements PollBlockSubscriptionDescriptor {
-
-    private static final Duration DEFAULT_INTERVAL = Duration.ofSeconds(5);
 
     private @Setter @NotNull Duration interval;
 
@@ -25,14 +22,13 @@ public final class PollBlockSubscriptionProperties extends BlockSubscriptionProp
             BigInteger syncBlockLimit,
             Duration interval) {
         super(
-                BlockSubscriptionMethod.POLL,
                 initialBlock,
                 confirmationBlocks,
                 missingTxRetryBlocks,
                 eventInvalidationBlockThreshold,
                 replayBlockOffset,
                 syncBlockLimit);
-        this.interval = interval != null ? interval : DEFAULT_INTERVAL;
+        this.interval = interval;
     }
 
     @Override

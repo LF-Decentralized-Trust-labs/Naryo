@@ -19,11 +19,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class HttpConnectionEntity extends ConnectionEntity implements HttpNodeConnectionDescriptor {
 
-    private static final int DEFAULT_MAX_IDLE_CONNECTIONS = 5;
-    private static final Duration DEFAULT_KEEP_ALIVE_DURATION = Duration.ofMinutes(5);
-    private static final Duration DEFAULT_CONNECTION_TIMEOUT = Duration.ofSeconds(10);
-    private static final Duration DEFAULT_READ_TIMEOUT = Duration.ofSeconds(30);
-
     private @Setter @Nullable @Column(name = "max_idle_connections") Integer maxIdleConnections;
     private @Setter @Nullable @Column(name = "keep_alive_duration") Duration keepAliveDuration;
     private @Setter @Nullable @Column(name = "connection_timeout") Duration connectionTimeout;
@@ -37,13 +32,10 @@ public class HttpConnectionEntity extends ConnectionEntity implements HttpNodeCo
             @Nullable Duration connectionTimeout,
             @Nullable Duration readTimeout) {
         super(retry, endpoint);
-        this.maxIdleConnections =
-                maxIdleConnections != null ? maxIdleConnections : DEFAULT_MAX_IDLE_CONNECTIONS;
-        this.keepAliveDuration =
-                keepAliveDuration != null ? keepAliveDuration : DEFAULT_KEEP_ALIVE_DURATION;
-        this.connectionTimeout =
-                connectionTimeout != null ? connectionTimeout : DEFAULT_CONNECTION_TIMEOUT;
-        this.readTimeout = readTimeout != null ? readTimeout : DEFAULT_READ_TIMEOUT;
+        this.maxIdleConnections = maxIdleConnections;
+        this.keepAliveDuration = keepAliveDuration;
+        this.connectionTimeout = connectionTimeout;
+        this.readTimeout = readTimeout;
     }
 
     @Override

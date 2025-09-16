@@ -16,4 +16,8 @@ public final class OptionalUtil {
     public static <T> T valueOrNull(Optional<T> source) {
         return source.orElse(null);
     }
+
+    public static <T> T valueOrDefault(Optional<T> source, T defaultValue) {
+        return source.orElse(defaultValue);
+    }
 }

@@ -13,8 +13,6 @@ import org.springframework.data.annotation.TypeAlias;
 public final class PollBlockSubscriptionPropertiesDocument
         extends BlockSubscriptionPropertiesDocument implements PollBlockSubscriptionDescriptor {
 
-    private static final Duration DEFAULT_INTERVAL = Duration.ofSeconds(5);
-
     private @Setter @NotNull Duration interval;
 
     public PollBlockSubscriptionPropertiesDocument(
@@ -32,7 +30,7 @@ public final class PollBlockSubscriptionPropertiesDocument
                 eventInvalidationBlockThreshold,
                 replayBlockOffset,
                 syncBlockLimit);
-        this.interval = interval != null ? interval : DEFAULT_INTERVAL;
+        this.interval = interval;
     }
 
     @Override

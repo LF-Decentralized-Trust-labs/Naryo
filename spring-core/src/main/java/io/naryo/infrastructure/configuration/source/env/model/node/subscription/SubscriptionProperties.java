@@ -1,15 +1,5 @@
 package io.naryo.infrastructure.configuration.source.env.model.node.subscription;
 
 import io.naryo.application.configuration.source.model.node.subscription.SubscriptionDescriptor;
-import io.naryo.domain.node.subscription.SubscriptionStrategy;
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
 
-public abstract class SubscriptionProperties implements SubscriptionDescriptor {
-
-    private final @Getter @NotNull SubscriptionStrategy strategy;
-
-    public SubscriptionProperties(SubscriptionStrategy strategy) {
-        this.strategy = strategy;
-    }
-}
+public abstract class SubscriptionProperties implements SubscriptionDescriptor {}

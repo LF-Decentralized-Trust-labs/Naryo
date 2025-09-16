@@ -15,11 +15,6 @@ import org.springframework.data.annotation.TypeAlias;
 public final class HttpConnectionPropertiesDocument extends ConnectionPropertiesDocument
         implements HttpNodeConnectionDescriptor {
 
-    private static final int DEFAULT_MAX_IDLE_CONNECTIONS = 5;
-    private static final Duration DEFAULT_KEEP_ALIVE_DURATION = Duration.ofMinutes(5);
-    private static final Duration DEFAULT_CONNECTION_TIMEOUT = Duration.ofSeconds(10);
-    private static final Duration DEFAULT_READ_TIMEOUT = Duration.ofSeconds(30);
-
     private @Setter @Nullable Integer maxIdleConnections;
     private @Setter @Nullable Duration keepAliveDuration;
     private @Setter @Nullable Duration connectionTimeout;
@@ -33,13 +28,10 @@ public final class HttpConnectionPropertiesDocument extends ConnectionProperties
             Duration connectionTimeout,
             Duration readTimeout) {
         super(retry, endpoint);
-        this.maxIdleConnections =
-                maxIdleConnections != null ? maxIdleConnections : DEFAULT_MAX_IDLE_CONNECTIONS;
-        this.keepAliveDuration =
-                keepAliveDuration != null ? keepAliveDuration : DEFAULT_KEEP_ALIVE_DURATION;
-        this.connectionTimeout =
-                connectionTimeout != null ? connectionTimeout : DEFAULT_CONNECTION_TIMEOUT;
-        this.readTimeout = readTimeout != null ? readTimeout : DEFAULT_READ_TIMEOUT;
+        this.maxIdleConnections = maxIdleConnections;
+        this.keepAliveDuration = keepAliveDuration;
+        this.connectionTimeout = connectionTimeout;
+        this.readTimeout = readTimeout;
     }
 
     @Override

@@ -10,38 +10,24 @@ import io.naryo.application.configuration.provider.CollectionSourceProvider;
 import io.naryo.application.configuration.source.model.node.EthereumNodeDescriptor;
 import io.naryo.application.configuration.source.model.node.NodeDescriptor;
 import io.naryo.application.configuration.source.model.node.PrivateEthereumNodeDescriptor;
-import io.naryo.application.configuration.source.model.node.connection.HttpNodeConnectionDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.NodeConnectionDescriptor;
-import io.naryo.application.configuration.source.model.node.connection.endpoint.ConnectionEndpointDescriptor;
-import io.naryo.application.configuration.source.model.node.connection.retry.NodeConnectionRetryDescriptor;
-import io.naryo.application.configuration.source.model.node.interaction.BlockInteractionDescriptor;
-import io.naryo.application.configuration.source.model.node.interaction.HederaMirrorNodeBlockInteractionDescriptor;
+import io.naryo.application.configuration.source.model.node.connection.factory.NodeConnectionFactory;
 import io.naryo.application.configuration.source.model.node.interaction.InteractionDescriptor;
+import io.naryo.application.configuration.source.model.node.interaction.factory.InteractionFactory;
 import io.naryo.application.configuration.source.model.node.subscription.BlockSubscriptionDescriptor;
-import io.naryo.application.configuration.source.model.node.subscription.PollBlockSubscriptionDescriptor;
 import io.naryo.application.configuration.source.model.node.subscription.SubscriptionDescriptor;
-import io.naryo.domain.common.NonNegativeBlockNumber;
-import io.naryo.domain.common.connection.endpoint.ConnectionEndpoint;
+import io.naryo.application.configuration.source.model.node.subscription.factory.BlockSubscriptionFactory;
 import io.naryo.domain.node.Node;
 import io.naryo.domain.node.NodeName;
 import io.naryo.domain.node.connection.NodeConnection;
-import io.naryo.domain.node.connection.RetryConfiguration;
 import io.naryo.domain.node.connection.http.*;
-import io.naryo.domain.node.connection.ws.WsNodeConnection;
 import io.naryo.domain.node.ethereum.priv.GroupId;
 import io.naryo.domain.node.ethereum.priv.PrecompiledAddress;
 import io.naryo.domain.node.ethereum.priv.PrivateEthereumNode;
 import io.naryo.domain.node.ethereum.pub.PublicEthereumNode;
 import io.naryo.domain.node.hedera.HederaNode;
 import io.naryo.domain.node.interaction.InteractionConfiguration;
-import io.naryo.domain.node.interaction.block.ethereum.EthereumRpcBlockInteractionConfiguration;
-import io.naryo.domain.node.interaction.block.hedera.HederaMirrorNodeBlockInteractionConfiguration;
-import io.naryo.domain.node.interaction.block.hedera.LimitPerRequest;
-import io.naryo.domain.node.interaction.block.hedera.RetriesPerRequest;
 import io.naryo.domain.node.subscription.block.BlockSubscriptionConfiguration;
-import io.naryo.domain.node.subscription.block.method.poll.Interval;
-import io.naryo.domain.node.subscription.block.method.poll.PollBlockSubscriptionMethodConfiguration;
-import io.naryo.domain.node.subscription.block.method.pubsub.PubSubBlockSubscriptionMethodConfiguration;
 
 import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 
@@ -49,10 +35,20 @@ public final class DefaultNodeConfigurationManager
         extends BaseCollectionConfigurationManager<Node, NodeDescriptor, UUID>
         implements NodeConfigurationManager {
 
+    private final BlockSubscriptionFactory blockSubscriptionFactory;
+    private final NodeConnectionFactory nodeConnectionFactory;
+    private final InteractionFactory interactionFactory;
+
     public DefaultNodeConfigurationManager(
             List<? extends CollectionSourceProvider<NodeDescriptor>>
-                    collectionConfigurationProviders) {
+                    collectionConfigurationProviders,
+            BlockSubscriptionFactory blockSubscriptionFactory,
+            NodeConnectionFactory nodeConnectionFactory,
+            InteractionFactory interactionFactory) {
         super(collectionConfigurationProviders);
+        this.blockSubscriptionFactory = blockSubscriptionFactory;
+        this.nodeConnectionFactory = nodeConnectionFactory;
+        this.interactionFactory = interactionFactory;
     }
 
     @Override
@@ -117,70 +113,15 @@ public final class DefaultNodeConfigurationManager
                 (BlockSubscriptionDescriptor)
                         descriptor; // We assume this is the correct type because there's not more
         // at this moment
-        var method =
-                switch (blockDescriptor.getMethod()) {
-                    case POLL ->
-                            new PollBlockSubscriptionMethodConfiguration(
-                                    new Interval(
-                                            valueOrNull(
-                                                    ((PollBlockSubscriptionDescriptor)
-                                                                    blockDescriptor)
-                                                            .getInterval())));
-                    case PUBSUB -> new PubSubBlockSubscriptionMethodConfiguration();
-                };
-        return new BlockSubscriptionConfiguration(
-                method,
-                valueOrNull(blockDescriptor.getInitialBlock()),
-                new NonNegativeBlockNumber(valueOrNull(blockDescriptor.getConfirmationBlocks())),
-                new NonNegativeBlockNumber(valueOrNull(blockDescriptor.getMissingTxRetryBlocks())),
-                new NonNegativeBlockNumber(
-                        valueOrNull(blockDescriptor.getEventInvalidationBlockThreshold())),
-                new NonNegativeBlockNumber(valueOrNull(blockDescriptor.getReplayBlockOffset())),
-                new NonNegativeBlockNumber(valueOrNull(blockDescriptor.getSyncBlockLimit())));
+        return this.blockSubscriptionFactory.create(blockDescriptor);
     }
 
     private InteractionConfiguration buildInteraction(InteractionDescriptor cfg) {
-        var props = (BlockInteractionDescriptor) cfg;
-        return switch (props.getMode()) {
-            case ETHEREUM_RPC -> new EthereumRpcBlockInteractionConfiguration();
-            case HEDERA_MIRROR_NODE -> {
-                var mirCfg = (HederaMirrorNodeBlockInteractionDescriptor) props;
-                yield new HederaMirrorNodeBlockInteractionConfiguration(
-                        new LimitPerRequest(valueOrNull(mirCfg.getLimitPerRequest())),
-                        new RetriesPerRequest(valueOrNull(mirCfg.getRetriesPerRequest())));
-            }
-        };
+        return this.interactionFactory.create(cfg);
     }
 
     private NodeConnection buildConnection(NodeConnectionDescriptor descriptor) {
-        var endpoint =
-                buildConnectionEndpoint(
-                        valueOrNull(NodeConnectionDescriptor::getEndpoint, descriptor));
-        var retry = buildRetry(valueOrNull(NodeConnectionDescriptor::getRetry, descriptor));
-        return switch (descriptor.getType()) {
-            case HTTP -> {
-                var httpDescriptor = (HttpNodeConnectionDescriptor) descriptor;
-                yield new HttpNodeConnection(
-                        endpoint,
-                        retry,
-                        new MaxIdleConnections(valueOrNull(httpDescriptor.getMaxIdleConnections())),
-                        new KeepAliveDuration(valueOrNull(httpDescriptor.getKeepAliveDuration())),
-                        new ConnectionTimeout(valueOrNull(httpDescriptor.getConnectionTimeout())),
-                        new ReadTimeout(valueOrNull(httpDescriptor.getReadTimeout())));
-            }
-            case WS -> new WsNodeConnection(endpoint, retry);
-        };
-    }
-
-    private ConnectionEndpoint buildConnectionEndpoint(ConnectionEndpointDescriptor descriptor) {
-        return descriptor != null ? new ConnectionEndpoint(valueOrNull(descriptor.getUrl())) : null;
-    }
-
-    private RetryConfiguration buildRetry(NodeConnectionRetryDescriptor descriptor) {
-        return descriptor != null
-                ? new RetryConfiguration(
-                        valueOrNull(descriptor.getTimes()), valueOrNull(descriptor.getBackoff()))
-                : null;
+        return this.nodeConnectionFactory.create(descriptor);
     }
 
     private record CommonParams(
