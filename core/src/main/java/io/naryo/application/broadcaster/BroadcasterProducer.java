@@ -7,7 +7,7 @@ import io.naryo.domain.event.Event;
 
 public interface BroadcasterProducer {
 
-    void produce(Broadcaster broadcaster, BroadcasterConfiguration configuration, Event event);
+    void produce(Broadcaster broadcaster, BroadcasterConfiguration configuration, Event<?> event);
 
     boolean supports(BroadcasterType type);
 }
