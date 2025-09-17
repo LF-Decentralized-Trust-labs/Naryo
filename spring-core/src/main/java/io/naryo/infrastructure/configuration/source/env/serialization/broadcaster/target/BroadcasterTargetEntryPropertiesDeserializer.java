@@ -36,7 +36,7 @@ public final class BroadcasterTargetEntryPropertiesDeserializer
                 typeString != null && !typeString.isBlank()
                         ? BroadcasterTargetType.valueOf(typeString.toUpperCase())
                         : BroadcasterTargetType.ALL;
-        List<String> destinations = getDestinations(root.get("target"), codec);
+        Set<String> destinations = getDestinations(root.get("target"), codec);
         BroadcasterTargetDescriptor target =
                 switch (type) {
                     case ALL -> new AllBroadcasterTargetProperties(destinations);
@@ -54,7 +54,7 @@ public final class BroadcasterTargetEntryPropertiesDeserializer
                 getUuidOrNull(id), getUuidOrNull(configurationId), target);
     }
 
-    private List<String> getDestinations(JsonNode root, ObjectCodec codec) {
+    private Set<String> getDestinations(JsonNode root, ObjectCodec codec) {
         ObjectMapper mapper = (ObjectMapper) codec;
         JsonNode destinationsNode = root.get("destinations");
         ArrayNode arrayNode;

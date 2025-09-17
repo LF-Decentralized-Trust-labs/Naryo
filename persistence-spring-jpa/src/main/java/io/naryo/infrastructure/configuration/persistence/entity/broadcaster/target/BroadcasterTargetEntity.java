@@ -1,6 +1,8 @@
 package io.naryo.infrastructure.configuration.persistence.entity.broadcaster.target;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import io.naryo.application.configuration.source.model.broadcaster.target.BroadcasterTargetDescriptor;
@@ -20,20 +22,20 @@ public abstract class BroadcasterTargetEntity implements BroadcasterTargetDescri
 
     private @ElementCollection(fetch = FetchType.EAGER) @CollectionTable(
             name = "broadcaster_target_destination",
-            joinColumns = @JoinColumn(name = "broadcaster_target_id")) @Column(name = "destination")
-    List<String> destinations;
+            joinColumns = @JoinColumn(name = "broadcaster_target_id")) @Column(
+            name = "destination", nullable = false) Set<String> destinations;
 
-    public BroadcasterTargetEntity(List<String> destinations) {
+    public BroadcasterTargetEntity(Set<String> destinations) {
         this.destinations = destinations;
     }
 
     @Override
-    public List<String> getDestinations() {
-        return this.destinations != null ? destinations : List.of();
+    public Set<String> getDestinations() {
+        return this.destinations != null ? destinations : Set.of();
     }
 
     @Override
-    public void setDestinations(List<String> destinations) {
-        this.destinations = destinations;
+    public void setDestinations(Set<String> destinations) {
+        this.destinations = new HashSet<>(destinations);
     }
 }

@@ -1,6 +1,7 @@
 package io.naryo.infrastructure.configuration.persistence.document.broadcaster.target;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import io.naryo.application.configuration.source.model.broadcaster.target.FilterBroadcasterTargetDescriptor;
@@ -15,7 +16,7 @@ public class FilterBroadcasterTargetDocument extends BroadcasterTargetDocument
 
     private @NotNull UUID filterId;
 
-    public FilterBroadcasterTargetDocument(List<String> destinations, UUID filterId) {
+    public FilterBroadcasterTargetDocument(Set<String> destinations, UUID filterId) {
         super(destinations);
         this.filterId = filterId;
     }
