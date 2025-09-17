@@ -57,7 +57,7 @@ public abstract class BroadcasterTargetDescriptorTest {
         BroadcasterTargetDescriptor result = original.merge(other);
 
         assertEquals(
-                expectedDestination == null ? List.of() : List.of(expectedDestination),
+                expectedDestination == null ? Set.of() : Set.of(expectedDestination),
                 result.getDestinations(),
                 "Should merge the destination");
     }
