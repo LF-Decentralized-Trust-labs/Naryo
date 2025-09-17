@@ -1,38 +1,31 @@
 package io.naryo.infrastructure.configuration.source.env.model.http;
 
 import java.time.Duration;
+import java.util.Optional;
 
-import jakarta.validation.constraints.NotNull;
+import io.naryo.application.configuration.source.model.http.HttpClientDescriptor;
+import jakarta.annotation.Nullable;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-public record HttpClientProperties(
-        int maxIdleConnections,
-        @NotNull Duration keepAliveDuration,
-        @NotNull Duration connectTimeout,
-        @NotNull Duration readTimeout,
-        @NotNull Duration writeTimeout,
-        @NotNull Duration callTimeout,
-        @NotNull Duration pingInterval,
-        boolean retryOnConnectionFailure) {
-    private static final int DEFAULT_MAX_IDLE_CONNECTIONS = 5;
-    private static final Duration DEFAULT_KEEP_ALIVE_DURATION = Duration.ofMinutes(5);
-    private static final Duration DEFAULT_CONNECT_TIMEOUT = Duration.ofSeconds(10);
-    private static final Duration DEFAULT_READ_TIMEOUT = Duration.ofSeconds(30);
-    private static final Duration DEFAULT_WRITE_TIMEOUT = Duration.ofSeconds(30);
-    private static final Duration DEFAULT_CALL_TIMEOUT = Duration.ofSeconds(60);
-    private static final Duration DEFAULT_PING_INTERVAL = Duration.ofSeconds(15);
-    private static final boolean DEFAULT_RETRY_ON_CONNECTION_FAILURE = true;
+@NoArgsConstructor
+public class HttpClientProperties implements HttpClientDescriptor {
 
-    public HttpClientProperties() {
-        this(
-                DEFAULT_MAX_IDLE_CONNECTIONS,
-                DEFAULT_KEEP_ALIVE_DURATION,
-                DEFAULT_CONNECT_TIMEOUT,
-                DEFAULT_READ_TIMEOUT,
-                DEFAULT_WRITE_TIMEOUT,
-                DEFAULT_CALL_TIMEOUT,
-                DEFAULT_PING_INTERVAL,
-                DEFAULT_RETRY_ON_CONNECTION_FAILURE);
-    }
+    private @Setter @Nullable Integer maxIdleConnections;
+
+    private @Setter @Nullable Duration keepAliveDuration;
+
+    private @Setter @Nullable Duration connectTimeout;
+
+    private @Setter @Nullable Duration readTimeout;
+
+    private @Setter @Nullable Duration writeTimeout;
+
+    private @Setter @Nullable Duration callTimeout;
+
+    private @Setter @Nullable Duration pingInterval;
+
+    private @Setter @Nullable Boolean retryOnConnectionFailure;
 
     public HttpClientProperties(
             int maxIdleConnections,
@@ -44,19 +37,52 @@ public record HttpClientProperties(
             Duration pingInterval,
             boolean retryOnConnectionFailure) {
         this.maxIdleConnections = maxIdleConnections;
+        this.keepAliveDuration = keepAliveDuration;
+        this.connectTimeout = connectTimeout;
+        this.readTimeout = readTimeout;
+        this.writeTimeout = writeTimeout;
+        this.callTimeout = callTimeout;
+        this.pingInterval = pingInterval;
         this.retryOnConnectionFailure = retryOnConnectionFailure;
-
-        this.keepAliveDuration = applyDefaultIfNull(keepAliveDuration, DEFAULT_KEEP_ALIVE_DURATION);
-        this.connectTimeout = applyDefaultIfNull(connectTimeout, DEFAULT_CONNECT_TIMEOUT);
-        this.readTimeout = applyDefaultIfNull(readTimeout, DEFAULT_READ_TIMEOUT);
-        this.writeTimeout = applyDefaultIfNull(writeTimeout, DEFAULT_WRITE_TIMEOUT);
-        this.callTimeout = applyDefaultIfNull(callTimeout, DEFAULT_CALL_TIMEOUT);
-        this.pingInterval = applyDefaultIfNull(pingInterval, DEFAULT_PING_INTERVAL);
     }
 
-    private Duration applyDefaultIfNull(Duration duration, Duration defaultValue) {
-        return (duration == null || duration.isNegative() || duration.isZero())
-                ? defaultValue
-                : duration;
+    @Override
+    public Optional<Integer> getMaxIdleConnections() {
+        return Optional.ofNullable(maxIdleConnections);
+    }
+
+    @Override
+    public Optional<Duration> getKeepAliveDuration() {
+        return Optional.ofNullable(keepAliveDuration);
+    }
+
+    @Override
+    public Optional<Duration> getConnectTimeout() {
+        return Optional.ofNullable(connectTimeout);
+    }
+
+    @Override
+    public Optional<Duration> getReadTimeout() {
+        return Optional.ofNullable(readTimeout);
+    }
+
+    @Override
+    public Optional<Duration> getWriteTimeout() {
+        return Optional.ofNullable(writeTimeout);
+    }
+
+    @Override
+    public Optional<Duration> getCallTimeout() {
+        return Optional.ofNullable(callTimeout);
+    }
+
+    @Override
+    public Optional<Duration> getPingInterval() {
+        return Optional.ofNullable(pingInterval);
+    }
+
+    @Override
+    public Optional<Boolean> getRetryOnConnectionFailure() {
+        return Optional.ofNullable(retryOnConnectionFailure);
     }
 }

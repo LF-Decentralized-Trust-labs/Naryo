@@ -9,6 +9,8 @@ import io.naryo.domain.node.interaction.block.hedera.HederaMirrorNodeBlockIntera
 import io.naryo.domain.node.interaction.block.hedera.LimitPerRequest;
 import io.naryo.domain.node.interaction.block.hedera.RetriesPerRequest;
 
+import static io.naryo.application.common.util.OptionalUtil.valueOrDefault;
+
 public class DefaultInteractionFactory implements InteractionFactory {
 
     public static final int DEFAULT_HEDERA_LIMIT_PER_REQUEST = 10;
@@ -30,8 +32,11 @@ public class DefaultInteractionFactory implements InteractionFactory {
 
     private static HederaMirrorNodeBlockInteractionConfiguration buildHedera(
             HederaMirrorNodeBlockInteractionDescriptor descriptor) {
-        int limit = descriptor.getLimitPerRequest().orElse(DEFAULT_HEDERA_LIMIT_PER_REQUEST);
-        int retries = descriptor.getRetriesPerRequest().orElse(DEFAULT_HEDERA_RETRIES_PER_REQUEST);
+        int limit =
+                valueOrDefault(descriptor.getLimitPerRequest(), DEFAULT_HEDERA_LIMIT_PER_REQUEST);
+        int retries =
+                valueOrDefault(
+                        descriptor.getRetriesPerRequest(), DEFAULT_HEDERA_RETRIES_PER_REQUEST);
         return new HederaMirrorNodeBlockInteractionConfiguration(
                 new LimitPerRequest(limit), new RetriesPerRequest(retries));
     }
