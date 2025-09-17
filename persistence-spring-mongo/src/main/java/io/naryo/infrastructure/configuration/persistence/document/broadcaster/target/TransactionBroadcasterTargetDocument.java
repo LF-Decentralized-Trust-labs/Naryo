@@ -1,6 +1,6 @@
 package io.naryo.infrastructure.configuration.persistence.document.broadcaster.target;
 
-import java.util.List;
+import java.util.Set;
 
 import io.naryo.application.configuration.source.model.broadcaster.target.TransactionBroadcasterTargetDescriptor;
 import org.springframework.data.annotation.TypeAlias;
@@ -9,7 +9,7 @@ import org.springframework.data.annotation.TypeAlias;
 public class TransactionBroadcasterTargetDocument extends BroadcasterTargetDocument
         implements TransactionBroadcasterTargetDescriptor {
 
-    public TransactionBroadcasterTargetDocument(List<String> destinations) {
+    public TransactionBroadcasterTargetDocument(Set<String> destinations) {
         super(destinations);
     }
 }

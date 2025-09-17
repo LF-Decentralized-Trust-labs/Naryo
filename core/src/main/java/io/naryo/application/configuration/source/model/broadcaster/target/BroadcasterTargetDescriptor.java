@@ -1,6 +1,6 @@
 package io.naryo.application.configuration.source.model.broadcaster.target;
 
-import java.util.List;
+import java.util.Set;
 
 import io.naryo.application.configuration.source.model.MergeableDescriptor;
 import io.naryo.domain.broadcaster.BroadcasterTargetType;
@@ -12,9 +12,9 @@ public interface BroadcasterTargetDescriptor
 
     BroadcasterTargetType getType();
 
-    List<String> getDestinations();
+    Set<String> getDestinations();
 
-    void setDestinations(List<String> destinations);
+    void setDestinations(Set<String> destinations);
 
     @Override
     default BroadcasterTargetDescriptor merge(BroadcasterTargetDescriptor other) {

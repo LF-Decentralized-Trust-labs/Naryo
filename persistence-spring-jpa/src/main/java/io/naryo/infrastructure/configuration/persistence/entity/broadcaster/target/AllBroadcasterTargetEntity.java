@@ -1,6 +1,6 @@
 package io.naryo.infrastructure.configuration.persistence.entity.broadcaster.target;
 
-import java.util.List;
+import java.util.Set;
 
 import io.naryo.application.configuration.source.model.broadcaster.target.AllBroadcasterTargetDescriptor;
 import jakarta.persistence.DiscriminatorValue;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class AllBroadcasterTargetEntity extends BroadcasterTargetEntity
         implements AllBroadcasterTargetDescriptor {
 
-    public AllBroadcasterTargetEntity(List<String> destinations) {
+    public AllBroadcasterTargetEntity(Set<String> destinations) {
         super(destinations);
     }
 }
