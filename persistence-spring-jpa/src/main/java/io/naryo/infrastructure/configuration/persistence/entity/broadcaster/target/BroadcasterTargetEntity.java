@@ -1,7 +1,6 @@
 package io.naryo.infrastructure.configuration.persistence.entity.broadcaster.target;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -23,7 +22,8 @@ public abstract class BroadcasterTargetEntity implements BroadcasterTargetDescri
     private @ElementCollection(fetch = FetchType.EAGER) @CollectionTable(
             name = "broadcaster_target_destination",
             joinColumns = @JoinColumn(name = "broadcaster_target_id")) @Column(
-            name = "destination", nullable = false) Set<String> destinations;
+            name = "destination",
+            nullable = false) Set<String> destinations;
 
     public BroadcasterTargetEntity(Set<String> destinations) {
         this.destinations = destinations;

@@ -1,6 +1,5 @@
 package io.naryo.infrastructure.configuration.source.env.model.broadcaster.target;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 

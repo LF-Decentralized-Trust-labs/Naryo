@@ -1,6 +1,7 @@
 package io.naryo.application.configuration.source.model.broadcaster.target;
 
 import java.util.List;
+import java.util.Set;
 
 import io.naryo.application.configuration.source.model.DescriptorTestStringArgumentsProvider;
 import io.naryo.domain.broadcaster.BroadcasterTargetType;
@@ -49,9 +50,9 @@ public abstract class BroadcasterTargetDescriptorTest {
             String originalDestination, String otherDestination, String expectedDestination) {
         BroadcasterTargetDescriptor original = this.getBroadcasterDescriptor();
         original.setDestinations(
-                originalDestination == null ? List.of() : List.of(originalDestination));
+                originalDestination == null ? Set.of() : Set.of(originalDestination));
         BroadcasterTargetDescriptor other = this.getBroadcasterDescriptor();
-        other.setDestinations(otherDestination == null ? List.of() : List.of(otherDestination));
+        other.setDestinations(otherDestination == null ? Set.of() : Set.of(otherDestination));
 
         BroadcasterTargetDescriptor result = original.merge(other);
 
@@ -64,10 +65,10 @@ public abstract class BroadcasterTargetDescriptorTest {
     @Setter
     public abstract static class DummyBroadcasterTargetDescriptor
             implements BroadcasterTargetDescriptor {
-        private List<String> destinations;
+        private Set<String> destinations;
 
         @Override
-        public List<String> getDestinations() {
+        public Set<String> getDestinations() {
             return destinations;
         }
     }

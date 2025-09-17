@@ -1,6 +1,5 @@
 package io.naryo.infrastructure.configuration.persistence.document.broadcaster.target;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
