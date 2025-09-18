@@ -95,25 +95,42 @@ Stored document excerpt:
 
 ## 📧 HttpClient Configuration
 
-The `persistence-spring-mongo` module allows configuring the HTTP client used across Naryo.
+The `persistence-spring-mongo` module retrieves HttpClient configuration from the `HttpClient` collection,
+allowing the configuration of HTTP client used across Naryo.
 If a value is missing in Mongo database, the default values defined in Core will apply.
 
 >**Conventions**
 > - All durations are expressed as ISO-8601 values (e.g., PT30S = 30 seconds).
 
-###  Table reference - `http_client`
+### Example
+`_id` is required. All other sections are optional.
+```json
+{
+"id": "550e8400-e29b-41d4-a716-446655440000",
+"maxIdleConnections": 66,
+"keepAliveDuration": "PT5M",
+"connectTimeout": "PT10S",
+"readTimeout": "PT30S",
+"writeTimeout": "PT30S",
+"callTimeout": "PT60S",
+"pingInterval": "PT15S",
+"retryOnConnectionFailure": true
+}
+```
 
-| Path                          | Type     | Required | Default (if omitted) | Notes                                                                 |
-|-------------------------------|----------|:--------:|----------------------|-----------------------------------------------------------------------|
-| `id`                          | UUID     |    ✅     | —                    | Identifier.                                                           |
-| `max_idle_connections`        | number   |    ❌     | `5`                  | Must be `>= 0`.                                                       |
-| `keep_alive_duration`         | duration |    ❌     | `PT5M`               | Must be strictly positive.                                            |
-| `connect_timeout`             | duration |    ❌     | `PT10S`              | Must be strictly positive.                                            |
-| `read_timeout`                | duration |    ❌     | `PT30S`              | Must be strictly positive.                                            |
-| `write_timeout`               | duration |    ❌     | `PT30S`              | Must be strictly positive.                                            |
-| `call_timeout`                | duration |    ❌     | `PT1M`               | Must be strictly positive.                                            |
-| `ping_interval`               | duration |    ❌     | `PT30S`              | Must be strictly positive.                                            |
-| `retry_on_connection_failure` | boolean  |    ❌     | `true`               | Whether to retry automatically when a connection fails.               |
+###  Field reference - HttpClient
+
+| Path                           | Type          | Required | Default (if omitted) | Notes                                                                 |
+|--------------------------------|---------------|:--------:|----------------------|-----------------------------------------------------------------------|
+| `id`                           | String (UUID) |    ✅     | —                    | Identifier.                                                           |
+| `maxIdleConnections`           | number        |    ❌     | `5`                  | Must be `>= 0`.                                                       |
+| `keepAliveDuration`            | duration      |    ❌     | `PT5M`               | Must be strictly positive.                                            |
+| `connectTimeout`               | duration      |    ❌     | `PT10S`              | Must be strictly positive.                                            |
+| `readTimeout`                  | duration      |    ❌     | `PT30S`              | Must be strictly positive.                                            |
+| `writeTimeout`                 | duration      |    ❌     | `PT30S`              | Must be strictly positive.                                            |
+| `callTimeout`                  | duration      |    ❌     | `PT1M`               | Must be strictly positive.                                            |
+| `pingInterval`                 | duration      |    ❌     | `PT30S`              | Must be strictly positive.                                            |
+| `retryOnConnectionFailure`     | boolean       |    ❌     | `true`               | Whether to retry automatically when a connection fails.               |
 
 ---
 
