@@ -2,6 +2,7 @@ package io.naryo.application.configuration.manager;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BinaryOperator;
 
 import io.naryo.application.configuration.provider.SourceProvider;
@@ -21,6 +22,7 @@ public abstract class BaseConfigurationManager<T, S extends Descriptor>
         return providers.stream()
                 .sorted(Comparator.comparingInt(SourceProvider::priority))
                 .map(SourceProvider::load)
+                .filter(Objects::nonNull)
                 .reduce(mergeFunction())
                 .map(this::map)
                 .orElseThrow(() -> new IllegalStateException("No configuration available"));
