@@ -38,41 +38,41 @@ public final class HttpClientEntity implements HttpClientDescriptor {
 
     @Override
     public Optional<Integer> getMaxIdleConnections() {
-        return Optional.empty();
+        return Optional.ofNullable(maxIdleConnections);
     }
 
     @Override
     public Optional<Duration> getKeepAliveDuration() {
-        return Optional.empty();
+        return Optional.ofNullable(this.keepAliveDuration);
     }
 
     @Override
     public Optional<Duration> getConnectTimeout() {
-        return Optional.empty();
+        return Optional.ofNullable(this.connectTimeout);
     }
 
     @Override
     public Optional<Duration> getReadTimeout() {
-        return Optional.empty();
+        return Optional.ofNullable(this.readTimeout);
     }
 
     @Override
     public Optional<Duration> getWriteTimeout() {
-        return Optional.empty();
+        return Optional.ofNullable(this.writeTimeout);
     }
 
     @Override
     public Optional<Duration> getCallTimeout() {
-        return Optional.empty();
+        return Optional.ofNullable(this.callTimeout);
     }
 
     @Override
     public Optional<Duration> getPingInterval() {
-        return Optional.empty();
+        return Optional.ofNullable(this.pingInterval);
     }
 
     @Override
     public Optional<Boolean> getRetryOnConnectionFailure() {
-        return Optional.empty();
+        return Optional.ofNullable(this.retryOnConnectionFailure);
     }
 }
