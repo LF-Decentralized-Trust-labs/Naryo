@@ -383,7 +383,7 @@ Each broadcaster links to a configuration (`configurationId`) and defines a **ta
 | `configurationId`            | string (UUID) |    ❌     | —                    | References a document in `broadcasters_configuration`. |
 | `target`                     | object        |    ❌     | —                    | Polymorphic target.                                    |
 | `target._class`              | string        |    ❌     | —                    | Alias: one of the values listed above.                 |
-| `target.destinations`        | List<string>  |    ❌     | —                    | Optional destination path/topic/queue.                 |
+| `target.destinations`        | Set<string>   |    ❌     | —                    | Optional destination path/topic/queue.                 |
 | `target.filterId` *(filter)* | string (UUID) |    ❌     | —                    | Required only for `filter_broadcaster_targets`.        |
 
 ---
