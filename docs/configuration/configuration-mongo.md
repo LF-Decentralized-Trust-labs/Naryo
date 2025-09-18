@@ -315,7 +315,7 @@ Each broadcaster links to a configuration (`configurationId`) and defines a **ta
   "configurationId": "550e8400-e29b-41d4-a716-446655440000",
   "target": {
     "_class": "block_broadcaster_targets",
-    "destination": "/block"
+    "destinations": ["/block"]
   }
 }
 ```
@@ -328,7 +328,7 @@ Each broadcaster links to a configuration (`configurationId`) and defines a **ta
   "configurationId": "550e8400-e29b-41d4-a716-446655440000",
   "target": {
     "_class": "transaction_broadcaster_targets",
-    "destination": "/tx"
+    "destinations": ["/tx"]
   }
 }
 ```
@@ -341,7 +341,7 @@ Each broadcaster links to a configuration (`configurationId`) and defines a **ta
   "configurationId": "550e8400-e29b-41d4-a716-446655440000",
   "target": {
     "_class": "contract_event_broadcaster_targets",
-    "destination": "/contract-event"
+    "destinations": ["/contract-event"]
   }
 }
 ```
@@ -354,7 +354,7 @@ Each broadcaster links to a configuration (`configurationId`) and defines a **ta
   "configurationId": "550e8400-e29b-41d4-a716-446655440000",
   "target": {
     "_class": "filter_broadcaster_targets",
-    "destination": "/filter",
+    "destinations": ["/filter"],
     "filterId": "550e8400-e29b-41d4-a716-446655440001"
   }
 }
@@ -368,7 +368,7 @@ Each broadcaster links to a configuration (`configurationId`) and defines a **ta
   "configurationId": "550e8400-e29b-41d4-a716-446655440000",
   "target": {
     "_class": "all_broadcaster_targets",
-    "destination": "/all"
+    "destinations": ["/all"]
   }
 }
 ```
@@ -383,7 +383,7 @@ Each broadcaster links to a configuration (`configurationId`) and defines a **ta
 | `configurationId`            | string (UUID) |    ❌     | —                    | References a document in `broadcasters_configuration`. |
 | `target`                     | object        |    ❌     | —                    | Polymorphic target.                                    |
 | `target._class`              | string        |    ❌     | —                    | Alias: one of the values listed above.                 |
-| `target.destination`         | string        |    ❌     | —                    | Optional destination path/topic/queue.                 |
+| `target.destinations`        | List<string>  |    ❌     | —                    | Optional destination path/topic/queue.                 |
 | `target.filterId` *(filter)* | string (UUID) |    ❌     | —                    | Required only for `filter_broadcaster_targets`.        |
 
 ---
