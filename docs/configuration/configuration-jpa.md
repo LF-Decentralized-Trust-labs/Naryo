@@ -76,6 +76,29 @@ When configuration is read from JPA, a single table may represent different subt
 In this scenarios, Naryo uses a single table approach via a discriminator column that specifies the concrete type of the tuple.
 
 ---
+## 📧 HttpClient Configuration
+
+The `persistence-spring-jpa` module allows configuring the HTTP client used across Naryo.
+If a value is missing in JPA, the default values defined in Core will apply.
+
+>**Conventions**
+> - All durations are expressed as ISO-8601 values (e.g., PT30S = 30 seconds).
+
+###  Table reference - `http_client`
+
+| Path                          | Type     | Required | Default (if omitted) | Notes                                                                 |
+|-------------------------------|----------|:--------:|----------------------|-----------------------------------------------------------------------|
+| `id`                          | UUID     |    ✅     | —                    | Identifier.                                                           |
+| `max_idle_connections`        | number   |    ❌     | `5`                  | Must be `>= 0`.                                                       |
+| `keep_alive_duration`         | duration |    ❌     | `PT5M`               | Must be strictly positive.                                            |
+| `connect_timeout`             | duration |    ❌     | `PT10S`              | Must be strictly positive.                                            |
+| `read_timeout`                | duration |    ❌     | `PT30S`              | Must be strictly positive.                                            |
+| `write_timeout`               | duration |    ❌     | `PT30S`              | Must be strictly positive.                                            |
+| `call_timeout`                | duration |    ❌     | `PT1M`               | Must be strictly positive.                                            |
+| `ping_interval`               | duration |    ❌     | `PT30S`              | Must be strictly positive.                                            |
+| `retry_on_connection_failure` | boolean  |    ❌     | `true`               | Whether to retry automatically when a connection fails.               |
+
+---
 
 ## 🌐️ Node Configuration
 
