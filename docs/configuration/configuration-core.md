@@ -44,25 +44,26 @@ broadcasting:
       configurationId: "550e8400-e29b-41d4-a716-446655440000"
       target:
         type: FILTER # Also supports BLOCK, TRANSACTION, CONTRACT_EVENT or ALL
-        destination: "/block" # depends on the type of broadcaster
+        destinations:
+          - "/block" # depends on the type of broadcaster
         filterId: "550e8400-e29b-41d4-a716-446655440001"
 ```
 
-| Parameter                            | Description                                           | Value Type | Supported by | Values                                          | Default Value  |
-|--------------------------------------|-------------------------------------------------------|------------|--------------|-------------------------------------------------|----------------|
-| `configuration`                      | List of broadcasting configurations.                  | List       | ALL          | Any                                             | Not applicable |
-| `configuration.id`                   | Unique identifier for the broadcasting configuration. | UUID       | ALL          | Any                                             | Not applicable |
-| `configuration.type`                 | Type of broadcasting.                                 | String     | ALL          | HTTP, KAFKA, RABBITMQ, etc.                     | Not applicable |
-| `configuration.cache`                | Cache configuration.                                  | Object     | ALL          | Any                                             | Not applicable |
-| `configuration.cache.expirationTime` | Expiration time for the cache.                        | Duration   | ALL          | Any                                             | 5m             |
-| `configuration.endpoint`             | Endpoint configuration.                               | Object     | HTTP         | Any                                             | Not applicable |
-| `configuration.endpoint.url`         | URL of the endpoint.                                  | String     | HTTP         | Any                                             | Not applicable |
-| `broadcasters`                       | List of broadcasters.                                 | List       | ALL          | Any                                             | Not applicable |
-| `broadcasters.id`                    | ID of the broadcasting to use.                        | UUID       | ALL          | Any                                             | Not applicable |
-| `broadcasters.configurationId`       | ID of the broadcasting configuration to use.          | UUID       | ALL          | Any                                             | Not applicable |
-| `broadcasters.target.type`           | Type of broadcaster.                                  | String     | ALL          | FILTER, CONTRACT_EVENT, BLOCK, TRANSACTION, ALL | Not applicable |
-| `broadcasters.target.destination`    | Destination of the broadcaster.                       | String     | ALL          | Any                                             | Not applicable |
-| `broadcasters.filterId`              | ID of the filter to broadcast.                        | UUID       | FILTER       | Any                                             | Not applicable |
+| Parameter                            | Description                                           | Value Type  | Supported by | Values                                          | Default Value  |
+|--------------------------------------|-------------------------------------------------------|-------------|--------------|-------------------------------------------------|----------------|
+| `configuration`                      | List of broadcasting configurations.                  | List        | ALL          | Any                                             | Not applicable |
+| `configuration.id`                   | Unique identifier for the broadcasting configuration. | UUID        | ALL          | Any                                             | Not applicable |
+| `configuration.type`                 | Type of broadcasting.                                 | String      | ALL          | HTTP, KAFKA, RABBITMQ, etc.                     | Not applicable |
+| `configuration.cache`                | Cache configuration.                                  | Object      | ALL          | Any                                             | Not applicable |
+| `configuration.cache.expirationTime` | Expiration time for the cache.                        | Duration    | ALL          | Any                                             | 5m             |
+| `configuration.endpoint`             | Endpoint configuration.                               | Object      | HTTP         | Any                                             | Not applicable |
+| `configuration.endpoint.url`         | URL of the endpoint.                                  | String      | HTTP         | Any                                             | Not applicable |
+| `broadcasters`                       | List of broadcasters.                                 | List        | ALL          | Any                                             | Not applicable |
+| `broadcasters.id`                    | ID of the broadcasting to use.                        | UUID        | ALL          | Any                                             | Not applicable |
+| `broadcasters.configurationId`       | ID of the broadcasting configuration to use.          | UUID        | ALL          | Any                                             | Not applicable |
+| `broadcasters.target.type`           | Type of broadcaster.                                  | String      | ALL          | FILTER, CONTRACT_EVENT, BLOCK, TRANSACTION, ALL | Not applicable |
+| `broadcasters.target.destinations`   | Destinations of the broadcaster.                      | Set<String> | ALL          | Any                                             | Not applicable |
+| `broadcasters.filterId`              | ID of the filter to broadcast.                        | UUID        | FILTER       | Any                                             | Not applicable |
 
 > **Note**: The broadcaster configuration type only supports `HTTP` by default, but depending on the modules you use, it
 > could be extended to support other broadcasting configuration types. Also, the broadcaster type can be set to the
