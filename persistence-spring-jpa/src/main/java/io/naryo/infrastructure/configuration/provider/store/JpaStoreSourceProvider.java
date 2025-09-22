@@ -11,8 +11,9 @@ import io.naryo.infrastructure.configuration.persistence.entity.store.ActiveStor
 import io.naryo.infrastructure.configuration.persistence.entity.store.InactiveStoreConfigurationEntity;
 import io.naryo.infrastructure.configuration.persistence.entity.store.StoreConfigurationEntity;
 import io.naryo.infrastructure.configuration.persistence.repository.store.StoreConfigurationEntityRepository;
-import io.naryo.infrastructure.util.serialization.TypeConverter;
 import org.springframework.stereotype.Component;
+
+import static io.naryo.infrastructure.util.serialization.ConfigurationSchemaConverter.rawObjectsToSchema;
 
 @Component
 public class JpaStoreSourceProvider implements StoreSourceProvider {
@@ -41,39 +42,15 @@ public class JpaStoreSourceProvider implements StoreSourceProvider {
     private StoreConfigurationDescriptor fromEntity(StoreConfigurationEntity entity) {
         return switch (entity) {
             case ActiveStoreConfigurationEntity active -> {
-                var schema =
+                ConfigurationSchema schema =
                         schemaRegistry.getSchema(
                                 ConfigurationSchemaType.STORE, active.getType().getName());
                 active.setAdditionalProperties(
-                        getAdditionalConfiguration(active.getAdditionalProperties(), schema));
+                        rawObjectsToSchema(active.getAdditionalProperties(), schema));
                 yield active;
             }
             case InactiveStoreConfigurationEntity inactive -> inactive;
             default -> throw new IllegalStateException("Unexpected value: " + entity);
         };
-    }
-
-    private Map<String, Object> getAdditionalConfiguration(
-            Map<String, Object> additionalProperties, ConfigurationSchema schema) {
-        Map<String, Object> additionalConfiguration = new HashMap<>();
-
-        if (additionalProperties != null && !additionalProperties.isEmpty() && schema != null) {
-            for (var entry : additionalProperties.entrySet()) {
-                schema.fields().stream()
-                        .filter(f -> f.name().equals(entry.getKey()))
-                        .findFirst()
-                        .ifPresent(
-                                field -> {
-                                    Object value =
-                                            TypeConverter.castToType(
-                                                    entry.getValue(), field.type());
-                                    additionalConfiguration.put(
-                                            entry.getKey(),
-                                            value != null ? value : field.defaultValue());
-                                });
-            }
-        }
-
-        return additionalConfiguration;
     }
 }
