@@ -3,7 +3,6 @@ package io.naryo.infrastructure.configuration.provider.store;
 import java.util.*;
 
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
-import io.naryo.application.configuration.source.definition.FieldDefinition;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaRegistry;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaType;
 import io.naryo.application.configuration.source.model.store.StoreConfigurationDescriptor;
@@ -12,8 +11,9 @@ import io.naryo.infrastructure.configuration.persistence.document.store.ActiveSt
 import io.naryo.infrastructure.configuration.persistence.document.store.InactiveStoreConfigurationPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.store.StoreConfigurationPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.repository.store.StorePropertiesDocumentRepository;
-import io.naryo.infrastructure.util.serialization.TypeConverter;
 import org.springframework.stereotype.Component;
+
+import static io.naryo.infrastructure.util.serialization.ConfigurationSchemaConverter.rawObjectsToSchema;
 
 @Component
 public final class MongoStoreSourceProvider implements StoreSourceProvider {
@@ -47,32 +47,11 @@ public final class MongoStoreSourceProvider implements StoreSourceProvider {
                         schemaRegistry.getSchema(
                                 ConfigurationSchemaType.STORE, active.getType().getName());
                 active.setAdditionalProperties(
-                        getAdditionalConfiguration(active.getAdditionalProperties(), schema));
+                        rawObjectsToSchema(active.getAdditionalProperties(), schema));
                 yield active;
             }
             case InactiveStoreConfigurationPropertiesDocument inactive -> inactive;
             default -> throw new IllegalStateException("Unexpected value: " + document);
         };
-    }
-
-    private Map<String, Object> getAdditionalConfiguration(
-            Map<String, Object> additionalProperties, ConfigurationSchema schema) {
-        Map<String, Object> additionalConfiguration = new HashMap<>();
-
-        if (!additionalProperties.isEmpty() && schema != null) {
-            for (Map.Entry<String, Object> entry : additionalProperties.entrySet()) {
-                Optional<FieldDefinition> field =
-                        schema.fields().stream()
-                                .filter(f -> f.name().equals(entry.getKey()))
-                                .findFirst();
-                if (field.isPresent()) {
-                    Object value = TypeConverter.castToType(entry.getValue(), field.get().type());
-                    additionalConfiguration.put(
-                            entry.getKey(), value != null ? value : field.get().defaultValue());
-                }
-            }
-        }
-
-        return additionalConfiguration;
     }
 }

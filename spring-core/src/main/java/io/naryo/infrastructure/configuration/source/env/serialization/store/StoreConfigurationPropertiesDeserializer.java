@@ -5,12 +5,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
-import io.naryo.application.configuration.source.definition.FieldDefinition;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaRegistry;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaType;
 import io.naryo.domain.configuration.store.active.feature.StoreFeatureType;
@@ -20,6 +18,8 @@ import io.naryo.infrastructure.configuration.source.env.model.store.StoreFeature
 import io.naryo.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
+
+import static io.naryo.infrastructure.configuration.source.env.serialization.utils.EnvSerializationUtils.jsonNodesToObjects;
 
 @Component
 public final class StoreConfigurationPropertiesDeserializer
@@ -42,11 +42,11 @@ public final class StoreConfigurationPropertiesDeserializer
 
         ConfigurationSchema schema = schemaRegistry.getSchema(ConfigurationSchemaType.STORE, type);
         Set<String> knownFields = Set.of("type", "strategy", "targets");
+        Map<String, Object> additionalConfiguration =
+                jsonNodesToObjects(codec, root.fields(), knownFields, schema);
+
         return new ActiveStoreConfigurationProperties(
-                nodeId,
-                () -> type,
-                getFeatures(root, codec),
-                getAdditionalConfiguration(root, knownFields, codec, schema));
+                nodeId, () -> type, getFeatures(root, codec), additionalConfiguration);
     }
 
     private @NotNull Map<StoreFeatureType, StoreFeatureConfigurationProperties> getFeatures(
@@ -58,28 +58,5 @@ public final class StoreConfigurationPropertiesDeserializer
                 .collect(
                         Collectors.toMap(
                                 StoreFeatureConfigurationProperties::getType, feature -> feature));
-    }
-
-    private static @NotNull Map<String, Object> getAdditionalConfiguration(
-            JsonNode root, Set<String> knownFields, ObjectCodec codec, ConfigurationSchema schema)
-            throws JsonProcessingException {
-        Map<String, Object> additionalConfiguration = new HashMap<>();
-        Iterator<Map.Entry<String, JsonNode>> fields = root.fields();
-
-        while (fields.hasNext()) {
-            Map.Entry<String, JsonNode> entry = fields.next();
-            if (!knownFields.contains(entry.getKey())) {
-                Optional<FieldDefinition> field =
-                        schema.fields().stream()
-                                .filter(f -> f.name().equals(entry.getKey()))
-                                .findFirst();
-                if (field.isPresent()) {
-                    Object value = codec.treeToValue(entry.getValue(), field.get().type());
-                    additionalConfiguration.put(
-                            entry.getKey(), value != null ? value : field.get().defaultValue());
-                }
-            }
-        }
-        return additionalConfiguration;
     }
 }
