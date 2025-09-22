@@ -6,7 +6,9 @@ import java.util.Map;
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.definition.FieldDefinition;
 
-public abstract class ConfigurationSchemaConverter {
+public final class ConfigurationSchemaConverter {
+
+    private ConfigurationSchemaConverter() {}
 
     public static Map<String, Object> rawObjectsToSchema(
             Map<String, Object> properties, ConfigurationSchema schema) {

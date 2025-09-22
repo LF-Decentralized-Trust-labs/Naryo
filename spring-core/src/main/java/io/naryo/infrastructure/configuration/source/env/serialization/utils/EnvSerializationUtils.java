@@ -8,7 +8,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.definition.FieldDefinition;
 
-public abstract class EnvSerializationUtils {
+public final class EnvSerializationUtils {
+
+    private EnvSerializationUtils() {}
 
     public static Map<String, Object> jsonNodesToObjects(
             ObjectCodec codec,
