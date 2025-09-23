@@ -7,6 +7,7 @@ import io.naryo.application.broadcaster.configuration.manager.BroadcasterConfigu
 import io.naryo.application.broadcaster.configuration.manager.DefaultBroadcasterConfigurationConfigurationManager;
 import io.naryo.application.broadcaster.configuration.manager.DefaultBroadcasterConfigurationManager;
 import io.naryo.application.broadcaster.configuration.mapper.BroadcasterConfigurationMapperRegistry;
+import io.naryo.application.broadcaster.configuration.normalization.BroadcasterConfigurationNormalizerRegistry;
 import io.naryo.application.configuration.source.provider.broadcaster.BroadcasterConfigurationSourceProvider;
 import io.naryo.application.configuration.source.provider.broadcaster.BroadcasterSourceProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -35,5 +36,11 @@ public class BroadcasterAutoConfiguration {
                     List<BroadcasterConfigurationSourceProvider> providers,
                     BroadcasterConfigurationMapperRegistry registry) {
         return new DefaultBroadcasterConfigurationConfigurationManager(providers, registry);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(BroadcasterConfigurationNormalizerRegistry.class)
+    public BroadcasterConfigurationNormalizerRegistry broadcasterConfigurationNormalizerRegistry() {
+        return new BroadcasterConfigurationNormalizerRegistry();
     }
 }

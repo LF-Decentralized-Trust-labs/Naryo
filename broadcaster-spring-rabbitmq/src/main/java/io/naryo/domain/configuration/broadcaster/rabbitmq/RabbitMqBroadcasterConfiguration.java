@@ -6,10 +6,12 @@ import java.util.UUID;
 import io.naryo.domain.configuration.broadcaster.BroadcasterCache;
 import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;
 import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
 import static io.naryo.domain.RabbitMqConstants.RABBITMQ_TYPE;
 
 @Getter
+@SuperBuilder(toBuilder = true)
 public final class RabbitMqBroadcasterConfiguration extends BroadcasterConfiguration {
 
     private final Exchange exchange;

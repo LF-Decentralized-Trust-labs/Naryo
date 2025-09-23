@@ -8,11 +8,13 @@ import io.naryo.domain.configuration.store.active.feature.StoreFeatureType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import static io.naryo.domain.JpaConstants.JPA_TYPE;
 
 @Getter
 @ToString(callSuper = true)
+@SuperBuilder(toBuilder = true)
 @EqualsAndHashCode(callSuper = true)
 public final class JpaActiveStoreConfiguration extends ActiveStoreConfiguration {
 
