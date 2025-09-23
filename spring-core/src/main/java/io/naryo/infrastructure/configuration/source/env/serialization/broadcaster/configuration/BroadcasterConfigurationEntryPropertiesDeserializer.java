@@ -15,8 +15,6 @@ import io.naryo.infrastructure.configuration.source.env.model.broadcaster.config
 import io.naryo.infrastructure.configuration.source.env.serialization.EnvironmentDeserializer;
 import org.springframework.stereotype.Component;
 
-import static io.naryo.infrastructure.configuration.source.env.serialization.utils.EnvSerializationUtils.jsonNodesToObjects;
-
 @Component
 public final class BroadcasterConfigurationEntryPropertiesDeserializer
         extends EnvironmentDeserializer<BroadcasterConfigurationEntryProperties> {
