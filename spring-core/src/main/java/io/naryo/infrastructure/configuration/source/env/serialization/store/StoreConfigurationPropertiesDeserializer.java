@@ -19,8 +19,6 @@ import io.naryo.infrastructure.configuration.source.env.serialization.Environmen
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
-import static io.naryo.infrastructure.configuration.source.env.serialization.utils.EnvSerializationUtils.jsonNodesToObjects;
-
 @Component
 public final class StoreConfigurationPropertiesDeserializer
         extends EnvironmentDeserializer<StoreConfigurationProperties> {
