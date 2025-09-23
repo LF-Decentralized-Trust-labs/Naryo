@@ -10,9 +10,11 @@ import io.naryo.domain.common.Destination;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @ToString(callSuper = true)
+@SuperBuilder(toBuilder = true)
 @EqualsAndHashCode(callSuper = true)
 public final class FilterEventBroadcasterTarget extends BroadcasterTarget {
 

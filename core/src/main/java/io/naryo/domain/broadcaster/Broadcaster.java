@@ -3,9 +3,11 @@ package io.naryo.domain.broadcaster;
 import java.util.Objects;
 import java.util.UUID;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder(toBuilder = true)
 public class Broadcaster {
 
     private final UUID id;

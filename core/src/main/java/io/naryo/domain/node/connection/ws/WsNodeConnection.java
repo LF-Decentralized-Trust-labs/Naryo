@@ -5,7 +5,9 @@ import io.naryo.domain.common.connection.endpoint.Protocol;
 import io.naryo.domain.node.connection.NodeConnection;
 import io.naryo.domain.node.connection.NodeConnectionType;
 import io.naryo.domain.node.connection.RetryConfiguration;
+import lombok.experimental.SuperBuilder;
 
+@SuperBuilder(toBuilder = true)
 public final class WsNodeConnection extends NodeConnection {
     public WsNodeConnection(ConnectionEndpoint endpoint, RetryConfiguration retryConfiguration) {
         super(NodeConnectionType.WS, endpoint, retryConfiguration);

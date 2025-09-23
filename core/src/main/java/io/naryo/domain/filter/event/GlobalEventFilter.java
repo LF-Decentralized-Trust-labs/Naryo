@@ -5,7 +5,9 @@ import java.util.UUID;
 
 import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.filter.FilterName;
+import lombok.experimental.SuperBuilder;
 
+@SuperBuilder(toBuilder = true)
 public class GlobalEventFilter extends EventFilter {
 
     public GlobalEventFilter(

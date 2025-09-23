@@ -8,10 +8,12 @@ import io.naryo.domain.configuration.Configuration;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @ToString
 @EqualsAndHashCode
+@SuperBuilder(toBuilder = true)
 public abstract class BroadcasterConfiguration implements Configuration {
 
     protected final UUID id;

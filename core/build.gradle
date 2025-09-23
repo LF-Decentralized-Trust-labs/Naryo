@@ -24,6 +24,7 @@ dependencies {
     implementation "org.web3j:besu:${web3jVersion}"
     implementation "org.bouncycastle:bcprov-jdk15on:$bcprovVersion"
     implementation "jakarta.annotation:jakarta.annotation-api:$jakartaAnnotationVersion"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
 
     compileOnly 'org.projectlombok:lombok'
 

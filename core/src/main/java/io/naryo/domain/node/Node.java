@@ -9,10 +9,12 @@ import io.naryo.domain.node.subscription.SubscriptionConfiguration;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(of = {"id"})
+@SuperBuilder(toBuilder = true)
 public abstract class Node {
 
     protected final UUID id;
