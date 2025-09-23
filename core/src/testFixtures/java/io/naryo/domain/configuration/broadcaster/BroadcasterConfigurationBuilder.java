@@ -1,10 +1,8 @@
-package io.naryo.domain.configuration;
+package io.naryo.domain.configuration.broadcaster;
 
 import java.util.UUID;
 
 import io.naryo.domain.DomainBuilder;
-import io.naryo.domain.configuration.broadcaster.BroadcasterCache;
-import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;
 import org.instancio.Instancio;
 
 public abstract class BroadcasterConfigurationBuilder<
