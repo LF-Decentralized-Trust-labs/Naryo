@@ -23,7 +23,7 @@ Currently, two configuration sources are supported:
   - The **`persistence-spring-mongo`** module enables dynamic configuration loading from MongoDB, based on each domain's model.
 
 - **JPA**
-    - The **`persistence-spring-jpa`** module enables dynamic configuration loading from PostgreSQL, based on each domain's model.
+    - The **`persistence-spring-jpa`** module enables dynamic configuration loading from the SQL Database of your choice, based on each domain's model.
 
 ### How is priority handled?
 In order to manage configurations flexibly, Naryo implements a priority system among configuration sources. Priority is defined as follows:
