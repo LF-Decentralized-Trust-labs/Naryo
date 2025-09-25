@@ -8,7 +8,9 @@ import io.naryo.application.configuration.source.definition.registry.Configurati
 import io.naryo.application.configuration.source.mapper.StoreConfigurationDescriptorMapper;
 import io.naryo.application.configuration.source.model.store.ActiveStoreConfigurationDescriptor;
 import io.naryo.application.store.configuration.mapper.ActiveStoreConfigurationMapperRegistry;
+import io.naryo.application.store.configuration.normalization.ActiveStoreConfigurationNormalizerRegistry;
 import io.naryo.domain.configuration.store.MongoStoreConfiguration;
+import io.naryo.domain.configuration.store.active.BaseActiveStoreNormalizer;
 import io.naryo.infrastructure.configuration.beans.env.EnvironmentInitializer;
 import org.springframework.stereotype.Component;
 
@@ -17,12 +19,15 @@ import static io.naryo.domain.MongoConstants.MONGO_TYPE;
 @Component
 public final class MongoStoreInitializer implements EnvironmentInitializer {
 
+    private final ActiveStoreConfigurationNormalizerRegistry normalizerRegistry;
     private final ActiveStoreConfigurationMapperRegistry mapperRegistry;
     private final ConfigurationSchemaRegistry schemaRegistry;
 
     public MongoStoreInitializer(
+            ActiveStoreConfigurationNormalizerRegistry normalizerRegistry,
             ActiveStoreConfigurationMapperRegistry mapperRegistry,
             ConfigurationSchemaRegistry schemaRegistry) {
+        this.normalizerRegistry = normalizerRegistry;
         this.mapperRegistry = mapperRegistry;
         this.schemaRegistry = schemaRegistry;
     }
@@ -41,5 +46,23 @@ public final class MongoStoreInitializer implements EnvironmentInitializer {
                 ConfigurationSchemaType.STORE,
                 MONGO_TYPE,
                 new ConfigurationSchema(MONGO_TYPE, List.of()));
+
+        var normalizer =
+                new BaseActiveStoreNormalizer<MongoStoreConfiguration>() {
+                    @Override
+                    public MongoStoreConfiguration normalize(MongoStoreConfiguration in) {
+                        var normalizedFeatures = normalize(in.getFeatures());
+                        return in.toBuilder().features(normalizedFeatures).build();
+                    }
+                };
+        normalizerRegistry.register(
+                MONGO_TYPE,
+                MongoStoreConfiguration.class,
+                configuration -> {
+                    if (configuration instanceof MongoStoreConfiguration mongoConf) {
+                        return normalizer.normalize(mongoConf);
+                    }
+                    return configuration;
+                });
     }
 }
