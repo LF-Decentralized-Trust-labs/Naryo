@@ -3,6 +3,7 @@ package io.naryo.infrastructure.configuration.beans.revision;
 import io.naryo.application.broadcaster.configuration.normalization.BroadcasterConfigurationNormalizerRegistry;
 import io.naryo.application.store.configuration.normalization.ActiveStoreConfigurationNormalizerRegistry;
 import io.naryo.domain.broadcaster.BroadcasterNormalizer;
+import io.naryo.domain.common.http.HttpClientNormalizer;
 import io.naryo.domain.configuration.broadcaster.BroadcasterConfigurationNormalizer;
 import io.naryo.domain.configuration.store.StoreConfigurationNormalizer;
 import io.naryo.domain.configuration.store.active.ActiveStoreConfigurationNormalizer;
@@ -45,5 +46,10 @@ public class NormalizerAutoConfiguration {
     public StoreConfigurationNormalizer storeConfigurationNormalizer(
             ActiveStoreConfigurationNormalizer activeNormalizer) {
         return new StoreConfigurationNormalizer(activeNormalizer);
+    }
+
+    @Bean
+    public HttpClientNormalizer httpClientNormalizer() {
+        return new HttpClientNormalizer();
     }
 }
