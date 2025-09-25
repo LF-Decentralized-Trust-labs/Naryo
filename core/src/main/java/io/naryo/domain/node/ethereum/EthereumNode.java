@@ -11,10 +11,12 @@ import io.naryo.domain.node.subscription.SubscriptionConfiguration;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@SuperBuilder(toBuilder = true)
 public abstract class EthereumNode extends Node {
 
     private final EthereumNodeVisibility visibility;

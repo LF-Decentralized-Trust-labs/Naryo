@@ -6,9 +6,11 @@ import java.util.UUID;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @ToString
+@SuperBuilder(toBuilder = true)
 @EqualsAndHashCode
 public abstract class Filter {
 

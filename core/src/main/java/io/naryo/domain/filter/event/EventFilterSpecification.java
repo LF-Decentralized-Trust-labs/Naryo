@@ -5,7 +5,9 @@ import java.util.stream.Collectors;
 
 import io.naryo.domain.common.event.EventName;
 import io.naryo.domain.filter.event.parameter.*;
+import lombok.Builder;
 
+@Builder(toBuilder = true)
 public record EventFilterSpecification(
         EventName eventName, CorrelationId correlationId, Set<ParameterDefinition> parameters) {
 

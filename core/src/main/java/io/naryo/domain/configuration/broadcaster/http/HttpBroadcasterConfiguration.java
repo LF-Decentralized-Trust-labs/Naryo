@@ -8,10 +8,12 @@ import io.naryo.domain.common.connection.endpoint.ConnectionEndpoint;
 import io.naryo.domain.configuration.broadcaster.BroadcasterCache;
 import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;
 import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
 import static io.naryo.domain.HttpConstants.HTTP_TYPE;
 
 @Getter
+@SuperBuilder(toBuilder = true)
 public final class HttpBroadcasterConfiguration extends BroadcasterConfiguration {
 
     private final ConnectionEndpoint endpoint;

@@ -8,7 +8,9 @@ import io.naryo.domain.node.NodeType;
 import io.naryo.domain.node.connection.NodeConnection;
 import io.naryo.domain.node.interaction.InteractionConfiguration;
 import io.naryo.domain.node.subscription.SubscriptionConfiguration;
+import lombok.experimental.SuperBuilder;
 
+@SuperBuilder(toBuilder = true)
 public final class HederaNode extends Node {
     public HederaNode(
             UUID id,

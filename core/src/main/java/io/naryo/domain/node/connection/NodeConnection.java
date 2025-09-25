@@ -6,15 +6,17 @@ import io.naryo.domain.common.connection.endpoint.ConnectionEndpoint;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = false)
+@SuperBuilder(toBuilder = true)
 public abstract class NodeConnection {
 
     private final NodeConnectionType type;
-    protected RetryConfiguration retryConfiguration;
-    protected ConnectionEndpoint endpoint;
+    protected final RetryConfiguration retryConfiguration;
+    protected final ConnectionEndpoint endpoint;
 
     protected NodeConnection(
             NodeConnectionType type,
