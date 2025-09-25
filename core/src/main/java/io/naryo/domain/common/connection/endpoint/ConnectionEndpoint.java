@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Objects;
 
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -18,6 +19,16 @@ public final class ConnectionEndpoint {
     private final int port;
     private final String path;
     private final Map<String, String> headers;
+
+    @Builder(toBuilder = true)
+    public ConnectionEndpoint(
+            Protocol protocol, String host, int port, String path, Map<String, String> headers) {
+        this.protocol = protocol;
+        this.host = host;
+        this.port = port;
+        this.path = path;
+        this.headers = headers;
+    }
 
     public ConnectionEndpoint(String url) {
         this(url, Map.of());

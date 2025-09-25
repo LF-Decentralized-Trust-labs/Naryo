@@ -3,7 +3,7 @@ package io.naryo.domain.broadcaster;
 import java.util.UUID;
 
 import io.naryo.domain.DomainBuilder;
-import org.instancio.Instancio;
+import io.naryo.domain.broadcaster.target.AllBroadcasterTargetBuilder;
 
 public class BroadcasterBuilder implements DomainBuilder<BroadcasterBuilder, Broadcaster> {
 
@@ -40,7 +40,7 @@ public class BroadcasterBuilder implements DomainBuilder<BroadcasterBuilder, Bro
     }
 
     protected BroadcasterTarget getTarget() {
-        return this.target == null ? Instancio.create(BroadcasterTarget.class) : this.target;
+        return this.target == null ? new AllBroadcasterTargetBuilder().build() : this.target;
     }
 
     protected UUID getConfigurationId() {
