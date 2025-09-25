@@ -57,7 +57,7 @@ References to configuring a Broadcaster
 
 1. [Getting Started](../getting_started.md)
 2. [Naryo Configuration](./index.md)
-3. [Core Configuration Overview](./configuration-core.md)
+3. [Core Configuration Overview](../configuration/configuration-core.md)
 
 ## 👉 Next steps
 

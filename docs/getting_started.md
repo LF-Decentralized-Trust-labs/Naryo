@@ -188,4 +188,5 @@ Need help setting it up in your use case? Let us know or check out the [tutorial
 ## 👉 Next Steps
 
 1. [Configuration Documentation](./configuration/index.md)
-2. [Tutorials](./tutorials/index.md)
+2. [Broadcasting Documentation](./broadcasting/index.md)
+3. [Tutorials](./tutorials/index.md)
