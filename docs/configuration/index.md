@@ -4,6 +4,7 @@
   - [How is priority handled?](#how-is-priority-handled)
 - [Core Configuration Overview](#-core-configuration-overview)
 - [MongoDB Configuration Overview](#-mongo-configuration-overview)
+- [JPA Configuration Overview](#-jpa-configuration-overview)
 
 Naryo supports flexible configuration mechanisms. The core module requires manual configuration through custom
 implementation due to its framework-agnostic design and wide configuration domain. Configuration can be loaded from
@@ -21,6 +22,9 @@ Currently, two configuration sources are supported:
 - **MongoDB**
   - The **`persistence-spring-mongo`** module enables dynamic configuration loading from MongoDB, based on each domain's model.
 
+- **JPA**
+    - The **`persistence-spring-jpa`** module enables dynamic configuration loading from the SQL Database of your choice, based on each domain's model.
+
 ### How is priority handled?
 In order to manage configurations flexibly, Naryo implements a priority system among configuration sources. Priority is defined as follows:
 
@@ -34,6 +38,10 @@ In order to manage configurations flexibly, Naryo implements a priority system a
 ## 📚 Mongo Configuration Overview
 
 [Mongo Configuration Overview](./configuration-mongo.md)
+
+## 📚 JPA Configuration Overview
+
+[JPA Configuration Overview](./configuration-jpa.md)
 
 ## 👈 Previous steps
 
