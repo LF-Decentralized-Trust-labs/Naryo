@@ -1,6 +1,6 @@
 package io.naryo.application.store.revision;
 
-import io.naryo.application.common.revision.DefaultRevisionFingerprinter;
+import io.naryo.application.configuration.revision.fingerprint.DefaultRevisionFingerprinter;
 import io.naryo.domain.configuration.store.StoreConfiguration;
 import io.naryo.domain.configuration.store.StoreConfigurationNormalizer;
 

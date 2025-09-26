@@ -1,4 +1,4 @@
-package io.naryo.application.common.revision;
+package io.naryo.application.configuration.revision.fingerprint;
 
 import java.util.List;
 import java.util.UUID;
