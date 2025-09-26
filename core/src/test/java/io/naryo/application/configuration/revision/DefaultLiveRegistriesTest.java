@@ -1,6 +1,7 @@
 package io.naryo.application.configuration.revision;
 
-import io.naryo.application.configuration.revision.impl.DefaultLiveRegistries;
+import io.naryo.application.configuration.revision.registry.DefaultLiveRegistries;
+import io.naryo.application.configuration.revision.registry.LiveRegistry;
 import io.naryo.domain.broadcaster.Broadcaster;
 import io.naryo.domain.common.http.HttpClient;
 import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;

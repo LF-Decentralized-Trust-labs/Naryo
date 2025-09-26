@@ -1,4 +1,4 @@
-package io.naryo.application.configuration.revision;
+package io.naryo.application.configuration.revision.registry;
 
 import io.naryo.domain.broadcaster.Broadcaster;
 import io.naryo.domain.common.http.HttpClient;
