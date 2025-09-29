@@ -1,12 +1,7 @@
 package io.naryo.application.configuration.revision;
 
 import java.util.Map;
+import java.util.UUID;
 
-public interface LiveView<T> {
-
-    Revision<T> revision();
-
-    Map<String, T> byId();
-
-    Map<String, String> itemFingerprintById();
-}
+public record LiveView<T>(
+        Revision<T> revision, Map<UUID, T> byId, Map<UUID, String> itemFingerprintById) {}
