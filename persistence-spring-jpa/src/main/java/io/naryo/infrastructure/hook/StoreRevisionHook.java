@@ -6,7 +6,9 @@ import io.naryo.application.configuration.revision.hook.RevisionHook;
 import io.naryo.application.configuration.source.model.store.StoreConfigurationDescriptor;
 import io.naryo.infrastructure.configuration.persistence.entity.store.StoreConfigurationEntity;
 import io.naryo.infrastructure.configuration.persistence.repository.store.StoreConfigurationEntityRepository;
+import org.springframework.stereotype.Component;
 
+@Component
 public class StoreRevisionHook implements RevisionHook<StoreConfigurationDescriptor> {
 
     private final StoreConfigurationEntityRepository repository;

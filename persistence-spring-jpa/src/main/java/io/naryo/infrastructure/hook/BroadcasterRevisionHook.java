@@ -6,7 +6,9 @@ import io.naryo.application.configuration.revision.hook.RevisionHook;
 import io.naryo.application.configuration.source.model.broadcaster.BroadcasterDescriptor;
 import io.naryo.infrastructure.configuration.persistence.entity.broadcaster.BroadcasterEntity;
 import io.naryo.infrastructure.configuration.persistence.repository.broadcaster.BroadcasterEntityRepository;
+import org.springframework.stereotype.Component;
 
+@Component
 public class BroadcasterRevisionHook implements RevisionHook<BroadcasterDescriptor> {
 
     private final BroadcasterEntityRepository repository;

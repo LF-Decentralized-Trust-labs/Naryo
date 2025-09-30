@@ -6,7 +6,9 @@ import io.naryo.application.configuration.revision.hook.RevisionHook;
 import io.naryo.application.configuration.source.model.node.NodeDescriptor;
 import io.naryo.infrastructure.configuration.persistence.entity.node.NodeEntity;
 import io.naryo.infrastructure.configuration.persistence.repository.node.NodeEntityRepository;
+import org.springframework.stereotype.Component;
 
+@Component
 public class NodeRevisionHook implements RevisionHook<NodeDescriptor> {
 
     private final NodeEntityRepository repository;

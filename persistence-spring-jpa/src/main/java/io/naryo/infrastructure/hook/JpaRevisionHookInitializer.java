@@ -1,5 +1,8 @@
 package io.naryo.infrastructure.hook;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class JpaRevisionHookInitializer {
 
     // private final DefaultRevisionHookBinder defaultRevisionHookBinder;

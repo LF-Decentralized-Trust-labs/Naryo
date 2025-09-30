@@ -6,7 +6,9 @@ import io.naryo.application.configuration.revision.hook.RevisionHook;
 import io.naryo.application.configuration.source.model.filter.FilterDescriptor;
 import io.naryo.infrastructure.configuration.persistence.entity.filter.FilterEntity;
 import io.naryo.infrastructure.configuration.persistence.repository.filter.FilterEntityRepository;
+import org.springframework.stereotype.Component;
 
+@Component
 public class FilterRevisionHook implements RevisionHook<FilterDescriptor> {
 
     private final FilterEntityRepository repository;
