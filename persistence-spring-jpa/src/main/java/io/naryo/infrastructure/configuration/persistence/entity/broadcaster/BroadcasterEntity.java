@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import io.naryo.application.configuration.source.model.broadcaster.BroadcasterDescriptor;
 import io.naryo.application.configuration.source.model.broadcaster.target.BroadcasterTargetDescriptor;
+import io.naryo.domain.broadcaster.Broadcaster;
 import io.naryo.infrastructure.configuration.persistence.entity.broadcaster.target.*;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -54,6 +55,13 @@ public final class BroadcasterEntity implements BroadcasterDescriptor {
         }
 
         this.target = BroadcasterTargetEntity.fromDescriptor(target);
+    }
+
+    public static BroadcasterEntity fromDomain(Broadcaster source) {
+        return new BroadcasterEntity(
+                source.getId(),
+                source.getConfigurationId(),
+                BroadcasterTargetEntity.fromDomain(source.getTarget()));
     }
 
     public static BroadcasterEntity fromDescriptor(BroadcasterDescriptor descriptor) {

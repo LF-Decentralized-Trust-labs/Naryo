@@ -3,6 +3,7 @@ package io.naryo.infrastructure.configuration.persistence.entity.broadcaster.con
 import java.time.Duration;
 
 import io.naryo.application.configuration.source.model.broadcaster.configuration.BroadcasterCacheConfigurationDescriptor;
+import io.naryo.domain.configuration.broadcaster.BroadcasterCache;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotNull;
@@ -18,5 +19,9 @@ public class BroadcasterCacheEntity implements BroadcasterCacheConfigurationDesc
 
     public BroadcasterCacheEntity(Duration expirationTime) {
         this.expirationTime = expirationTime;
+    }
+
+    public static BroadcasterCacheEntity fromDomain(BroadcasterCache source) {
+        return new BroadcasterCacheEntity(source.expirationTime());
     }
 }

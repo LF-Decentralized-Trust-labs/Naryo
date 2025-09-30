@@ -3,14 +3,14 @@ package io.naryo.infrastructure.hook;
 import io.naryo.application.configuration.revision.Revision;
 import io.naryo.application.configuration.revision.diff.DiffResult;
 import io.naryo.application.configuration.revision.hook.RevisionHook;
-import io.naryo.application.configuration.source.model.broadcaster.configuration.BroadcasterConfigurationDescriptor;
+import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;
 import io.naryo.infrastructure.configuration.persistence.entity.broadcaster.configuration.BroadcasterConfigurationEntity;
 import io.naryo.infrastructure.configuration.persistence.repository.broadcaster.BroadcasterConfigurationEntityRepository;
 import org.springframework.stereotype.Component;
 
 @Component
 public class BroadcasterConfigurationRevisionHook
-        implements RevisionHook<BroadcasterConfigurationDescriptor> {
+        implements RevisionHook<BroadcasterConfiguration> {
 
     private final BroadcasterConfigurationEntityRepository repository;
 
@@ -20,32 +20,32 @@ public class BroadcasterConfigurationRevisionHook
     }
 
     @Override
-    public void onBeforeApply(DiffResult<BroadcasterConfigurationDescriptor> diff) {
-        for (BroadcasterConfigurationDescriptor add : diff.added()) {
+    public void onBeforeApply(DiffResult<BroadcasterConfiguration> diff) {
+        for (BroadcasterConfiguration add : diff.added()) {
             addBroadcasterConfiguration(add);
         }
-        for (BroadcasterConfigurationDescriptor remove : diff.removed()) {
+        for (BroadcasterConfiguration remove : diff.removed()) {
             removeBroadcasterConfiguration(remove);
         }
-        for (DiffResult.Modified<BroadcasterConfigurationDescriptor> modified : diff.modified()) {
+        for (DiffResult.Modified<BroadcasterConfiguration> modified : diff.modified()) {
             updateBroadcasterConfiguration(modified.after());
         }
     }
 
     @Override
     public void onAfterApply(
-            Revision<BroadcasterConfigurationDescriptor> applied,
-            DiffResult<BroadcasterConfigurationDescriptor> diff) {}
+            Revision<BroadcasterConfiguration> applied,
+            DiffResult<BroadcasterConfiguration> diff) {}
 
-    private void addBroadcasterConfiguration(BroadcasterConfigurationDescriptor descriptor) {
-        repository.save(BroadcasterConfigurationEntity.fromDescriptor(descriptor));
+    private void addBroadcasterConfiguration(BroadcasterConfiguration source) {
+        repository.save(BroadcasterConfigurationEntity.fromDomain(source));
     }
 
-    private void removeBroadcasterConfiguration(BroadcasterConfigurationDescriptor descriptor) {
-        repository.deleteById(descriptor.getId());
+    private void removeBroadcasterConfiguration(BroadcasterConfiguration source) {
+        repository.deleteById(source.getId());
     }
 
-    private void updateBroadcasterConfiguration(BroadcasterConfigurationDescriptor descriptor) {
-        repository.findById(descriptor.getId()).ifPresent(repository::save);
+    private void updateBroadcasterConfiguration(BroadcasterConfiguration source) {
+        repository.findById(source.getId()).ifPresent(repository::save);
     }
 }

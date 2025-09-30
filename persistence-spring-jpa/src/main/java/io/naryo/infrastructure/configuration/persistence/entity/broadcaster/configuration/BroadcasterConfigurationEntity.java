@@ -1,12 +1,11 @@
 package io.naryo.infrastructure.configuration.persistence.entity.broadcaster.configuration;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import io.naryo.application.configuration.source.model.broadcaster.configuration.BroadcasterCacheConfigurationDescriptor;
 import io.naryo.application.configuration.source.model.broadcaster.configuration.BroadcasterConfigurationDescriptor;
 import io.naryo.domain.broadcaster.BroadcasterType;
+import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -61,6 +60,14 @@ public final class BroadcasterConfigurationEntity implements BroadcasterConfigur
     @Override
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties == null ? Map.of() : this.additionalProperties;
+    }
+
+    public static BroadcasterConfigurationEntity fromDomain(BroadcasterConfiguration source) {
+        return new BroadcasterConfigurationEntity(
+                source.getId(),
+                source.getType().getName(),
+                BroadcasterCacheEntity.fromDomain(source.getCache()),
+                new HashMap<>());
     }
 
     public static BroadcasterConfigurationEntity fromDescriptor(

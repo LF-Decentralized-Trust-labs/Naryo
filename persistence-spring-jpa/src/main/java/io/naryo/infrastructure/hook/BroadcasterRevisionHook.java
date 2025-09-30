@@ -3,13 +3,13 @@ package io.naryo.infrastructure.hook;
 import io.naryo.application.configuration.revision.Revision;
 import io.naryo.application.configuration.revision.diff.DiffResult;
 import io.naryo.application.configuration.revision.hook.RevisionHook;
-import io.naryo.application.configuration.source.model.broadcaster.BroadcasterDescriptor;
+import io.naryo.domain.broadcaster.Broadcaster;
 import io.naryo.infrastructure.configuration.persistence.entity.broadcaster.BroadcasterEntity;
 import io.naryo.infrastructure.configuration.persistence.repository.broadcaster.BroadcasterEntityRepository;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BroadcasterRevisionHook implements RevisionHook<BroadcasterDescriptor> {
+public class BroadcasterRevisionHook implements RevisionHook<Broadcaster> {
 
     private final BroadcasterEntityRepository repository;
 
@@ -18,31 +18,30 @@ public class BroadcasterRevisionHook implements RevisionHook<BroadcasterDescript
     }
 
     @Override
-    public void onBeforeApply(DiffResult<BroadcasterDescriptor> diff) {
-        for (BroadcasterDescriptor add : diff.added()) {
+    public void onBeforeApply(DiffResult<Broadcaster> diff) {
+        for (Broadcaster add : diff.added()) {
             addBroadcaster(add);
         }
-        for (BroadcasterDescriptor remove : diff.removed()) {
+        for (Broadcaster remove : diff.removed()) {
             removeBroadcaster(remove);
         }
-        for (DiffResult.Modified<BroadcasterDescriptor> modified : diff.modified()) {
+        for (DiffResult.Modified<Broadcaster> modified : diff.modified()) {
             updateBroadcaster(modified.after());
         }
     }
 
     @Override
-    public void onAfterApply(
-            Revision<BroadcasterDescriptor> applied, DiffResult<BroadcasterDescriptor> diff) {}
+    public void onAfterApply(Revision<Broadcaster> applied, DiffResult<Broadcaster> diff) {}
 
-    private void addBroadcaster(BroadcasterDescriptor broadcaster) {
-        repository.save(BroadcasterEntity.fromDescriptor(broadcaster));
+    private void addBroadcaster(Broadcaster broadcaster) {
+        repository.save(BroadcasterEntity.fromDomain(broadcaster));
     }
 
-    private void removeBroadcaster(BroadcasterDescriptor broadcaster) {
+    private void removeBroadcaster(Broadcaster broadcaster) {
         repository.deleteById(broadcaster.getId());
     }
 
-    private void updateBroadcaster(BroadcasterDescriptor broadcaster) {
+    private void updateBroadcaster(Broadcaster broadcaster) {
         repository.findById(broadcaster.getId()).ifPresent(repository::save);
     }
 }

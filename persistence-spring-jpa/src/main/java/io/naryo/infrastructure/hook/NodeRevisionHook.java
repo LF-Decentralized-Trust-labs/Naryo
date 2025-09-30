@@ -3,13 +3,13 @@ package io.naryo.infrastructure.hook;
 import io.naryo.application.configuration.revision.Revision;
 import io.naryo.application.configuration.revision.diff.DiffResult;
 import io.naryo.application.configuration.revision.hook.RevisionHook;
-import io.naryo.application.configuration.source.model.node.NodeDescriptor;
+import io.naryo.domain.node.Node;
 import io.naryo.infrastructure.configuration.persistence.entity.node.NodeEntity;
 import io.naryo.infrastructure.configuration.persistence.repository.node.NodeEntityRepository;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NodeRevisionHook implements RevisionHook<NodeDescriptor> {
+public class NodeRevisionHook implements RevisionHook<Node> {
 
     private final NodeEntityRepository repository;
 
@@ -18,30 +18,30 @@ public class NodeRevisionHook implements RevisionHook<NodeDescriptor> {
     }
 
     @Override
-    public void onBeforeApply(DiffResult<NodeDescriptor> diff) {
-        for (NodeDescriptor add : diff.added()) {
+    public void onBeforeApply(DiffResult<Node> diff) {
+        for (Node add : diff.added()) {
             addNode(add);
         }
-        for (NodeDescriptor remove : diff.removed()) {
+        for (Node remove : diff.removed()) {
             removeNode(remove);
         }
-        for (DiffResult.Modified<NodeDescriptor> modified : diff.modified()) {
+        for (DiffResult.Modified<Node> modified : diff.modified()) {
             updateNode(modified.after());
         }
     }
 
     @Override
-    public void onAfterApply(Revision<NodeDescriptor> applied, DiffResult<NodeDescriptor> diff) {}
+    public void onAfterApply(Revision<Node> applied, DiffResult<Node> diff) {}
 
-    private void addNode(NodeDescriptor descriptor) {
-        repository.save(NodeEntity.fromDescriptor(descriptor));
+    private void addNode(Node source) {
+        repository.save(NodeEntity.fromDomain(source));
     }
 
-    private void removeNode(NodeDescriptor descriptor) {
-        repository.deleteById(descriptor.getId());
+    private void removeNode(Node source) {
+        repository.deleteById(source.getId());
     }
 
-    private void updateNode(NodeDescriptor descriptor) {
-        repository.findById(descriptor.getId()).ifPresent(repository::save);
+    private void updateNode(Node source) {
+        repository.findById(source.getId()).ifPresent(repository::save);
     }
 }

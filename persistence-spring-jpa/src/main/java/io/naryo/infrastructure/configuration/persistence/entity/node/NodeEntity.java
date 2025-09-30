@@ -9,6 +9,9 @@ import io.naryo.application.configuration.source.model.node.PrivateEthereumNodeD
 import io.naryo.application.configuration.source.model.node.connection.NodeConnectionDescriptor;
 import io.naryo.application.configuration.source.model.node.interaction.InteractionDescriptor;
 import io.naryo.application.configuration.source.model.node.subscription.SubscriptionDescriptor;
+import io.naryo.domain.node.Node;
+import io.naryo.domain.node.ethereum.EthereumNode;
+import io.naryo.domain.node.ethereum.priv.PrivateEthereumNode;
 import io.naryo.infrastructure.configuration.persistence.entity.node.connection.ConnectionEntity;
 import io.naryo.infrastructure.configuration.persistence.entity.node.eth.PrivateEthereumNodeEntity;
 import io.naryo.infrastructure.configuration.persistence.entity.node.eth.PublicEthereumNodeEntity;
@@ -97,6 +100,56 @@ public abstract class NodeEntity implements NodeDescriptor {
     @Override
     public void setConnection(NodeConnectionDescriptor connection) {
         this.connection = ConnectionEntity.fromDescriptor(connection);
+    }
+
+    public static NodeEntity fromDomain(Node source) {
+        NodeEntity nodeEntity = null;
+
+        String name = source.getName().value();
+        SubscriptionEntity subscriptionEntity =
+                SubscriptionEntity.fromDomain(source.getSubscriptionConfiguration());
+        InteractionEntity interactionEntity =
+                InteractionEntity.fromDomain(source.getInteractionConfiguration());
+        ConnectionEntity connectionEntity = ConnectionEntity.fromDomain(source.getConnection());
+
+        switch (source.getType()) {
+            case HEDERA ->
+                    nodeEntity =
+                            new HederaNodeEntity(
+                                    source.getId(),
+                                    name,
+                                    subscriptionEntity,
+                                    interactionEntity,
+                                    connectionEntity);
+            case ETHEREUM -> {
+                var ethSource = (EthereumNode) source;
+                switch (ethSource.getVisibility()) {
+                    case PRIVATE -> {
+                        var privateEthSource = (PrivateEthereumNode) ethSource;
+                        nodeEntity =
+                                new PrivateEthereumNodeEntity(
+                                        source.getId(),
+                                        name,
+                                        subscriptionEntity,
+                                        interactionEntity,
+                                        connectionEntity,
+                                        privateEthSource.getGroupId().value(),
+                                        privateEthSource.getPrecompiledAddress().value());
+                    }
+                    case PUBLIC ->
+                            nodeEntity =
+                                    new PublicEthereumNodeEntity(
+                                            source.getId(),
+                                            name,
+                                            subscriptionEntity,
+                                            interactionEntity,
+                                            connectionEntity);
+                    default -> throw new IllegalArgumentException("Invalid Ethereum visibility");
+                }
+            }
+        }
+
+        return nodeEntity;
     }
 
     public static NodeEntity fromDescriptor(NodeDescriptor descriptor) {

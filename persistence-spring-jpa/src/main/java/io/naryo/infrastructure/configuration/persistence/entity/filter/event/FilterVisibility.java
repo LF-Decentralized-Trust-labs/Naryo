@@ -3,6 +3,7 @@ package io.naryo.infrastructure.configuration.persistence.entity.filter.event;
 import java.util.Optional;
 
 import io.naryo.application.configuration.source.model.filter.event.FilterVisibilityDescriptor;
+import io.naryo.domain.filter.event.EventFilterVisibilityConfiguration;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
@@ -30,5 +31,9 @@ public class FilterVisibility implements FilterVisibilityDescriptor {
     @Override
     public Optional<String> getPrivacyGroupId() {
         return Optional.ofNullable(privacyGroupId);
+    }
+
+    public static FilterVisibility fromDomain(EventFilterVisibilityConfiguration source) {
+        return new FilterVisibility(source.isVisible(), source.getPrivacyGroupId());
     }
 }

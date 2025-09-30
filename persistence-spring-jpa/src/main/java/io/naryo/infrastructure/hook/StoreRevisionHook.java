@@ -3,13 +3,13 @@ package io.naryo.infrastructure.hook;
 import io.naryo.application.configuration.revision.Revision;
 import io.naryo.application.configuration.revision.diff.DiffResult;
 import io.naryo.application.configuration.revision.hook.RevisionHook;
-import io.naryo.application.configuration.source.model.store.StoreConfigurationDescriptor;
+import io.naryo.domain.configuration.store.StoreConfiguration;
 import io.naryo.infrastructure.configuration.persistence.entity.store.StoreConfigurationEntity;
 import io.naryo.infrastructure.configuration.persistence.repository.store.StoreConfigurationEntityRepository;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StoreRevisionHook implements RevisionHook<StoreConfigurationDescriptor> {
+public class StoreRevisionHook implements RevisionHook<StoreConfiguration> {
 
     private final StoreConfigurationEntityRepository repository;
 
@@ -18,32 +18,31 @@ public class StoreRevisionHook implements RevisionHook<StoreConfigurationDescrip
     }
 
     @Override
-    public void onBeforeApply(DiffResult<StoreConfigurationDescriptor> diff) {
-        for (StoreConfigurationDescriptor add : diff.added()) {
+    public void onBeforeApply(DiffResult<StoreConfiguration> diff) {
+        for (StoreConfiguration add : diff.added()) {
             addStore(add);
         }
-        for (StoreConfigurationDescriptor remove : diff.removed()) {
+        for (StoreConfiguration remove : diff.removed()) {
             removeStore(remove);
         }
-        for (DiffResult.Modified<StoreConfigurationDescriptor> modified : diff.modified()) {
+        for (DiffResult.Modified<StoreConfiguration> modified : diff.modified()) {
             updateStore(modified.after());
         }
     }
 
     @Override
     public void onAfterApply(
-            Revision<StoreConfigurationDescriptor> applied,
-            DiffResult<StoreConfigurationDescriptor> diff) {}
+            Revision<StoreConfiguration> applied, DiffResult<StoreConfiguration> diff) {}
 
-    private void addStore(StoreConfigurationDescriptor descriptor) {
-        this.repository.save(StoreConfigurationEntity.fromDescriptor(descriptor));
+    private void addStore(StoreConfiguration source) {
+        this.repository.save(StoreConfigurationEntity.fromDomain(source));
     }
 
-    private void removeStore(StoreConfigurationDescriptor descriptor) {
-        repository.deleteById(descriptor.getNodeId());
+    private void removeStore(StoreConfiguration source) {
+        repository.deleteById(source.getNodeId());
     }
 
-    private void updateStore(StoreConfigurationDescriptor descriptor) {
-        repository.findById(descriptor.getNodeId()).ifPresent(repository::save);
+    private void updateStore(StoreConfiguration source) {
+        repository.findById(source.getNodeId()).ifPresent(repository::save);
     }
 }

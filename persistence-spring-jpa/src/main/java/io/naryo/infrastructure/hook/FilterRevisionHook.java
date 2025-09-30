@@ -3,13 +3,13 @@ package io.naryo.infrastructure.hook;
 import io.naryo.application.configuration.revision.Revision;
 import io.naryo.application.configuration.revision.diff.DiffResult;
 import io.naryo.application.configuration.revision.hook.RevisionHook;
-import io.naryo.application.configuration.source.model.filter.FilterDescriptor;
+import io.naryo.domain.filter.Filter;
 import io.naryo.infrastructure.configuration.persistence.entity.filter.FilterEntity;
 import io.naryo.infrastructure.configuration.persistence.repository.filter.FilterEntityRepository;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FilterRevisionHook implements RevisionHook<FilterDescriptor> {
+public class FilterRevisionHook implements RevisionHook<Filter> {
 
     private final FilterEntityRepository repository;
 
@@ -18,31 +18,30 @@ public class FilterRevisionHook implements RevisionHook<FilterDescriptor> {
     }
 
     @Override
-    public void onBeforeApply(DiffResult<FilterDescriptor> diff) {
-        for (FilterDescriptor add : diff.added()) {
+    public void onBeforeApply(DiffResult<Filter> diff) {
+        for (Filter add : diff.added()) {
             addFilter(add);
         }
-        for (FilterDescriptor remove : diff.removed()) {
+        for (Filter remove : diff.removed()) {
             removeFilter(remove);
         }
-        for (DiffResult.Modified<FilterDescriptor> modified : diff.modified()) {
+        for (DiffResult.Modified<Filter> modified : diff.modified()) {
             updateFilter(modified.after());
         }
     }
 
     @Override
-    public void onAfterApply(
-            Revision<FilterDescriptor> applied, DiffResult<FilterDescriptor> diff) {}
+    public void onAfterApply(Revision<Filter> applied, DiffResult<Filter> diff) {}
 
-    private void addFilter(FilterDescriptor descriptor) {
-        repository.save(FilterEntity.fromDescriptor(descriptor));
+    private void addFilter(Filter descriptor) {
+        repository.save(FilterEntity.fromDomain(descriptor));
     }
 
-    private void removeFilter(FilterDescriptor descriptor) {
+    private void removeFilter(Filter descriptor) {
         repository.deleteById(descriptor.getId());
     }
 
-    private void updateFilter(FilterDescriptor descriptor) {
+    private void updateFilter(Filter descriptor) {
         repository.findById(descriptor.getId()).ifPresent(repository::save);
     }
 }
