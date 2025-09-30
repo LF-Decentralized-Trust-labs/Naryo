@@ -32,10 +32,7 @@ public class BroadcasterRevisionHook implements RevisionHook<BroadcasterDescript
 
     @Override
     public void onAfterApply(
-            Revision<BroadcasterDescriptor> applied, DiffResult<BroadcasterDescriptor> diff) {
-        // Run post-publication actions (e.g., selective filter sync; broadcaster
-        // add/remove/restart)
-    }
+            Revision<BroadcasterDescriptor> applied, DiffResult<BroadcasterDescriptor> diff) {}
 
     private void addBroadcaster(BroadcasterDescriptor broadcaster) {
         repository.save(BroadcasterEntity.fromDescriptor(broadcaster));

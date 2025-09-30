@@ -19,7 +19,6 @@ public class NodeRevisionHook implements RevisionHook<NodeDescriptor> {
 
     @Override
     public void onBeforeApply(DiffResult<NodeDescriptor> diff) {
-        // Todo: manage each diffResult array: add/remove/update nodes
         for (NodeDescriptor add : diff.added()) {
             addNode(add);
         }
@@ -32,9 +31,7 @@ public class NodeRevisionHook implements RevisionHook<NodeDescriptor> {
     }
 
     @Override
-    public void onAfterApply(Revision<NodeDescriptor> applied, DiffResult<NodeDescriptor> diff) {
-        // Run post-publication actions (e.g., selective filter sync; node add/remove/restart)
-    }
+    public void onAfterApply(Revision<NodeDescriptor> applied, DiffResult<NodeDescriptor> diff) {}
 
     private void addNode(NodeDescriptor descriptor) {
         repository.save(NodeEntity.fromDescriptor(descriptor));

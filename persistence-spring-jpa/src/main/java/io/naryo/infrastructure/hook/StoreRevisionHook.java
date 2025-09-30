@@ -33,10 +33,7 @@ public class StoreRevisionHook implements RevisionHook<StoreConfigurationDescrip
     @Override
     public void onAfterApply(
             Revision<StoreConfigurationDescriptor> applied,
-            DiffResult<StoreConfigurationDescriptor> diff) {
-        // Run post-publication actions (e.g., selective filter sync; broadcaster
-        // add/remove/restart)
-    }
+            DiffResult<StoreConfigurationDescriptor> diff) {}
 
     private void addStore(StoreConfigurationDescriptor descriptor) {
         this.repository.save(StoreConfigurationEntity.fromDescriptor(descriptor));
