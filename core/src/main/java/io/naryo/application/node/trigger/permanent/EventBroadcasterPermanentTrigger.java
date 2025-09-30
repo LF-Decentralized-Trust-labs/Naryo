@@ -1,5 +1,6 @@
 package io.naryo.application.node.trigger.permanent;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,19 +13,19 @@ import io.reactivex.functions.Consumer;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public final class EventBroadcasterPermanentTrigger implements PermanentTrigger<Event> {
+public final class EventBroadcasterPermanentTrigger implements PermanentTrigger<Event<?>> {
 
     private final EventRoutingService eventRoutingService;
-    private final List<BroadcasterProducer> producers;
-    private final List<Broadcaster> broadcasters;
-    private final List<BroadcasterConfiguration> configurations;
-    private Consumer<Event> consumer;
+    private final Collection<BroadcasterProducer> producers;
+    private final Collection<Broadcaster> broadcasters;
+    private final Collection<BroadcasterConfiguration> configurations;
+    private Consumer<Event<?>> consumer;
 
     public EventBroadcasterPermanentTrigger(
-            List<Broadcaster> broadcasters,
+            Collection<Broadcaster> broadcasters,
             EventRoutingService eventRoutingService,
-            List<BroadcasterProducer> producers,
-            List<BroadcasterConfiguration> configurations) {
+            Collection<BroadcasterProducer> producers,
+            Collection<BroadcasterConfiguration> configurations) {
         Objects.requireNonNull(broadcasters, "broadcasters must not be null");
         Objects.requireNonNull(producers, "producers must not be null");
         Objects.requireNonNull(eventRoutingService, "Event routing service must not be null");
@@ -36,12 +37,12 @@ public final class EventBroadcasterPermanentTrigger implements PermanentTrigger<
     }
 
     @Override
-    public void onExecute(Consumer<Event> consumer) {
+    public void onExecute(Consumer<Event<?>> consumer) {
         this.consumer = consumer;
     }
 
     @Override
-    public void trigger(Event event) {
+    public void trigger(Event<?> event) {
         final List<Broadcaster> matchedBroadcasters =
                 eventRoutingService.matchingWrappers(event, broadcasters);
 
@@ -76,7 +77,7 @@ public final class EventBroadcasterPermanentTrigger implements PermanentTrigger<
     }
 
     @Override
-    public boolean supports(Event event) {
+    public boolean supports(Event<?> event) {
         return true;
     }
 }

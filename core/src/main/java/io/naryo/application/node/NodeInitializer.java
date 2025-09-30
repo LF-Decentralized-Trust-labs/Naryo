@@ -7,6 +7,8 @@ import java.util.stream.Stream;
 
 import io.naryo.application.broadcaster.BroadcasterProducer;
 import io.naryo.application.configuration.resilence.ResilienceRegistry;
+import io.naryo.application.configuration.revision.manager.ConfigurationRevisionManager;
+import io.naryo.application.configuration.revision.manager.ConfigurationRevisionManagers;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.filter.block.NodeSynchronizer;
 import io.naryo.application.node.calculator.EventStoreStartBlockCalculator;
@@ -27,6 +29,8 @@ import io.naryo.application.store.event.EventStore;
 import io.naryo.application.store.event.block.BlockEventStore;
 import io.naryo.application.store.filter.FilterStore;
 import io.naryo.application.store.filter.model.FilterState;
+import io.naryo.domain.broadcaster.Broadcaster;
+import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;
 import io.naryo.domain.configuration.store.StoreConfiguration;
 import io.naryo.domain.configuration.store.StoreState;
 import io.naryo.domain.configuration.store.active.ActiveStoreConfiguration;
@@ -41,17 +45,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class NodeInitializer {
 
-    private final List<Trigger<?>> sharedTriggers;
+    private final ConfigurationRevisionManagers configurationRevisionManagers;
+    private final Collection<Trigger<?>> sharedTriggers;
     private final ResilienceRegistry resilienceRegistry;
     private final BlockInteractorFactory interactorFactory;
     private final BlockSubscriberFactory subscriberFactory;
     private final ProcessorTriggerFactory processorFactory;
     private final ContractEventParameterDecoder decoder;
-    private final NodeConfigurationFacade config;
     private final Set<Store<?, ?, ?>> stores;
 
     public NodeInitializer(
-            NodeConfigurationFacade config,
+            ConfigurationRevisionManagers configurationRevisionManagers,
             ResilienceRegistry resilienceRegistry,
             BlockInteractorFactory interactorFactory,
             BlockSubscriberFactory subscriberFactory,
@@ -59,7 +63,7 @@ public class NodeInitializer {
             ContractEventParameterDecoder decoder,
             List<BroadcasterProducer> producers,
             Set<Store<?, ?, ?>> stores) {
-        this.config = config;
+        this.configurationRevisionManagers = configurationRevisionManagers;
         this.resilienceRegistry = resilienceRegistry;
         this.interactorFactory = interactorFactory;
         this.subscriberFactory = subscriberFactory;
@@ -67,38 +71,44 @@ public class NodeInitializer {
         this.decoder = decoder;
         this.stores = stores;
 
+        Collection<Broadcaster> broadcasters =
+                getDomainItems(configurationRevisionManagers.broadcasters());
+        Collection<Filter> filters = getDomainItems(configurationRevisionManagers.filters());
+        Collection<BroadcasterConfiguration> broadcasterConfigurations =
+                getDomainItems(configurationRevisionManagers.broadcasterConfigurations());
+
         this.sharedTriggers =
                 List.of(
                         new EventBroadcasterPermanentTrigger(
-                                config.getBroadcasters(),
-                                new EventRoutingService(config.getFilters()),
+                                broadcasters,
+                                new EventRoutingService(filters),
                                 producers,
-                                config.getBroadcasterConfigurations()));
+                                broadcasterConfigurations));
     }
 
-    public NodeContainer init() {
-        var nodes = config.getNodes();
-        var filters = config.getFilters();
+    public Collection<NodeRunner> initialize() {
+        Collection<Node> nodes = getDomainItems(configurationRevisionManagers.nodes());
+        Collection<Filter> filters = getDomainItems(configurationRevisionManagers.filters());
 
-        return new NodeContainer(
-                nodes.stream()
-                        .map(
-                                node -> {
-                                    try {
-                                        return initNode(node, filters);
-                                    } catch (IOException e) {
-                                        log.info(
-                                                "Failed to initialize node {}: {}",
-                                                node.getId(),
-                                                e.getMessage());
-                                    }
-                                    return null;
-                                })
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.toSet()));
+        return nodes.stream()
+                .map(
+                        node -> {
+                            try {
+                                return initNode(node, filters);
+                            } catch (IOException e) {
+                                log.info(
+                                        "Failed to initialize node {}: {}",
+                                        node.getId(),
+                                        e.getMessage());
+                            }
+                            return null;
+                        })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
     }
 
-    private NodeRunner initNode(Node node, List<Filter> allFilters) throws IOException {
+    @SuppressWarnings("unchecked")
+    private NodeRunner initNode(Node node, Collection<Filter> allFilters) throws IOException {
         var interactor = interactorFactory.create(node);
         var storeConfiguration = filterForNode(node);
         var nodeFilters = filterForNode(allFilters, node.getId());
@@ -108,11 +118,10 @@ public class NodeInitializer {
 
         storeForNode(EventStore.class, BlockEvent.class, storeConfiguration)
                 .ifPresent(
-                        store -> {
-                            dispatcher.addTrigger(
-                                    new EventStoreBroadcasterPermanentTrigger(
-                                            Set.of(store), List.of(storeConfiguration)));
-                        });
+                        store ->
+                                dispatcher.addTrigger(
+                                        new EventStoreBroadcasterPermanentTrigger(
+                                                Set.of(store), List.of(storeConfiguration))));
 
         var blockTrigger =
                 processorFactory.createBlockTrigger(
@@ -170,7 +179,7 @@ public class NodeInitializer {
     }
 
     private StoreConfiguration filterForNode(Node node) {
-        return config.getStoreConfigurations().stream()
+        return getDomainItems(configurationRevisionManagers.stores()).stream()
                 .filter(configuration -> configuration.getNodeId().equals(node.getId()))
                 .findFirst()
                 .orElseThrow(
@@ -180,7 +189,7 @@ public class NodeInitializer {
                                                 + node.getId()));
     }
 
-    private List<Filter> filterForNode(List<Filter> filters, UUID id) {
+    private List<Filter> filterForNode(Collection<Filter> filters, UUID id) {
         return filters.stream().filter(f -> f.getNodeId().equals(id)).toList();
     }
 
@@ -206,5 +215,10 @@ public class NodeInitializer {
                     node, interactor, eventStore.get(), (ActiveStoreConfiguration) configuration);
         }
         return new StartBlockCalculator(node, interactor);
+    }
+
+    private <T> Collection<T> getDomainItems(
+            ConfigurationRevisionManager<T> configurationRevisionManager) {
+        return configurationRevisionManager.liveView().revision().domainItems();
     }
 }

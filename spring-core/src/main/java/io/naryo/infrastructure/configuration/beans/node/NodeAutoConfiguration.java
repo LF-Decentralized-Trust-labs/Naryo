@@ -10,6 +10,7 @@ import io.naryo.application.broadcaster.configuration.manager.BroadcasterConfigu
 import io.naryo.application.broadcaster.configuration.manager.BroadcasterConfigurationManager;
 import io.naryo.application.common.Mapper;
 import io.naryo.application.configuration.resilence.ResilienceRegistry;
+import io.naryo.application.configuration.revision.manager.ConfigurationRevisionManagers;
 import io.naryo.application.configuration.source.model.node.connection.factory.DefaultNodeConnectionFactory;
 import io.naryo.application.configuration.source.model.node.connection.factory.NodeConnectionFactory;
 import io.naryo.application.configuration.source.model.node.interaction.factory.DefaultInteractionFactory;
@@ -19,8 +20,10 @@ import io.naryo.application.configuration.source.model.node.subscription.factory
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.event.decoder.block.DefaultContractEventParameterDecoder;
 import io.naryo.application.filter.configuration.manager.FilterConfigurationManager;
+import io.naryo.application.node.DefaultNodeLifecycle;
 import io.naryo.application.node.NodeConfigurationFacade;
 import io.naryo.application.node.NodeInitializer;
+import io.naryo.application.node.NodeLifecycle;
 import io.naryo.application.node.configuration.manager.DefaultNodeConfigurationManager;
 import io.naryo.application.node.configuration.manager.NodeConfigurationManager;
 import io.naryo.application.node.configuration.provider.NodeSourceProvider;
@@ -134,7 +137,7 @@ public class NodeAutoConfiguration {
 
     @Bean
     public NodeInitializer nodeInitializer(
-            NodeConfigurationFacade config,
+            ConfigurationRevisionManagers configurationRevisionManagers,
             ResilienceRegistry resilienceRegistry,
             BlockInteractorFactory interactorFactory,
             BlockSubscriberFactory subscriberFactory,
@@ -143,7 +146,7 @@ public class NodeAutoConfiguration {
             List<BroadcasterProducer> producers,
             Set<Store<?, ?, ?>> stores) {
         return new NodeInitializer(
-                config,
+                configurationRevisionManagers,
                 resilienceRegistry,
                 interactorFactory,
                 subscriberFactory,
@@ -151,5 +154,10 @@ public class NodeAutoConfiguration {
                 decoder,
                 producers,
                 stores);
+    }
+
+    @Bean
+    public NodeLifecycle nodeLifecycle() {
+        return new DefaultNodeLifecycle();
     }
 }

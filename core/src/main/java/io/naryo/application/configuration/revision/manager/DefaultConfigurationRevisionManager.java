@@ -42,7 +42,7 @@ public abstract class DefaultConfigurationRevisionManager<T>
     }
 
     @Override
-    public Revision<T> initialize() throws Exception {
+    public Revision<T> initialize() {
         Collection<T> conf = configurationManager.load();
         if (conf == null) conf = List.of();
         String hash = fingerprinter.revisionHash(conf, idFn);
@@ -59,7 +59,7 @@ public abstract class DefaultConfigurationRevisionManager<T>
     }
 
     @Override
-    public Revision<T> apply(RevisionOperation<T> op) throws Exception {
+    public Revision<T> apply(RevisionOperation<T> op) {
         var curView = view;
         var current = curView == null ? List.<T>of() : curView.revision().domainItems();
         var byId = curView == null ? Map.<UUID, T>of() : curView.byId();
