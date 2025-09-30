@@ -4,15 +4,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 import io.naryo.application.configuration.source.model.broadcaster.BroadcasterDescriptor;
-import io.naryo.application.configuration.source.model.broadcaster.target.BroadcasterTargetDescriptor;
+import io.naryo.application.configuration.source.model.broadcaster.target.*;
 import io.naryo.domain.broadcaster.Broadcaster;
 import io.naryo.infrastructure.configuration.persistence.entity.broadcaster.target.*;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-
-import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 
 @Entity
 @Table(name = "broadcaster")
@@ -54,7 +52,32 @@ public final class BroadcasterEntity implements BroadcasterDescriptor {
             return;
         }
 
-        this.target = BroadcasterTargetEntity.fromDescriptor(target);
+        switch (target) {
+            case BlockBroadcasterTargetDescriptor blockTarget ->
+                    this.target = new BlockBroadcasterTargetEntity(blockTarget.getDestinations());
+
+            case TransactionBroadcasterTargetDescriptor transactionTarget ->
+                    this.target =
+                            new TransactionBroadcasterTargetEntity(
+                                    transactionTarget.getDestinations());
+
+            case ContractEventBroadcasterTargetDescriptor contractEventTarget ->
+                    this.target =
+                            new ContractEventBroadcasterTargetEntity(
+                                    contractEventTarget.getDestinations());
+
+            case FilterBroadcasterTargetDescriptor filterTarget ->
+                    this.target =
+                            new FilterBroadcasterTargetEntity(
+                                    filterTarget.getDestinations(), filterTarget.getFilterId());
+
+            case AllBroadcasterTargetDescriptor allTarget ->
+                    this.target = new AllBroadcasterTargetEntity(allTarget.getDestinations());
+
+            default ->
+                    throw new IllegalArgumentException(
+                            "Unsupported target type: " + target.getClass().getSimpleName());
+        }
     }
 
     public static BroadcasterEntity fromDomain(Broadcaster source) {
@@ -62,12 +85,5 @@ public final class BroadcasterEntity implements BroadcasterDescriptor {
                 source.getId(),
                 source.getConfigurationId(),
                 BroadcasterTargetEntity.fromDomain(source.getTarget()));
-    }
-
-    public static BroadcasterEntity fromDescriptor(BroadcasterDescriptor descriptor) {
-        return new BroadcasterEntity(
-                descriptor.getId(),
-                valueOrNull(descriptor.getConfigurationId()),
-                BroadcasterTargetEntity.fromDescriptor(valueOrNull(descriptor.getTarget())));
     }
 }

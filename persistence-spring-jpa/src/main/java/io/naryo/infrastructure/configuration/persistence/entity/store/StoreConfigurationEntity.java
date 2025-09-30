@@ -5,8 +5,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import io.naryo.application.configuration.source.model.store.ActiveStoreConfigurationDescriptor;
-import io.naryo.application.configuration.source.model.store.InactiveStoreConfigurationDescriptor;
 import io.naryo.application.configuration.source.model.store.StoreConfigurationDescriptor;
 import io.naryo.domain.configuration.store.StoreConfiguration;
 import io.naryo.domain.configuration.store.active.ActiveStoreConfiguration;
@@ -55,22 +53,6 @@ public abstract class StoreConfigurationEntity implements StoreConfigurationDesc
             default ->
                     throw new IllegalArgumentException(
                             "Unsupported store type: " + source.getClass());
-        };
-    }
-
-    public static StoreConfigurationEntity fromDescriptor(StoreConfigurationDescriptor descriptor) {
-        return switch (descriptor) {
-            case ActiveStoreConfigurationDescriptor active ->
-                    new ActiveStoreConfigurationEntity(
-                            active.getNodeId(),
-                            active.getType().getName(),
-                            StoreFeatureConfigurationEntity.flatFeaturesMap(active.getFeatures()),
-                            active.getAdditionalProperties());
-            case InactiveStoreConfigurationDescriptor inactive ->
-                    new InactiveStoreConfigurationEntity();
-            default ->
-                    throw new IllegalArgumentException(
-                            "Unsupported store type: " + descriptor.getClass());
         };
     }
 }

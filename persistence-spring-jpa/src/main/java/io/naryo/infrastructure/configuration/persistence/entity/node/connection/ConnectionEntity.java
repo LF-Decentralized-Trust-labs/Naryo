@@ -3,9 +3,7 @@ package io.naryo.infrastructure.configuration.persistence.entity.node.connection
 import java.util.Optional;
 import java.util.UUID;
 
-import io.naryo.application.configuration.source.model.node.connection.HttpNodeConnectionDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.NodeConnectionDescriptor;
-import io.naryo.application.configuration.source.model.node.connection.WsNodeConnectionDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.endpoint.ConnectionEndpointDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.retry.NodeConnectionRetryDescriptor;
 import io.naryo.domain.node.connection.NodeConnection;
@@ -90,26 +88,6 @@ public abstract class ConnectionEntity implements NodeConnectionDescriptor {
             default ->
                     throw new IllegalArgumentException(
                             "Unsupported connection type: " + source.getClass().getSimpleName());
-        };
-    }
-
-    public static ConnectionEntity fromDescriptor(NodeConnectionDescriptor descriptor) {
-        return switch (descriptor) {
-            case WsNodeConnectionDescriptor ws ->
-                    new WsConnectionEntity(
-                            valueOrNull(ws.getRetry()), valueOrNull(ws.getEndpoint()));
-            case HttpNodeConnectionDescriptor http ->
-                    new HttpConnectionEntity(
-                            valueOrNull(http.getRetry()),
-                            valueOrNull(http.getEndpoint()),
-                            valueOrNull(http.getMaxIdleConnections()),
-                            valueOrNull(http.getKeepAliveDuration()),
-                            valueOrNull(http.getConnectionTimeout()),
-                            valueOrNull(http.getReadTimeout()));
-            default ->
-                    throw new IllegalArgumentException(
-                            "Unsupported connection type: "
-                                    + descriptor.getClass().getSimpleName());
         };
     }
 }
