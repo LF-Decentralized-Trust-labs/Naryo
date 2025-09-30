@@ -2,9 +2,15 @@ package io.naryo.infrastructure.configuration.persistence.entity.node.interactio
 
 import java.util.UUID;
 
+import io.naryo.application.configuration.source.model.node.interaction.EthereumRpcBlockInteractionDescriptor;
+import io.naryo.application.configuration.source.model.node.interaction.HederaMirrorNodeBlockInteractionDescriptor;
 import io.naryo.application.configuration.source.model.node.interaction.InteractionDescriptor;
+import io.naryo.infrastructure.configuration.persistence.entity.node.interaction.block.EthereumRpcBlockInteractionEntity;
+import io.naryo.infrastructure.configuration.persistence.entity.node.interaction.block.HederaMirrorNodeBlockInteractionEntity;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
+
+import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 
 @Entity
 @Table(name = "node_interaction")
@@ -20,5 +26,20 @@ public abstract class InteractionEntity implements InteractionDescriptor {
 
     public java.util.UUID getId() {
         return this.id;
+    }
+
+    public static InteractionEntity fromDescriptor(InteractionDescriptor descriptor) {
+        return switch (descriptor) {
+            case EthereumRpcBlockInteractionDescriptor ignore ->
+                    new EthereumRpcBlockInteractionEntity();
+            case HederaMirrorNodeBlockInteractionDescriptor hedera ->
+                    new HederaMirrorNodeBlockInteractionEntity(
+                            valueOrNull(hedera.getLimitPerRequest()),
+                            valueOrNull(hedera.getRetriesPerRequest()));
+            default ->
+                    throw new IllegalArgumentException(
+                            "Unsupported interaction type: "
+                                    + descriptor.getClass().getSimpleName());
+        };
     }
 }

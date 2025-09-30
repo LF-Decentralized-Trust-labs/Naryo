@@ -62,12 +62,6 @@ public class ActiveStoreConfigurationEntity extends StoreConfigurationEntity
     @Override
     public void setFeatures(
             Map<StoreFeatureType, ? extends StoreFeatureConfigurationDescriptor> features) {
-        if (features.values().stream()
-                .allMatch(f -> f instanceof StoreFeatureConfigurationEntity)) {
-            this.features = (List<StoreFeatureConfigurationEntity>) features.values();
-        } else {
-            throw new IllegalArgumentException(
-                    "Unsupported feature type for JPA entity: " + features.getClass());
-        }
+        this.features = StoreFeatureConfigurationEntity.flatFeaturesMap(features);
     }
 }

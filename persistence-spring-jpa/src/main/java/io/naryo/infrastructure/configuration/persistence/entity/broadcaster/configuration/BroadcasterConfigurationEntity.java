@@ -16,6 +16,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
+
 @Entity
 @Table(name = "broadcaster_configuration")
 @AllArgsConstructor
@@ -59,5 +61,13 @@ public final class BroadcasterConfigurationEntity implements BroadcasterConfigur
     @Override
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties == null ? Map.of() : this.additionalProperties;
+    }
+
+    public static BroadcasterConfigurationEntity fromDescriptor(BroadcasterConfigurationDescriptor descriptor) {
+        return new BroadcasterConfigurationEntity(
+                descriptor.getId(),
+                descriptor.getType().getName(),
+                valueOrNull(descriptor.getCache()),
+                descriptor.getAdditionalProperties());
     }
 }

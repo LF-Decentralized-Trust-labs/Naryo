@@ -16,6 +16,8 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
+
 @Entity
 @Table(name = "broadcaster")
 @AllArgsConstructor
@@ -56,31 +58,13 @@ public final class BroadcasterEntity implements BroadcasterDescriptor {
             return;
         }
 
-        switch (target) {
-            case BlockBroadcasterTargetDescriptor blockTarget ->
-                    this.target = new BlockBroadcasterTargetEntity(blockTarget.getDestinations());
+        this.target = BroadcasterTargetEntity.fromDescriptor(target);
+    }
 
-            case TransactionBroadcasterTargetDescriptor transactionTarget ->
-                    this.target =
-                            new TransactionBroadcasterTargetEntity(
-                                    transactionTarget.getDestinations());
-
-            case ContractEventBroadcasterTargetDescriptor contractEventTarget ->
-                    this.target =
-                            new ContractEventBroadcasterTargetEntity(
-                                    contractEventTarget.getDestinations());
-
-            case FilterBroadcasterTargetDescriptor filterTarget ->
-                    this.target =
-                            new FilterBroadcasterTargetEntity(
-                                    filterTarget.getDestinations(), filterTarget.getFilterId());
-
-            case AllBroadcasterTargetDescriptor allTarget ->
-                    this.target = new AllBroadcasterTargetEntity(allTarget.getDestinations());
-
-            default ->
-                    throw new IllegalArgumentException(
-                            "Unsupported target type: " + target.getClass().getSimpleName());
-        }
+    public static BroadcasterEntity fromDescriptor(BroadcasterDescriptor descriptor) {
+        return new BroadcasterEntity(
+                descriptor.getId(),
+                valueOrNull(descriptor.getConfigurationId()),
+                BroadcasterTargetEntity.fromDescriptor(valueOrNull(descriptor.getTarget())));
     }
 }

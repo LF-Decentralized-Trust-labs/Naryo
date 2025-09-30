@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import io.naryo.application.configuration.source.model.broadcaster.target.BroadcasterTargetDescriptor;
+import io.naryo.application.configuration.source.model.broadcaster.target.*;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,5 +37,26 @@ public abstract class BroadcasterTargetEntity implements BroadcasterTargetDescri
     @Override
     public void setDestinations(Set<String> destinations) {
         this.destinations = new HashSet<>(destinations);
+    }
+
+    public static BroadcasterTargetEntity fromDescriptor(BroadcasterTargetDescriptor descriptor) {
+        return switch (descriptor) {
+            case BlockBroadcasterTargetDescriptor blockTarget -> new BlockBroadcasterTargetEntity(blockTarget.getDestinations());
+
+            case TransactionBroadcasterTargetDescriptor transactionTarget -> new TransactionBroadcasterTargetEntity(
+                        transactionTarget.getDestinations());
+
+            case ContractEventBroadcasterTargetDescriptor contractEventTarget -> new ContractEventBroadcasterTargetEntity(
+                        contractEventTarget.getDestinations());
+
+            case FilterBroadcasterTargetDescriptor filterTarget -> new FilterBroadcasterTargetEntity(
+                        filterTarget.getDestinations(), filterTarget.getFilterId());
+
+            case AllBroadcasterTargetDescriptor allTarget ->  new AllBroadcasterTargetEntity(allTarget.getDestinations());
+
+            default ->
+                throw new IllegalArgumentException(
+                    "Unsupported target type: " + descriptor.getClass().getSimpleName());
+        };
     }
 }

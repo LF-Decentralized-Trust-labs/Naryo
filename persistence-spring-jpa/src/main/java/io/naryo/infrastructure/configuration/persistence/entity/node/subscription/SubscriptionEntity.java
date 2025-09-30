@@ -2,10 +2,17 @@ package io.naryo.infrastructure.configuration.persistence.entity.node.subscripti
 
 import java.util.UUID;
 
+import io.naryo.application.configuration.source.model.node.subscription.BlockSubscriptionDescriptor;
+import io.naryo.application.configuration.source.model.node.subscription.PollBlockSubscriptionDescriptor;
+import io.naryo.application.configuration.source.model.node.subscription.PubsubBlockSubscriptionDescriptor;
 import io.naryo.application.configuration.source.model.node.subscription.SubscriptionDescriptor;
+import io.naryo.infrastructure.configuration.persistence.entity.node.subscription.block.PollBlockSubscriptionEntity;
+import io.naryo.infrastructure.configuration.persistence.entity.node.subscription.block.PubSubBlockSubscriptionEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static io.naryo.application.common.util.OptionalUtil.valueOrNull;
 
 @Entity
 @Table(name = "node_subscription")
@@ -19,4 +26,31 @@ public abstract class SubscriptionEntity implements SubscriptionDescriptor {
     @Column(name = "id", nullable = false, updatable = false)
     @Getter
     private UUID id;
+
+    public static SubscriptionEntity fromDescriptor(SubscriptionDescriptor descriptor) {
+        BlockSubscriptionDescriptor blockDescriptor = (BlockSubscriptionDescriptor) descriptor;
+        return switch (blockDescriptor) {
+            case PollBlockSubscriptionDescriptor poll ->
+                    new PollBlockSubscriptionEntity(
+                            valueOrNull(poll.getInitialBlock()),
+                            valueOrNull(poll.getConfirmationBlocks()),
+                            valueOrNull(poll.getMissingTxRetryBlocks()),
+                            valueOrNull(poll.getEventInvalidationBlockThreshold()),
+                            valueOrNull(poll.getReplayBlockOffset()),
+                            valueOrNull(poll.getSyncBlockLimit()),
+                            valueOrNull(poll.getInterval()));
+            case PubsubBlockSubscriptionDescriptor pubsub ->
+                    new PubSubBlockSubscriptionEntity(
+                            valueOrNull(pubsub.getInitialBlock()),
+                            valueOrNull(pubsub.getConfirmationBlocks()),
+                            valueOrNull(pubsub.getMissingTxRetryBlocks()),
+                            valueOrNull(pubsub.getEventInvalidationBlockThreshold()),
+                            valueOrNull(pubsub.getReplayBlockOffset()),
+                            valueOrNull(pubsub.getSyncBlockLimit()));
+            default ->
+                    throw new IllegalArgumentException(
+                            "Unsupported subscription type: "
+                                    + descriptor.getClass().getSimpleName());
+        };
+    }
 }
