@@ -6,7 +6,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import io.naryo.application.configuration.revision.impl.DefaultLiveRegistry;
+import io.naryo.application.configuration.revision.registry.DefaultLiveRegistry;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;

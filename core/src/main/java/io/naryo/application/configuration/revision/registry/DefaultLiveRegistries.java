@@ -1,10 +1,8 @@
-package io.naryo.application.configuration.revision.impl;
+package io.naryo.application.configuration.revision.registry;
 
 import java.util.Map;
 import java.util.Objects;
 
-import io.naryo.application.configuration.revision.LiveRegistries;
-import io.naryo.application.configuration.revision.LiveRegistry;
 import io.naryo.domain.broadcaster.Broadcaster;
 import io.naryo.domain.common.http.HttpClient;
 import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;

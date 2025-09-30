@@ -1,9 +1,8 @@
-package io.naryo.application.configuration.revision.impl;
+package io.naryo.application.configuration.revision.registry;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.naryo.application.configuration.revision.LiveRegistry;
 import io.naryo.application.configuration.revision.Revision;
 
 public class DefaultLiveRegistry<T> implements LiveRegistry<T> {

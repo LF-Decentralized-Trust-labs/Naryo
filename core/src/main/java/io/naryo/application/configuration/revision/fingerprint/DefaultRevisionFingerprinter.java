@@ -1,9 +1,6 @@
-package io.naryo.application.common.revision;
+package io.naryo.application.configuration.revision.fingerprint;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -27,7 +24,7 @@ public abstract class DefaultRevisionFingerprinter<T> implements RevisionFingerp
     }
 
     @Override
-    public String revisionHash(List<T> items, Function<T, UUID> idFn) {
+    public String revisionHash(Collection<T> items, Function<T, UUID> idFn) {
         Objects.requireNonNull(items, "items cannot be null");
         Objects.requireNonNull(idFn, "idFn cannot be null");
 

@@ -1,4 +1,6 @@
-package io.naryo.application.configuration.revision;
+package io.naryo.application.configuration.revision.registry;
+
+import io.naryo.application.configuration.revision.Revision;
 
 public interface LiveRegistry<T> {
 

@@ -15,7 +15,7 @@ public class Broadcaster {
     private UUID configurationId;
 
     public Broadcaster(UUID id, BroadcasterTarget target, UUID configurationId) {
-        Objects.requireNonNull(id, "filterId cannot be null");
+        Objects.requireNonNull(id, "id cannot be null");
         Objects.requireNonNull(target, "target cannot be null");
         Objects.requireNonNull(configurationId, "configurationId cannot be null");
 

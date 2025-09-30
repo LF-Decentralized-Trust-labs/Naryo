@@ -1,6 +1,6 @@
 package io.naryo.application.broadcaster.revision;
 
-import io.naryo.application.common.revision.DefaultRevisionFingerprinter;
+import io.naryo.application.configuration.revision.fingerprint.DefaultRevisionFingerprinter;
 import io.naryo.domain.broadcaster.Broadcaster;
 import io.naryo.domain.broadcaster.BroadcasterNormalizer;
 

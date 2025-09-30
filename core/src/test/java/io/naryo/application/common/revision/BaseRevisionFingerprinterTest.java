@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 
+import io.naryo.application.configuration.revision.fingerprint.DefaultRevisionFingerprinter;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

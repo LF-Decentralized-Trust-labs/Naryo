@@ -1,4 +1,4 @@
-package io.naryo.application.common.revision;
+package io.naryo.application.configuration.revision.fingerprint;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
