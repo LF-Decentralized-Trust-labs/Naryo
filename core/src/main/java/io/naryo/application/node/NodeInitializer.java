@@ -107,7 +107,6 @@ public class NodeInitializer {
                 .collect(Collectors.toSet());
     }
 
-    @SuppressWarnings("unchecked")
     private NodeRunner initNode(Node node, Collection<Filter> allFilters) throws IOException {
         var interactor = interactorFactory.create(node);
         var storeConfiguration = filterForNode(node);
@@ -155,7 +154,6 @@ public class NodeInitializer {
         return new DefaultNodeRunner(node, subscriber, synchronizer);
     }
 
-    @SuppressWarnings("unchecked")
     private <S extends Store<?, ?, ?>> Optional<S> storeForNode(
             Class<S> storeClass, Class<?> dataClass, StoreConfiguration configuration) {
         List<S> eventStores =
