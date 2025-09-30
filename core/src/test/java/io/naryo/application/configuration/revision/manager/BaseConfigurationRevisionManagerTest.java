@@ -103,12 +103,13 @@ public abstract class BaseConfigurationRevisionManagerTest<
 
         ArgumentCaptor<Collection<T>> beforeCur = ArgumentCaptor.forClass(Collection.class);
         ArgumentCaptor<Collection<T>> beforeNew = ArgumentCaptor.forClass(Collection.class);
-        verify(hookSpy, times(1)).onBeforeApply(beforeCur.capture(), beforeNew.capture());
+        ArgumentCaptor<DiffResult<T>> afterDiff = ArgumentCaptor.forClass(DiffResult.class);
+        verify(hookSpy, times(1)).onBeforeApply(afterDiff.capture());
         assertTrue(beforeCur.getValue().isEmpty());
         assertEquals(1, beforeNew.getValue().size());
 
         ArgumentCaptor<Revision<T>> afterApplied = ArgumentCaptor.forClass(Revision.class);
-        ArgumentCaptor<DiffResult<T>> afterDiff = ArgumentCaptor.forClass(DiffResult.class);
+
         verify(hookSpy, times(1)).onAfterApply(afterApplied.capture(), afterDiff.capture());
         assertEquals(after, afterApplied.getValue());
         assertNotNull(afterDiff.getValue());
@@ -138,7 +139,7 @@ public abstract class BaseConfigurationRevisionManagerTest<
                 fingerprinter.itemHash(updated),
                 manager.liveView().itemFingerprintById().get(idFn.apply(updated)));
 
-        verify(hookSpy, atLeast(2)).onBeforeApply(any(), any());
+        verify(hookSpy, atLeast(2)).onBeforeApply(any());
         verify(hookSpy, atLeast(2)).onAfterApply(any(), any());
         verify(liveRegistry, times(3)).refresh(any());
     }
@@ -157,7 +158,7 @@ public abstract class BaseConfigurationRevisionManagerTest<
                 () -> manager.apply(new UpdateOperation<>(idFn.apply(base), wrongPrev, updated)));
 
         verify(liveRegistry, times(2)).refresh(any());
-        verify(hookSpy, times(1)).onBeforeApply(any(), any());
+        verify(hookSpy, times(1)).onBeforeApply(any());
         verify(hookSpy, times(1)).onAfterApply(any(), any());
     }
 
@@ -173,7 +174,7 @@ public abstract class BaseConfigurationRevisionManagerTest<
         assertEquals(2L, after.version());
         assertTrue(after.domainItems().stream().noneMatch(i -> idOf(i).equals(idOf(base))));
         verify(liveRegistry, times(3)).refresh(any());
-        verify(hookSpy, atLeast(2)).onBeforeApply(any(), any());
+        verify(hookSpy, atLeast(2)).onBeforeApply(any());
         verify(hookSpy, atLeast(2)).onAfterApply(any(), any());
     }
 
@@ -189,7 +190,7 @@ public abstract class BaseConfigurationRevisionManagerTest<
                 () -> manager.apply(new RemoveOperation<>(idFn.apply(base), wrongPrev)));
 
         verify(liveRegistry, times(2)).refresh(any());
-        verify(hookSpy, times(1)).onBeforeApply(any(), any());
+        verify(hookSpy, times(1)).onBeforeApply(any());
         verify(hookSpy, times(1)).onAfterApply(any(), any());
     }
 
@@ -206,7 +207,7 @@ public abstract class BaseConfigurationRevisionManagerTest<
 
         verify(liveRegistry, times(2)).refresh(any());
 
-        verify(hookSpy, times(1)).onBeforeApply(any(), any());
+        verify(hookSpy, times(1)).onBeforeApply(any());
         verify(hookSpy, times(1)).onAfterApply(any(), any());
     }
 }
