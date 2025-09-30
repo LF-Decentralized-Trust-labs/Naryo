@@ -29,7 +29,11 @@ public class InMemoryRevisionOperationStore implements RevisionOperationStore {
         }
 
         void touch() {
-            this.lastUpdatedAt = Instant.now();
+            Instant now = Instant.now();
+            if (!now.isAfter(this.lastUpdatedAt)) {
+                now = this.lastUpdatedAt.plusNanos(1);
+            }
+            this.lastUpdatedAt = now;
         }
 
         RevisionOperationStatus snapshot() {
@@ -80,9 +84,12 @@ public class InMemoryRevisionOperationStore implements RevisionOperationStore {
     public void succeeded(String operationId, long revision, String hash) {
         Objects.requireNonNull(operationId, "operationId");
         Objects.requireNonNull(hash, "hash");
-        entries.computeIfPresent(
+        entries.compute(
                 operationId,
                 (id, e) -> {
+                    if (e == null) {
+                        e = new Entry(id);
+                    }
                     e.state = RevisionOperationState.SUCCEEDED;
                     e.revision = revision;
                     e.hash = hash;
@@ -96,9 +103,12 @@ public class InMemoryRevisionOperationStore implements RevisionOperationStore {
     @Override
     public void failed(String operationId, String errorCode, String errorMessage) {
         Objects.requireNonNull(operationId, "operationId");
-        entries.computeIfPresent(
+        entries.compute(
                 operationId,
                 (id, e) -> {
+                    if (e == null) {
+                        e = new Entry(id);
+                    }
                     e.state = RevisionOperationState.FAILED;
                     e.revision = null;
                     e.hash = null;
