@@ -63,7 +63,8 @@ public final class BroadcasterConfigurationEntity implements BroadcasterConfigur
         return this.additionalProperties == null ? Map.of() : this.additionalProperties;
     }
 
-    public static BroadcasterConfigurationEntity fromDescriptor(BroadcasterConfigurationDescriptor descriptor) {
+    public static BroadcasterConfigurationEntity fromDescriptor(
+            BroadcasterConfigurationDescriptor descriptor) {
         return new BroadcasterConfigurationEntity(
                 descriptor.getId(),
                 descriptor.getType().getName(),

@@ -22,13 +22,14 @@ public abstract class StoreFeatureConfigurationEntity
             nullable = false,
             updatable = false) UUID id;
 
-    public static List<StoreFeatureConfigurationEntity> flatFeaturesMap(Map<StoreFeatureType, ? extends StoreFeatureConfigurationDescriptor> features) {
+    public static List<StoreFeatureConfigurationEntity> flatFeaturesMap(
+            Map<StoreFeatureType, ? extends StoreFeatureConfigurationDescriptor> features) {
         if (features.values().stream()
-            .allMatch(f -> f instanceof StoreFeatureConfigurationEntity)) {
+                .allMatch(f -> f instanceof StoreFeatureConfigurationEntity)) {
             return (List<StoreFeatureConfigurationEntity>) features.values();
         } else {
             throw new IllegalArgumentException(
-                "Unsupported feature type for JPA entity: " + features.getClass());
+                    "Unsupported feature type for JPA entity: " + features.getClass());
         }
     }
 }

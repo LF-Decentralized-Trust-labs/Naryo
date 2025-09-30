@@ -4,12 +4,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import io.naryo.application.configuration.source.model.broadcaster.BroadcasterDescriptor;
-import io.naryo.application.configuration.source.model.broadcaster.target.AllBroadcasterTargetDescriptor;
-import io.naryo.application.configuration.source.model.broadcaster.target.BlockBroadcasterTargetDescriptor;
 import io.naryo.application.configuration.source.model.broadcaster.target.BroadcasterTargetDescriptor;
-import io.naryo.application.configuration.source.model.broadcaster.target.ContractEventBroadcasterTargetDescriptor;
-import io.naryo.application.configuration.source.model.broadcaster.target.FilterBroadcasterTargetDescriptor;
-import io.naryo.application.configuration.source.model.broadcaster.target.TransactionBroadcasterTargetDescriptor;
 import io.naryo.infrastructure.configuration.persistence.entity.broadcaster.target.*;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;

@@ -58,34 +58,36 @@ public abstract class FilterEntity implements FilterDescriptor {
 
     public static FilterEntity fromDescriptor(FilterDescriptor descriptor) {
         return switch (descriptor) {
-            case ContractEventFilterDescriptor contract -> new ContractEventFilterEntity(
-                contract.getId(),
-                valueOrNull(contract.getName()),
-                valueOrNull(contract.getNodeId()),
-                valueOrNull(contract.getSpecification()),
-                contract.getStatuses(),
-                valueOrNull(contract.getSync()),
-                valueOrNull(contract.getVisibility()),
-                valueOrNull(contract.getAddress())
-            );
-            case GlobalEventFilterDescriptor global -> new GlobalEventFilterEntity(
-                global.getId(),
-                valueOrNull(global.getName()),
-                valueOrNull(global.getNodeId()),
-                valueOrNull(global.getSpecification()),
-                global.getStatuses(),
-                valueOrNull(global.getSync()),
-                valueOrNull(global.getVisibility())
-            );
-            case TransactionFilterDescriptor transaction -> new TransactionFilterEntity(
-                transaction.getId(),
-                valueOrNull(transaction.getName()),
-                valueOrNull(transaction.getNodeId()),
-                valueOrNull(transaction.getIdentifierType()),
-                valueOrNull(transaction.getValue()),
-                transaction.getStatuses()
-            );
-            default -> throw new IllegalStateException("Unsupported filter type: " + descriptor.getClass().getSimpleName());
+            case ContractEventFilterDescriptor contract ->
+                    new ContractEventFilterEntity(
+                            contract.getId(),
+                            valueOrNull(contract.getName()),
+                            valueOrNull(contract.getNodeId()),
+                            valueOrNull(contract.getSpecification()),
+                            contract.getStatuses(),
+                            valueOrNull(contract.getSync()),
+                            valueOrNull(contract.getVisibility()),
+                            valueOrNull(contract.getAddress()));
+            case GlobalEventFilterDescriptor global ->
+                    new GlobalEventFilterEntity(
+                            global.getId(),
+                            valueOrNull(global.getName()),
+                            valueOrNull(global.getNodeId()),
+                            valueOrNull(global.getSpecification()),
+                            global.getStatuses(),
+                            valueOrNull(global.getSync()),
+                            valueOrNull(global.getVisibility()));
+            case TransactionFilterDescriptor transaction ->
+                    new TransactionFilterEntity(
+                            transaction.getId(),
+                            valueOrNull(transaction.getName()),
+                            valueOrNull(transaction.getNodeId()),
+                            valueOrNull(transaction.getIdentifierType()),
+                            valueOrNull(transaction.getValue()),
+                            transaction.getStatuses());
+            default ->
+                    throw new IllegalStateException(
+                            "Unsupported filter type: " + descriptor.getClass().getSimpleName());
         };
     }
 }

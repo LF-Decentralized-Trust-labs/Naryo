@@ -9,11 +9,13 @@ import io.naryo.infrastructure.configuration.persistence.repository.broadcaster.
 import org.springframework.stereotype.Component;
 
 @Component
-public class BroadcasterConfigurationRevisionHook implements RevisionHook<BroadcasterConfigurationDescriptor> {
+public class BroadcasterConfigurationRevisionHook
+        implements RevisionHook<BroadcasterConfigurationDescriptor> {
 
     private final BroadcasterConfigurationEntityRepository repository;
 
-    public BroadcasterConfigurationRevisionHook(BroadcasterConfigurationEntityRepository repository) {
+    public BroadcasterConfigurationRevisionHook(
+            BroadcasterConfigurationEntityRepository repository) {
         this.repository = repository;
     }
 
@@ -31,7 +33,9 @@ public class BroadcasterConfigurationRevisionHook implements RevisionHook<Broadc
     }
 
     @Override
-    public void onAfterApply(Revision<BroadcasterConfigurationDescriptor> applied, DiffResult<BroadcasterConfigurationDescriptor> diff) {}
+    public void onAfterApply(
+            Revision<BroadcasterConfigurationDescriptor> applied,
+            DiffResult<BroadcasterConfigurationDescriptor> diff) {}
 
     private void addBroadcasterConfiguration(BroadcasterConfigurationDescriptor descriptor) {
         repository.save(BroadcasterConfigurationEntity.fromDescriptor(descriptor));

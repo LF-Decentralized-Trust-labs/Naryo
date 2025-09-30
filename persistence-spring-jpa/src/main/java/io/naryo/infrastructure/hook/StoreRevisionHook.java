@@ -31,8 +31,11 @@ public class StoreRevisionHook implements RevisionHook<StoreConfigurationDescrip
     }
 
     @Override
-    public void onAfterApply(Revision<StoreConfigurationDescriptor> applied, DiffResult<StoreConfigurationDescriptor> diff) {
-        // Run post-publication actions (e.g., selective filter sync; broadcaster add/remove/restart)
+    public void onAfterApply(
+            Revision<StoreConfigurationDescriptor> applied,
+            DiffResult<StoreConfigurationDescriptor> diff) {
+        // Run post-publication actions (e.g., selective filter sync; broadcaster
+        // add/remove/restart)
     }
 
     private void addStore(StoreConfigurationDescriptor descriptor) {
@@ -40,11 +43,10 @@ public class StoreRevisionHook implements RevisionHook<StoreConfigurationDescrip
     }
 
     private void removeStore(StoreConfigurationDescriptor descriptor) {
-         repository.deleteById(descriptor.getNodeId());
+        repository.deleteById(descriptor.getNodeId());
     }
 
     private void updateStore(StoreConfigurationDescriptor descriptor) {
         repository.findById(descriptor.getNodeId()).ifPresent(repository::save);
-
     }
 }

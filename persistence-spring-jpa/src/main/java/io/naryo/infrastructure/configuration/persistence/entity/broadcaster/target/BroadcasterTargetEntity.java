@@ -41,22 +41,25 @@ public abstract class BroadcasterTargetEntity implements BroadcasterTargetDescri
 
     public static BroadcasterTargetEntity fromDescriptor(BroadcasterTargetDescriptor descriptor) {
         return switch (descriptor) {
-            case BlockBroadcasterTargetDescriptor blockTarget -> new BlockBroadcasterTargetEntity(blockTarget.getDestinations());
+            case BlockBroadcasterTargetDescriptor blockTarget ->
+                    new BlockBroadcasterTargetEntity(blockTarget.getDestinations());
 
-            case TransactionBroadcasterTargetDescriptor transactionTarget -> new TransactionBroadcasterTargetEntity(
-                        transactionTarget.getDestinations());
+            case TransactionBroadcasterTargetDescriptor transactionTarget ->
+                    new TransactionBroadcasterTargetEntity(transactionTarget.getDestinations());
 
-            case ContractEventBroadcasterTargetDescriptor contractEventTarget -> new ContractEventBroadcasterTargetEntity(
-                        contractEventTarget.getDestinations());
+            case ContractEventBroadcasterTargetDescriptor contractEventTarget ->
+                    new ContractEventBroadcasterTargetEntity(contractEventTarget.getDestinations());
 
-            case FilterBroadcasterTargetDescriptor filterTarget -> new FilterBroadcasterTargetEntity(
-                        filterTarget.getDestinations(), filterTarget.getFilterId());
+            case FilterBroadcasterTargetDescriptor filterTarget ->
+                    new FilterBroadcasterTargetEntity(
+                            filterTarget.getDestinations(), filterTarget.getFilterId());
 
-            case AllBroadcasterTargetDescriptor allTarget ->  new AllBroadcasterTargetEntity(allTarget.getDestinations());
+            case AllBroadcasterTargetDescriptor allTarget ->
+                    new AllBroadcasterTargetEntity(allTarget.getDestinations());
 
             default ->
-                throw new IllegalArgumentException(
-                    "Unsupported target type: " + descriptor.getClass().getSimpleName());
+                    throw new IllegalArgumentException(
+                            "Unsupported target type: " + descriptor.getClass().getSimpleName());
         };
     }
 }

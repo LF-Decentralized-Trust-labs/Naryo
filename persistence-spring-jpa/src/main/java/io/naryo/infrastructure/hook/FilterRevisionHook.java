@@ -31,7 +31,8 @@ public class FilterRevisionHook implements RevisionHook<FilterDescriptor> {
     }
 
     @Override
-    public void onAfterApply(Revision<FilterDescriptor> applied, DiffResult<FilterDescriptor> diff) {}
+    public void onAfterApply(
+            Revision<FilterDescriptor> applied, DiffResult<FilterDescriptor> diff) {}
 
     private void addFilter(FilterDescriptor descriptor) {
         repository.save(FilterEntity.fromDescriptor(descriptor));

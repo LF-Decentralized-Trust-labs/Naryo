@@ -31,8 +31,10 @@ public class BroadcasterRevisionHook implements RevisionHook<BroadcasterDescript
     }
 
     @Override
-    public void onAfterApply(Revision<BroadcasterDescriptor> applied, DiffResult<BroadcasterDescriptor> diff) {
-        // Run post-publication actions (e.g., selective filter sync; broadcaster add/remove/restart)
+    public void onAfterApply(
+            Revision<BroadcasterDescriptor> applied, DiffResult<BroadcasterDescriptor> diff) {
+        // Run post-publication actions (e.g., selective filter sync; broadcaster
+        // add/remove/restart)
     }
 
     private void addBroadcaster(BroadcasterDescriptor broadcaster) {

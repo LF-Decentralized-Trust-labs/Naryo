@@ -30,14 +30,17 @@ public abstract class StoreConfigurationEntity implements StoreConfigurationDesc
 
     public static StoreConfigurationEntity fromDescriptor(StoreConfigurationDescriptor descriptor) {
         return switch (descriptor) {
-            case ActiveStoreConfigurationDescriptor active -> new ActiveStoreConfigurationEntity(
-                active.getNodeId(),
-                active.getType().getName(),
-                StoreFeatureConfigurationEntity.flatFeaturesMap(active.getFeatures()),
-                active.getAdditionalProperties()
-            );
-            case InactiveStoreConfigurationDescriptor inactive -> new InactiveStoreConfigurationEntity();
-            default -> throw new IllegalArgumentException("Unsupported store type: " + descriptor.getClass());
+            case ActiveStoreConfigurationDescriptor active ->
+                    new ActiveStoreConfigurationEntity(
+                            active.getNodeId(),
+                            active.getType().getName(),
+                            StoreFeatureConfigurationEntity.flatFeaturesMap(active.getFeatures()),
+                            active.getAdditionalProperties());
+            case InactiveStoreConfigurationDescriptor inactive ->
+                    new InactiveStoreConfigurationEntity();
+            default ->
+                    throw new IllegalArgumentException(
+                            "Unsupported store type: " + descriptor.getClass());
         };
     }
 }
