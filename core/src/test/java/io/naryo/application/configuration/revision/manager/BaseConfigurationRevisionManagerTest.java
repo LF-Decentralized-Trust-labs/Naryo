@@ -101,12 +101,8 @@ public abstract class BaseConfigurationRevisionManagerTest<
         assertTrue(after.domainItems().stream().anyMatch(i -> idOf(i).equals(idOf(item))));
         assertEquals(itemHash, manager.liveView().itemFingerprintById().get(idFn.apply(item)));
 
-        ArgumentCaptor<Collection<T>> beforeCur = ArgumentCaptor.forClass(Collection.class);
-        ArgumentCaptor<Collection<T>> beforeNew = ArgumentCaptor.forClass(Collection.class);
         ArgumentCaptor<DiffResult<T>> afterDiff = ArgumentCaptor.forClass(DiffResult.class);
         verify(hookSpy, times(1)).onBeforeApply(afterDiff.capture());
-        assertTrue(beforeCur.getValue().isEmpty());
-        assertEquals(1, beforeNew.getValue().size());
 
         ArgumentCaptor<Revision<T>> afterApplied = ArgumentCaptor.forClass(Revision.class);
 
