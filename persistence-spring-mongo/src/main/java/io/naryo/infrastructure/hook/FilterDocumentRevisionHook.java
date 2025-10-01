@@ -33,15 +33,20 @@ public class FilterDocumentRevisionHook implements RevisionHook<Filter> {
     @Override
     public void onAfterApply(Revision<Filter> applied, DiffResult<Filter> diff) {}
 
-    private void addFilter(Filter descriptor) {
-        repository.save(FilterDocument.fromDomain(descriptor));
+    private void addFilter(Filter filter) {
+        repository.save(FilterDocument.fromDomain(filter));
     }
 
-    private void removeFilter(Filter descriptor) {
-        repository.deleteById(descriptor.getId().toString());
+    private void removeFilter(Filter filter) {
+        repository.deleteById(filter.getId().toString());
     }
 
-    private void updateFilter(Filter descriptor) {
-        repository.findById(descriptor.getId().toString()).ifPresent(repository::save);
+    private void updateFilter(Filter filter) {
+        repository
+                .findById(filter.getId().toString())
+                .ifPresent(
+                        filterDocument -> {
+                            repository.save(FilterDocument.fromDomain(filter));
+                        });
     }
 }

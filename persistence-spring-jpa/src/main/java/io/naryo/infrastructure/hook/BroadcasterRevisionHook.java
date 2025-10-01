@@ -42,6 +42,11 @@ public class BroadcasterRevisionHook implements RevisionHook<Broadcaster> {
     }
 
     private void updateBroadcaster(Broadcaster broadcaster) {
-        repository.findById(broadcaster.getId()).ifPresent(repository::save);
+        repository
+                .findById(broadcaster.getId())
+                .ifPresent(
+                        filterDocument -> {
+                            repository.save(BroadcasterEntity.fromDomain(broadcaster));
+                        });
     }
 }

@@ -44,21 +44,30 @@ public class BroadcasterConfigurationRevisionHook
             Revision<BroadcasterConfiguration> applied,
             DiffResult<BroadcasterConfiguration> diff) {}
 
-    private void addBroadcasterConfiguration(BroadcasterConfiguration source) {
-        BroadcasterConfigurationEntity entity = BroadcasterConfigurationEntity.fromDomain(source);
+    private void addBroadcasterConfiguration(BroadcasterConfiguration broadcasterConfiguration) {
+        BroadcasterConfigurationEntity entity =
+                BroadcasterConfigurationEntity.fromDomain(broadcasterConfiguration);
         entity.setAdditionalProperties(
                 rawObjectsFromSchema(
-                        source,
+                        broadcasterConfiguration,
                         schemaRegistry.getSchema(
-                                ConfigurationSchemaType.BROADCASTER, source.getType().getName())));
+                                ConfigurationSchemaType.BROADCASTER,
+                                broadcasterConfiguration.getType().getName())));
         repository.save(entity);
     }
 
-    private void removeBroadcasterConfiguration(BroadcasterConfiguration source) {
-        repository.deleteById(source.getId());
+    private void removeBroadcasterConfiguration(BroadcasterConfiguration broadcasterConfiguration) {
+        repository.deleteById(broadcasterConfiguration.getId());
     }
 
-    private void updateBroadcasterConfiguration(BroadcasterConfiguration source) {
-        repository.findById(source.getId()).ifPresent(repository::save);
+    private void updateBroadcasterConfiguration(BroadcasterConfiguration broadcasterConfiguration) {
+        repository
+                .findById(broadcasterConfiguration.getId())
+                .ifPresent(
+                        filterDocument -> {
+                            repository.save(
+                                    BroadcasterConfigurationEntity.fromDomain(
+                                            broadcasterConfiguration));
+                        });
     }
 }

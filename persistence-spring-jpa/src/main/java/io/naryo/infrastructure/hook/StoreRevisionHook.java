@@ -45,8 +45,8 @@ public class StoreRevisionHook implements RevisionHook<StoreConfiguration> {
     public void onAfterApply(
             Revision<StoreConfiguration> applied, DiffResult<StoreConfiguration> diff) {}
 
-    private void addStore(StoreConfiguration source) {
-        StoreConfigurationEntity entity = StoreConfigurationEntity.fromDomain(source);
+    private void addStore(StoreConfiguration storeConfiguration) {
+        StoreConfigurationEntity entity = StoreConfigurationEntity.fromDomain(storeConfiguration);
         if (entity instanceof ActiveStoreConfigurationEntity activeEntity) {
             activeEntity.setAdditionalProperties(
                     rawObjectsFromSchema(
@@ -55,14 +55,20 @@ public class StoreRevisionHook implements RevisionHook<StoreConfiguration> {
                                     ConfigurationSchemaType.STORE,
                                     activeEntity.getType().getName())));
         }
-        this.repository.save(StoreConfigurationEntity.fromDomain(source));
+        this.repository.save(StoreConfigurationEntity.fromDomain(storeConfiguration));
     }
 
-    private void removeStore(StoreConfiguration source) {
-        repository.deleteById(source.getNodeId());
+    private void removeStore(StoreConfiguration storeConfiguration) {
+        repository.deleteById(storeConfiguration.getNodeId());
     }
 
-    private void updateStore(StoreConfiguration source) {
-        repository.findById(source.getNodeId()).ifPresent(repository::save);
+    private void updateStore(StoreConfiguration storeConfiguration) {
+        repository
+                .findById(storeConfiguration.getNodeId())
+                .ifPresent(
+                        filterDocument -> {
+                            repository.save(
+                                    StoreConfigurationEntity.fromDomain(storeConfiguration));
+                        });
     }
 }

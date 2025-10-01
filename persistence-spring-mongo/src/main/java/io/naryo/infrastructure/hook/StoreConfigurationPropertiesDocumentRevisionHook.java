@@ -44,9 +44,9 @@ public class StoreConfigurationPropertiesDocumentRevisionHook
     public void onAfterApply(
             Revision<StoreConfiguration> applied, DiffResult<StoreConfiguration> diff) {}
 
-    private void addStore(StoreConfiguration source) {
+    private void addStore(StoreConfiguration storeConfiguration) {
         StoreConfigurationPropertiesDocument entity =
-                StoreConfigurationPropertiesDocument.fromDomain(source);
+                StoreConfigurationPropertiesDocument.fromDomain(storeConfiguration);
         if (entity instanceof ActiveStoreConfigurationPropertiesDocument activeEntity) {
             activeEntity.setAdditionalProperties(
                     rawObjectsFromSchema(
@@ -55,14 +55,21 @@ public class StoreConfigurationPropertiesDocumentRevisionHook
                                     ConfigurationSchemaType.STORE,
                                     activeEntity.getType().getName())));
         }
-        this.repository.save(StoreConfigurationPropertiesDocument.fromDomain(source));
+        this.repository.save(StoreConfigurationPropertiesDocument.fromDomain(storeConfiguration));
     }
 
-    private void removeStore(StoreConfiguration source) {
-        repository.deleteById(source.getNodeId().toString());
+    private void removeStore(StoreConfiguration storeConfiguration) {
+        repository.deleteById(storeConfiguration.getNodeId().toString());
     }
 
-    private void updateStore(StoreConfiguration source) {
-        repository.findById(source.getNodeId().toString()).ifPresent(repository::save);
+    private void updateStore(StoreConfiguration storeConfiguration) {
+        repository
+                .findById(storeConfiguration.getNodeId().toString())
+                .ifPresent(
+                        filterDocument -> {
+                            repository.save(
+                                    StoreConfigurationPropertiesDocument.fromDomain(
+                                            storeConfiguration));
+                        });
     }
 }

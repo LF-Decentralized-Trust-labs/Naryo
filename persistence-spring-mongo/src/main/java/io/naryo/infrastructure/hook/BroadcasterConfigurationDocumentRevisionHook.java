@@ -44,22 +44,30 @@ public class BroadcasterConfigurationDocumentRevisionHook
             Revision<BroadcasterConfiguration> applied,
             DiffResult<BroadcasterConfiguration> diff) {}
 
-    private void addBroadcasterConfiguration(BroadcasterConfiguration source) {
+    private void addBroadcasterConfiguration(BroadcasterConfiguration broadcasterConfiguration) {
         BroadcasterConfigurationDocument entity =
-                BroadcasterConfigurationDocument.fromDomain(source);
+                BroadcasterConfigurationDocument.fromDomain(broadcasterConfiguration);
         entity.setAdditionalProperties(
                 rawObjectsFromSchema(
-                        source,
+                        broadcasterConfiguration,
                         schemaRegistry.getSchema(
-                                ConfigurationSchemaType.BROADCASTER, source.getType().getName())));
+                                ConfigurationSchemaType.BROADCASTER,
+                                broadcasterConfiguration.getType().getName())));
         repository.save(entity);
     }
 
-    private void removeBroadcasterConfiguration(BroadcasterConfiguration source) {
-        repository.deleteById(source.getId().toString());
+    private void removeBroadcasterConfiguration(BroadcasterConfiguration broadcasterConfiguration) {
+        repository.deleteById(broadcasterConfiguration.getId().toString());
     }
 
-    private void updateBroadcasterConfiguration(BroadcasterConfiguration source) {
-        repository.findById(source.getId().toString()).ifPresent(repository::save);
+    private void updateBroadcasterConfiguration(BroadcasterConfiguration broadcasterConfiguration) {
+        repository
+                .findById(broadcasterConfiguration.getId().toString())
+                .ifPresent(
+                        filterDocument -> {
+                            repository.save(
+                                    BroadcasterConfigurationDocument.fromDomain(
+                                            broadcasterConfiguration));
+                        });
     }
 }

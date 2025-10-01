@@ -33,15 +33,20 @@ public class NodeDocumentRevisionHook implements RevisionHook<Node> {
     @Override
     public void onAfterApply(Revision<Node> applied, DiffResult<Node> diff) {}
 
-    private void addNode(Node source) {
-        repository.save(NodePropertiesDocument.fromDomain(source));
+    private void addNode(Node node) {
+        repository.save(NodePropertiesDocument.fromDomain(node));
     }
 
-    private void removeNode(Node source) {
-        repository.deleteById(source.getId().toString());
+    private void removeNode(Node node) {
+        repository.deleteById(node.getId().toString());
     }
 
-    private void updateNode(Node source) {
-        repository.findById(source.getId().toString()).ifPresent(repository::save);
+    private void updateNode(Node node) {
+        repository
+                .findById(node.getId().toString())
+                .ifPresent(
+                        filterDocument -> {
+                            repository.save(NodePropertiesDocument.fromDomain(node));
+                        });
     }
 }
