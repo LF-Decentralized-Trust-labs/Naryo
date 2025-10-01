@@ -1,9 +1,6 @@
 package io.naryo.application.node.routing;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import io.naryo.domain.broadcaster.Broadcaster;
@@ -19,13 +16,13 @@ import io.naryo.domain.filter.event.EventFilter;
 import io.naryo.domain.filter.event.ParameterDefinition;
 
 public final class EventRoutingService {
-    private final List<Filter> filters;
+    private final Collection<Filter> filters;
 
-    public EventRoutingService(List<Filter> filters) {
+    public EventRoutingService(Collection<Filter> filters) {
         this.filters = filters;
     }
 
-    public List<Filter> getAllFilters(List<Broadcaster> broadcasters) {
+    public List<Filter> getAllFilters(Collection<Broadcaster> broadcasters) {
         List<UUID> filterIds =
                 broadcasters.stream()
                         .filter(b -> b.getTarget() instanceof FilterEventBroadcasterTarget)
@@ -34,7 +31,8 @@ public final class EventRoutingService {
         return filters.stream().filter(filter -> filterIds.contains(filter.getId())).toList();
     }
 
-    public List<Broadcaster> matchingWrappers(Event event, List<Broadcaster> broadcasters) {
+    public List<Broadcaster> matchingWrappers(
+            Event<?> event, Collection<Broadcaster> broadcasters) {
         return switch (event.getEventType()) {
             case BLOCK -> filterByTypes(broadcasters, BroadcasterTargetType.BLOCK);
             case TRANSACTION -> filterByTypes(broadcasters, BroadcasterTargetType.TRANSACTION);
@@ -79,7 +77,7 @@ public final class EventRoutingService {
     }
 
     private List<Broadcaster> filterByTypes(
-            List<Broadcaster> broadcasters, BroadcasterTargetType type) {
+            Collection<Broadcaster> broadcasters, BroadcasterTargetType type) {
         return broadcasters.stream()
                 .filter(
                         b -> {

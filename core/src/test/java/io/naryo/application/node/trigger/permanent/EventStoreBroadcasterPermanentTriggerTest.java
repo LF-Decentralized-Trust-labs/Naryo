@@ -22,9 +22,9 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class EventStoreBroadcasterPermanentTriggerTest {
 
-    @Mock private EventStore<ActiveStoreConfiguration, Object, Event> store1;
-    @Mock private EventStore<ActiveStoreConfiguration, Object, Event> store2;
-    @Mock private Consumer<Event> consumer;
+    @Mock private EventStore<ActiveStoreConfiguration, Object, Event<?>> store1;
+    @Mock private EventStore<ActiveStoreConfiguration, Object, Event<?>> store2;
+    @Mock private Consumer<Event<?>> consumer;
     @Mock private ActiveStoreConfiguration configuration;
 
     private EventStoreBroadcasterPermanentTrigger trigger;

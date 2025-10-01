@@ -21,11 +21,11 @@ class EventDispatcherTest {
 
     private final ResilienceRegistry resilienceRegistry = new ResilienceRegistry();
 
-    @Mock private DisposableTrigger<Event> disposableTrigger;
+    @Mock private DisposableTrigger<Event<?>> disposableTrigger;
 
-    @Mock private PermanentTrigger<Event> permanentTrigger;
+    @Mock private PermanentTrigger<Event<?>> permanentTrigger;
 
-    @Mock private Event event;
+    @Mock private Event<?> event;
 
     private EventDispatcher dispatcher;
 
@@ -34,7 +34,8 @@ class EventDispatcherTest {
     void dispatchDisposable_invokesOnDisposeAndTrigger_andRemovesTrigger() throws Exception {
         when(disposableTrigger.supports(event)).thenReturn(true);
 
-        ArgumentCaptor<Consumer<Event>> onDisposeCaptor = ArgumentCaptor.forClass(Consumer.class);
+        ArgumentCaptor<Consumer<Event<?>>> onDisposeCaptor =
+                ArgumentCaptor.forClass(Consumer.class);
         doNothing().when(disposableTrigger).onDispose(onDisposeCaptor.capture());
         doNothing().when(disposableTrigger).trigger(event);
 
@@ -46,7 +47,7 @@ class EventDispatcherTest {
         verify(disposableTrigger).trigger(event);
 
         // Simulate disposal callback and check removal
-        Consumer<Event> disposeCallback = onDisposeCaptor.getValue();
+        Consumer<Event<?>> disposeCallback = onDisposeCaptor.getValue();
         assertNotNull(disposeCallback);
         disposeCallback.accept(event);
         assertFalse(dispatcher.triggers().contains(disposableTrigger));
@@ -57,7 +58,8 @@ class EventDispatcherTest {
     void dispatchPermanent_invokesOnExecuteAndTrigger_andKeepsTrigger() throws Exception {
         when(permanentTrigger.supports(event)).thenReturn(true);
 
-        ArgumentCaptor<Consumer<Event>> onExecuteCaptor = ArgumentCaptor.forClass(Consumer.class);
+        ArgumentCaptor<Consumer<Event<?>>> onExecuteCaptor =
+                ArgumentCaptor.forClass(Consumer.class);
         doNothing().when(permanentTrigger).onExecute(onExecuteCaptor.capture());
         doNothing().when(permanentTrigger).trigger(event);
 
@@ -69,7 +71,7 @@ class EventDispatcherTest {
         assertTrue(dispatcher.triggers().contains(permanentTrigger));
 
         // invoke onExecute callback to ensure it doesn't remove
-        Consumer<Event> execCallback = onExecuteCaptor.getValue();
+        Consumer<Event<?>> execCallback = onExecuteCaptor.getValue();
         assertNotNull(execCallback);
         execCallback.accept(event);
         assertTrue(dispatcher.triggers().contains(permanentTrigger));

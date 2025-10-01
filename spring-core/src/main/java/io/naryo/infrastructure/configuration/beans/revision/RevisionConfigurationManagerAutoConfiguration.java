@@ -6,6 +6,8 @@ import io.naryo.application.broadcaster.configuration.revision.BroadcasterConfig
 import io.naryo.application.broadcaster.configuration.revision.BroadcasterConfigurationRevisionFingerprinter;
 import io.naryo.application.broadcaster.revision.BroadcasterConfigurationRevisionManager;
 import io.naryo.application.broadcaster.revision.BroadcasterRevisionFingerprinter;
+import io.naryo.application.configuration.revision.manager.ConfigurationRevisionManagers;
+import io.naryo.application.configuration.revision.manager.DefaultConfigurationRevisionManagers;
 import io.naryo.application.configuration.revision.registry.LiveRegistry;
 import io.naryo.application.filter.configuration.manager.FilterConfigurationManager;
 import io.naryo.application.filter.revision.FilterConfigurationRevisionManager;
@@ -21,6 +23,7 @@ import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;
 import io.naryo.domain.configuration.store.StoreConfiguration;
 import io.naryo.domain.filter.Filter;
 import io.naryo.domain.node.Node;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -68,5 +71,22 @@ public class RevisionConfigurationManagerAutoConfiguration {
             StoreRevisionFingerprinter fingerprinter,
             LiveRegistry<StoreConfiguration> live) {
         return new StoreConfigurationRevisionManager(configurationManager, fingerprinter, live);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(ConfigurationRevisionManagers.class)
+    public ConfigurationRevisionManagers configurationRevisionManagers(
+            NodeConfigurationRevisionManager nodeConfigurationRevisionManager,
+            FilterConfigurationRevisionManager filterConfigurationRevisionManager,
+            BroadcasterConfigurationRevisionManager broadcasterConfigurationRevisionManager,
+            BroadcasterConfigurationConfigurationRevisionManager
+                    broadcasterConfigurationConfigurationRevisionManager,
+            StoreConfigurationRevisionManager storeConfigurationRevisionManager) {
+        return new DefaultConfigurationRevisionManagers(
+                nodeConfigurationRevisionManager,
+                filterConfigurationRevisionManager,
+                broadcasterConfigurationRevisionManager,
+                broadcasterConfigurationConfigurationRevisionManager,
+                storeConfigurationRevisionManager);
     }
 }

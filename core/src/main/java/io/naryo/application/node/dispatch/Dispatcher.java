@@ -5,7 +5,7 @@ import io.naryo.domain.event.Event;
 
 public interface Dispatcher {
 
-    void dispatch(Event event);
+    void dispatch(Event<?> event);
 
     void addTrigger(Trigger<?> trigger);
 

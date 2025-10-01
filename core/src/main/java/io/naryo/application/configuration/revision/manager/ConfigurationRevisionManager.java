@@ -7,9 +7,9 @@ import io.naryo.application.configuration.revision.operation.RevisionOperation;
 
 public interface ConfigurationRevisionManager<T> {
 
-    Revision<T> initialize() throws Exception;
+    Revision<T> initialize();
 
-    Revision<T> apply(RevisionOperation<T> op) throws Exception;
+    Revision<T> apply(RevisionOperation<T> op);
 
     void registerHook(RevisionHook<T> hook);
 

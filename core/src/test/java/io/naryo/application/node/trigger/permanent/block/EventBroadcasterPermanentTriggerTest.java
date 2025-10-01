@@ -80,7 +80,7 @@ class EventBroadcasterPermanentTriggerTest {
         when(routingService.matchingWrappers(event, broadcasters)).thenReturn(List.of());
 
         @SuppressWarnings("unchecked")
-        io.reactivex.functions.Consumer<Event> consumer =
+        io.reactivex.functions.Consumer<Event<?>> consumer =
                 mock(io.reactivex.functions.Consumer.class);
         trigger.onExecute(consumer);
 
@@ -143,7 +143,7 @@ class EventBroadcasterPermanentTriggerTest {
                 .thenReturn(List.of(broadcaster1));
 
         @SuppressWarnings("unchecked")
-        io.reactivex.functions.Consumer<Event> consumer =
+        io.reactivex.functions.Consumer<Event<?>> consumer =
                 mock(io.reactivex.functions.Consumer.class);
         trigger.onExecute(consumer);
 

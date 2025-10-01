@@ -19,6 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 public record EventDispatcher(CircuitBreaker circuitBreaker, Retry retry, Set<Trigger<?>> triggers)
         implements Dispatcher {
 
+    public EventDispatcher(ResilienceRegistry resilienceRegistry) {
+        this(resilienceRegistry, new HashSet<>());
+    }
+
     public EventDispatcher(ResilienceRegistry resilienceRegistry, Set<Trigger<?>> triggers) {
         this(
                 resilienceRegistry.getOrDefault("event-dispatcher", CircuitBreaker.class),
@@ -27,7 +31,7 @@ public record EventDispatcher(CircuitBreaker circuitBreaker, Retry retry, Set<Tr
     }
 
     @Override
-    public void dispatch(Event event) {
+    public void dispatch(Event<?> event) {
         new HashSet<>(triggers)
                 .stream()
                         .parallel()
@@ -54,8 +58,7 @@ public record EventDispatcher(CircuitBreaker circuitBreaker, Retry retry, Set<Tr
         triggers.remove(trigger);
     }
 
-    @SuppressWarnings("unchecked")
-    private Consumer<Trigger<?>> consumer(Event event) {
+    private Consumer<Trigger<?>> consumer(Event<?> event) {
         return Decorators.ofConsumer(
                         (Trigger<?> trigger) -> {
                             if (trigger.supports(event)) {
@@ -78,7 +81,7 @@ public record EventDispatcher(CircuitBreaker circuitBreaker, Retry retry, Set<Tr
                                                                             .getSimpleName()));
                                 }
 
-                                Trigger<Event> typedTrigger = (Trigger<Event>) trigger;
+                                Trigger<Event<?>> typedTrigger = (Trigger<Event<?>>) trigger;
                                 typedTrigger.trigger(event);
                             }
                         })
