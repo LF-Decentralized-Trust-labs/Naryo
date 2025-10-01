@@ -3,10 +3,8 @@ package io.naryo.infrastructure.configuration.beans.revision;
 import io.naryo.application.broadcaster.configuration.revision.BroadcasterConfigurationRevisionFingerprinter;
 import io.naryo.application.broadcaster.revision.BroadcasterRevisionFingerprinter;
 import io.naryo.application.filter.revision.FilterRevisionFingerprinter;
-import io.naryo.application.http.configuration.revision.HttpClientRevisionFingerprinter;
 import io.naryo.application.node.revision.NodeRevisionFingerprinter;
 import io.naryo.application.store.revision.StoreRevisionFingerprinter;
-import io.naryo.domain.common.http.HttpClientNormalizer;
 import io.naryo.domain.configuration.broadcaster.BroadcasterConfigurationNormalizer;
 import io.naryo.domain.configuration.store.StoreConfigurationNormalizer;
 import org.springframework.context.annotation.Bean;
@@ -41,11 +39,5 @@ public class FingerprinterAutoConfiguration {
     public StoreRevisionFingerprinter storeRevisionFingerprinter(
             StoreConfigurationNormalizer normalizer) {
         return new StoreRevisionFingerprinter(normalizer);
-    }
-
-    @Bean
-    public HttpClientRevisionFingerprinter httpClientRevisionFingerprinter(
-            HttpClientNormalizer normalizer) {
-        return new HttpClientRevisionFingerprinter(normalizer);
     }
 }
