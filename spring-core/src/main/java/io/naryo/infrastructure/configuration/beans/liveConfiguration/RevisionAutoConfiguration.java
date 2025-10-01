@@ -201,13 +201,16 @@ public class RevisionAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean(name = "httpClientRevisionWorker")
-    public RevisionOperationWorker<HttpClient> broadcasterConfigurationRevisionWorker(
-            RevisionOperationQueue<HttpClient> httpClientRevisionQueue,
-            ConfigurationRevisionManager<HttpClient> httpClientRevisionManager,
+    @ConditionalOnMissingBean(name = "broadcasterConfigurationRevisionWorker")
+    public RevisionOperationWorker<BroadcasterConfiguration> broadcasterConfigurationRevisionWorker(
+            RevisionOperationQueue<BroadcasterConfiguration> broadcasterConfigurationRevisionQueue,
+            ConfigurationRevisionManager<BroadcasterConfiguration>
+                    broadcasterConfigurationRevisionManager,
             RevisionOperationStore store) {
         return new RevisionOperationWorker<>(
-                httpClientRevisionQueue, httpClientRevisionManager, store);
+                broadcasterConfigurationRevisionQueue,
+                broadcasterConfigurationRevisionManager,
+                store);
     }
 
     @Bean
