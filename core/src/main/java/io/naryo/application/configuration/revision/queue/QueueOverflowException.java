@@ -9,12 +9,4 @@ public final class QueueOverflowException extends IllegalStateException {
         this.lane = lane;
         this.kind = kind;
     }
-
-    public String lane() {
-        return lane;
-    }
-
-    public String kind() {
-        return kind;
-    }
 }

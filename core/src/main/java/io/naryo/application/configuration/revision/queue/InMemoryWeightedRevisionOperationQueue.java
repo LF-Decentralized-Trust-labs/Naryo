@@ -44,7 +44,7 @@ public class InMemoryWeightedRevisionOperationQueue<T>
     @Override
     public OperationId enqueue(RevisionOperation<T> op) {
         Objects.requireNonNull(op);
-        if (closed.get()) throw new IllegalStateException("Queue is closed");
+        if (closed.get()) throw new QueueClosedException();
         OperationId opId = OperationId.random();
         Task<T> task = new Task<>(opId, op);
 
