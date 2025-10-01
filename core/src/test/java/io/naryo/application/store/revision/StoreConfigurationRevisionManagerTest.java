@@ -71,8 +71,9 @@ class StoreConfigurationRevisionManagerTest
     }
 
     /**
-     * This test is overridden because adding the same InactiveStoreConfiguration twice does not throw.
-     * This is due to the fact that the InactiveStoreConfiguration does not have any attributes.
+     * This test is overridden because adding the same InactiveStoreConfiguration twice does not
+     * throw. This is due to the fact that the InactiveStoreConfiguration does not have any
+     * attributes.
      */
     @Override
     @Test
@@ -84,7 +85,7 @@ class StoreConfigurationRevisionManagerTest
         StoreConfiguration other = updatedVariantOf(base);
 
         assertThrows(
-            RevisionConflictException.class, () -> manager.apply(new AddOperation<>(other)));
+                RevisionConflictException.class, () -> manager.apply(new AddOperation<>(other)));
 
         verify(liveRegistry, times(2)).refresh(any());
 
