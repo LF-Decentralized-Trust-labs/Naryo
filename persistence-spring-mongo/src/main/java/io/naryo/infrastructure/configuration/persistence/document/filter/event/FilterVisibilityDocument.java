@@ -3,6 +3,7 @@ package io.naryo.infrastructure.configuration.persistence.document.filter.event;
 import java.util.Optional;
 
 import io.naryo.application.configuration.source.model.filter.event.FilterVisibilityDescriptor;
+import io.naryo.domain.filter.event.EventFilterVisibilityConfiguration;
 import jakarta.annotation.Nullable;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -28,5 +29,9 @@ public class FilterVisibilityDocument implements FilterVisibilityDescriptor {
     @Override
     public Optional<String> getPrivacyGroupId() {
         return Optional.ofNullable(privacyGroupId);
+    }
+
+    public static FilterVisibilityDocument fromDomain(EventFilterVisibilityConfiguration source) {
+        return new FilterVisibilityDocument(source.isVisible(), source.getPrivacyGroupId());
     }
 }

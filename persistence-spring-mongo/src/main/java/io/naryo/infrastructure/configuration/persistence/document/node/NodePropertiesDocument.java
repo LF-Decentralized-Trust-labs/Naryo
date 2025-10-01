@@ -13,9 +13,15 @@ import io.naryo.application.configuration.source.model.node.interaction.Interact
 import io.naryo.application.configuration.source.model.node.subscription.PollBlockSubscriptionDescriptor;
 import io.naryo.application.configuration.source.model.node.subscription.PubsubBlockSubscriptionDescriptor;
 import io.naryo.application.configuration.source.model.node.subscription.SubscriptionDescriptor;
+import io.naryo.domain.node.Node;
+import io.naryo.domain.node.ethereum.EthereumNode;
+import io.naryo.domain.node.ethereum.priv.PrivateEthereumNode;
 import io.naryo.infrastructure.configuration.persistence.document.node.connection.ConnectionPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.connection.http.HttpConnectionPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.connection.ws.WsConnectionPropertiesDocument;
+import io.naryo.infrastructure.configuration.persistence.document.node.eth.PrivateEthereumNodePropertiesDocument;
+import io.naryo.infrastructure.configuration.persistence.document.node.eth.PublicEthereumNodePropertiesDocument;
+import io.naryo.infrastructure.configuration.persistence.document.node.hedera.HederaNodePropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.interaction.InteractionPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.interaction.block.EthereumRpcBlockInteractionPropertiesDocument;
 import io.naryo.infrastructure.configuration.persistence.document.node.interaction.block.HederaMirrorNodeBlockInteractionPropertiesDocument;
@@ -145,5 +151,57 @@ public abstract class NodePropertiesDocument implements NodeDescriptor {
                             "Unsupported connection type: "
                                     + connection.getClass().getSimpleName());
         }
+    }
+
+    public static NodePropertiesDocument fromDomain(Node source) {
+        NodePropertiesDocument document = null;
+
+        String id = source.getId().toString();
+        String name = source.getName().value();
+        SubscriptionPropertiesDocument subscriptionEntity =
+                SubscriptionPropertiesDocument.fromDomain(source.getSubscriptionConfiguration());
+        InteractionPropertiesDocument interactionEntity =
+                InteractionPropertiesDocument.fromDomain(source.getInteractionConfiguration());
+        ConnectionPropertiesDocument connectionEntity =
+                ConnectionPropertiesDocument.fromDomain(source.getConnection());
+
+        switch (source.getType()) {
+            case HEDERA ->
+                    document =
+                            new HederaNodePropertiesDocument(
+                                    id,
+                                    name,
+                                    subscriptionEntity,
+                                    interactionEntity,
+                                    connectionEntity);
+            case ETHEREUM -> {
+                var ethSource = (EthereumNode) source;
+                switch (ethSource.getVisibility()) {
+                    case PRIVATE -> {
+                        var privateEthSource = (PrivateEthereumNode) ethSource;
+                        document =
+                                new PrivateEthereumNodePropertiesDocument(
+                                        id,
+                                        name,
+                                        subscriptionEntity,
+                                        interactionEntity,
+                                        connectionEntity,
+                                        privateEthSource.getGroupId().value(),
+                                        privateEthSource.getPrecompiledAddress().value());
+                    }
+                    case PUBLIC ->
+                            document =
+                                    new PublicEthereumNodePropertiesDocument(
+                                            id,
+                                            name,
+                                            subscriptionEntity,
+                                            interactionEntity,
+                                            connectionEntity);
+                    default -> throw new IllegalArgumentException("Invalid Ethereum visibility");
+                }
+            }
+        }
+
+        return document;
     }
 }

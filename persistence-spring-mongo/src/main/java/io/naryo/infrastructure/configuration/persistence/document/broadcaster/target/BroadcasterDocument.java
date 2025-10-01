@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.mongodb.lang.Nullable;
 import io.naryo.application.configuration.source.model.broadcaster.BroadcasterDescriptor;
 import io.naryo.application.configuration.source.model.broadcaster.target.*;
+import io.naryo.domain.broadcaster.Broadcaster;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -74,5 +75,12 @@ public final class BroadcasterDocument implements BroadcasterDescriptor {
                     throw new IllegalArgumentException(
                             "Unsupported target type: " + target.getClass().getSimpleName());
         }
+    }
+
+    public static BroadcasterDocument fromDomain(Broadcaster source) {
+        return new BroadcasterDocument(
+                source.getId().toString(),
+                source.getConfigurationId().toString(),
+                BroadcasterTargetDocument.fromDomain(source.getTarget()));
     }
 }

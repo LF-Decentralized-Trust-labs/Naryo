@@ -3,6 +3,7 @@ package io.naryo.infrastructure.configuration.persistence.document.broadcaster.c
 import java.time.Duration;
 
 import io.naryo.application.configuration.source.model.broadcaster.configuration.BroadcasterCacheConfigurationDescriptor;
+import io.naryo.domain.configuration.broadcaster.BroadcasterCache;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
@@ -19,5 +20,9 @@ public class BroadcasterCacheConfiguration implements BroadcasterCacheConfigurat
 
     public BroadcasterCacheConfiguration() {
         this(DEFAULT_EXPIRATION_TIME);
+    }
+
+    public static BroadcasterCacheConfiguration fromDomain(BroadcasterCache source) {
+        return new BroadcasterCacheConfiguration(source.expirationTime());
     }
 }
