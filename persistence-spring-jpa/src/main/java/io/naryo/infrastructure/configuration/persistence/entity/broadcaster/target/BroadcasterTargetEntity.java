@@ -44,37 +44,24 @@ public abstract class BroadcasterTargetEntity implements BroadcasterTargetDescri
     }
 
     public static BroadcasterTargetEntity fromDomain(BroadcasterTarget domain) {
+        Set<String> destinations =
+                domain.getDestinations().stream()
+                        .map(Destination::value)
+                        .collect(Collectors.toSet());
         return switch (domain) {
             case BlockBroadcasterTarget blockTarget ->
-                    new BlockBroadcasterTargetEntity(
-                            blockTarget.getDestinations().stream()
-                                    .map(Destination::value)
-                                    .collect(Collectors.toSet()));
+                    new BlockBroadcasterTargetEntity(destinations);
 
             case TransactionBroadcasterTarget transactionTarget ->
-                    new TransactionBroadcasterTargetEntity(
-                            transactionTarget.getDestinations().stream()
-                                    .map(Destination::value)
-                                    .collect(Collectors.toSet()));
+                    new TransactionBroadcasterTargetEntity(destinations);
 
             case ContractEventBroadcasterTarget contractEventTarget ->
-                    new ContractEventBroadcasterTargetEntity(
-                            contractEventTarget.getDestinations().stream()
-                                    .map(Destination::value)
-                                    .collect(Collectors.toSet()));
+                    new ContractEventBroadcasterTargetEntity(destinations);
 
             case FilterEventBroadcasterTarget filterTarget ->
-                    new FilterBroadcasterTargetEntity(
-                            filterTarget.getDestinations().stream()
-                                    .map(Destination::value)
-                                    .collect(Collectors.toSet()),
-                            filterTarget.getFilterId());
+                    new FilterBroadcasterTargetEntity(destinations, filterTarget.getFilterId());
 
-            case AllBroadcasterTarget allTarget ->
-                    new AllBroadcasterTargetEntity(
-                            allTarget.getDestinations().stream()
-                                    .map(Destination::value)
-                                    .collect(Collectors.toSet()));
+            case AllBroadcasterTarget allTarget -> new AllBroadcasterTargetEntity(destinations);
 
             default ->
                     throw new IllegalArgumentException(
