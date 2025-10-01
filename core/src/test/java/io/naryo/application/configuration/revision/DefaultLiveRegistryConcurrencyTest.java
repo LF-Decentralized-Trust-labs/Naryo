@@ -71,9 +71,8 @@ class DefaultLiveRegistryConcurrencyTest {
                             }));
         }
 
-        go.countDown();
-
         registry.refresh(newRevision);
+        go.countDown();
 
         boolean completed = done.await(3, TimeUnit.SECONDS);
         assertTrue(completed);
