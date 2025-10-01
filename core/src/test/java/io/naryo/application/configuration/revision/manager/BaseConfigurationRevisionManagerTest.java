@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public abstract class BaseConfigurationRevisionManagerTest<
-    T, C extends CollectionConfigurationManager<T>, F extends DefaultRevisionFingerprinter<T>> {
+        T, C extends CollectionConfigurationManager<T>, F extends DefaultRevisionFingerprinter<T>> {
 
     protected ConfigurationRevisionManager<T> manager;
     protected F fingerprinter;
@@ -35,13 +35,13 @@ public abstract class BaseConfigurationRevisionManagerTest<
     protected final Class<C> configurationManagerClass;
 
     protected BaseConfigurationRevisionManagerTest(
-        Function<T, UUID> idFn, Class<C> configurationManagerClass) {
+            Function<T, UUID> idFn, Class<C> configurationManagerClass) {
         this.idFn = idFn;
         this.configurationManagerClass = configurationManagerClass;
     }
 
     protected abstract ConfigurationRevisionManager<T> createManager(
-        C configurationManager, F fingerprinter, LiveRegistry<T> liveRegistry);
+            C configurationManager, F fingerprinter, LiveRegistry<T> liveRegistry);
 
     protected abstract F createFingerprinter();
 
@@ -126,13 +126,13 @@ public abstract class BaseConfigurationRevisionManagerTest<
         T updated = updatedVariantOf(base);
 
         Revision<T> after =
-            manager.apply(new UpdateOperation<>(idFn.apply(base), prevHash, updated));
+                manager.apply(new UpdateOperation<>(idFn.apply(base), prevHash, updated));
 
         assertEquals(2L, after.version());
         assertTrue(after.domainItems().stream().anyMatch(i -> idOf(i).equals(idOf(updated))));
         assertEquals(
-            fingerprinter.itemHash(updated),
-            manager.liveView().itemFingerprintById().get(idFn.apply(updated)));
+                fingerprinter.itemHash(updated),
+                manager.liveView().itemFingerprintById().get(idFn.apply(updated)));
 
         verify(hookSpy, atLeast(2)).onBeforeApply(any());
         verify(hookSpy, atLeast(2)).onAfterApply(any(), any());
@@ -149,8 +149,8 @@ public abstract class BaseConfigurationRevisionManagerTest<
         T updated = updatedVariantOf(base);
 
         assertThrows(
-            RevisionConflictException.class,
-            () -> manager.apply(new UpdateOperation<>(idFn.apply(base), wrongPrev, updated)));
+                RevisionConflictException.class,
+                () -> manager.apply(new UpdateOperation<>(idFn.apply(base), wrongPrev, updated)));
 
         verify(liveRegistry, times(2)).refresh(any());
         verify(hookSpy, times(1)).onBeforeApply(any());
@@ -181,8 +181,8 @@ public abstract class BaseConfigurationRevisionManagerTest<
         String wrongPrev = "0x" + "ff".repeat(32);
 
         assertThrows(
-            RevisionConflictException.class,
-            () -> manager.apply(new RemoveOperation<>(idFn.apply(base), wrongPrev)));
+                RevisionConflictException.class,
+                () -> manager.apply(new RemoveOperation<>(idFn.apply(base), wrongPrev)));
 
         verify(liveRegistry, times(2)).refresh(any());
         verify(hookSpy, times(1)).onBeforeApply(any());
@@ -198,7 +198,7 @@ public abstract class BaseConfigurationRevisionManagerTest<
         T other = updatedVariantOf(base);
 
         assertThrows(
-            RevisionConflictException.class, () -> manager.apply(new AddOperation<>(other)));
+                RevisionConflictException.class, () -> manager.apply(new AddOperation<>(other)));
 
         verify(liveRegistry, times(2)).refresh(any());
 
