@@ -42,16 +42,16 @@ public class DefaultRevisionHookBinder implements RevisionHookBinder {
 
     @Override
     public <T> void register(Class<T> domainClass, RevisionHook<T> hook) {
-        if (domainClass == Node.class) {
+        if (Node.class.isAssignableFrom(domainClass)) {
             nodeConfigurationRevisionManager.registerHook((RevisionHook<Node>) hook);
-        } else if (domainClass == Broadcaster.class) {
+        } else if (Broadcaster.class.isAssignableFrom(domainClass)) {
             broadcasterConfigurationRevisionManager.registerHook((RevisionHook<Broadcaster>) hook);
-        } else if (domainClass == BroadcasterConfiguration.class) {
+        } else if (BroadcasterConfiguration.class.isAssignableFrom(domainClass)) {
             broadcasterConfigurationConfigurationRevisionManager.registerHook(
                     (RevisionHook<BroadcasterConfiguration>) hook);
-        } else if (domainClass == StoreConfiguration.class) {
+        } else if (StoreConfiguration.class.isAssignableFrom(domainClass)) {
             storeConfigurationRevisionManager.registerHook((RevisionHook<StoreConfiguration>) hook);
-        } else if (domainClass == Filter.class) {
+        } else if (Filter.class.isAssignableFrom(domainClass)) {
             filterConfigurationRevisionManager.registerHook((RevisionHook<Filter>) hook);
         } else {
             throw new IllegalArgumentException("Unsupported domain class: " + domainClass);
