@@ -190,7 +190,7 @@ public abstract class BaseConfigurationRevisionManagerTest<
     }
 
     @Test
-    void apply_addWithSameIdButDifferentContent_throwRevisionConflict() throws Exception {
+    protected void apply_addWithSameIdButDifferentContent_throwRevisionConflict() throws Exception {
         manager.initialize();
         T base = newItem();
         manager.apply(new AddOperation<>(base));
