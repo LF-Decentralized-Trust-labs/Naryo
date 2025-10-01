@@ -3,20 +3,27 @@ package io.naryo.infrastructure.hook;
 import io.naryo.application.configuration.revision.Revision;
 import io.naryo.application.configuration.revision.diff.DiffResult;
 import io.naryo.application.configuration.revision.hook.RevisionHook;
+import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaRegistry;
+import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaType;
 import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;
 import io.naryo.infrastructure.configuration.persistence.entity.broadcaster.configuration.BroadcasterConfigurationEntity;
 import io.naryo.infrastructure.configuration.persistence.repository.broadcaster.BroadcasterConfigurationEntityRepository;
 import org.springframework.stereotype.Component;
+
+import static io.naryo.infrastructure.util.serialization.ConfigurationSchemaConverter.rawObjectsFromSchema;
 
 @Component
 public class BroadcasterConfigurationRevisionHook
         implements RevisionHook<BroadcasterConfiguration> {
 
     private final BroadcasterConfigurationEntityRepository repository;
+    private final ConfigurationSchemaRegistry schemaRegistry;
 
     public BroadcasterConfigurationRevisionHook(
-            BroadcasterConfigurationEntityRepository repository) {
+            BroadcasterConfigurationEntityRepository repository,
+            ConfigurationSchemaRegistry schemaRegistry) {
         this.repository = repository;
+        this.schemaRegistry = schemaRegistry;
     }
 
     @Override
@@ -38,7 +45,13 @@ public class BroadcasterConfigurationRevisionHook
             DiffResult<BroadcasterConfiguration> diff) {}
 
     private void addBroadcasterConfiguration(BroadcasterConfiguration source) {
-        repository.save(BroadcasterConfigurationEntity.fromDomain(source));
+        BroadcasterConfigurationEntity entity = BroadcasterConfigurationEntity.fromDomain(source);
+        entity.setAdditionalProperties(
+                rawObjectsFromSchema(
+                        source,
+                        schemaRegistry.getSchema(
+                                ConfigurationSchemaType.BROADCASTER, source.getType().getName())));
+        repository.save(entity);
     }
 
     private void removeBroadcasterConfiguration(BroadcasterConfiguration source) {
