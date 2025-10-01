@@ -19,6 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 public record EventDispatcher(CircuitBreaker circuitBreaker, Retry retry, Set<Trigger<?>> triggers)
         implements Dispatcher {
 
+    public EventDispatcher(ResilienceRegistry resilienceRegistry) {
+        this(resilienceRegistry, new HashSet<>());
+    }
+
     public EventDispatcher(ResilienceRegistry resilienceRegistry, Set<Trigger<?>> triggers) {
         this(
                 resilienceRegistry.getOrDefault("event-dispatcher", CircuitBreaker.class),
