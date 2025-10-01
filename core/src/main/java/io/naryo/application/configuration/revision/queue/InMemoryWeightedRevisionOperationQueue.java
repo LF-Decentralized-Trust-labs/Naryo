@@ -64,8 +64,8 @@ public class InMemoryWeightedRevisionOperationQueue<T>
         return opId;
     }
 
+    @Override
     public Task<T> dequeue() throws InterruptedException {
-        if (closed.get()) return null;
         for (int i = 0; i < highPerLowPolicy; i++) {
             if (closed.get()) return null;
             Task<T> highPriorityTask =
@@ -76,7 +76,7 @@ public class InMemoryWeightedRevisionOperationQueue<T>
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         closed.set(true);
         this.highCapacityQueue.clear();
         this.lowCapacityQueue.clear();

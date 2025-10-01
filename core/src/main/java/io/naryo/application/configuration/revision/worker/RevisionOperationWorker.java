@@ -89,7 +89,10 @@ public final class RevisionOperationWorker<T> implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
-        stop();
+        this.stop();
+        if (queue instanceof AutoCloseable ac) {
+            ac.close();
+        }
     }
 
     private static String safeMsg(Throwable t) {
