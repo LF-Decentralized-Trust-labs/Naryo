@@ -41,4 +41,13 @@ public class DefaultRevisionOperationWorkers implements RevisionOperationWorkers
         this.broadcasterWorker.start(this.executor);
         this.storeWorker.start(this.executor);
     }
+
+    @Override
+    public void close() throws Exception {
+        this.nodeWorker.close();
+        this.filterWorker.close();
+        this.broadcasterConfigurationWorker.close();
+        this.broadcasterWorker.close();
+        this.storeWorker.close();
+    }
 }
