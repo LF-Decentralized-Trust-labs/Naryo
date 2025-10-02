@@ -19,7 +19,9 @@ public class BootstrapperAutoConfiguration {
             ConfigurationRevisionManagers managers,
             NodeInitializer nodeInitializer,
             NodeLifecycle nodeLifecycle,
+            RevisionOperationWorkers revisionOperationWorkers,
             RevisionHookBinder hookBinder) {
-        return new DefaultBootstrapper(managers, nodeInitializer, nodeLifecycle, hookBinder);
+        return new DefaultBootstrapper(
+                managers, nodeInitializer, nodeLifecycle, revisionOperationWorkers, hookBinder);
     }
 }

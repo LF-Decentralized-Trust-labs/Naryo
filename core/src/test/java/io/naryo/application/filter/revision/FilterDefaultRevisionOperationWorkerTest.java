@@ -1,4 +1,4 @@
-package io.naryo.application.node.revision;
+package io.naryo.application.filter.revision;
 
 import java.util.List;
 import java.util.Map;
@@ -14,13 +14,13 @@ import io.naryo.application.configuration.revision.operation.AddOperation;
 import io.naryo.application.configuration.revision.operation.RevisionOperation;
 import io.naryo.application.configuration.revision.queue.InMemoryWeightedRevisionOperationQueue;
 import io.naryo.application.configuration.revision.queue.RevisionOperationQueue;
-import io.naryo.application.configuration.revision.worker.BaseRevisionOperationWorkerTest;
-import io.naryo.application.configuration.revision.worker.RevisionOperationWorker;
-import io.naryo.domain.node.Node;
-import io.naryo.domain.node.NodeBuilder;
-import io.naryo.domain.node.eth.priv.PrivateEthereumNodeBuilder;
-import io.naryo.domain.node.eth.pub.PublicEthereumNodeBuilder;
-import io.naryo.domain.node.hedera.HederaNodeBuilder;
+import io.naryo.application.configuration.revision.worker.BaseDefaultRevisionOperationWorkerTest;
+import io.naryo.application.configuration.revision.worker.DefaultRevisionOperationWorker;
+import io.naryo.domain.filter.Filter;
+import io.naryo.domain.filter.FilterBuilder;
+import io.naryo.domain.filter.event.ContractEventFilterBuilder;
+import io.naryo.domain.filter.event.GlobalEventFilterBuilder;
+import io.naryo.domain.filter.transaction.TransactionFilterBuilder;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.ArgumentMatchers.contains;
@@ -28,38 +28,41 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class NodeRevisionOperationWorkerTest extends BaseRevisionOperationWorkerTest<Node> {
+public class FilterDefaultRevisionOperationWorkerTest
+        extends BaseDefaultRevisionOperationWorkerTest<Filter> {
 
-    private Node newNode() {
+    private Filter newFilter() {
         return this.newItem();
     }
 
     @Test
     void marks_succeeded_when_liveView_reflects_publication() throws Exception {
         @SuppressWarnings("unchecked")
-        RevisionOperationQueue<Node> q = (RevisionOperationQueue<Node>) this.queue;
+        RevisionOperationQueue<Filter> q = (RevisionOperationQueue<Filter>) this.queue;
         @SuppressWarnings("unchecked")
-        ConfigurationRevisionManager<Node> m = (ConfigurationRevisionManager<Node>) this.manager;
+        ConfigurationRevisionManager<Filter> m =
+                (ConfigurationRevisionManager<Filter>) this.manager;
 
-        Node cfg = newNode();
-        RevisionOperation<Node> op = new AddOperation<>(cfg);
+        Filter cfg = newFilter();
+        RevisionOperation<Filter> op = new AddOperation<>(cfg);
         OperationId opId = OperationId.random();
-        InMemoryWeightedRevisionOperationQueue.Task<Node> task =
+        InMemoryWeightedRevisionOperationQueue.Task<Filter> task =
                 new InMemoryWeightedRevisionOperationQueue.Task<>(opId, op);
 
         when(q.dequeue()).thenReturn(task).thenReturn(null);
 
-        Revision<Node> applied = new Revision<>(1L, "hash1", List.of(cfg));
+        Revision<Filter> applied = new Revision<>(1L, "hash1", List.of(cfg));
         when(m.apply(op)).thenReturn(applied);
 
-        LiveView<Node> lv = new LiveView<>(applied, Map.of(cfg.getId(), cfg), Map.of());
+        LiveView<Filter> lv = new LiveView<>(applied, Map.of(cfg.getId(), cfg), Map.of());
         when(m.liveView()).thenReturn(lv);
 
-        RevisionOperationWorker<Node> worker = new RevisionOperationWorker<>(q, m, this.store);
+        DefaultRevisionOperationWorker<Filter> worker =
+                new DefaultRevisionOperationWorker<>(q, m, this.store);
         worker.start(executor);
 
         TimeUnit.MILLISECONDS.sleep(100);
-        worker.stop();
+        worker.close();
 
         verify(this.store).running(opId.getValue());
         verify(this.store).succeeded(opId.getValue(), 1L, "hash1");
@@ -68,14 +71,15 @@ public class NodeRevisionOperationWorkerTest extends BaseRevisionOperationWorker
     @Test
     void marks_failed_on_revision_conflict() throws Exception {
         @SuppressWarnings("unchecked")
-        RevisionOperationQueue<Node> q = (RevisionOperationQueue<Node>) this.queue;
+        RevisionOperationQueue<Filter> q = (RevisionOperationQueue<Filter>) this.queue;
         @SuppressWarnings("unchecked")
-        ConfigurationRevisionManager<Node> m = (ConfigurationRevisionManager<Node>) this.manager;
+        ConfigurationRevisionManager<Filter> m =
+                (ConfigurationRevisionManager<Filter>) this.manager;
 
-        Node cfg = newNode();
-        RevisionOperation<Node> op = new AddOperation<>(cfg);
+        Filter cfg = newFilter();
+        RevisionOperation<Filter> op = new AddOperation<>(cfg);
         OperationId opId = OperationId.random();
-        InMemoryWeightedRevisionOperationQueue.Task<Node> task =
+        InMemoryWeightedRevisionOperationQueue.Task<Filter> task =
                 new InMemoryWeightedRevisionOperationQueue.Task<>(opId, op);
 
         when(q.dequeue()).thenReturn(task).thenReturn(null);
@@ -83,11 +87,12 @@ public class NodeRevisionOperationWorkerTest extends BaseRevisionOperationWorker
         when(m.apply(op))
                 .thenThrow(new RevisionConflictException(cfg.getId(), op.kind(), "conflict"));
 
-        RevisionOperationWorker<Node> worker = new RevisionOperationWorker<>(q, m, this.store);
+        DefaultRevisionOperationWorker<Filter> worker =
+                new DefaultRevisionOperationWorker<>(q, m, this.store);
         worker.start(executor);
 
         TimeUnit.MILLISECONDS.sleep(100);
-        worker.stop();
+        worker.close();
 
         verify(this.store).running(opId.getValue());
         verify(this.store)
@@ -97,27 +102,29 @@ public class NodeRevisionOperationWorkerTest extends BaseRevisionOperationWorker
     @Test
     void fails_when_liveView_not_updated_after_apply() throws Exception {
         @SuppressWarnings("unchecked")
-        RevisionOperationQueue<Node> q = (RevisionOperationQueue<Node>) this.queue;
+        RevisionOperationQueue<Filter> q = (RevisionOperationQueue<Filter>) this.queue;
         @SuppressWarnings("unchecked")
-        ConfigurationRevisionManager<Node> m = (ConfigurationRevisionManager<Node>) this.manager;
+        ConfigurationRevisionManager<Filter> m =
+                (ConfigurationRevisionManager<Filter>) this.manager;
 
-        Node cfg = newNode();
-        RevisionOperation<Node> op = new AddOperation<>(cfg);
+        Filter cfg = newFilter();
+        RevisionOperation<Filter> op = new AddOperation<>(cfg);
         OperationId opId = OperationId.random();
-        InMemoryWeightedRevisionOperationQueue.Task<Node> task =
+        InMemoryWeightedRevisionOperationQueue.Task<Filter> task =
                 new InMemoryWeightedRevisionOperationQueue.Task<>(opId, op);
 
         when(q.dequeue()).thenReturn(task).thenReturn(null);
 
-        Revision<Node> applied = new Revision<>(2L, "hash2", List.of(cfg));
+        Revision<Filter> applied = new Revision<>(2L, "hash2", List.of(cfg));
         when(m.apply(op)).thenReturn(applied);
         when(m.liveView()).thenReturn(null);
 
-        RevisionOperationWorker<Node> worker = new RevisionOperationWorker<>(q, m, this.store);
+        DefaultRevisionOperationWorker<Filter> worker =
+                new DefaultRevisionOperationWorker<>(q, m, this.store);
         worker.start(executor);
 
         TimeUnit.MILLISECONDS.sleep(100);
-        worker.stop();
+        worker.close();
 
         verify(this.store).running(opId.getValue());
         verify(this.store)
@@ -136,23 +143,24 @@ public class NodeRevisionOperationWorkerTest extends BaseRevisionOperationWorker
                             return null;
                         });
 
-        RevisionOperationWorker<Node> worker = new RevisionOperationWorker<>(queue, manager, store);
+        DefaultRevisionOperationWorker<Filter> worker =
+                new DefaultRevisionOperationWorker<>(queue, manager, store);
         worker.start(executor);
 
         TimeUnit.MILLISECONDS.sleep(20);
         worker.close();
     }
 
-    protected Node newItem() {
+    protected Filter newItem() {
         return newBuilder().build();
     }
 
-    private NodeBuilder<?, ?> newBuilder() {
+    private FilterBuilder<?, ?> newBuilder() {
         var random = new Random().nextInt(3);
         return switch (random) {
-            case 0 -> new PublicEthereumNodeBuilder();
-            case 1 -> new PrivateEthereumNodeBuilder();
-            case 2 -> new HederaNodeBuilder();
+            case 0 -> new ContractEventFilterBuilder();
+            case 1 -> new GlobalEventFilterBuilder();
+            case 2 -> new TransactionFilterBuilder();
             default -> throw new IllegalStateException("Unexpected value: " + random);
         };
     }

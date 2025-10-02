@@ -14,8 +14,8 @@ import io.naryo.application.configuration.revision.operation.AddOperation;
 import io.naryo.application.configuration.revision.operation.RevisionOperation;
 import io.naryo.application.configuration.revision.queue.InMemoryWeightedRevisionOperationQueue;
 import io.naryo.application.configuration.revision.queue.RevisionOperationQueue;
-import io.naryo.application.configuration.revision.worker.BaseRevisionOperationWorkerTest;
-import io.naryo.application.configuration.revision.worker.RevisionOperationWorker;
+import io.naryo.application.configuration.revision.worker.BaseDefaultRevisionOperationWorkerTest;
+import io.naryo.application.configuration.revision.worker.DefaultRevisionOperationWorker;
 import io.naryo.domain.broadcaster.Broadcaster;
 import io.naryo.domain.broadcaster.BroadcasterBuilder;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,8 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class BroadcasterRevisionWorkerTest extends BaseRevisionOperationWorkerTest<Broadcaster> {
+public class BroadcasterRevisionWorkerTest
+        extends BaseDefaultRevisionOperationWorkerTest<Broadcaster> {
 
     private Broadcaster newBroadcaster() {
         return new BroadcasterBuilder().withId(UUID.randomUUID()).build();
@@ -53,12 +54,12 @@ public class BroadcasterRevisionWorkerTest extends BaseRevisionOperationWorkerTe
         LiveView<Broadcaster> lv = new LiveView<>(applied, Map.of(cfg.getId(), cfg), Map.of());
         when(m.liveView()).thenReturn(lv);
 
-        RevisionOperationWorker<Broadcaster> worker =
-                new RevisionOperationWorker<>(q, m, this.store);
+        DefaultRevisionOperationWorker<Broadcaster> worker =
+                new DefaultRevisionOperationWorker<>(q, m, this.store);
         worker.start(executor);
 
         TimeUnit.MILLISECONDS.sleep(100);
-        worker.stop();
+        worker.close();
 
         verify(this.store).running(opId.getValue());
         verify(this.store).succeeded(opId.getValue(), 1L, "hash1");
@@ -83,12 +84,12 @@ public class BroadcasterRevisionWorkerTest extends BaseRevisionOperationWorkerTe
         when(m.apply(op))
                 .thenThrow(new RevisionConflictException(cfg.getId(), op.kind(), "conflict"));
 
-        RevisionOperationWorker<Broadcaster> worker =
-                new RevisionOperationWorker<>(q, m, this.store);
+        DefaultRevisionOperationWorker<Broadcaster> worker =
+                new DefaultRevisionOperationWorker<>(q, m, this.store);
         worker.start(executor);
 
         TimeUnit.MILLISECONDS.sleep(100);
-        worker.stop();
+        worker.close();
 
         verify(this.store).running(opId.getValue());
         verify(this.store)
@@ -115,12 +116,12 @@ public class BroadcasterRevisionWorkerTest extends BaseRevisionOperationWorkerTe
         when(m.apply(op)).thenReturn(applied);
         when(m.liveView()).thenReturn(null);
 
-        RevisionOperationWorker<Broadcaster> worker =
-                new RevisionOperationWorker<>(q, m, this.store);
+        DefaultRevisionOperationWorker<Broadcaster> worker =
+                new DefaultRevisionOperationWorker<>(q, m, this.store);
         worker.start(executor);
 
         TimeUnit.MILLISECONDS.sleep(100);
-        worker.stop();
+        worker.close();
 
         verify(this.store).running(opId.getValue());
         verify(this.store)
@@ -139,8 +140,8 @@ public class BroadcasterRevisionWorkerTest extends BaseRevisionOperationWorkerTe
                             return null;
                         });
 
-        RevisionOperationWorker<Broadcaster> worker =
-                new RevisionOperationWorker<>(queue, manager, store);
+        DefaultRevisionOperationWorker<Broadcaster> worker =
+                new DefaultRevisionOperationWorker<>(queue, manager, store);
         worker.start(executor);
 
         TimeUnit.MILLISECONDS.sleep(20);

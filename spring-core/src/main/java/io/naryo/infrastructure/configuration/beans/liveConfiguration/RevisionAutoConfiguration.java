@@ -12,7 +12,7 @@ import io.naryo.application.configuration.revision.registry.LiveRegistries;
 import io.naryo.application.configuration.revision.registry.LiveRegistry;
 import io.naryo.application.configuration.revision.store.InMemoryRevisionOperationStore;
 import io.naryo.application.configuration.revision.store.RevisionOperationStore;
-import io.naryo.application.configuration.revision.worker.RevisionOperationWorker;
+import io.naryo.application.configuration.revision.worker.DefaultRevisionOperationWorker;
 import io.naryo.domain.broadcaster.Broadcaster;
 import io.naryo.domain.common.http.HttpClient;
 import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;
@@ -174,40 +174,43 @@ public class RevisionAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(name = "nodeRevisionWorker")
-    public RevisionOperationWorker<Node> nodeRevisionWorker(
+    public DefaultRevisionOperationWorker<Node> nodeRevisionWorker(
             RevisionOperationQueue<Node> nodeRevisionQueue,
             ConfigurationRevisionManager<Node> nodeRevisionManager,
             RevisionOperationStore store) {
-        return new RevisionOperationWorker<>(nodeRevisionQueue, nodeRevisionManager, store);
+        return new DefaultRevisionOperationWorker<>(nodeRevisionQueue, nodeRevisionManager, store);
     }
 
     @Bean
     @ConditionalOnMissingBean(name = "filterRevisionWorker")
-    public RevisionOperationWorker<Filter> filterRevisionWorker(
+    public DefaultRevisionOperationWorker<Filter> filterRevisionWorker(
             RevisionOperationQueue<Filter> filterRevisionQueue,
             ConfigurationRevisionManager<Filter> filterRevisionManager,
             RevisionOperationStore store) {
-        return new RevisionOperationWorker<>(filterRevisionQueue, filterRevisionManager, store);
+        return new DefaultRevisionOperationWorker<>(
+                filterRevisionQueue, filterRevisionManager, store);
     }
 
     @Bean
     @ConditionalOnMissingBean(name = "broadcasterRevisionWorker")
-    public RevisionOperationWorker<Broadcaster> broadcasterRevisionWorker(
+    public DefaultRevisionOperationWorker<Broadcaster> broadcasterRevisionWorker(
             RevisionOperationQueue<Broadcaster> broadcasterRevisionQueue,
             ConfigurationRevisionManager<Broadcaster> broadcasterRevisionManager,
             RevisionOperationStore store) {
-        return new RevisionOperationWorker<>(
+        return new DefaultRevisionOperationWorker<>(
                 broadcasterRevisionQueue, broadcasterRevisionManager, store);
     }
 
     @Bean
     @ConditionalOnMissingBean(name = "broadcasterConfigurationRevisionWorker")
-    public RevisionOperationWorker<BroadcasterConfiguration> broadcasterConfigurationRevisionWorker(
-            RevisionOperationQueue<BroadcasterConfiguration> broadcasterConfigurationRevisionQueue,
-            ConfigurationRevisionManager<BroadcasterConfiguration>
-                    broadcasterConfigurationRevisionManager,
-            RevisionOperationStore store) {
-        return new RevisionOperationWorker<>(
+    public DefaultRevisionOperationWorker<BroadcasterConfiguration>
+            broadcasterConfigurationRevisionWorker(
+                    RevisionOperationQueue<BroadcasterConfiguration>
+                            broadcasterConfigurationRevisionQueue,
+                    ConfigurationRevisionManager<BroadcasterConfiguration>
+                            broadcasterConfigurationRevisionManager,
+                    RevisionOperationStore store) {
+        return new DefaultRevisionOperationWorker<>(
                 broadcasterConfigurationRevisionQueue,
                 broadcasterConfigurationRevisionManager,
                 store);
@@ -215,11 +218,11 @@ public class RevisionAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(name = "storeConfigRevisionWorker")
-    public RevisionOperationWorker<StoreConfiguration> storeConfigRevisionWorker(
+    public DefaultRevisionOperationWorker<StoreConfiguration> storeConfigRevisionWorker(
             RevisionOperationQueue<StoreConfiguration> storeConfigurationRevisionQueue,
             ConfigurationRevisionManager<StoreConfiguration> storeConfigurationRevisionManager,
             RevisionOperationStore store) {
-        return new RevisionOperationWorker<>(
+        return new DefaultRevisionOperationWorker<>(
                 storeConfigurationRevisionQueue, storeConfigurationRevisionManager, store);
     }
 }

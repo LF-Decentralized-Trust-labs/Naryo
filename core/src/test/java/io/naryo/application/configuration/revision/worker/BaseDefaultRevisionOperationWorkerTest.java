@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 import static org.mockito.Mockito.mock;
 
-public abstract class BaseRevisionOperationWorkerTest<T> {
+public abstract class BaseDefaultRevisionOperationWorkerTest<T> {
 
     protected ExecutorService executor;
     protected RevisionOperationQueue<T> queue;

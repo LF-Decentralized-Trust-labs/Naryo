@@ -14,8 +14,8 @@ import io.naryo.application.configuration.revision.operation.AddOperation;
 import io.naryo.application.configuration.revision.operation.RevisionOperation;
 import io.naryo.application.configuration.revision.queue.InMemoryWeightedRevisionOperationQueue;
 import io.naryo.application.configuration.revision.queue.RevisionOperationQueue;
-import io.naryo.application.configuration.revision.worker.BaseRevisionOperationWorkerTest;
-import io.naryo.application.configuration.revision.worker.RevisionOperationWorker;
+import io.naryo.application.configuration.revision.worker.BaseDefaultRevisionOperationWorkerTest;
+import io.naryo.application.configuration.revision.worker.DefaultRevisionOperationWorker;
 import io.naryo.domain.configuration.store.StoreConfiguration;
 import io.naryo.domain.configuration.store.StoreConfigurationBuilder;
 import io.naryo.domain.configuration.store.active.HttpStoreConfigurationBuilder;
@@ -27,8 +27,8 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class StoreRevisionOperationWorkerTest
-        extends BaseRevisionOperationWorkerTest<StoreConfiguration> {
+public class StoreDefaultRevisionOperationWorkerTest
+        extends BaseDefaultRevisionOperationWorkerTest<StoreConfiguration> {
 
     private StoreConfiguration newStoreConfiguration() {
         return this.newItem();
@@ -58,12 +58,12 @@ public class StoreRevisionOperationWorkerTest
                 new LiveView<>(applied, Map.of(cfg.getNodeId(), cfg), Map.of());
         when(m.liveView()).thenReturn(lv);
 
-        RevisionOperationWorker<StoreConfiguration> worker =
-                new RevisionOperationWorker<>(q, m, this.store);
+        DefaultRevisionOperationWorker<StoreConfiguration> worker =
+                new DefaultRevisionOperationWorker<>(q, m, this.store);
         worker.start(executor);
 
         TimeUnit.MILLISECONDS.sleep(100);
-        worker.stop();
+        worker.close();
 
         verify(this.store).running(opId.getValue());
         verify(this.store).succeeded(opId.getValue(), 1L, "hash1");
@@ -89,12 +89,12 @@ public class StoreRevisionOperationWorkerTest
         when(m.apply(op))
                 .thenThrow(new RevisionConflictException(cfg.getNodeId(), op.kind(), "conflict"));
 
-        RevisionOperationWorker<StoreConfiguration> worker =
-                new RevisionOperationWorker<>(q, m, this.store);
+        DefaultRevisionOperationWorker<StoreConfiguration> worker =
+                new DefaultRevisionOperationWorker<>(q, m, this.store);
         worker.start(executor);
 
         TimeUnit.MILLISECONDS.sleep(100);
-        worker.stop();
+        worker.close();
 
         verify(this.store).running(opId.getValue());
         verify(this.store)
@@ -122,12 +122,12 @@ public class StoreRevisionOperationWorkerTest
         when(m.apply(op)).thenReturn(applied);
         when(m.liveView()).thenReturn(null);
 
-        RevisionOperationWorker<StoreConfiguration> worker =
-                new RevisionOperationWorker<>(q, m, this.store);
+        DefaultRevisionOperationWorker<StoreConfiguration> worker =
+                new DefaultRevisionOperationWorker<>(q, m, this.store);
         worker.start(executor);
 
         TimeUnit.MILLISECONDS.sleep(100);
-        worker.stop();
+        worker.close();
 
         verify(this.store).running(opId.getValue());
         verify(this.store)

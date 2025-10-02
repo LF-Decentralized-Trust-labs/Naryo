@@ -14,8 +14,8 @@ import io.naryo.application.configuration.revision.operation.AddOperation;
 import io.naryo.application.configuration.revision.operation.RevisionOperation;
 import io.naryo.application.configuration.revision.queue.InMemoryWeightedRevisionOperationQueue.Task;
 import io.naryo.application.configuration.revision.queue.RevisionOperationQueue;
-import io.naryo.application.configuration.revision.worker.BaseRevisionOperationWorkerTest;
-import io.naryo.application.configuration.revision.worker.RevisionOperationWorker;
+import io.naryo.application.configuration.revision.worker.BaseDefaultRevisionOperationWorkerTest;
+import io.naryo.application.configuration.revision.worker.DefaultRevisionOperationWorker;
 import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;
 import io.naryo.domain.configuration.broadcaster.http.HttpBroadcasterConfiguration;
 import io.naryo.domain.configuration.broadcaster.http.HttpBroadcasterConfigurationBuilder;
@@ -23,8 +23,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.*;
 
-class BroadcasterConfigurationRevisionOperationWorkerTest
-        extends BaseRevisionOperationWorkerTest<BroadcasterConfiguration> {
+class BroadcasterConfigurationDefaultRevisionOperationWorkerTest
+        extends BaseDefaultRevisionOperationWorkerTest<BroadcasterConfiguration> {
 
     private HttpBroadcasterConfiguration newHttpCfg() {
         return new HttpBroadcasterConfigurationBuilder().withId(UUID.randomUUID()).build();
@@ -53,12 +53,12 @@ class BroadcasterConfigurationRevisionOperationWorkerTest
                 new LiveView<>(applied, Map.of(cfg.getId(), cfg), Map.of());
         when(m.liveView()).thenReturn(lv);
 
-        RevisionOperationWorker<BroadcasterConfiguration> worker =
-                new RevisionOperationWorker<>(q, m, this.store);
+        DefaultRevisionOperationWorker<BroadcasterConfiguration> worker =
+                new DefaultRevisionOperationWorker<>(q, m, this.store);
         worker.start(executor);
 
         TimeUnit.MILLISECONDS.sleep(100);
-        worker.stop();
+        worker.close();
 
         verify(this.store).running(opId.getValue());
         verify(this.store).succeeded(opId.getValue(), 1L, "hash1");
@@ -83,12 +83,12 @@ class BroadcasterConfigurationRevisionOperationWorkerTest
         when(m.apply(op))
                 .thenThrow(new RevisionConflictException(cfg.getId(), op.kind(), "conflict"));
 
-        RevisionOperationWorker<BroadcasterConfiguration> worker =
-                new RevisionOperationWorker<>(q, m, this.store);
+        DefaultRevisionOperationWorker<BroadcasterConfiguration> worker =
+                new DefaultRevisionOperationWorker<>(q, m, this.store);
         worker.start(executor);
 
         TimeUnit.MILLISECONDS.sleep(100);
-        worker.stop();
+        worker.close();
 
         verify(this.store).running(opId.getValue());
         verify(this.store)
@@ -115,12 +115,12 @@ class BroadcasterConfigurationRevisionOperationWorkerTest
         when(m.apply(op)).thenReturn(applied);
         when(m.liveView()).thenReturn(null);
 
-        RevisionOperationWorker<BroadcasterConfiguration> worker =
-                new RevisionOperationWorker<>(q, m, this.store);
+        DefaultRevisionOperationWorker<BroadcasterConfiguration> worker =
+                new DefaultRevisionOperationWorker<>(q, m, this.store);
         worker.start(executor);
 
         TimeUnit.MILLISECONDS.sleep(100);
-        worker.stop();
+        worker.close();
 
         verify(this.store).running(opId.getValue());
         verify(this.store)
@@ -139,8 +139,8 @@ class BroadcasterConfigurationRevisionOperationWorkerTest
                             return null;
                         });
 
-        RevisionOperationWorker<BroadcasterConfiguration> worker =
-                new RevisionOperationWorker<>(queue, manager, store);
+        DefaultRevisionOperationWorker<BroadcasterConfiguration> worker =
+                new DefaultRevisionOperationWorker<>(queue, manager, store);
         worker.start(executor);
 
         TimeUnit.MILLISECONDS.sleep(20);
