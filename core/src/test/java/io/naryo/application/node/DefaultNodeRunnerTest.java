@@ -5,6 +5,8 @@ import java.time.Duration;
 import java.util.UUID;
 
 import io.naryo.application.filter.Synchronizer;
+import io.naryo.application.node.dispatch.Dispatcher;
+import io.naryo.application.node.interactor.Interactor;
 import io.naryo.application.node.subscription.Subscriber;
 import io.naryo.domain.common.connection.endpoint.ConnectionEndpoint;
 import io.naryo.domain.node.Node;
@@ -22,6 +24,7 @@ import io.reactivex.disposables.Disposable;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 class DefaultNodeRunnerTest {
 
@@ -36,8 +39,10 @@ class DefaultNodeRunnerTest {
                         new MockNodeConnection());
         Subscriber subscriber = new MockSubscriber();
         Synchronizer synchronizer = new MockSynchronizer();
+        Dispatcher dispatcher = mock(Dispatcher.class);
 
-        DefaultNodeRunner runner = new DefaultNodeRunner(node, subscriber, synchronizer);
+        DefaultNodeRunner runner =
+                new DefaultNodeRunner(node, subscriber, synchronizer, dispatcher);
 
         CompositeDisposable disposable = runner.run();
 
@@ -48,6 +53,11 @@ class DefaultNodeRunnerTest {
         @Override
         public Disposable subscribe() {
             return new CompositeDisposable();
+        }
+
+        @Override
+        public Interactor getInteractor() {
+            return null;
         }
     }
 

@@ -4,14 +4,9 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Supplier;
 
-import io.reactivex.disposables.CompositeDisposable;
-
-import static io.vertx.core.spi.resolver.ResolverProvider.factory;
-
 public final class DefaultNodeLifecycle implements NodeLifecycle {
 
-    Map<UUID, CompositeDisposable> runningProcessesByNodeId;
-    Map<UUID, NodeRunner> nodeRunnersByNodeId;
+    Map<UUID, NodeRunner> nodeRunners;
 
     @Override
     public void launch(Collection<NodeRunner> runners) {
@@ -23,24 +18,20 @@ public final class DefaultNodeLifecycle implements NodeLifecycle {
     @Override
     public void launch(NodeRunner runner) {
         UUID nodeId = runner.getNode().getId();
-        if (runningProcessesByNodeId.containsKey(nodeId)) {
+        if (isRunning(nodeId)) {
             throw new IllegalArgumentException("Node with id " + nodeId + "is already running");
         }
 
-        nodeRunnersByNodeId.put(runner.getNode().getId(), runner);
         runNode(runner);
     }
 
     @Override
     public void stop(UUID nodeId) {
-        CompositeDisposable runningProcess = runningProcessesByNodeId.get(nodeId);
-
-        if (runningProcess == null) {
+        if (!isRunning(nodeId)) {
             throw new IllegalArgumentException("Node with id " + nodeId + "is not running");
         }
 
-        runningProcess.dispose();
-        runningProcessesByNodeId.remove(nodeId);
+        nodeRunners.get(nodeId).stop();
     }
 
     @Override
@@ -51,17 +42,26 @@ public final class DefaultNodeLifecycle implements NodeLifecycle {
 
     @Override
     public boolean isRunning(UUID nodeId) {
-        return runningProcessesByNodeId.containsKey(nodeId);
+        return nodeRunners.containsKey(nodeId) && nodeRunners.get(nodeId).isRunning();
     }
 
     @Override
     public int runningCount() {
-        return runningProcessesByNodeId.size();
+        return Math.toIntExact(
+                nodeRunners.entrySet().stream()
+                        .filter(nrEntry -> nrEntry.getValue().isRunning())
+                        .count());
+    }
+
+    @Override
+    public NodeRunner getRunner(UUID nodeId) {
+        return nodeRunners.get(nodeId);
     }
 
     private void runNode(NodeRunner nodeRunner) {
         try {
-            runningProcessesByNodeId.put(nodeRunner.getNode().getId(), nodeRunner.run());
+            nodeRunner.run();
+            nodeRunners.put(nodeRunner.getNode().getId(), nodeRunner);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

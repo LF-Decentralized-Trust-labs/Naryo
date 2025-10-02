@@ -16,4 +16,6 @@ public interface NodeLifecycle {
     boolean isRunning(UUID nodeId);
 
     int runningCount();
+
+    NodeRunner getRunner(UUID nodeId);
 }
