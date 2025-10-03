@@ -6,7 +6,12 @@ import java.util.UUID;
 import io.naryo.application.configuration.source.model.node.connection.NodeConnectionDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.endpoint.ConnectionEndpointDescriptor;
 import io.naryo.application.configuration.source.model.node.connection.retry.NodeConnectionRetryDescriptor;
+import io.naryo.domain.node.connection.NodeConnection;
+import io.naryo.domain.node.connection.http.HttpNodeConnection;
+import io.naryo.domain.node.connection.ws.WsNodeConnection;
 import io.naryo.infrastructure.configuration.persistence.entity.common.ConnectionEndpointEntity;
+import io.naryo.infrastructure.configuration.persistence.entity.node.connection.http.HttpConnectionEntity;
+import io.naryo.infrastructure.configuration.persistence.entity.node.connection.ws.WsConnectionEntity;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
@@ -60,5 +65,29 @@ public abstract class ConnectionEntity implements NodeConnectionDescriptor {
 
     public UUID getId() {
         return this.id;
+    }
+
+    public static ConnectionEntity fromDomain(NodeConnection source) {
+        return switch (source) {
+            case WsNodeConnection ws ->
+                    new WsConnectionEntity(
+                            new NodeConnectionRetryEntity(
+                                    ws.getRetryConfiguration().times(),
+                                    ws.getRetryConfiguration().backoff()),
+                            new ConnectionEndpointEntity(ws.getEndpoint().getUrl()));
+            case HttpNodeConnection http ->
+                    new HttpConnectionEntity(
+                            new NodeConnectionRetryEntity(
+                                    http.getRetryConfiguration().times(),
+                                    http.getRetryConfiguration().backoff()),
+                            new ConnectionEndpointEntity(http.getEndpoint().getUrl()),
+                            http.getMaxIdleConnections().value(),
+                            http.getKeepAliveDuration().value(),
+                            http.getConnectionTimeout().value(),
+                            http.getReadTimeout().value());
+            default ->
+                    throw new IllegalArgumentException(
+                            "Unsupported connection type: " + source.getClass().getSimpleName());
+        };
     }
 }

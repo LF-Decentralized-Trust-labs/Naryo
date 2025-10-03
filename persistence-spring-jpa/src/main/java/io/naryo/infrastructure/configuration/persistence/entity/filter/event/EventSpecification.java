@@ -3,6 +3,7 @@ package io.naryo.infrastructure.configuration.persistence.entity.filter.event;
 import java.util.Optional;
 
 import io.naryo.application.configuration.source.model.filter.event.EventSpecificationDescriptor;
+import io.naryo.domain.filter.event.EventFilterSpecification;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
@@ -32,5 +33,10 @@ public class EventSpecification implements EventSpecificationDescriptor {
     @Override
     public Optional<Integer> getCorrelationId() {
         return Optional.ofNullable(correlationId);
+    }
+
+    public static EventSpecification fromDomain(EventFilterSpecification source) {
+        return new EventSpecification(
+                source.getEventSignature(), source.correlationId().position());
     }
 }

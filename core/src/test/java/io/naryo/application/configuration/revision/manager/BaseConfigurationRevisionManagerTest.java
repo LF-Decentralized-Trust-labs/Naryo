@@ -1,6 +1,5 @@
 package io.naryo.application.configuration.revision.manager;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
@@ -101,14 +100,11 @@ public abstract class BaseConfigurationRevisionManagerTest<
         assertTrue(after.domainItems().stream().anyMatch(i -> idOf(i).equals(idOf(item))));
         assertEquals(itemHash, manager.liveView().itemFingerprintById().get(idFn.apply(item)));
 
-        ArgumentCaptor<Collection<T>> beforeCur = ArgumentCaptor.forClass(Collection.class);
-        ArgumentCaptor<Collection<T>> beforeNew = ArgumentCaptor.forClass(Collection.class);
-        verify(hookSpy, times(1)).onBeforeApply(beforeCur.capture(), beforeNew.capture());
-        assertTrue(beforeCur.getValue().isEmpty());
-        assertEquals(1, beforeNew.getValue().size());
+        ArgumentCaptor<DiffResult<T>> afterDiff = ArgumentCaptor.forClass(DiffResult.class);
+        verify(hookSpy, times(1)).onBeforeApply(afterDiff.capture());
 
         ArgumentCaptor<Revision<T>> afterApplied = ArgumentCaptor.forClass(Revision.class);
-        ArgumentCaptor<DiffResult<T>> afterDiff = ArgumentCaptor.forClass(DiffResult.class);
+
         verify(hookSpy, times(1)).onAfterApply(afterApplied.capture(), afterDiff.capture());
         assertEquals(after, afterApplied.getValue());
         assertNotNull(afterDiff.getValue());
@@ -138,7 +134,7 @@ public abstract class BaseConfigurationRevisionManagerTest<
                 fingerprinter.itemHash(updated),
                 manager.liveView().itemFingerprintById().get(idFn.apply(updated)));
 
-        verify(hookSpy, atLeast(2)).onBeforeApply(any(), any());
+        verify(hookSpy, atLeast(2)).onBeforeApply(any());
         verify(hookSpy, atLeast(2)).onAfterApply(any(), any());
         verify(liveRegistry, times(3)).refresh(any());
     }
@@ -157,7 +153,7 @@ public abstract class BaseConfigurationRevisionManagerTest<
                 () -> manager.apply(new UpdateOperation<>(idFn.apply(base), wrongPrev, updated)));
 
         verify(liveRegistry, times(2)).refresh(any());
-        verify(hookSpy, times(1)).onBeforeApply(any(), any());
+        verify(hookSpy, times(1)).onBeforeApply(any());
         verify(hookSpy, times(1)).onAfterApply(any(), any());
     }
 
@@ -173,7 +169,7 @@ public abstract class BaseConfigurationRevisionManagerTest<
         assertEquals(2L, after.version());
         assertTrue(after.domainItems().stream().noneMatch(i -> idOf(i).equals(idOf(base))));
         verify(liveRegistry, times(3)).refresh(any());
-        verify(hookSpy, atLeast(2)).onBeforeApply(any(), any());
+        verify(hookSpy, atLeast(2)).onBeforeApply(any());
         verify(hookSpy, atLeast(2)).onAfterApply(any(), any());
     }
 
@@ -189,12 +185,12 @@ public abstract class BaseConfigurationRevisionManagerTest<
                 () -> manager.apply(new RemoveOperation<>(idFn.apply(base), wrongPrev)));
 
         verify(liveRegistry, times(2)).refresh(any());
-        verify(hookSpy, times(1)).onBeforeApply(any(), any());
+        verify(hookSpy, times(1)).onBeforeApply(any());
         verify(hookSpy, times(1)).onAfterApply(any(), any());
     }
 
     @Test
-    void apply_addWithSameIdButDifferentContent_throwRevisionConflict() throws Exception {
+    protected void apply_addWithSameIdButDifferentContent_throwRevisionConflict() throws Exception {
         manager.initialize();
         T base = newItem();
         manager.apply(new AddOperation<>(base));
@@ -206,7 +202,7 @@ public abstract class BaseConfigurationRevisionManagerTest<
 
         verify(liveRegistry, times(2)).refresh(any());
 
-        verify(hookSpy, times(1)).onBeforeApply(any(), any());
+        verify(hookSpy, times(1)).onBeforeApply(any());
         verify(hookSpy, times(1)).onAfterApply(any(), any());
     }
 }

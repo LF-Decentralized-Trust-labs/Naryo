@@ -1,5 +1,6 @@
 package io.naryo.infrastructure.configuration.persistence.document.broadcaster.configuration;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -8,6 +9,7 @@ import com.mongodb.lang.Nullable;
 import io.naryo.application.configuration.source.model.broadcaster.configuration.BroadcasterCacheConfigurationDescriptor;
 import io.naryo.application.configuration.source.model.broadcaster.configuration.BroadcasterConfigurationDescriptor;
 import io.naryo.domain.broadcaster.BroadcasterType;
+import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -55,5 +57,13 @@ public final class BroadcasterConfigurationDocument implements BroadcasterConfig
     @Override
     public void setAdditionalProperties(Map<String, Object> additionalProperties) {
         this.additionalProperties = additionalProperties;
+    }
+
+    public static BroadcasterConfigurationDocument fromDomain(BroadcasterConfiguration source) {
+        return new BroadcasterConfigurationDocument(
+                source.getId().toString(),
+                source.getType().getName(),
+                BroadcasterCacheConfiguration.fromDomain(source.getCache()),
+                new HashMap<>());
     }
 }

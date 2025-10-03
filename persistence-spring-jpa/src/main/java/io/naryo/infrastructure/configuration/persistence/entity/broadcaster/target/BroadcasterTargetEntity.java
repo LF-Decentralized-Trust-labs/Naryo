@@ -3,8 +3,12 @@ package io.naryo.infrastructure.configuration.persistence.entity.broadcaster.tar
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-import io.naryo.application.configuration.source.model.broadcaster.target.BroadcasterTargetDescriptor;
+import io.naryo.application.configuration.source.model.broadcaster.target.*;
+import io.naryo.domain.broadcaster.BroadcasterTarget;
+import io.naryo.domain.broadcaster.target.*;
+import io.naryo.domain.common.Destination;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,5 +41,31 @@ public abstract class BroadcasterTargetEntity implements BroadcasterTargetDescri
     @Override
     public void setDestinations(Set<String> destinations) {
         this.destinations = new HashSet<>(destinations);
+    }
+
+    public static BroadcasterTargetEntity fromDomain(BroadcasterTarget domain) {
+        Set<String> destinations =
+                domain.getDestinations().stream()
+                        .map(Destination::value)
+                        .collect(Collectors.toSet());
+        return switch (domain) {
+            case BlockBroadcasterTarget blockTarget ->
+                    new BlockBroadcasterTargetEntity(destinations);
+
+            case TransactionBroadcasterTarget transactionTarget ->
+                    new TransactionBroadcasterTargetEntity(destinations);
+
+            case ContractEventBroadcasterTarget contractEventTarget ->
+                    new ContractEventBroadcasterTargetEntity(destinations);
+
+            case FilterEventBroadcasterTarget filterTarget ->
+                    new FilterBroadcasterTargetEntity(destinations, filterTarget.getFilterId());
+
+            case AllBroadcasterTarget allTarget -> new AllBroadcasterTargetEntity(destinations);
+
+            default ->
+                    throw new IllegalArgumentException(
+                            "Unsupported target type: " + domain.getClass().getSimpleName());
+        };
     }
 }

@@ -3,6 +3,9 @@ package io.naryo.infrastructure.configuration.persistence.entity.filter.event.sy
 import java.util.UUID;
 
 import io.naryo.application.configuration.source.model.filter.event.sync.FilterSyncDescriptor;
+import io.naryo.domain.filter.event.FilterSyncState;
+import io.naryo.domain.filter.event.sync.NoFilterSyncState;
+import io.naryo.domain.filter.event.sync.block.BlockActiveFilterSyncState;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,4 +19,15 @@ import lombok.NoArgsConstructor;
 public abstract class FilterSyncEntity implements FilterSyncDescriptor {
 
     private @Id @GeneratedValue(strategy = GenerationType.UUID) @Column(name = "id") UUID id;
+
+    public static FilterSyncEntity fromDomain(FilterSyncState source) {
+        return switch (source) {
+            case BlockActiveFilterSyncState block ->
+                    new BlockFilterSyncEntity(block.getInitialBlock().value());
+            case NoFilterSyncState ignore -> null;
+            default ->
+                    throw new IllegalStateException(
+                            "Unsupported sync state: " + source.getClass().getSimpleName());
+        };
+    }
 }

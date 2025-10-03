@@ -13,9 +13,15 @@ import io.naryo.application.configuration.source.model.node.interaction.Interact
 import io.naryo.application.configuration.source.model.node.subscription.PollBlockSubscriptionDescriptor;
 import io.naryo.application.configuration.source.model.node.subscription.PubsubBlockSubscriptionDescriptor;
 import io.naryo.application.configuration.source.model.node.subscription.SubscriptionDescriptor;
+import io.naryo.domain.node.Node;
+import io.naryo.domain.node.ethereum.EthereumNode;
+import io.naryo.domain.node.ethereum.priv.PrivateEthereumNode;
 import io.naryo.infrastructure.configuration.persistence.entity.node.connection.ConnectionEntity;
 import io.naryo.infrastructure.configuration.persistence.entity.node.connection.http.HttpConnectionEntity;
 import io.naryo.infrastructure.configuration.persistence.entity.node.connection.ws.WsConnectionEntity;
+import io.naryo.infrastructure.configuration.persistence.entity.node.eth.PrivateEthereumNodeEntity;
+import io.naryo.infrastructure.configuration.persistence.entity.node.eth.PublicEthereumNodeEntity;
+import io.naryo.infrastructure.configuration.persistence.entity.node.hedera.HederaNodeEntity;
 import io.naryo.infrastructure.configuration.persistence.entity.node.interaction.InteractionEntity;
 import io.naryo.infrastructure.configuration.persistence.entity.node.interaction.block.EthereumRpcBlockInteractionEntity;
 import io.naryo.infrastructure.configuration.persistence.entity.node.interaction.block.HederaMirrorNodeBlockInteractionEntity;
@@ -158,5 +164,55 @@ public abstract class NodeEntity implements NodeDescriptor {
                             "Unsupported connection type: "
                                     + connection.getClass().getSimpleName());
         }
+    }
+
+    public static NodeEntity fromDomain(Node source) {
+        NodeEntity nodeEntity = null;
+
+        String name = source.getName().value();
+        SubscriptionEntity subscriptionEntity =
+                SubscriptionEntity.fromDomain(source.getSubscriptionConfiguration());
+        InteractionEntity interactionEntity =
+                InteractionEntity.fromDomain(source.getInteractionConfiguration());
+        ConnectionEntity connectionEntity = ConnectionEntity.fromDomain(source.getConnection());
+
+        switch (source.getType()) {
+            case HEDERA ->
+                    nodeEntity =
+                            new HederaNodeEntity(
+                                    source.getId(),
+                                    name,
+                                    subscriptionEntity,
+                                    interactionEntity,
+                                    connectionEntity);
+            case ETHEREUM -> {
+                var ethSource = (EthereumNode) source;
+                switch (ethSource.getVisibility()) {
+                    case PRIVATE -> {
+                        var privateEthSource = (PrivateEthereumNode) ethSource;
+                        nodeEntity =
+                                new PrivateEthereumNodeEntity(
+                                        source.getId(),
+                                        name,
+                                        subscriptionEntity,
+                                        interactionEntity,
+                                        connectionEntity,
+                                        privateEthSource.getGroupId().value(),
+                                        privateEthSource.getPrecompiledAddress().value());
+                    }
+                    case PUBLIC ->
+                            nodeEntity =
+                                    new PublicEthereumNodeEntity(
+                                            source.getId(),
+                                            name,
+                                            subscriptionEntity,
+                                            interactionEntity,
+                                            connectionEntity);
+                    default -> throw new IllegalArgumentException("Invalid Ethereum visibility");
+                }
+            }
+        }
+
+        return nodeEntity;
     }
 }

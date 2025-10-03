@@ -1,8 +1,14 @@
 package io.naryo.infrastructure.configuration.persistence.entity.store;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import io.naryo.application.configuration.source.model.store.StoreConfigurationDescriptor;
+import io.naryo.domain.configuration.store.StoreConfiguration;
+import io.naryo.domain.configuration.store.active.ActiveStoreConfiguration;
+import io.naryo.domain.configuration.store.inactive.InactiveStoreConfiguration;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,5 +30,29 @@ public abstract class StoreConfigurationEntity implements StoreConfigurationDesc
     @Override
     public UUID getNodeId() {
         return this.nodeId;
+    }
+
+    public static StoreConfigurationEntity fromDomain(StoreConfiguration source) {
+        return switch (source) {
+            case ActiveStoreConfiguration active ->
+                    new ActiveStoreConfigurationEntity(
+                            active.getNodeId(),
+                            active.getType().getName(),
+                            StoreFeatureConfigurationEntity.flatFeaturesMap(
+                                    active.getFeatures().entrySet().stream()
+                                            .collect(
+                                                    Collectors.toMap(
+                                                            Map.Entry::getKey,
+                                                            e ->
+                                                                    StoreFeatureConfigurationEntity
+                                                                            .fromDomain(
+                                                                                    e
+                                                                                            .getValue())))),
+                            new HashMap<>());
+            case InactiveStoreConfiguration inactive -> new InactiveStoreConfigurationEntity();
+            default ->
+                    throw new IllegalArgumentException(
+                            "Unsupported store type: " + source.getClass());
+        };
     }
 }

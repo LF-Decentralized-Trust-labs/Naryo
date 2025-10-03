@@ -90,7 +90,7 @@ public abstract class DefaultConfigurationRevisionManager<T>
 
         for (var h : hooks) {
             try {
-                h.onBeforeApply(current, newDomain);
+                h.onBeforeApply(diff);
             } catch (Exception e) {
                 throw new RuntimeException("onBeforeApply hook error", e);
             }
