@@ -1,5 +1,7 @@
 package io.naryo.application.configuration.revision.hook;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import io.naryo.application.broadcaster.configuration.revision.BroadcasterConfigurationConfigurationRevisionManager;
 import io.naryo.application.broadcaster.revision.BroadcasterConfigurationRevisionManager;
 import io.naryo.application.filter.revision.FilterConfigurationRevisionManager;
@@ -11,7 +13,7 @@ import io.naryo.domain.configuration.store.StoreConfiguration;
 import io.naryo.domain.filter.Filter;
 import io.naryo.domain.node.Node;
 
-public class DefaultRevisionHookBinder implements RevisionHookBinder {
+public final class DefaultRevisionHookBinder implements RevisionHookBinder {
 
     private final NodeConfigurationRevisionManager nodeConfigurationRevisionManager;
     private final BroadcasterConfigurationRevisionManager broadcasterConfigurationRevisionManager;
@@ -19,6 +21,9 @@ public class DefaultRevisionHookBinder implements RevisionHookBinder {
             broadcasterConfigurationConfigurationRevisionManager;
     private final StoreConfigurationRevisionManager storeConfigurationRevisionManager;
     private final FilterConfigurationRevisionManager filterConfigurationRevisionManager;
+    private final AtomicBoolean defaultsBound = new AtomicBoolean(false);
+    private final DefaultFilterRuntimeHook defaultFilterRuntimeHook;
+    private final DefaultNodeRuntimeHook defaultNodeRuntimeHook;
 
     public DefaultRevisionHookBinder(
             NodeConfigurationRevisionManager nodeConfigurationRevisionManager,
@@ -26,18 +31,29 @@ public class DefaultRevisionHookBinder implements RevisionHookBinder {
             BroadcasterConfigurationConfigurationRevisionManager
                     broadcasterConfigurationConfigurationRevisionManager,
             StoreConfigurationRevisionManager storeConfigurationRevisionManager,
-            FilterConfigurationRevisionManager filterConfigurationRevisionManager) {
+            FilterConfigurationRevisionManager filterConfigurationRevisionManager,
+            DefaultFilterRuntimeHook defaultFilterRuntimeHook,
+            DefaultNodeRuntimeHook defaultNodeRuntimeHook) {
         this.nodeConfigurationRevisionManager = nodeConfigurationRevisionManager;
         this.broadcasterConfigurationRevisionManager = broadcasterConfigurationRevisionManager;
         this.broadcasterConfigurationConfigurationRevisionManager =
                 broadcasterConfigurationConfigurationRevisionManager;
         this.storeConfigurationRevisionManager = storeConfigurationRevisionManager;
         this.filterConfigurationRevisionManager = filterConfigurationRevisionManager;
+        this.defaultFilterRuntimeHook = defaultFilterRuntimeHook;
+        this.defaultNodeRuntimeHook = defaultNodeRuntimeHook;
     }
 
     @Override
     public void bindDefaults() {
-        // Todo: Bind default revision hooks
+        if (defaultsBound.get()) {
+            return;
+        }
+
+        filterConfigurationRevisionManager.registerHook(defaultFilterRuntimeHook);
+        nodeConfigurationRevisionManager.registerHook(defaultNodeRuntimeHook);
+
+        defaultsBound.set(true);
     }
 
     @Override

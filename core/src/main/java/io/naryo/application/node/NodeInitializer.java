@@ -41,7 +41,7 @@ import io.naryo.domain.node.Node;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class NodeInitializer {
+public final class NodeInitializer {
 
     private final ConfigurationRevisionManagers configurationRevisionManagers;
     private final ResilienceRegistry resilienceRegistry;
@@ -78,7 +78,7 @@ public class NodeInitializer {
                 .map(
                         node -> {
                             try {
-                                return createNodeRunner(node);
+                                return initializeNode(node);
                             } catch (Exception e) {
                                 log.info(
                                         "Failed to initialize node {}: {}",
@@ -91,7 +91,7 @@ public class NodeInitializer {
                 .collect(Collectors.toSet());
     }
 
-    private NodeRunner createNodeRunner(Node node) {
+    public NodeRunner initializeNode(Node node) {
         Collection<Filter> allFilters = getDomainItems(configurationRevisionManagers.filters());
 
         var interactor = interactorFactory.create(node);
@@ -116,7 +116,7 @@ public class NodeInitializer {
                 getNodeSynchronizer(
                         node, interactor, nodeStoreConfiguration, nodeFilters, contractEventHelper);
 
-        return new DefaultNodeRunner(node, subscriber, synchronizer);
+        return new DefaultNodeRunner(node, subscriber, synchronizer, dispatcher);
     }
 
     private void addSharedTriggers(Dispatcher dispatcher, Collection<Filter> filters) {

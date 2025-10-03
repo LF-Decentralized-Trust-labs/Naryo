@@ -15,12 +15,13 @@ import io.naryo.application.node.subscription.Subscriber;
 import io.naryo.domain.event.block.BlockEvent;
 import io.naryo.domain.node.Node;
 import io.reactivex.disposables.Disposable;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public abstract class BlockSubscriber implements Subscriber {
 
-    protected final BlockInteractor interactor;
+    protected final @Getter BlockInteractor interactor;
     protected final Dispatcher dispatcher;
     protected final Node node;
     protected final Mapper<Block, BlockEvent> blockMapper;

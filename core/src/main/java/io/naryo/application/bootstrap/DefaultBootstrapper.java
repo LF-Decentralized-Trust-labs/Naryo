@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import io.naryo.application.configuration.revision.hook.RevisionHookBinder;
 import io.naryo.application.configuration.revision.manager.ConfigurationRevisionManagers;
 import io.naryo.application.node.NodeInitializer;
 import io.naryo.application.node.NodeLifecycle;
@@ -14,16 +15,19 @@ public final class DefaultBootstrapper implements Bootstrapper {
     private final ConfigurationRevisionManagers managers;
     private final NodeInitializer nodeInitializer;
     private final NodeLifecycle nodeLifecycle;
+    private final RevisionHookBinder hookBinder;
     private final AtomicBoolean started = new AtomicBoolean(false);
 
     public DefaultBootstrapper(
             ConfigurationRevisionManagers managers,
             NodeInitializer nodeInitializer,
-            NodeLifecycle nodeLifecycle) {
+            NodeLifecycle nodeLifecycle,
+            RevisionHookBinder hookBinder) {
         this.managers = Objects.requireNonNull(managers, "managers cannot be null");
         this.nodeInitializer =
                 Objects.requireNonNull(nodeInitializer, "nodeInitializer cannot be null");
         this.nodeLifecycle = Objects.requireNonNull(nodeLifecycle, "nodeLifecycle cannot be null");
+        this.hookBinder = Objects.requireNonNull(hookBinder, "hookBinder cannot be null");
     }
 
     @Override
@@ -34,8 +38,7 @@ public final class DefaultBootstrapper implements Bootstrapper {
 
         managers.initialize();
 
-        // TODO: Bind default hooks via an injected hook binder to support runtime config changes
-        // hookBinder.bindDefaults();
+        hookBinder.bindDefaults();
 
         Collection<NodeRunner> nodeRunners = nodeInitializer.initialize();
 
