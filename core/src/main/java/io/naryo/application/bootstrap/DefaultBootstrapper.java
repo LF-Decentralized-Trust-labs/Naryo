@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.naryo.application.configuration.revision.hook.RevisionHookBinder;
 import io.naryo.application.configuration.revision.manager.ConfigurationRevisionManagers;
+import io.naryo.application.configuration.revision.worker.RevisionOperationWorkers;
 import io.naryo.application.node.NodeInitializer;
 import io.naryo.application.node.NodeLifecycle;
 import io.naryo.application.node.NodeRunner;
