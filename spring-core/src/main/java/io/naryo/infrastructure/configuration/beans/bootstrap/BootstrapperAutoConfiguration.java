@@ -4,6 +4,7 @@ import io.naryo.application.bootstrap.Bootstrapper;
 import io.naryo.application.bootstrap.DefaultBootstrapper;
 import io.naryo.application.configuration.revision.hook.RevisionHookBinder;
 import io.naryo.application.configuration.revision.manager.ConfigurationRevisionManagers;
+import io.naryo.application.configuration.revision.worker.RevisionOperationWorkers;
 import io.naryo.application.node.NodeInitializer;
 import io.naryo.application.node.NodeLifecycle;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -19,7 +20,9 @@ public class BootstrapperAutoConfiguration {
             ConfigurationRevisionManagers managers,
             NodeInitializer nodeInitializer,
             NodeLifecycle nodeLifecycle,
+            RevisionOperationWorkers revisionOperationWorkers,
             RevisionHookBinder hookBinder) {
-        return new DefaultBootstrapper(managers, nodeInitializer, nodeLifecycle, hookBinder);
+        return new DefaultBootstrapper(
+                managers, nodeInitializer, nodeLifecycle, revisionOperationWorkers, hookBinder);
     }
 }
