@@ -6,7 +6,6 @@ import java.util.stream.StreamSupport;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,7 +50,8 @@ public final class FilterPropertiesDeserializer extends EnvironmentDeserializer<
                         safeTreeToValue(root, "scope", codec, EventFilterScope.class);
                 EventSpecification specification =
                         safeTreeToValue(root, "specification", codec, EventSpecification.class);
-                Set<ContractEventStatus> statuses = getStatuses(root, codec);
+                Set<ContractEventStatus> statuses =
+                        getStatuses(root, codec, ContractEventStatus.class);
                 FilterSyncProperties sync =
                         safeTreeToValue(root, "sync", codec, FilterSyncProperties.class);
                 EventFilterVisibilityProperties visibility =
@@ -85,7 +85,7 @@ public final class FilterPropertiesDeserializer extends EnvironmentDeserializer<
                 IdentifierType identifierType =
                         safeTreeToValue(root, "identifierType", codec, IdentifierType.class);
                 String value = getTextOrNull(root.get("value"));
-                Set<TransactionStatus> statuses = getStatuses(root, codec);
+                Set<TransactionStatus> statuses = getStatuses(root, codec, TransactionStatus.class);
                 yield new TransactionFilterProperties(
                         getUuidOrNull(id),
                         name,
@@ -97,31 +97,29 @@ public final class FilterPropertiesDeserializer extends EnvironmentDeserializer<
         };
     }
 
-    private <T> Set<T> getStatuses(JsonNode root, ObjectCodec codec) {
+    private <E extends Enum<E>> Set<E> getStatuses(
+            JsonNode root, ObjectCodec codec, Class<E> enumType) {
         ObjectMapper mapper = (ObjectMapper) codec;
-        JsonNode statusesNode = root.get("statuses");
-        ArrayNode arrayNode;
-
-        if (statusesNode == null || statusesNode.isNull()) {
-            arrayNode = mapper.createArrayNode(); // empty list
-        } else if (statusesNode.isArray()) {
-            arrayNode = (ArrayNode) statusesNode;
-        } else {
-            ObjectNode obj = (ObjectNode) statusesNode;
-            List<String> idxs =
-                    StreamSupport.stream(
-                                    Spliterators.spliteratorUnknownSize(
-                                            obj.fieldNames(), Spliterator.ORDERED),
-                                    false)
-                            .sorted(Comparator.comparingInt(Integer::parseInt))
-                            .toList();
-
-            arrayNode = mapper.createArrayNode();
-            for (String idx : idxs) {
-                arrayNode.add(obj.get(idx));
+        ArrayNode arr = toArrayNode(mapper, root.get("statuses"));
+        Set<E> out = new LinkedHashSet<>();
+        for (JsonNode n : arr) {
+            if (!n.isNull()) {
+                out.add(Enum.valueOf(enumType, n.asText().trim().toUpperCase(Locale.ROOT)));
             }
         }
+        return out;
+    }
 
-        return mapper.convertValue(arrayNode, new TypeReference<>() {});
+    private ArrayNode toArrayNode(ObjectMapper mapper, JsonNode node) {
+        if (node == null || node.isNull()) return mapper.createArrayNode();
+        if (node.isArray()) return (ArrayNode) node;
+        ObjectNode obj = (ObjectNode) node;
+        ArrayNode arr = mapper.createArrayNode();
+        StreamSupport.stream(
+                        Spliterators.spliteratorUnknownSize(obj.fieldNames(), Spliterator.ORDERED),
+                        false)
+                .sorted(Comparator.comparingInt(Integer::parseInt))
+                .forEach(idx -> arr.add(obj.get(idx)));
+        return arr;
     }
 }

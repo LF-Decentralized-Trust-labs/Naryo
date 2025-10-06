@@ -1,9 +1,18 @@
 package io.naryo.infrastructure.configuration.beans.liveConfiguration;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import io.naryo.application.configuration.revision.manager.ConfigurationRevisionManager;
+import io.naryo.application.configuration.revision.queue.InMemoryWeightedRevisionOperationQueue;
+import io.naryo.application.configuration.revision.queue.RevisionOperationQueue;
 import io.naryo.application.configuration.revision.registry.DefaultLiveRegistries;
 import io.naryo.application.configuration.revision.registry.DefaultLiveRegistry;
 import io.naryo.application.configuration.revision.registry.LiveRegistries;
 import io.naryo.application.configuration.revision.registry.LiveRegistry;
+import io.naryo.application.configuration.revision.store.InMemoryRevisionOperationStore;
+import io.naryo.application.configuration.revision.store.RevisionOperationStore;
+import io.naryo.application.configuration.revision.worker.DefaultRevisionOperationWorker;
 import io.naryo.domain.broadcaster.Broadcaster;
 import io.naryo.domain.common.http.HttpClient;
 import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;
@@ -16,6 +25,12 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RevisionAutoConfiguration {
+
+    private static final int REVISION_OPERATION_QUEUE_HIGH_CAPACITY = 1024;
+    private static final int REVISION_OPERATION_QUEUE_LOW_CAPACITY = 1024;
+    private static final int REVISION_OPERATION_QUEUE_HIGH_PER_LOW_POLICY = 5;
+    private static final long REVISION_OPERATION_QUEUE_POLL_TIMEOUT_MS = 200L;
+
     @Bean
     @ConditionalOnMissingBean(name = "broadcasterConfigurationsLiveRegistry")
     public LiveRegistry<BroadcasterConfiguration> broadcasterConfigurationsLiveRegistry() {
@@ -68,5 +83,146 @@ public class RevisionAutoConfiguration {
                 nodesLiveRegistry,
                 storeConfigurationsLiveRegistry,
                 httpClientLiveRegistry);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(RevisionOperationStore.class)
+    public RevisionOperationStore revisionOperationStore() {
+        return new InMemoryRevisionOperationStore();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "revisionWorkersExecutor")
+    public ExecutorService revisionWorkersExecutor() {
+        return Executors.newCachedThreadPool(
+                r -> {
+                    Thread t = new Thread(r, "revision-worker");
+                    t.setDaemon(true);
+                    return t;
+                });
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "nodeRevisionQueue")
+    public RevisionOperationQueue<Node> nodeRevisionQueue(RevisionOperationStore store) {
+        return new InMemoryWeightedRevisionOperationQueue<>(
+                REVISION_OPERATION_QUEUE_HIGH_CAPACITY,
+                REVISION_OPERATION_QUEUE_LOW_CAPACITY,
+                REVISION_OPERATION_QUEUE_HIGH_PER_LOW_POLICY,
+                REVISION_OPERATION_QUEUE_POLL_TIMEOUT_MS,
+                store);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "filterRevisionQueue")
+    public RevisionOperationQueue<Filter> filterRevisionQueue(RevisionOperationStore store) {
+        return new InMemoryWeightedRevisionOperationQueue<>(
+                REVISION_OPERATION_QUEUE_HIGH_CAPACITY,
+                REVISION_OPERATION_QUEUE_LOW_CAPACITY,
+                REVISION_OPERATION_QUEUE_HIGH_PER_LOW_POLICY,
+                REVISION_OPERATION_QUEUE_POLL_TIMEOUT_MS,
+                store);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "broadcasterRevisionQueue")
+    public RevisionOperationQueue<Broadcaster> broadcasterRevisionQueue(
+            RevisionOperationStore store) {
+        return new InMemoryWeightedRevisionOperationQueue<>(
+                REVISION_OPERATION_QUEUE_HIGH_CAPACITY,
+                REVISION_OPERATION_QUEUE_LOW_CAPACITY,
+                REVISION_OPERATION_QUEUE_HIGH_PER_LOW_POLICY,
+                REVISION_OPERATION_QUEUE_POLL_TIMEOUT_MS,
+                store);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "broadcasterConfigurationRevisionQueue")
+    public RevisionOperationQueue<BroadcasterConfiguration> broadcasterConfigurationRevisionQueue(
+            RevisionOperationStore store) {
+        return new InMemoryWeightedRevisionOperationQueue<>(
+                REVISION_OPERATION_QUEUE_HIGH_CAPACITY,
+                REVISION_OPERATION_QUEUE_LOW_CAPACITY,
+                REVISION_OPERATION_QUEUE_HIGH_PER_LOW_POLICY,
+                REVISION_OPERATION_QUEUE_POLL_TIMEOUT_MS,
+                store);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "httpClientRevisionQueue")
+    public RevisionOperationQueue<HttpClient> HttpClientRevisionQueue(
+            RevisionOperationStore store) {
+        return new InMemoryWeightedRevisionOperationQueue<>(
+                REVISION_OPERATION_QUEUE_HIGH_CAPACITY,
+                REVISION_OPERATION_QUEUE_LOW_CAPACITY,
+                REVISION_OPERATION_QUEUE_HIGH_PER_LOW_POLICY,
+                REVISION_OPERATION_QUEUE_POLL_TIMEOUT_MS,
+                store);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "storeConfigRevisionQueue")
+    public RevisionOperationQueue<StoreConfiguration> storeConfigRevisionQueue(
+            RevisionOperationStore store) {
+        return new InMemoryWeightedRevisionOperationQueue<>(
+                REVISION_OPERATION_QUEUE_HIGH_CAPACITY,
+                REVISION_OPERATION_QUEUE_LOW_CAPACITY,
+                REVISION_OPERATION_QUEUE_HIGH_PER_LOW_POLICY,
+                REVISION_OPERATION_QUEUE_POLL_TIMEOUT_MS,
+                store);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "nodeRevisionWorker")
+    public DefaultRevisionOperationWorker<Node> nodeRevisionWorker(
+            RevisionOperationQueue<Node> nodeRevisionQueue,
+            ConfigurationRevisionManager<Node> nodeRevisionManager,
+            RevisionOperationStore store) {
+        return new DefaultRevisionOperationWorker<>(nodeRevisionQueue, nodeRevisionManager, store);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "filterRevisionWorker")
+    public DefaultRevisionOperationWorker<Filter> filterRevisionWorker(
+            RevisionOperationQueue<Filter> filterRevisionQueue,
+            ConfigurationRevisionManager<Filter> filterRevisionManager,
+            RevisionOperationStore store) {
+        return new DefaultRevisionOperationWorker<>(
+                filterRevisionQueue, filterRevisionManager, store);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "broadcasterRevisionWorker")
+    public DefaultRevisionOperationWorker<Broadcaster> broadcasterRevisionWorker(
+            RevisionOperationQueue<Broadcaster> broadcasterRevisionQueue,
+            ConfigurationRevisionManager<Broadcaster> broadcasterRevisionManager,
+            RevisionOperationStore store) {
+        return new DefaultRevisionOperationWorker<>(
+                broadcasterRevisionQueue, broadcasterRevisionManager, store);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "broadcasterConfigurationRevisionWorker")
+    public DefaultRevisionOperationWorker<BroadcasterConfiguration>
+            broadcasterConfigurationRevisionWorker(
+                    RevisionOperationQueue<BroadcasterConfiguration>
+                            broadcasterConfigurationRevisionQueue,
+                    ConfigurationRevisionManager<BroadcasterConfiguration>
+                            broadcasterConfigurationRevisionManager,
+                    RevisionOperationStore store) {
+        return new DefaultRevisionOperationWorker<>(
+                broadcasterConfigurationRevisionQueue,
+                broadcasterConfigurationRevisionManager,
+                store);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "storeConfigRevisionWorker")
+    public DefaultRevisionOperationWorker<StoreConfiguration> storeConfigRevisionWorker(
+            RevisionOperationQueue<StoreConfiguration> storeConfigurationRevisionQueue,
+            ConfigurationRevisionManager<StoreConfiguration> storeConfigurationRevisionManager,
+            RevisionOperationStore store) {
+        return new DefaultRevisionOperationWorker<>(
+                storeConfigurationRevisionQueue, storeConfigurationRevisionManager, store);
     }
 }
