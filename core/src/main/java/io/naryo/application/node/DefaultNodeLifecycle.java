@@ -8,6 +8,10 @@ public final class DefaultNodeLifecycle implements NodeLifecycle {
 
     Map<UUID, NodeRunner> nodeRunners;
 
+    public DefaultNodeLifecycle() {
+        this.nodeRunners = new HashMap<>();
+    }
+
     @Override
     public void launch(Collection<NodeRunner> runners) {
         for (var runner : runners) {

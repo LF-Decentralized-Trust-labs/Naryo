@@ -1,9 +1,9 @@
 package io.naryo.application.node.trigger.permanent.block;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
 
+import io.naryo.application.configuration.revision.LiveView;
 import io.naryo.application.node.helper.TransactionEventDispatcherHelper;
 import io.naryo.application.node.interactor.block.dto.Transaction;
 import io.naryo.application.node.interactor.block.dto.TransactionReceipt;
@@ -12,7 +12,7 @@ import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.event.block.BlockEvent;
 import io.naryo.domain.event.transaction.TransactionEvent;
-import io.naryo.domain.filter.transaction.TransactionFilter;
+import io.naryo.domain.filter.Filter;
 import io.naryo.domain.node.ethereum.priv.PrivateEthereumNode;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,7 +24,7 @@ public final class PrivateEthereumTransactionProcessorPermanentTrigger
 
     public PrivateEthereumTransactionProcessorPermanentTrigger(
             PrivateEthereumNode node,
-            List<TransactionFilter> filters,
+            LiveView<Filter> filters,
             TransactionEventDispatcherHelper helper,
             PrivateBlockInteractor interactor) {
         super(node, filters, helper);

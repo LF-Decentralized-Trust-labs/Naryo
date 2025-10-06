@@ -6,6 +6,7 @@ import java.util.Objects;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.retry.Retry;
 import io.naryo.application.configuration.resilence.ResilienceRegistry;
+import io.naryo.application.configuration.revision.LiveView;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.filter.Synchronizer;
 import io.naryo.application.node.calculator.StartBlockCalculator;
@@ -35,7 +36,7 @@ public final class NodeSynchronizer implements Synchronizer {
     private final BlockInteractor blockInteractor;
     private final ContractEventParameterDecoder decoder;
     private final ContractEventDispatcherHelper helper;
-    private final List<Filter> filters;
+    private final LiveView<Filter> filters;
     private final ResilienceRegistry resilienceRegistry;
     private final @Nullable FilterStore<?> filterStore;
     private final StoreConfiguration storeConfiguration;
@@ -44,7 +45,7 @@ public final class NodeSynchronizer implements Synchronizer {
             Node node,
             StartBlockCalculator calculator,
             BlockInteractor blockInteractor,
-            List<Filter> filters,
+            LiveView<Filter> filters,
             ContractEventParameterDecoder decoder,
             ContractEventDispatcherHelper helper,
             ResilienceRegistry resilienceRegistry,
@@ -112,7 +113,7 @@ public final class NodeSynchronizer implements Synchronizer {
 
     private FilteringResult getFilters() {
         List<Filter> filters =
-                this.filters.stream()
+                this.filters.revision().domainItems().stream()
                         .filter(
                                 filter ->
                                         filter.getType().equals(FilterType.EVENT)

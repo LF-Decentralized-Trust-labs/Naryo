@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.UUID;
 
 import io.naryo.application.broadcaster.BroadcasterProducer;
+import io.naryo.application.configuration.revision.LiveView;
+import io.naryo.application.configuration.revision.Revision;
 import io.naryo.application.node.routing.EventRoutingService;
 import io.naryo.application.node.trigger.permanent.EventBroadcasterPermanentTrigger;
 import io.naryo.domain.broadcaster.Broadcaster;
@@ -33,18 +35,16 @@ class EventBroadcasterPermanentTriggerTest {
     @Mock private BroadcasterConfiguration configuration1;
     @Mock private BroadcasterConfiguration configuration2;
 
-    @Mock private Event event;
+    @Mock private Event<?> event;
 
-    private List<Broadcaster> broadcasters;
+    @Mock private LiveView<Broadcaster> broadcasters;
+    @Mock private LiveView<BroadcasterConfiguration> configurations;
     private List<BroadcasterProducer> producers;
-    private List<BroadcasterConfiguration> configurations;
     private EventBroadcasterPermanentTrigger trigger;
 
     @BeforeEach
     void setUp() {
-        broadcasters = List.of(broadcaster1, broadcaster2);
         producers = List.of(producer1, producer2);
-        configurations = List.of(configuration1, configuration2);
         trigger =
                 new EventBroadcasterPermanentTrigger(
                         broadcasters, routingService, producers, configurations);
@@ -94,6 +94,9 @@ class EventBroadcasterPermanentTriggerTest {
         // only wrapper2 should be invoked
         when(routingService.matchingWrappers(event, broadcasters))
                 .thenReturn(List.of(broadcaster2));
+        when(configurations.revision())
+                .thenReturn(
+                        new Revision<>(1, "test-hash", List.of(configuration1, configuration2)));
         UUID configurationId = UUID.randomUUID();
         when(broadcaster2.getConfigurationId()).thenReturn(configurationId);
         when(configuration1.getId()).thenReturn(UUID.randomUUID());
@@ -112,6 +115,9 @@ class EventBroadcasterPermanentTriggerTest {
     void trigger_continuesWhenProducerThrowsAndInvokesAll() {
         when(routingService.matchingWrappers(event, broadcasters))
                 .thenReturn(List.of(broadcaster1, broadcaster2));
+        when(configurations.revision())
+                .thenReturn(
+                        new Revision<>(1, "test-hash", List.of(configuration1, configuration2)));
 
         UUID configurationId = UUID.randomUUID();
         UUID configurationId2 = UUID.randomUUID();

@@ -17,7 +17,7 @@ import io.naryo.domain.event.transaction.TransactionEvent;
 import io.naryo.infrastructure.event.http.HttpStore;
 import okhttp3.OkHttpClient;
 
-public abstract class HttpEventStore<K, D extends Event> extends HttpStore<K, D>
+public abstract class HttpEventStore<K, D extends Event<?>> extends HttpStore<K, D>
         implements EventStore<HttpStoreConfiguration, K, D> {
 
     public HttpEventStore(Class<D> clazz, OkHttpClient httpClient, ObjectMapper objectMapper) {
@@ -41,7 +41,7 @@ public abstract class HttpEventStore<K, D extends Event> extends HttpStore<K, D>
                 .findFirst();
     }
 
-    private TargetType resolveTargetType(Class<? extends Event> eventClass) {
+    private TargetType resolveTargetType(Class<? extends Event<?>> eventClass) {
         if (eventClass.isAssignableFrom(BlockEvent.class)) {
             return TargetType.BLOCK;
         } else if (eventClass.isAssignableFrom(TransactionEvent.class)) {

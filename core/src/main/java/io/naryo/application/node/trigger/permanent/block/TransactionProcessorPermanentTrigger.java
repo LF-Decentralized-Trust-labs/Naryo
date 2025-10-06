@@ -1,7 +1,8 @@
 package io.naryo.application.node.trigger.permanent.block;
 
-import java.util.List;
+import java.util.stream.Stream;
 
+import io.naryo.application.configuration.revision.LiveView;
 import io.naryo.application.node.helper.TransactionEventDispatcherHelper;
 import io.naryo.application.node.interactor.block.dto.Transaction;
 import io.naryo.application.node.trigger.permanent.PermanentTrigger;
@@ -10,6 +11,8 @@ import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.event.Event;
 import io.naryo.domain.event.block.BlockEvent;
 import io.naryo.domain.event.transaction.TransactionEvent;
+import io.naryo.domain.filter.Filter;
+import io.naryo.domain.filter.FilterType;
 import io.naryo.domain.filter.transaction.TransactionFilter;
 import io.naryo.domain.node.Node;
 import io.reactivex.functions.Consumer;
@@ -20,19 +23,19 @@ public class TransactionProcessorPermanentTrigger<N extends Node>
         implements PermanentTrigger<BlockEvent> {
 
     protected final N node;
-    protected final List<TransactionFilter> filters;
+    protected final LiveView<Filter> filters;
     protected final TransactionEventDispatcherHelper helper;
     protected Consumer<BlockEvent> consumer;
 
     public TransactionProcessorPermanentTrigger(
-            N node, List<TransactionFilter> filters, TransactionEventDispatcherHelper helper) {
+            N node, LiveView<Filter> filters, TransactionEventDispatcherHelper helper) {
         this.node = node;
         this.filters = filters;
         this.helper = helper;
     }
 
     @Override
-    public boolean supports(Event event) {
+    public boolean supports(Event<?> event) {
         return event instanceof BlockEvent;
     }
 
@@ -47,7 +50,7 @@ public class TransactionProcessorPermanentTrigger<N extends Node>
     }
 
     protected void processTransaction(Transaction transaction, BlockEvent block) {
-        filters.stream()
+        findTransactionFilters()
                 .filter(filter -> filter.matches(transaction))
                 .forEach(
                         filter -> {
@@ -88,5 +91,11 @@ public class TransactionProcessorPermanentTrigger<N extends Node>
         } else {
             log.debug("No consumer found for block event {}", event);
         }
+    }
+
+    protected Stream<TransactionFilter> findTransactionFilters() {
+        return filters.revision().domainItems().stream()
+                .filter(f -> f.getType() == FilterType.TRANSACTION && f.getNodeId() == node.getId())
+                .map(TransactionFilter.class::cast);
     }
 }

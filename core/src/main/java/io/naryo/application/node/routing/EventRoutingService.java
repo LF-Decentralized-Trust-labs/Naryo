@@ -3,6 +3,7 @@ package io.naryo.application.node.routing;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import io.naryo.application.configuration.revision.LiveView;
 import io.naryo.domain.broadcaster.Broadcaster;
 import io.naryo.domain.broadcaster.BroadcasterTargetType;
 import io.naryo.domain.broadcaster.target.FilterEventBroadcasterTarget;
@@ -16,9 +17,9 @@ import io.naryo.domain.filter.event.EventFilter;
 import io.naryo.domain.filter.event.ParameterDefinition;
 
 public final class EventRoutingService {
-    private final Collection<Filter> filters;
+    private final LiveView<Filter> filters;
 
-    public EventRoutingService(Collection<Filter> filters) {
+    public EventRoutingService(LiveView<Filter> filters) {
         this.filters = filters;
     }
 
@@ -28,19 +29,22 @@ public final class EventRoutingService {
                         .filter(b -> b.getTarget() instanceof FilterEventBroadcasterTarget)
                         .map(b -> ((FilterEventBroadcasterTarget) b.getTarget()).getFilterId())
                         .toList();
-        return filters.stream().filter(filter -> filterIds.contains(filter.getId())).toList();
+
+        return filters.revision().domainItems().stream()
+                .filter(filter -> filterIds.contains(filter.getId()))
+                .toList();
     }
 
-    public List<Broadcaster> matchingWrappers(
-            Event<?> event, Collection<Broadcaster> broadcasters) {
+    public List<Broadcaster> matchingWrappers(Event<?> event, LiveView<Broadcaster> broadcasters) {
+        Collection<Broadcaster> broadcasterList = broadcasters.revision().domainItems();
         return switch (event.getEventType()) {
-            case BLOCK -> filterByTypes(broadcasters, BroadcasterTargetType.BLOCK);
-            case TRANSACTION -> filterByTypes(broadcasters, BroadcasterTargetType.TRANSACTION);
+            case BLOCK -> filterByTypes(broadcasterList, BroadcasterTargetType.BLOCK);
+            case TRANSACTION -> filterByTypes(broadcasterList, BroadcasterTargetType.TRANSACTION);
             case CONTRACT -> {
                 List<Broadcaster> result =
-                        filterByTypes(broadcasters, BroadcasterTargetType.CONTRACT_EVENT);
+                        filterByTypes(broadcasterList, BroadcasterTargetType.CONTRACT_EVENT);
                 List<Filter> filters =
-                        getAllFilters(broadcasters).stream()
+                        getAllFilters(broadcasterList).stream()
                                 .filter(f -> f.getType() == FilterType.EVENT)
                                 .filter(f -> f instanceof EventFilter)
                                 .map(f -> (EventFilter) f)
@@ -48,7 +52,7 @@ public final class EventRoutingService {
                                 .collect(Collectors.toList());
                 if (!filters.isEmpty()) {
                     List<Broadcaster> filterWrappers =
-                            broadcasters.stream()
+                            broadcasterList.stream()
                                     .filter(
                                             b ->
                                                     b.getTarget().getType()

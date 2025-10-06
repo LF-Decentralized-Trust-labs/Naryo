@@ -20,7 +20,7 @@ public interface ConfigurationRevisionManagers {
 
     ConfigurationRevisionManager<BroadcasterConfiguration> broadcasterConfigurations();
 
-    ConfigurationRevisionManager<StoreConfiguration> stores();
+    ConfigurationRevisionManager<StoreConfiguration> storeConfigurations();
 
     <T> ConfigurationRevisionManager<T> get(Class<T> domainClass);
 
