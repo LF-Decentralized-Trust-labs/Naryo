@@ -1,10 +1,9 @@
 package io.naryo.application.node.routing;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
+import io.naryo.application.configuration.revision.Revision;
+import io.naryo.application.configuration.revision.registry.LiveRegistry;
 import io.naryo.domain.broadcaster.Broadcaster;
 import io.naryo.domain.broadcaster.BroadcasterTarget;
 import io.naryo.domain.broadcaster.BroadcasterTargetType;
@@ -36,7 +35,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class EventRoutingServiceTest {
 
-    private List<Filter> filters = new ArrayList<>();
+    @Mock LiveRegistry<Filter> filters;
     @Mock private Broadcaster wrapperAll;
     @Mock private Broadcaster wrapperBlock;
     @Mock private Broadcaster wrapperTx;
@@ -56,10 +55,13 @@ class EventRoutingServiceTest {
         when(wrapperBlock.getTarget()).thenReturn(new DummyTarget(BroadcasterTargetType.BLOCK));
         when(wrapperTx.getTarget()).thenReturn(new DummyTarget(BroadcasterTargetType.TRANSACTION));
 
-        Event block = mock(Event.class);
+        Event<?> block = mock(Event.class);
         when(block.getEventType()).thenReturn(EventType.BLOCK);
 
-        List<Broadcaster> wrappers = List.of(wrapperAll, wrapperBlock, wrapperTx);
+        Revision<Broadcaster> broadcasterRevision =
+                new Revision<>(1, "test-hash", Set.of(wrapperAll, wrapperBlock, wrapperTx));
+        LiveRegistry<Broadcaster> wrappers = mock(LiveRegistry.class);
+        when(wrappers.active()).thenReturn(broadcasterRevision);
         List<Broadcaster> result = service.matchingWrappers(block, wrappers);
 
         assertTrue(result.contains(wrapperAll), "ALL should always be included");
@@ -74,10 +76,13 @@ class EventRoutingServiceTest {
         when(wrapperBlock.getTarget()).thenReturn(new DummyTarget(BroadcasterTargetType.BLOCK));
         when(wrapperTx.getTarget()).thenReturn(new DummyTarget(BroadcasterTargetType.TRANSACTION));
 
-        Event tx = mock(Event.class);
+        Event<?> tx = mock(Event.class);
         when(tx.getEventType()).thenReturn(EventType.TRANSACTION);
 
-        List<Broadcaster> wrappers = List.of(wrapperAll, wrapperBlock, wrapperTx);
+        Revision<Broadcaster> broadcasterRevision =
+                new Revision<>(1, "test-hash", Set.of(wrapperAll, wrapperBlock, wrapperTx));
+        LiveRegistry<Broadcaster> wrappers = mock(LiveRegistry.class);
+        when(wrappers.active()).thenReturn(broadcasterRevision);
         List<Broadcaster> result = service.matchingWrappers(tx, wrappers);
 
         assertTrue(result.contains(wrapperAll));
@@ -106,7 +111,7 @@ class EventRoutingServiceTest {
         when(evtFilter.getSpecification()).thenReturn(spec);
         when(evtFilter.getStatuses()).thenReturn(Set.of(ContractEventStatus.CONFIRMED));
 
-        filters.add(evtFilter);
+        when(filters.active()).thenReturn(new Revision<>(1, "test-hash", Set.of(evtFilter)));
 
         ContractEvent ce = mock(ContractEvent.class);
         when(ce.getEventType()).thenReturn(EventType.CONTRACT);
@@ -115,7 +120,11 @@ class EventRoutingServiceTest {
         IntParameter param = new IntParameter(false, 0, 42);
         when(ce.getParameters()).thenReturn(Set.of(param));
 
-        List<Broadcaster> wrappers = List.of(wrapperAll, wrapperContractEvent, wrapperFilter);
+        Revision<Broadcaster> broadcasterRevision =
+                new Revision<>(
+                        1, "test-hash", Set.of(wrapperAll, wrapperContractEvent, wrapperFilter));
+        LiveRegistry<Broadcaster> wrappers = mock(LiveRegistry.class);
+        when(wrappers.active()).thenReturn(broadcasterRevision);
         List<Broadcaster> result = service.matchingWrappers(ce, wrappers);
 
         assertTrue(result.contains(wrapperAll));

@@ -2,11 +2,9 @@ package io.naryo.application.node;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import io.naryo.application.broadcaster.BroadcasterProducer;
 import io.naryo.application.configuration.resilence.ResilienceRegistry;
-import io.naryo.application.configuration.revision.manager.ConfigurationRevisionManager;
 import io.naryo.application.configuration.revision.manager.ConfigurationRevisionManagers;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.filter.block.NodeSynchronizer;
@@ -25,18 +23,14 @@ import io.naryo.application.node.trigger.permanent.EventBroadcasterPermanentTrig
 import io.naryo.application.node.trigger.permanent.EventStoreBroadcasterPermanentTrigger;
 import io.naryo.application.node.trigger.permanent.block.ProcessorTriggerFactory;
 import io.naryo.application.store.Store;
-import io.naryo.application.store.event.EventStore;
 import io.naryo.application.store.event.block.BlockEventStore;
 import io.naryo.application.store.filter.FilterStore;
 import io.naryo.application.store.filter.model.FilterState;
 import io.naryo.domain.configuration.store.StoreConfiguration;
 import io.naryo.domain.configuration.store.StoreState;
 import io.naryo.domain.configuration.store.active.ActiveStoreConfiguration;
+import io.naryo.domain.event.EventType;
 import io.naryo.domain.event.block.BlockEvent;
-import io.naryo.domain.filter.Filter;
-import io.naryo.domain.filter.FilterType;
-import io.naryo.domain.filter.event.EventFilter;
-import io.naryo.domain.filter.transaction.TransactionFilter;
 import io.naryo.domain.node.Node;
 import lombok.extern.slf4j.Slf4j;
 
@@ -72,7 +66,8 @@ public final class NodeInitializer {
     }
 
     public Collection<NodeRunner> initialize() {
-        Collection<Node> nodes = getDomainItems(configurationRevisionManagers.nodes());
+        Collection<Node> nodes =
+                configurationRevisionManagers.nodes().liveRegistry().active().domainItems();
 
         return nodes.stream()
                 .map(
@@ -92,37 +87,28 @@ public final class NodeInitializer {
     }
 
     public NodeRunner initializeNode(Node node) {
-        Collection<Filter> allFilters = getDomainItems(configurationRevisionManagers.filters());
-
         var interactor = interactorFactory.create(node);
         var nodeStoreConfiguration = getStoreConfigurationForNode(node);
-        var nodeFilters = getFiltersForNode(allFilters, node.getId());
         var dispatcher = new EventDispatcher(resilienceRegistry);
         var contractEventHelper = new ContractEventDispatcherHelper(dispatcher, interactor);
         var transactionEventHelper = new TransactionEventDispatcherHelper(dispatcher, interactor);
 
-        addSharedTriggers(dispatcher, allFilters);
+        addSharedTriggers(dispatcher);
         addNodeSpecificTriggers(
-                dispatcher,
-                node,
-                nodeStoreConfiguration,
-                nodeFilters,
-                interactor,
-                contractEventHelper,
-                transactionEventHelper);
+                dispatcher, node, interactor, contractEventHelper, transactionEventHelper);
 
         var subscriber = getNodeSubscriber(node, interactor, nodeStoreConfiguration, dispatcher);
         var synchronizer =
-                getNodeSynchronizer(
-                        node, interactor, nodeStoreConfiguration, nodeFilters, contractEventHelper);
+                getNodeSynchronizer(node, interactor, nodeStoreConfiguration, contractEventHelper);
 
         return new DefaultNodeRunner(node, subscriber, synchronizer, dispatcher);
     }
 
-    private void addSharedTriggers(Dispatcher dispatcher, Collection<Filter> filters) {
-        var broadcasters = getDomainItems(configurationRevisionManagers.broadcasters());
+    private void addSharedTriggers(Dispatcher dispatcher) {
+        var filters = configurationRevisionManagers.filters().liveRegistry();
+        var broadcasters = configurationRevisionManagers.broadcasters().liveRegistry();
         var broadcasterConfigurations =
-                getDomainItems(configurationRevisionManagers.broadcasterConfigurations());
+                configurationRevisionManagers.broadcasterConfigurations().liveRegistry();
 
         var eventBroadcasterPermanentTrigger =
                 new EventBroadcasterPermanentTrigger(
@@ -137,26 +123,25 @@ public final class NodeInitializer {
     private void addNodeSpecificTriggers(
             Dispatcher dispatcher,
             Node node,
-            StoreConfiguration storeConfiguration,
-            List<Filter> filters,
             BlockInteractor interactor,
             ContractEventDispatcherHelper contractEventHelper,
             TransactionEventDispatcherHelper transactionEventHelper) {
-        storeForNode(EventStore.class, BlockEvent.class, storeConfiguration)
-                .ifPresent(
-                        store ->
-                                dispatcher.addTrigger(
-                                        new EventStoreBroadcasterPermanentTrigger(
-                                                Set.of(store), List.of(storeConfiguration))));
+        var filters = configurationRevisionManagers.filters().liveRegistry();
+        var storeConfigurations =
+                configurationRevisionManagers.storeConfigurations().liveRegistry();
+
+        var eventStoreTrigger =
+                new EventStoreBroadcasterPermanentTrigger(
+                        EventType.BLOCK, node, stores, storeConfigurations);
+        dispatcher.addTrigger(eventStoreTrigger);
 
         var blockTrigger =
-                processorFactory.createBlockTrigger(
-                        node, findEventFilters(filters), interactor, contractEventHelper);
+                processorFactory.createBlockTrigger(node, filters, interactor, contractEventHelper);
         dispatcher.addTrigger(blockTrigger);
 
         var transactionTrigger =
                 processorFactory.createTransactionTrigger(
-                        node, findTransactionFilters(filters), interactor, transactionEventHelper);
+                        node, filters, interactor, transactionEventHelper);
         dispatcher.addTrigger(transactionTrigger);
     }
 
@@ -175,8 +160,8 @@ public final class NodeInitializer {
             Node node,
             BlockInteractor interactor,
             StoreConfiguration storeConfiguration,
-            List<Filter> filters,
             ContractEventDispatcherHelper contractEventHelper) {
+        var filters = configurationRevisionManagers.filters().liveRegistry();
         StartBlockCalculator calculator =
                 createStartBlockCalculator(node, interactor, storeConfiguration);
 
@@ -215,7 +200,12 @@ public final class NodeInitializer {
     }
 
     private StoreConfiguration getStoreConfigurationForNode(Node node) {
-        return getDomainItems(configurationRevisionManagers.stores()).stream()
+        return configurationRevisionManagers
+                .storeConfigurations()
+                .liveRegistry()
+                .active()
+                .domainItems()
+                .stream()
                 .filter(configuration -> configuration.getNodeId().equals(node.getId()))
                 .findFirst()
                 .orElseThrow(
@@ -223,24 +213,6 @@ public final class NodeInitializer {
                                 new IllegalStateException(
                                         "No event store configuration found for node: "
                                                 + node.getId()));
-    }
-
-    private List<Filter> getFiltersForNode(Collection<Filter> filters, UUID id) {
-        return filters.stream().filter(f -> f.getNodeId().equals(id)).toList();
-    }
-
-    private List<TransactionFilter> findTransactionFilters(List<Filter> filters) {
-        return findFilters(filters, FilterType.TRANSACTION)
-                .map(TransactionFilter.class::cast)
-                .toList();
-    }
-
-    private List<EventFilter> findEventFilters(List<Filter> filters) {
-        return findFilters(filters, FilterType.EVENT).map(EventFilter.class::cast).toList();
-    }
-
-    private Stream<Filter> findFilters(List<Filter> filters, FilterType type) {
-        return filters.stream().filter(f -> f.getType() == type);
     }
 
     private StartBlockCalculator createStartBlockCalculator(
@@ -251,10 +223,5 @@ public final class NodeInitializer {
                     node, interactor, eventStore.get(), (ActiveStoreConfiguration) configuration);
         }
         return new StartBlockCalculator(node, interactor);
-    }
-
-    private <T> Collection<T> getDomainItems(
-            ConfigurationRevisionManager<T> configurationRevisionManager) {
-        return configurationRevisionManager.liveView().revision().domainItems();
     }
 }

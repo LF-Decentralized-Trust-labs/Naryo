@@ -1,12 +1,11 @@
 package io.naryo.application.filter.block;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import io.naryo.application.configuration.resilence.ResilienceRegistry;
+import io.naryo.application.configuration.revision.Revision;
+import io.naryo.application.configuration.revision.registry.LiveRegistry;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.node.calculator.StartBlockCalculator;
 import io.naryo.application.node.helper.ContractEventDispatcherHelper;
@@ -27,7 +26,6 @@ import io.naryo.domain.filter.event.sync.block.BlockActiveFilterSyncState;
 import io.naryo.domain.filter.transaction.IdentifierType;
 import io.naryo.domain.filter.transaction.TransactionFilter;
 import io.naryo.domain.node.Node;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -40,7 +38,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class NodeSynchronizerTest {
 
-    private final List<Filter> filters = new ArrayList<>();
+    @Mock private LiveRegistry<Filter> filters;
     private final ResilienceRegistry resilienceRegistry = new ResilienceRegistry();
     @Mock private Node node;
     @Mock private StartBlockCalculator calculator;
@@ -49,11 +47,6 @@ class NodeSynchronizerTest {
     @Mock private ContractEventDispatcherHelper helper;
     private @Mock FilterStore<?> store;
     private @Mock StoreConfiguration storeConfiguration;
-
-    @AfterEach
-    void cleanUp() {
-        filters.clear();
-    }
 
     @Test
     void testConstructor_nullValues() {
@@ -154,7 +147,7 @@ class NodeSynchronizerTest {
     @Test
     void testSynchronize() {
         UUID nodeId = UUID.randomUUID();
-        filters.add(
+        Filter filter =
                 new ContractEventFilter(
                         UUID.randomUUID(),
                         new FilterName("filter1"),
@@ -165,7 +158,10 @@ class NodeSynchronizerTest {
                                 Set.of(new AddressParameterDefinition())),
                         Set.of(ContractEventStatus.CONFIRMED, ContractEventStatus.UNCONFIRMED),
                         new BlockActiveFilterSyncState(new NonNegativeBlockNumber(BigInteger.ZERO)),
-                        "0x1234567890abcdef1234567890abcdef12345678"));
+                        "0x1234567890abcdef1234567890abcdef12345678");
+
+        when(filters.active()).thenReturn(new Revision<>(1, "test-hash", Set.of(filter)));
+
         NodeSynchronizer synchronizer =
                 new NodeSynchronizer(
                         node,
@@ -187,14 +183,17 @@ class NodeSynchronizerTest {
     @Test
     void testSynchronize_noEventFilters() {
         UUID nodeId = UUID.randomUUID();
-        filters.add(
+        Filter filter =
                 new TransactionFilter(
                         UUID.randomUUID(),
                         new FilterName("filter1"),
                         nodeId,
                         IdentifierType.HASH,
                         "0x1234567890abcdef1234567890abcdef12345678",
-                        Set.of(TransactionStatus.FAILED)));
+                        Set.of(TransactionStatus.FAILED));
+
+        when(filters.active()).thenReturn(new Revision<>(1, "test-hash", Set.of(filter)));
+
         NodeSynchronizer synchronizer =
                 new NodeSynchronizer(
                         node,
@@ -219,7 +218,7 @@ class NodeSynchronizerTest {
         UUID nodeId = UUID.randomUUID();
         BlockActiveFilterSyncState syncState =
                 new BlockActiveFilterSyncState(new NonNegativeBlockNumber(BigInteger.ZERO));
-        filters.add(
+        Filter filter =
                 new ContractEventFilter(
                         UUID.randomUUID(),
                         new FilterName("filter1"),
@@ -230,7 +229,9 @@ class NodeSynchronizerTest {
                                 Set.of(new AddressParameterDefinition())),
                         Set.of(ContractEventStatus.CONFIRMED, ContractEventStatus.UNCONFIRMED),
                         syncState,
-                        "0x1234567890abcdef1234567890abcdef12345678"));
+                        "0x1234567890abcdef1234567890abcdef12345678");
+
+        when(filters.active()).thenReturn(new Revision<>(1, "test-hash", Set.of(filter)));
         NodeSynchronizer synchronizer =
                 new NodeSynchronizer(
                         node,

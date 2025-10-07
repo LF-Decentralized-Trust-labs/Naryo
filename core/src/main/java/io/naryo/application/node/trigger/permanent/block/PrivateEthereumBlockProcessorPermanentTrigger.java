@@ -1,12 +1,11 @@
 package io.naryo.application.node.trigger.permanent.block;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
+import io.naryo.application.configuration.revision.registry.LiveRegistry;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.filter.util.BloomFilterUtil;
 import io.naryo.application.node.helper.ContractEventDispatcherHelper;
@@ -14,6 +13,7 @@ import io.naryo.application.node.interactor.block.dto.Log;
 import io.naryo.application.node.interactor.block.dto.TransactionReceipt;
 import io.naryo.application.node.interactor.block.priv.PrivateBlockInteractor;
 import io.naryo.domain.event.block.BlockEvent;
+import io.naryo.domain.filter.Filter;
 import io.naryo.domain.filter.event.ContractEventFilter;
 import io.naryo.domain.filter.event.EventFilter;
 import io.naryo.domain.filter.event.GlobalEventFilter;
@@ -26,7 +26,7 @@ public final class PrivateEthereumBlockProcessorPermanentTrigger
 
     public PrivateEthereumBlockProcessorPermanentTrigger(
             PrivateEthereumNode node,
-            List<EventFilter> filters,
+            LiveRegistry<Filter> filters,
             PrivateBlockInteractor interactor,
             ContractEventParameterDecoder decoder,
             ContractEventDispatcherHelper helper) {
@@ -35,69 +35,83 @@ public final class PrivateEthereumBlockProcessorPermanentTrigger
 
     @Override
     protected void processBlock(BlockEvent event) throws IOException {
-        if (!event.getNodeId().equals(node.getId())) {
-            log.debug("Skipping block event {} for node {}", event, node.getId());
-            return;
-        }
-        List<EventFilter> foundFilters = findFilters(event);
+        List<EventFilter> foundFilters = checkIfEventMatchesNodeAndFindRelatedFilters(event);
         if (foundFilters.isEmpty()) {
-            log.debug("No filters found for block event {}", event);
             return;
         }
-        log.debug("Found {} filters for block event {}", foundFilters.size(), event);
-        List<Log> publicLogs = interactor.getLogs(event.getHash());
-        Map<String, List<Log>> privateLogs =
-                foundFilters.stream()
-                        .filter(f -> !f.getVisibilityConfiguration().isVisible())
-                        .map(f -> f.getVisibilityConfiguration().getPrivacyGroupId())
-                        .distinct()
-                        .collect(
-                                HashMap::new,
-                                (map, privacyGroupId) -> {
-                                    try {
-                                        map.put(
-                                                privacyGroupId,
-                                                interactor.getPrivateLogs(
-                                                        privacyGroupId, event.getHash()));
-                                    } catch (IOException e) {
-                                        log.error(
-                                                "Error getting private logs for block event {}",
-                                                event,
-                                                e);
-                                    }
-                                },
-                                Map::putAll);
 
-        if (publicLogs.isEmpty() && privateLogs.isEmpty()) {
-            log.debug("No logs found for block event {}", event);
-            return;
-        }
+        List<EventFilter> publicFilters = new ArrayList<>();
+        List<EventFilter> privateFilters = new ArrayList<>();
 
         foundFilters.forEach(
                 filter -> {
-                    Predicate<Log> predicate = getLogPredicate(filter);
                     if (filter.getVisibilityConfiguration().isVisible()) {
-                        publicLogs.stream()
-                                .filter(predicate)
-                                .forEach(value -> processLog(event, filter, value));
-                        return;
+                        publicFilters.add(filter);
+                    } else {
+                        privateFilters.add(filter);
                     }
-
-                    privateLogs
-                            .get(filter.getVisibilityConfiguration().getPrivacyGroupId())
-                            .stream()
-                            .filter(predicate)
-                            .forEach(value -> processLog(event, filter, value));
                 });
+
+        processPublicLogs(event, publicFilters);
+        processPrivateLogs(event, privateFilters);
+    }
+
+    private void processPrivateLogs(BlockEvent event, List<EventFilter> privateFilters) {
+        Map<String, List<Log>> logs = getPrivateLogsByPrivacyGroupId(event, privateFilters);
+
+        if (logs.isEmpty()) {
+            log.debug("No private logs found for block event {}", event);
+            return;
+        }
+
+        AtomicInteger processedLogs = new AtomicInteger();
+
+        for (EventFilter filter : privateFilters) {
+            Predicate<Log> predicate = getLogPredicate(filter);
+
+            logs.get(filter.getVisibilityConfiguration().getPrivacyGroupId()).stream()
+                    .filter(predicate)
+                    .forEach(
+                            value -> {
+                                processLog(event, filter, value);
+                                processedLogs.set(+1);
+                            });
+        }
+
+        log.info(
+                "Processed {} logs for {} private filters for block event {}",
+                processedLogs.get(),
+                privateFilters.size(),
+                event.getNumber().value());
+    }
+
+    private Map<String, List<Log>> getPrivateLogsByPrivacyGroupId(
+            BlockEvent event, List<EventFilter> privateFilters) {
+        return privateFilters.stream()
+                .map(f -> f.getVisibilityConfiguration().getPrivacyGroupId())
+                .distinct()
+                .collect(
+                        HashMap::new,
+                        (map, privacyGroupId) -> {
+                            try {
+                                map.put(
+                                        privacyGroupId,
+                                        interactor.getPrivateLogs(privacyGroupId, event.getHash()));
+                            } catch (IOException e) {
+                                log.error(
+                                        "Error getting private logs for block event {}", event, e);
+                            }
+                        },
+                        Map::putAll);
     }
 
     @Override
-    protected List<EventFilter> findFilters(BlockEvent event) {
-        List<EventFilter> foundFilters = super.findFilters(event);
+    protected List<EventFilter> findFiltersForEvent(BlockEvent event) {
+        List<EventFilter> filtersForEvent = super.findFiltersForEvent(event);
         List<String> privateLogBlooms = getPrivateLogBlooms(event);
 
-        filters.stream()
-                .filter(f -> !foundFilters.contains(f))
+        findActiveEventFilters()
+                .filter(f -> !filtersForEvent.contains(f))
                 .filter(
                         filter -> {
                             if (!filter.getNodeId().equals(event.getNodeId())) {
@@ -127,9 +141,9 @@ public final class PrivateEthereumBlockProcessorPermanentTrigger
 
                             return false;
                         })
-                .forEach(foundFilters::add);
+                .forEach(filtersForEvent::add);
 
-        return foundFilters;
+        return filtersForEvent;
     }
 
     private List<String> getPrivateLogBlooms(BlockEvent event) {

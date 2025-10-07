@@ -3,9 +3,12 @@ package io.naryo.application.node.trigger.permanent.block;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import io.naryo.application.common.util.EncryptionUtil;
+import io.naryo.application.configuration.revision.registry.LiveRegistry;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.filter.util.BloomFilterUtil;
 import io.naryo.application.node.helper.ContractEventDispatcherHelper;
@@ -17,6 +20,8 @@ import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.event.Event;
 import io.naryo.domain.event.block.BlockEvent;
 import io.naryo.domain.event.contract.ContractEvent;
+import io.naryo.domain.filter.Filter;
+import io.naryo.domain.filter.FilterType;
 import io.naryo.domain.filter.event.ContractEventFilter;
 import io.naryo.domain.filter.event.EventFilter;
 import io.naryo.domain.filter.event.GlobalEventFilter;
@@ -31,7 +36,7 @@ public class BlockProcessorPermanentTrigger<N extends Node, I extends BlockInter
         implements PermanentTrigger<BlockEvent> {
 
     protected final N node;
-    protected final List<EventFilter> filters;
+    protected final LiveRegistry<Filter> filters;
     protected final I interactor;
     protected final ContractEventParameterDecoder decoder;
     protected final ContractEventDispatcherHelper helper;
@@ -39,7 +44,7 @@ public class BlockProcessorPermanentTrigger<N extends Node, I extends BlockInter
 
     public BlockProcessorPermanentTrigger(
             N node,
-            List<EventFilter> filters,
+            LiveRegistry<Filter> filters,
             I interactor,
             ContractEventParameterDecoder decoder,
             ContractEventDispatcherHelper helper) {
@@ -69,8 +74,8 @@ public class BlockProcessorPermanentTrigger<N extends Node, I extends BlockInter
     }
 
     @Override
-    public boolean supports(Event event) {
-        return event instanceof BlockEvent;
+    public boolean supports(Event<?> event) {
+        return event instanceof BlockEvent && event.getNodeId().equals(node.getId());
     }
 
     @Override
@@ -90,35 +95,58 @@ public class BlockProcessorPermanentTrigger<N extends Node, I extends BlockInter
     }
 
     protected void processBlock(BlockEvent event) throws IOException {
-        if (!event.getNodeId().equals(node.getId())) {
-            log.debug("Skipping block event {} for node {}", event, node.getId());
+        List<EventFilter> filtersForEvent = checkIfEventMatchesNodeAndFindRelatedFilters(event);
+
+        if (filtersForEvent.isEmpty()) {
             return;
         }
-        List<EventFilter> foundFilters = findFilters(event);
-        if (foundFilters.isEmpty()) {
-            log.debug("No filters found for block event {}", event);
-            return;
-        }
-        log.debug("Found {} filters for block event {}", foundFilters.size(), event);
+
+        processPublicLogs(event, filtersForEvent);
+    }
+
+    protected void processPublicLogs(BlockEvent event, List<EventFilter> filtersForEvent)
+            throws IOException {
         List<Log> logs = interactor.getLogs(event.getHash());
         if (logs.isEmpty()) {
-            log.debug("No logs found for block event {}", event);
+            log.debug("No public logs found for block event {}", event);
             return;
         }
-        log.debug("Found {} logs for block event {}", logs.size(), event);
 
-        int filterCount = 0;
-        for (EventFilter filter : foundFilters) {
+        AtomicInteger processedLogs = new AtomicInteger();
+
+        for (EventFilter filter : filtersForEvent) {
             Predicate<Log> predicate = getLogPredicate(filter);
-            List<Log> foundLogs = logs.stream().filter(predicate).toList();
-            foundLogs.forEach(value -> processLog(event, filter, value));
-            filterCount += foundLogs.size();
+            logs.stream()
+                    .filter(predicate)
+                    .forEach(
+                            log -> {
+                                processLog(event, filter, log);
+                                processedLogs.set(+1);
+                            });
         }
+
         log.info(
-                "Processed {} logs for {} filters for block event {}",
-                filterCount,
-                foundFilters.size(),
+                "Processed {} logs for {} public filters for block event {}",
+                processedLogs.get(),
+                filtersForEvent.size(),
                 event.getNumber().value());
+    }
+
+    protected List<EventFilter> checkIfEventMatchesNodeAndFindRelatedFilters(BlockEvent event) {
+        if (!event.getNodeId().equals(node.getId())) {
+            log.debug("Skipping block event {} for node {}", event, node.getId());
+            return List.of();
+        }
+
+        List<EventFilter> filtersForEvent = findFiltersForEvent(event);
+        if (filtersForEvent.isEmpty()) {
+            log.debug("No filters found for block event {}", event);
+            return List.of();
+        }
+
+        log.debug("Found {} filters for block event {}", filtersForEvent.size(), event);
+
+        return filtersForEvent;
     }
 
     protected void processLog(BlockEvent event, EventFilter filter, Log value) {
@@ -159,8 +187,8 @@ public class BlockProcessorPermanentTrigger<N extends Node, I extends BlockInter
         }
     }
 
-    protected List<EventFilter> findFilters(BlockEvent event) {
-        return filters.stream()
+    protected List<EventFilter> findFiltersForEvent(BlockEvent event) {
+        return findActiveEventFilters()
                 .filter(
                         filter -> {
                             if (!filter.getNodeId().equals(event.getNodeId())) {
@@ -186,5 +214,11 @@ public class BlockProcessorPermanentTrigger<N extends Node, I extends BlockInter
                             return false;
                         })
                 .toList();
+    }
+
+    protected Stream<EventFilter> findActiveEventFilters() {
+        return filters.active().domainItems().stream()
+                .filter(f -> f.getType() == FilterType.EVENT && f.getNodeId() == node.getId())
+                .map(EventFilter.class::cast);
     }
 }

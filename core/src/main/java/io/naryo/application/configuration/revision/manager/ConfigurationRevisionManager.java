@@ -4,6 +4,7 @@ import io.naryo.application.configuration.revision.LiveView;
 import io.naryo.application.configuration.revision.Revision;
 import io.naryo.application.configuration.revision.hook.RevisionHook;
 import io.naryo.application.configuration.revision.operation.RevisionOperation;
+import io.naryo.application.configuration.revision.registry.LiveRegistry;
 
 public interface ConfigurationRevisionManager<T> {
 
@@ -14,4 +15,6 @@ public interface ConfigurationRevisionManager<T> {
     void registerHook(RevisionHook<T> hook);
 
     LiveView<T> liveView();
+
+    LiveRegistry<T> liveRegistry();
 }

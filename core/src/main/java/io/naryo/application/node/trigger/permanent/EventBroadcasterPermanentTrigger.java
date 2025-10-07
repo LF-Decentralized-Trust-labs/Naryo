@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import io.naryo.application.broadcaster.BroadcasterProducer;
+import io.naryo.application.configuration.revision.registry.LiveRegistry;
 import io.naryo.application.node.routing.EventRoutingService;
 import io.naryo.domain.broadcaster.Broadcaster;
 import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;
@@ -17,15 +18,15 @@ public final class EventBroadcasterPermanentTrigger implements PermanentTrigger<
 
     private final EventRoutingService eventRoutingService;
     private final Collection<BroadcasterProducer> producers;
-    private final Collection<Broadcaster> broadcasters;
-    private final Collection<BroadcasterConfiguration> configurations;
+    private final LiveRegistry<Broadcaster> broadcasters;
+    private final LiveRegistry<BroadcasterConfiguration> configurations;
     private Consumer<Event<?>> consumer;
 
     public EventBroadcasterPermanentTrigger(
-            Collection<Broadcaster> broadcasters,
+            LiveRegistry<Broadcaster> broadcasters,
             EventRoutingService eventRoutingService,
             Collection<BroadcasterProducer> producers,
-            Collection<BroadcasterConfiguration> configurations) {
+            LiveRegistry<BroadcasterConfiguration> configurations) {
         Objects.requireNonNull(broadcasters, "broadcasters must not be null");
         Objects.requireNonNull(producers, "producers must not be null");
         Objects.requireNonNull(eventRoutingService, "Event routing service must not be null");
@@ -49,7 +50,7 @@ public final class EventBroadcasterPermanentTrigger implements PermanentTrigger<
         for (Broadcaster broadcaster : matchedBroadcasters) {
             try {
                 BroadcasterConfiguration configuration =
-                        configurations.stream()
+                        configurations.active().domainItems().stream()
                                 .filter(
                                         config ->
                                                 config.getId()

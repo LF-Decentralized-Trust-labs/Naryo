@@ -59,7 +59,7 @@ public final class DefaultConfigurationRevisionManagers implements Configuration
     }
 
     @Override
-    public ConfigurationRevisionManager<StoreConfiguration> stores() {
+    public ConfigurationRevisionManager<StoreConfiguration> storeConfigurations() {
         return stores;
     }
 
@@ -74,7 +74,7 @@ public final class DefaultConfigurationRevisionManagers implements Configuration
         } else if (BroadcasterConfiguration.class.isAssignableFrom(domainClass)) {
             return (ConfigurationRevisionManager<T>) broadcasterConfigurations();
         } else if (StoreConfiguration.class.isAssignableFrom(domainClass)) {
-            return (ConfigurationRevisionManager<T>) stores();
+            return (ConfigurationRevisionManager<T>) storeConfigurations();
         } else {
             throw new IllegalArgumentException(
                     "Unsupported class for configuration revision" + domainClass);
