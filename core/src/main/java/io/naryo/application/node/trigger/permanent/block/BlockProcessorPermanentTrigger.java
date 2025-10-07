@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import io.naryo.application.common.util.EncryptionUtil;
-import io.naryo.application.configuration.revision.LiveView;
+import io.naryo.application.configuration.revision.registry.LiveRegistry;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.filter.util.BloomFilterUtil;
 import io.naryo.application.node.helper.ContractEventDispatcherHelper;
@@ -36,7 +36,7 @@ public class BlockProcessorPermanentTrigger<N extends Node, I extends BlockInter
         implements PermanentTrigger<BlockEvent> {
 
     protected final N node;
-    protected final LiveView<Filter> filters;
+    protected final LiveRegistry<Filter> filters;
     protected final I interactor;
     protected final ContractEventParameterDecoder decoder;
     protected final ContractEventDispatcherHelper helper;
@@ -44,7 +44,7 @@ public class BlockProcessorPermanentTrigger<N extends Node, I extends BlockInter
 
     public BlockProcessorPermanentTrigger(
             N node,
-            LiveView<Filter> filters,
+            LiveRegistry<Filter> filters,
             I interactor,
             ContractEventParameterDecoder decoder,
             ContractEventDispatcherHelper helper) {
@@ -75,7 +75,7 @@ public class BlockProcessorPermanentTrigger<N extends Node, I extends BlockInter
 
     @Override
     public boolean supports(Event<?> event) {
-        return event instanceof BlockEvent;
+        return event instanceof BlockEvent && event.getNodeId().equals(node.getId());
     }
 
     @Override
@@ -217,7 +217,7 @@ public class BlockProcessorPermanentTrigger<N extends Node, I extends BlockInter
     }
 
     protected Stream<EventFilter> findActiveEventFilters() {
-        return filters.revision().domainItems().stream()
+        return filters.active().domainItems().stream()
                 .filter(f -> f.getType() == FilterType.EVENT && f.getNodeId() == node.getId())
                 .map(EventFilter.class::cast);
     }

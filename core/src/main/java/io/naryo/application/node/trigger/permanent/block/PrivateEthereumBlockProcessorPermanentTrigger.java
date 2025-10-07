@@ -5,7 +5,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
-import io.naryo.application.configuration.revision.LiveView;
+import io.naryo.application.configuration.revision.registry.LiveRegistry;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.filter.util.BloomFilterUtil;
 import io.naryo.application.node.helper.ContractEventDispatcherHelper;
@@ -26,7 +26,7 @@ public final class PrivateEthereumBlockProcessorPermanentTrigger
 
     public PrivateEthereumBlockProcessorPermanentTrigger(
             PrivateEthereumNode node,
-            LiveView<Filter> filters,
+            LiveRegistry<Filter> filters,
             PrivateBlockInteractor interactor,
             ContractEventParameterDecoder decoder,
             ContractEventDispatcherHelper helper) {

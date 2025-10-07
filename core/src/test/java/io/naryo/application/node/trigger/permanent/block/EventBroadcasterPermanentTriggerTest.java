@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.UUID;
 
 import io.naryo.application.broadcaster.BroadcasterProducer;
-import io.naryo.application.configuration.revision.LiveView;
 import io.naryo.application.configuration.revision.Revision;
+import io.naryo.application.configuration.revision.registry.LiveRegistry;
 import io.naryo.application.node.routing.EventRoutingService;
 import io.naryo.application.node.trigger.permanent.EventBroadcasterPermanentTrigger;
 import io.naryo.domain.broadcaster.Broadcaster;
@@ -37,8 +37,8 @@ class EventBroadcasterPermanentTriggerTest {
 
     @Mock private Event<?> event;
 
-    @Mock private LiveView<Broadcaster> broadcasters;
-    @Mock private LiveView<BroadcasterConfiguration> configurations;
+    @Mock private LiveRegistry<Broadcaster> broadcasters;
+    @Mock private LiveRegistry<BroadcasterConfiguration> configurations;
     private List<BroadcasterProducer> producers;
     private EventBroadcasterPermanentTrigger trigger;
 
@@ -94,7 +94,7 @@ class EventBroadcasterPermanentTriggerTest {
         // only wrapper2 should be invoked
         when(routingService.matchingWrappers(event, broadcasters))
                 .thenReturn(List.of(broadcaster2));
-        when(configurations.revision())
+        when(configurations.active())
                 .thenReturn(
                         new Revision<>(1, "test-hash", List.of(configuration1, configuration2)));
         UUID configurationId = UUID.randomUUID();
@@ -115,7 +115,7 @@ class EventBroadcasterPermanentTriggerTest {
     void trigger_continuesWhenProducerThrowsAndInvokesAll() {
         when(routingService.matchingWrappers(event, broadcasters))
                 .thenReturn(List.of(broadcaster1, broadcaster2));
-        when(configurations.revision())
+        when(configurations.active())
                 .thenReturn(
                         new Revision<>(1, "test-hash", List.of(configuration1, configuration2)));
 

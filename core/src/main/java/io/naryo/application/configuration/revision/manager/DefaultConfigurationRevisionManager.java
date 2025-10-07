@@ -120,6 +120,11 @@ public abstract class DefaultConfigurationRevisionManager<T>
         return view;
     }
 
+    @Override
+    public LiveRegistry<T> liveRegistry() {
+        return live;
+    }
+
     private Revision<T> publish(Collection<T> canonical) {
         var hash = fingerprinter.revisionHash(canonical, idFn);
         var rev = new Revision<>(revisionVersion.incrementAndGet(), hash, List.copyOf(canonical));

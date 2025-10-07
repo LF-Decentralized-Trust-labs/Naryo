@@ -1,6 +1,6 @@
 package io.naryo.application.node.trigger.permanent.block;
 
-import io.naryo.application.configuration.revision.LiveView;
+import io.naryo.application.configuration.revision.registry.LiveRegistry;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.node.helper.ContractEventDispatcherHelper;
 import io.naryo.application.node.helper.TransactionEventDispatcherHelper;
@@ -21,7 +21,7 @@ public final class ProcessorTriggerFactory {
 
     public PermanentTrigger<?> createBlockTrigger(
             Node node,
-            LiveView<Filter> filters,
+            LiveRegistry<Filter> filters,
             BlockInteractor interactor,
             ContractEventDispatcherHelper helper) {
         if (node instanceof PrivateEthereumNode privateNode
@@ -34,7 +34,7 @@ public final class ProcessorTriggerFactory {
 
     public PermanentTrigger<?> createTransactionTrigger(
             Node node,
-            LiveView<Filter> filters,
+            LiveRegistry<Filter> filters,
             BlockInteractor interactor,
             TransactionEventDispatcherHelper helper) {
         if (node instanceof PrivateEthereumNode privateNode

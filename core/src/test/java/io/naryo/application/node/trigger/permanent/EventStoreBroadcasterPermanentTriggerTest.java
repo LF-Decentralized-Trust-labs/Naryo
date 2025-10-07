@@ -5,8 +5,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import io.naryo.application.configuration.revision.LiveView;
 import io.naryo.application.configuration.revision.Revision;
+import io.naryo.application.configuration.revision.registry.LiveRegistry;
 import io.naryo.application.store.event.EventStore;
 import io.naryo.domain.configuration.store.StoreConfiguration;
 import io.naryo.domain.configuration.store.StoreState;
@@ -39,7 +39,7 @@ class EventStoreBroadcasterPermanentTriggerTest {
     @Mock private EventStore<ActiveStoreConfiguration, Object, Event<?>> store2;
     @Mock private Consumer<Event<?>> consumer;
     @Mock private ActiveStoreConfiguration configuration;
-    @Mock private LiveView<StoreConfiguration> storeConfigurations;
+    @Mock private LiveRegistry<StoreConfiguration> storeConfigurations;
 
     private EventStoreBroadcasterPermanentTrigger trigger;
 
@@ -56,7 +56,7 @@ class EventStoreBroadcasterPermanentTriggerTest {
                 new EventStoreBroadcasterPermanentTrigger(
                         targetEventType, node, List.of(store1, store2), storeConfigurations);
 
-        when(storeConfigurations.revision())
+        when(storeConfigurations.active())
                 .thenReturn(new Revision<>(1, "test-hash", Set.of(configuration)));
         Event<?> evt = mock(eventClass);
         when(store1.supports(configuration.getType(), evt.getClass())).thenReturn(true);
@@ -78,7 +78,7 @@ class EventStoreBroadcasterPermanentTriggerTest {
                 new EventStoreBroadcasterPermanentTrigger(
                         targetEventType, node, List.of(store1, store2), storeConfigurations);
 
-        when(storeConfigurations.revision())
+        when(storeConfigurations.active())
                 .thenReturn(new Revision<>(1, "test-hash", Set.of(configuration)));
         Event<?> evt = mock(eventClass);
         when(store1.supports(configuration.getType(), evt.getClass())).thenReturn(true);
@@ -100,7 +100,7 @@ class EventStoreBroadcasterPermanentTriggerTest {
                 new EventStoreBroadcasterPermanentTrigger(
                         targetEventType, node, List.of(store1, store2), storeConfigurations);
 
-        when(storeConfigurations.revision())
+        when(storeConfigurations.active())
                 .thenReturn(new Revision<>(1, "test-hash", Set.of(configuration)));
         Event<?> evt = mock(eventClass);
         when(store1.supports(configuration.getType(), evt.getClass())).thenReturn(true);
@@ -120,7 +120,7 @@ class EventStoreBroadcasterPermanentTriggerTest {
                 new EventStoreBroadcasterPermanentTrigger(
                         targetEventType, node, List.of(store1, store2), storeConfigurations);
 
-        when(storeConfigurations.revision())
+        when(storeConfigurations.active())
                 .thenReturn(new Revision<>(1, "test-hash", Set.of(configuration)));
         Event<?> evt = mock(eventClass);
         when(store1.supports(configuration.getType(), evt.getClass())).thenReturn(false);

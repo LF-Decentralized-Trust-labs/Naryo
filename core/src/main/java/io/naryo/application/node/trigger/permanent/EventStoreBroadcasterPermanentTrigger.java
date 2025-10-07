@@ -3,7 +3,7 @@ package io.naryo.application.node.trigger.permanent;
 import java.util.Collection;
 import java.util.Optional;
 
-import io.naryo.application.configuration.revision.LiveView;
+import io.naryo.application.configuration.revision.registry.LiveRegistry;
 import io.naryo.application.store.Store;
 import io.naryo.application.store.event.EventStore;
 import io.naryo.domain.configuration.store.StoreConfiguration;
@@ -24,14 +24,14 @@ public final class EventStoreBroadcasterPermanentTrigger implements PermanentTri
     private final EventType targetEventType;
     private final Node node;
     private final Collection<Store<?, ?, ?>> stores;
-    private final LiveView<StoreConfiguration> storeConfigurations;
+    private final LiveRegistry<StoreConfiguration> storeConfigurations;
     private Consumer<Event<?>> consumer;
 
     public EventStoreBroadcasterPermanentTrigger(
             EventType targetEventType,
             Node node,
             Collection<Store<?, ?, ?>> stores,
-            LiveView<StoreConfiguration> storeConfigurations) {
+            LiveRegistry<StoreConfiguration> storeConfigurations) {
         this.targetEventType = targetEventType;
         this.node = node;
         this.stores = stores;
@@ -61,7 +61,7 @@ public final class EventStoreBroadcasterPermanentTrigger implements PermanentTri
 
     private Optional<ActiveStoreConfiguration> getNodeStoreConfiguration() {
         StoreConfiguration storeConfiguration =
-                storeConfigurations.revision().domainItems().stream()
+                storeConfigurations.active().domainItems().stream()
                         .filter(conf -> conf.getNodeId().equals(node.getId()))
                         .findFirst()
                         .orElseThrow(

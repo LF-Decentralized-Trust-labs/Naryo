@@ -9,8 +9,8 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.naryo.application.common.util.EncryptionUtil;
-import io.naryo.application.configuration.revision.LiveView;
 import io.naryo.application.configuration.revision.Revision;
+import io.naryo.application.configuration.revision.registry.LiveRegistry;
 import io.naryo.application.event.decoder.block.DefaultContractEventParameterDecoder;
 import io.naryo.application.filter.util.BloomFilterUtil;
 import io.naryo.application.node.dispatch.Dispatcher;
@@ -62,7 +62,7 @@ class BlockProcessorPermanentTriggerTest {
         return createBlockEvent(nodeId, "0x0");
     }
 
-    @Mock private LiveView<Filter> filters;
+    @Mock private LiveRegistry<Filter> filters;
 
     private static BlockEvent createBlockEvent(UUID nodeId, String logBloom) {
         return new BlockEvent(
@@ -271,7 +271,7 @@ class BlockProcessorPermanentTriggerTest {
                         Set.of(ContractEventStatus.CONFIRMED),
                         new NoFilterSyncState(),
                         "0xa6c9f780caeafc2b8e83469a8b6422c22fa39ba1");
-        when(filters.revision()).thenReturn(new Revision<>(1, "test-hash", Set.of(filter)));
+        when(filters.active()).thenReturn(new Revision<>(1, "test-hash", Set.of(filter)));
 
         BlockProcessorPermanentTrigger<Node, MockBlockInteractor> trigger =
                 new BlockProcessorPermanentTrigger<>(
@@ -312,7 +312,7 @@ class BlockProcessorPermanentTriggerTest {
                                 Set.of(new AddressParameterDefinition(0, false))),
                         Set.of(ContractEventStatus.UNCONFIRMED, ContractEventStatus.CONFIRMED),
                         new NoFilterSyncState());
-        when(filters.revision()).thenReturn(new Revision<>(1, "test-hash", Set.of(filter)));
+        when(filters.active()).thenReturn(new Revision<>(1, "test-hash", Set.of(filter)));
 
         BlockProcessorPermanentTrigger<Node, BlockInteractor> trigger =
                 new BlockProcessorPermanentTrigger<>(
@@ -354,7 +354,7 @@ class BlockProcessorPermanentTriggerTest {
                                 Set.of(new AddressParameterDefinition(0, false))),
                         Set.of(ContractEventStatus.UNCONFIRMED, ContractEventStatus.CONFIRMED),
                         new NoFilterSyncState());
-        when(filters.revision()).thenReturn(new Revision<>(1, "test-hash", Set.of(filter)));
+        when(filters.active()).thenReturn(new Revision<>(1, "test-hash", Set.of(filter)));
         BlockProcessorPermanentTrigger<Node, BlockInteractor> trigger =
                 new BlockProcessorPermanentTrigger<>(
                         node,
@@ -395,7 +395,7 @@ class BlockProcessorPermanentTriggerTest {
                                 Set.of(new AddressParameterDefinition(0, false))),
                         Set.of(ContractEventStatus.UNCONFIRMED, ContractEventStatus.CONFIRMED),
                         new NoFilterSyncState());
-        when(filters.revision()).thenReturn(new Revision<>(1, "test-hash", Set.of(filter)));
+        when(filters.active()).thenReturn(new Revision<>(1, "test-hash", Set.of(filter)));
         BlockProcessorPermanentTrigger<Node, BlockInteractor> trigger =
                 new BlockProcessorPermanentTrigger<>(
                         node,
@@ -571,7 +571,7 @@ class BlockProcessorPermanentTriggerTest {
         }
 
         @Override
-        public String getRevertReason(String transactionHash) throws IOException {
+        public String getRevertReason(String transactionHash) {
             return "";
         }
     }

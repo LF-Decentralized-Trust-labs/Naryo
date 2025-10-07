@@ -67,7 +67,7 @@ public final class NodeInitializer {
 
     public Collection<NodeRunner> initialize() {
         Collection<Node> nodes =
-                configurationRevisionManagers.nodes().liveView().revision().domainItems();
+                configurationRevisionManagers.nodes().liveRegistry().active().domainItems();
 
         return nodes.stream()
                 .map(
@@ -105,10 +105,10 @@ public final class NodeInitializer {
     }
 
     private void addSharedTriggers(Dispatcher dispatcher) {
-        var filters = configurationRevisionManagers.filters().liveView();
-        var broadcasters = configurationRevisionManagers.broadcasters().liveView();
+        var filters = configurationRevisionManagers.filters().liveRegistry();
+        var broadcasters = configurationRevisionManagers.broadcasters().liveRegistry();
         var broadcasterConfigurations =
-                configurationRevisionManagers.broadcasterConfigurations().liveView();
+                configurationRevisionManagers.broadcasterConfigurations().liveRegistry();
 
         var eventBroadcasterPermanentTrigger =
                 new EventBroadcasterPermanentTrigger(
@@ -126,8 +126,8 @@ public final class NodeInitializer {
             BlockInteractor interactor,
             ContractEventDispatcherHelper contractEventHelper,
             TransactionEventDispatcherHelper transactionEventHelper) {
-        var filters = configurationRevisionManagers.filters().liveView();
-        var storeConfigurations = configurationRevisionManagers.storeConfigurations().liveView();
+        var filters = configurationRevisionManagers.filters().liveRegistry();
+        var storeConfigurations = configurationRevisionManagers.storeConfigurations().liveRegistry();
 
         var eventStoreTrigger =
                 new EventStoreBroadcasterPermanentTrigger(
@@ -160,7 +160,7 @@ public final class NodeInitializer {
             BlockInteractor interactor,
             StoreConfiguration storeConfiguration,
             ContractEventDispatcherHelper contractEventHelper) {
-        var filters = configurationRevisionManagers.filters().liveView();
+        var filters = configurationRevisionManagers.filters().liveRegistry();
         StartBlockCalculator calculator =
                 createStartBlockCalculator(node, interactor, storeConfiguration);
 
@@ -201,8 +201,8 @@ public final class NodeInitializer {
     private StoreConfiguration getStoreConfigurationForNode(Node node) {
         return configurationRevisionManagers
                 .storeConfigurations()
-                .liveView()
-                .revision()
+                .liveRegistry()
+                .active()
                 .domainItems()
                 .stream()
                 .filter(configuration -> configuration.getNodeId().equals(node.getId()))

@@ -6,7 +6,7 @@ import java.util.Objects;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.retry.Retry;
 import io.naryo.application.configuration.resilence.ResilienceRegistry;
-import io.naryo.application.configuration.revision.LiveView;
+import io.naryo.application.configuration.revision.registry.LiveRegistry;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.filter.Synchronizer;
 import io.naryo.application.node.calculator.StartBlockCalculator;
@@ -36,7 +36,7 @@ public final class NodeSynchronizer implements Synchronizer {
     private final BlockInteractor blockInteractor;
     private final ContractEventParameterDecoder decoder;
     private final ContractEventDispatcherHelper helper;
-    private final LiveView<Filter> filters;
+    private final LiveRegistry<Filter> filters;
     private final ResilienceRegistry resilienceRegistry;
     private final @Nullable FilterStore<?> filterStore;
     private final StoreConfiguration storeConfiguration;
@@ -45,7 +45,7 @@ public final class NodeSynchronizer implements Synchronizer {
             Node node,
             StartBlockCalculator calculator,
             BlockInteractor blockInteractor,
-            LiveView<Filter> filters,
+            LiveRegistry<Filter> filters,
             ContractEventParameterDecoder decoder,
             ContractEventDispatcherHelper helper,
             ResilienceRegistry resilienceRegistry,
@@ -113,10 +113,11 @@ public final class NodeSynchronizer implements Synchronizer {
 
     private FilteringResult getFilters() {
         List<Filter> filters =
-                this.filters.revision().domainItems().stream()
+                this.filters.active().domainItems().stream()
                         .filter(
                                 filter ->
-                                        filter.getType().equals(FilterType.EVENT)
+                                        filter.getNodeId().equals(node.getId())
+                                                && filter.getType().equals(FilterType.EVENT)
                                                 && filter instanceof EventFilter ef
                                                 && ef.getFilterSyncState()
                                                         instanceof ActiveFilterSyncState ase

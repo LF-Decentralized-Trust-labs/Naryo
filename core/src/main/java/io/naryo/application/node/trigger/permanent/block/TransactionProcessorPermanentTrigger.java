@@ -2,7 +2,7 @@ package io.naryo.application.node.trigger.permanent.block;
 
 import java.util.stream.Stream;
 
-import io.naryo.application.configuration.revision.LiveView;
+import io.naryo.application.configuration.revision.registry.LiveRegistry;
 import io.naryo.application.node.helper.TransactionEventDispatcherHelper;
 import io.naryo.application.node.interactor.block.dto.Transaction;
 import io.naryo.application.node.trigger.permanent.PermanentTrigger;
@@ -23,12 +23,12 @@ public class TransactionProcessorPermanentTrigger<N extends Node>
         implements PermanentTrigger<BlockEvent> {
 
     protected final N node;
-    protected final LiveView<Filter> filters;
+    protected final LiveRegistry<Filter> filters;
     protected final TransactionEventDispatcherHelper helper;
     protected Consumer<BlockEvent> consumer;
 
     public TransactionProcessorPermanentTrigger(
-            N node, LiveView<Filter> filters, TransactionEventDispatcherHelper helper) {
+            N node, LiveRegistry<Filter> filters, TransactionEventDispatcherHelper helper) {
         this.node = node;
         this.filters = filters;
         this.helper = helper;
@@ -36,7 +36,7 @@ public class TransactionProcessorPermanentTrigger<N extends Node>
 
     @Override
     public boolean supports(Event<?> event) {
-        return event instanceof BlockEvent;
+        return event instanceof BlockEvent && event.getNodeId().equals(node.getId());
     }
 
     @Override
@@ -94,7 +94,7 @@ public class TransactionProcessorPermanentTrigger<N extends Node>
     }
 
     protected Stream<TransactionFilter> findTransactionFilters() {
-        return filters.revision().domainItems().stream()
+        return filters.active().domainItems().stream()
                 .filter(f -> f.getType() == FilterType.TRANSACTION && f.getNodeId() == node.getId())
                 .map(TransactionFilter.class::cast);
     }

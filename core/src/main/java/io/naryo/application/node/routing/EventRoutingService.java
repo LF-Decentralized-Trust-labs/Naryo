@@ -3,7 +3,7 @@ package io.naryo.application.node.routing;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import io.naryo.application.configuration.revision.LiveView;
+import io.naryo.application.configuration.revision.registry.LiveRegistry;
 import io.naryo.domain.broadcaster.Broadcaster;
 import io.naryo.domain.broadcaster.BroadcasterTargetType;
 import io.naryo.domain.broadcaster.target.FilterEventBroadcasterTarget;
@@ -17,9 +17,9 @@ import io.naryo.domain.filter.event.EventFilter;
 import io.naryo.domain.filter.event.ParameterDefinition;
 
 public final class EventRoutingService {
-    private final LiveView<Filter> filters;
+    private final LiveRegistry<Filter> filters;
 
-    public EventRoutingService(LiveView<Filter> filters) {
+    public EventRoutingService(LiveRegistry<Filter> filters) {
         this.filters = filters;
     }
 
@@ -30,13 +30,14 @@ public final class EventRoutingService {
                         .map(b -> ((FilterEventBroadcasterTarget) b.getTarget()).getFilterId())
                         .toList();
 
-        return filters.revision().domainItems().stream()
+        return filters.active().domainItems().stream()
                 .filter(filter -> filterIds.contains(filter.getId()))
                 .toList();
     }
 
-    public List<Broadcaster> matchingWrappers(Event<?> event, LiveView<Broadcaster> broadcasters) {
-        Collection<Broadcaster> broadcasterList = broadcasters.revision().domainItems();
+    public List<Broadcaster> matchingWrappers(
+            Event<?> event, LiveRegistry<Broadcaster> broadcasters) {
+        Collection<Broadcaster> broadcasterList = broadcasters.active().domainItems();
         return switch (event.getEventType()) {
             case BLOCK -> filterByTypes(broadcasterList, BroadcasterTargetType.BLOCK);
             case TRANSACTION -> filterByTypes(broadcasterList, BroadcasterTargetType.TRANSACTION);

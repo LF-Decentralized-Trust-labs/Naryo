@@ -4,8 +4,8 @@ import java.math.BigInteger;
 import java.util.*;
 
 import io.naryo.application.configuration.resilence.ResilienceRegistry;
-import io.naryo.application.configuration.revision.LiveView;
 import io.naryo.application.configuration.revision.Revision;
+import io.naryo.application.configuration.revision.registry.LiveRegistry;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.node.calculator.StartBlockCalculator;
 import io.naryo.application.node.helper.ContractEventDispatcherHelper;
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class NodeSynchronizerTest {
 
-    @Mock private LiveView<Filter> filters;
+    @Mock private LiveRegistry<Filter> filters;
     private final ResilienceRegistry resilienceRegistry = new ResilienceRegistry();
     @Mock private Node node;
     @Mock private StartBlockCalculator calculator;
@@ -160,7 +160,7 @@ class NodeSynchronizerTest {
                         new BlockActiveFilterSyncState(new NonNegativeBlockNumber(BigInteger.ZERO)),
                         "0x1234567890abcdef1234567890abcdef12345678");
 
-        when(filters.revision()).thenReturn(new Revision<>(1, "test-hash", Set.of(filter)));
+        when(filters.active()).thenReturn(new Revision<>(1, "test-hash", Set.of(filter)));
 
         NodeSynchronizer synchronizer =
                 new NodeSynchronizer(
@@ -192,7 +192,7 @@ class NodeSynchronizerTest {
                         "0x1234567890abcdef1234567890abcdef12345678",
                         Set.of(TransactionStatus.FAILED));
 
-        when(filters.revision()).thenReturn(new Revision<>(1, "test-hash", Set.of(filter)));
+        when(filters.active()).thenReturn(new Revision<>(1, "test-hash", Set.of(filter)));
 
         NodeSynchronizer synchronizer =
                 new NodeSynchronizer(
@@ -231,7 +231,7 @@ class NodeSynchronizerTest {
                         syncState,
                         "0x1234567890abcdef1234567890abcdef12345678");
 
-        when(filters.revision()).thenReturn(new Revision<>(1, "test-hash", Set.of(filter)));
+        when(filters.active()).thenReturn(new Revision<>(1, "test-hash", Set.of(filter)));
         NodeSynchronizer synchronizer =
                 new NodeSynchronizer(
                         node,

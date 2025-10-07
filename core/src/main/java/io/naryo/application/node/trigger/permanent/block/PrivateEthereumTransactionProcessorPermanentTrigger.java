@@ -3,7 +3,7 @@ package io.naryo.application.node.trigger.permanent.block;
 import java.io.IOException;
 import java.util.Objects;
 
-import io.naryo.application.configuration.revision.LiveView;
+import io.naryo.application.configuration.revision.registry.LiveRegistry;
 import io.naryo.application.node.helper.TransactionEventDispatcherHelper;
 import io.naryo.application.node.interactor.block.dto.Transaction;
 import io.naryo.application.node.interactor.block.dto.TransactionReceipt;
@@ -24,7 +24,7 @@ public final class PrivateEthereumTransactionProcessorPermanentTrigger
 
     public PrivateEthereumTransactionProcessorPermanentTrigger(
             PrivateEthereumNode node,
-            LiveView<Filter> filters,
+            LiveRegistry<Filter> filters,
             TransactionEventDispatcherHelper helper,
             PrivateBlockInteractor interactor) {
         super(node, filters, helper);
