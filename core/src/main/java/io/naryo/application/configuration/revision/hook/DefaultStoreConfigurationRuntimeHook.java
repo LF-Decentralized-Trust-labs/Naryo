@@ -20,16 +20,14 @@ public record DefaultStoreConfigurationRuntimeHook(
     public void onAfterApply(
             Revision<StoreConfiguration> applied, DiffResult<StoreConfiguration> diff) {
         if (!diff.removed().isEmpty()) {
-            Collection<UUID> nodeIdsToRemove = diff.removed().stream()
-                .map(StoreConfiguration::getNodeId)
-                .toList();
+            Collection<UUID> nodeIdsToRemove =
+                    diff.removed().stream().map(StoreConfiguration::getNodeId).toList();
             stopNodes(nodeIdsToRemove);
         }
 
         if (!diff.modified().isEmpty()) {
-            Collection<UUID> affectedNodeIds = diff.modified().stream()
-                .map(modified -> modified.after().getNodeId())
-                .toList();
+            Collection<UUID> affectedNodeIds =
+                    diff.modified().stream().map(modified -> modified.after().getNodeId()).toList();
             restartNodes(affectedNodeIds);
         }
     }
