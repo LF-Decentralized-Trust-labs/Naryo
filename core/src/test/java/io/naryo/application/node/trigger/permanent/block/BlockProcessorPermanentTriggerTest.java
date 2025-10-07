@@ -186,12 +186,12 @@ class BlockProcessorPermanentTriggerTest {
     void testSupportsWithNoMatchingNodeId() {
         BlockInteractor interactor = new MockBlockInteractor();
         BlockProcessorPermanentTrigger<MockNode, MockBlockInteractor> trigger =
-            new BlockProcessorPermanentTrigger<>(
-                new MockNode(),
-                filters,
-                new MockBlockInteractor(),
-                decoder,
-                new ContractEventDispatcherHelper(new TestDispatcher(), interactor));
+                new BlockProcessorPermanentTrigger<>(
+                        new MockNode(),
+                        filters,
+                        new MockBlockInteractor(),
+                        decoder,
+                        new ContractEventDispatcherHelper(new TestDispatcher(), interactor));
         assertFalse(trigger.supports(createBlockEvent(UUID.randomUUID())));
     }
 
