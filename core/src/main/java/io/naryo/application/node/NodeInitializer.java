@@ -127,7 +127,8 @@ public final class NodeInitializer {
             ContractEventDispatcherHelper contractEventHelper,
             TransactionEventDispatcherHelper transactionEventHelper) {
         var filters = configurationRevisionManagers.filters().liveRegistry();
-        var storeConfigurations = configurationRevisionManagers.storeConfigurations().liveRegistry();
+        var storeConfigurations =
+                configurationRevisionManagers.storeConfigurations().liveRegistry();
 
         var eventStoreTrigger =
                 new EventStoreBroadcasterPermanentTrigger(

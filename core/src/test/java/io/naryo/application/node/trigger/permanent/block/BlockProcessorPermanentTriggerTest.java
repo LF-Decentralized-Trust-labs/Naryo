@@ -1,6 +1,5 @@
 package io.naryo.application.node.trigger.permanent.block;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.time.Duration;
 import java.util.List;
