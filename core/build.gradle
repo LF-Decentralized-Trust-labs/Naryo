@@ -5,35 +5,24 @@ plugins {
     id 'maven-publish'
 }
 
-ext {
-    web3jVersion = '4.14.0'
-    junitVersion = '5.7.1'
-    bcprovVersion = '1.70'
-    mockitoVersion = '5.17.0'
-    okHttpVersion = '4.12.0'
-    resilience4jVersion = '2.3.0'
-    instancioJunitVersion = '5.4.0'
-    jakartaAnnotationVersion = '2.1.1'
-}
-
 dependencies {
-    implementation "com.squareup.okhttp3:okhttp:$okHttpVersion"
-    implementation "com.squareup.okhttp3:okhttp-urlconnection:$okHttpVersion"
-    implementation "io.github.resilience4j:resilience4j-all:$resilience4jVersion"
-    implementation "org.web3j:core:$web3jVersion"
-    implementation "org.web3j:besu:${web3jVersion}"
-    implementation "org.bouncycastle:bcprov-jdk15on:$bcprovVersion"
-    implementation "jakarta.annotation:jakarta.annotation-api:$jakartaAnnotationVersion"
-    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    implementation(libs.okhttp)
+    implementation(libs.okhttpUrlConnection)
+    implementation(libs.resilience4jAll)
+    implementation(libs.web3jCore)
+    implementation(libs.web3jBesu)
+    implementation(libs.bcprov)
+    implementation(libs.jakartaannotationApi)
+    implementation(libs.jacksonDatatypejsr310)
 
-    compileOnly 'org.projectlombok:lombok'
+    compileOnly(libs.lombok)
 
-    testImplementation "org.junit.jupiter:junit-jupiter:$junitVersion"
-    testImplementation "org.mockito:mockito-core:$mockitoVersion"
-    testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation(libs.junitJupiter)
+    testImplementation(libs.mockitoCore)
+    testImplementation(libs.mockitoJunitJupiter)
+    testRuntimeOnly(libs.junitPlatformLauncher)
 
-    testFixturesApi "org.instancio:instancio-junit:$instancioJunitVersion"
+    testFixturesApi(libs.instancioJunit)
 }
 
 tasks.named('test', Test) {
@@ -45,9 +34,7 @@ tasks.named('test', Test) {
                 .find { it.name.startsWith('byte-buddy-agent') }
         if (bbAgent) {
             jvmArgs += [
-                "-javaagent:${bbAgent.absolutePath}"
-            ]
-            jvmArgs += [
+                "-javaagent:${bbAgent.absolutePath}",
                 "-XX:+EnableDynamicAgentLoading"
             ]
         } else {
@@ -68,7 +55,6 @@ publishing {
     publications {
         maven(MavenPublication) {
             artifactId = 'core'
-
             from components.java
         }
     }

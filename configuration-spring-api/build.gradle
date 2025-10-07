@@ -5,25 +5,18 @@ plugins {
     alias(libs.plugins.dependencyManagement)
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     implementation project(':spring-core')
     implementation project(':core')
 
-    implementation(libs.springBootStarter)
-    implementation(libs.springBootStarterMmqp)
-
-    implementation(libs.jacksonDatabind)
-    implementation(libs.jakartaValidationApi)
-
-    compileOnly(libs.lombok)
-    annotationProcessor(libs.lombok)
+    implementation(libs.springBootStarterWeb)
 
     testImplementation(testFixtures(project(':core')))
     testImplementation(libs.springBootStarterTest)
-    testImplementation(libs.springkafkaTest)
-    testImplementation(libs.instancioJunit)
-
-    testRuntimeOnly(libs.junitPlatformLauncher)
 }
 
 tasks.named('bootJar') { enabled = false }

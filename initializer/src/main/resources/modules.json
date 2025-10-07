@@ -48,5 +48,14 @@
       "description": "Naryo Kafka support",
       "required": false
     }
+    ,
+    {
+      "id": "api",
+      "groupId": "io.naryo",
+      "artifactId": "configuration-spring-api",
+      "version": "0.1.0-SNAPSHOT",
+      "description": "Naryo configuration api support",
+      "required": false
+    }
   ]
 }

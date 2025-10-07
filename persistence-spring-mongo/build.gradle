@@ -1,31 +1,27 @@
 plugins {
     id 'java-library'
-    id 'org.springframework.boot'
-    id 'io.spring.dependency-management'
+    alias(libs.plugins.boot)
+    alias(libs.plugins.dependencyManagement)
     id 'maven-publish'
 }
 
-ext {
-    mockitoVersion = '5.17.0'
-    instancioJunitVersion = '5.4.0'
-}
-
 dependencies {
-    implementation project(':spring-core')
-    implementation project(':core')
-    implementation 'org.springframework.boot:spring-boot-starter'
-    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-    implementation 'jakarta.validation:jakarta.validation-api'
+    implementation(project(':spring-core'))
+    implementation(project(':core'))
 
-    compileOnly 'org.projectlombok:lombok'
+    implementation(libs.springBootStarter)
+    implementation(libs.springBootStarterDataMongoDb)
 
-    annotationProcessor 'org.projectlombok:lombok'
+    implementation(libs.jakartaValidationApi)
 
-    testImplementation testFixtures(project(':core'))
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation "org.instancio:instancio-junit:$instancioJunitVersion"
+    compileOnly(libs.lombok)
+    annotationProcessor(libs.lombok)
 
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation(testFixtures(project(':core')))
+    testImplementation(libs.springBootStarterTest)
+    testImplementation(libs.instancioJunit)
+
+    testRuntimeOnly(libs.junitPlatformLauncher)
 }
 
 tasks.named('bootJar') { enabled = false }
