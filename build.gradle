@@ -4,8 +4,8 @@ plugins {
     id 'jacoco'
     id 'application'
     alias(libs.plugins.spotless)
-    alias(libs.plugins.boot)
-    alias(libs.plugins.dependencyManagement)
+    alias(libs.plugins.springBoot)
+    alias(libs.plugins.springDependencyManagement)
     alias(libs.plugins.freefairLombok)
     id 'maven-publish'
 }

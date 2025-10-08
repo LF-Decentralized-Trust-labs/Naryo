@@ -19,8 +19,8 @@ picocli = "4.7.7"
 mustache = "0.9.10"
 
 [plugins]
-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
-dependencyManagement = { id = "io.spring.dependency-management", version.ref = "dependency-management"}
+springBoot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+springDependencyManagement = { id = "io.spring.dependency-management", version.ref = "dependency-management"}
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless"}
 freefairLombok = { id = "io.freefair.lombok", version.ref = "freefair-lombok"}
 
