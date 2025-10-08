@@ -24,6 +24,7 @@ public final class DefaultRevisionHookBinder implements RevisionHookBinder {
     private final AtomicBoolean defaultsBound = new AtomicBoolean(false);
     private final DefaultFilterRuntimeHook defaultFilterRuntimeHook;
     private final DefaultNodeRuntimeHook defaultNodeRuntimeHook;
+    private final DefaultStoreConfigurationRuntimeHook defaultStoreConfigurationRuntimeHook;
 
     public DefaultRevisionHookBinder(
             NodeConfigurationRevisionManager nodeConfigurationRevisionManager,
@@ -33,7 +34,8 @@ public final class DefaultRevisionHookBinder implements RevisionHookBinder {
             StoreConfigurationRevisionManager storeConfigurationRevisionManager,
             FilterConfigurationRevisionManager filterConfigurationRevisionManager,
             DefaultFilterRuntimeHook defaultFilterRuntimeHook,
-            DefaultNodeRuntimeHook defaultNodeRuntimeHook) {
+            DefaultNodeRuntimeHook defaultNodeRuntimeHook,
+            DefaultStoreConfigurationRuntimeHook defaultStoreConfigurationRuntimeHook) {
         this.nodeConfigurationRevisionManager = nodeConfigurationRevisionManager;
         this.broadcasterConfigurationRevisionManager = broadcasterConfigurationRevisionManager;
         this.broadcasterConfigurationConfigurationRevisionManager =
@@ -42,6 +44,7 @@ public final class DefaultRevisionHookBinder implements RevisionHookBinder {
         this.filterConfigurationRevisionManager = filterConfigurationRevisionManager;
         this.defaultFilterRuntimeHook = defaultFilterRuntimeHook;
         this.defaultNodeRuntimeHook = defaultNodeRuntimeHook;
+        this.defaultStoreConfigurationRuntimeHook = defaultStoreConfigurationRuntimeHook;
     }
 
     @Override
@@ -52,6 +55,7 @@ public final class DefaultRevisionHookBinder implements RevisionHookBinder {
 
         filterConfigurationRevisionManager.registerHook(defaultFilterRuntimeHook);
         nodeConfigurationRevisionManager.registerHook(defaultNodeRuntimeHook);
+        storeConfigurationRevisionManager.registerHook(defaultStoreConfigurationRuntimeHook);
 
         defaultsBound.set(true);
     }

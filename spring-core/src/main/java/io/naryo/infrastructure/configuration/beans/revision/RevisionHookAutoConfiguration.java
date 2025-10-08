@@ -5,10 +5,7 @@ import java.util.Set;
 import io.naryo.application.broadcaster.configuration.revision.BroadcasterConfigurationConfigurationRevisionManager;
 import io.naryo.application.broadcaster.revision.BroadcasterConfigurationRevisionManager;
 import io.naryo.application.configuration.resilence.ResilienceRegistry;
-import io.naryo.application.configuration.revision.hook.DefaultFilterRuntimeHook;
-import io.naryo.application.configuration.revision.hook.DefaultNodeRuntimeHook;
-import io.naryo.application.configuration.revision.hook.DefaultRevisionHookBinder;
-import io.naryo.application.configuration.revision.hook.RevisionHookBinder;
+import io.naryo.application.configuration.revision.hook.*;
 import io.naryo.application.configuration.revision.registry.LiveRegistry;
 import io.naryo.application.event.decoder.ContractEventParameterDecoder;
 import io.naryo.application.filter.revision.FilterConfigurationRevisionManager;
@@ -35,7 +32,8 @@ public class RevisionHookAutoConfiguration {
             StoreConfigurationRevisionManager storeConfigurationRevisionManager,
             FilterConfigurationRevisionManager filterConfigurationRevisionManager,
             DefaultFilterRuntimeHook defaultFilterRuntimeHook,
-            DefaultNodeRuntimeHook defaultNodeRuntimeHook) {
+            DefaultNodeRuntimeHook defaultNodeRuntimeHook,
+            DefaultStoreConfigurationRuntimeHook defaultStoreConfigurationRuntimeHook) {
         return new DefaultRevisionHookBinder(
                 nodeConfigurationRevisionManager,
                 broadcasterConfigurationRevisionManager,
@@ -43,7 +41,8 @@ public class RevisionHookAutoConfiguration {
                 storeConfigurationRevisionManager,
                 filterConfigurationRevisionManager,
                 defaultFilterRuntimeHook,
-                defaultNodeRuntimeHook);
+                defaultNodeRuntimeHook,
+                defaultStoreConfigurationRuntimeHook);
     }
 
     @Bean
@@ -63,5 +62,15 @@ public class RevisionHookAutoConfiguration {
     public DefaultNodeRuntimeHook defaultNodeRuntimeHook(
             NodeLifecycle nodeLifecycle, NodeInitializer nodeInitializer) {
         return new DefaultNodeRuntimeHook(nodeLifecycle, nodeInitializer);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public DefaultStoreConfigurationRuntimeHook defaultStoreConfigurationRuntimeHook(
+            NodeLifecycle nodeLifecycle,
+            NodeInitializer nodeInitializer,
+            NodeConfigurationRevisionManager nodeConfigurationRevisionManager) {
+        return new DefaultStoreConfigurationRuntimeHook(
+                nodeLifecycle, nodeInitializer, nodeConfigurationRevisionManager);
     }
 }
