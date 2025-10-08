@@ -1,37 +1,31 @@
 plugins {
     id 'java-library'
-    id 'org.springframework.boot'
-    id 'io.spring.dependency-management'
     id 'maven-publish'
-}
-
-ext {
-    mockitoVersion = '5.17.0'
-    jacksonVersion = '2.17.1'
-    instancioJunitVersion = '5.4.0'
-    testContainersVersion = '1.21.3'
+    alias(libs.plugins.springBoot)
+    alias(libs.plugins.springDependencyManagement)
 }
 
 dependencies {
     implementation project(':spring-core')
     implementation project(':core')
-    implementation 'org.springframework.kafka:spring-kafka'
-    implementation 'org.springframework.boot:spring-boot-starter'
-    implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
-    implementation 'jakarta.validation:jakarta.validation-api'
 
-    compileOnly 'org.projectlombok:lombok'
+    implementation libs.springBootStarter
+    implementation libs.springKafka
 
-    annotationProcessor 'org.projectlombok:lombok'
+    implementation libs.jacksonDatabind
+
+    implementation libs.jakartaValidationApi
+
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
 
     testImplementation testFixtures(project(':core'))
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.kafka:spring-kafka-test'
-    testImplementation "org.testcontainers:testcontainers:${testContainersVersion}"
-    testImplementation "org.testcontainers:kafka:${testContainersVersion}"
-    testImplementation "org.instancio:instancio-junit:$instancioJunitVersion"
-
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation libs.springBootStarterTest
+    testImplementation libs.springkafkaTest
+    testImplementation libs.testContainers
+    testImplementation libs.testContainersKafka
+    testImplementation libs.instancioJunit
+    testRuntimeOnly libs.junitPlatformLauncher
 }
 
 tasks.named('bootJar') { enabled = false }

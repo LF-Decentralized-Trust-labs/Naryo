@@ -1,27 +1,22 @@
 plugins {
     id 'java-library'
+    id 'maven-publish'
     alias(libs.plugins.springBoot)
     alias(libs.plugins.springDependencyManagement)
-    id 'maven-publish'
+}
+
+repositories {
+    mavenCentral()
 }
 
 dependencies {
-    implementation(project(':spring-core'))
-    implementation(project(':core'))
+    implementation project(':spring-core')
+    implementation project(':core')
 
-    implementation(libs.springBootStarter)
-    implementation(libs.springBootStarterDataMongoDb)
-
-    implementation(libs.jakartaValidationApi)
-
-    compileOnly(libs.lombok)
-    annotationProcessor(libs.lombok)
+    implementation(libs.springBootStarterWeb)
 
     testImplementation(testFixtures(project(':core')))
     testImplementation(libs.springBootStarterTest)
-    testImplementation(libs.instancioJunit)
-
-    testRuntimeOnly(libs.junitPlatformLauncher)
 }
 
 tasks.named('bootJar') { enabled = false }
