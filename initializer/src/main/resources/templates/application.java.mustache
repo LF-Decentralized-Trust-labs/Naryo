@@ -1,7 +1,6 @@
 package {{package}};
 
-import io.naryo.application.node.NodeContainer;
-import io.naryo.application.node.NodeInitializer;
+import io.naryo.application.bootstrap.Bootstrapper;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,10 +8,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication(scanBasePackages = {"{{package}}", "io.naryo"})
 public class Application implements InitializingBean {
 
-    private final NodeInitializer nodeInitializer;
+    private final Bootstrapper bootstrapper;
 
-    public Application(NodeInitializer nodeInitializer) {
-        this.nodeInitializer = nodeInitializer;
+    public Application(Bootstrapper bootstrapper) {
+        this.bootstrapper = bootstrapper;
     }
 
     public static void main(String[] args) {
@@ -20,8 +19,7 @@ public class Application implements InitializingBean {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        NodeContainer container = nodeInitializer.init();
-        container.start();
+    public void afterPropertiesSet() {
+        bootstrapper.start();
     }
 }

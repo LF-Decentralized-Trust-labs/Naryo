@@ -11,7 +11,8 @@ public final class CanonicalJson {
             new ObjectMapper()
                     .configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true)
                     .registerModule(new JavaTimeModule())
-                    .setSerializationInclusion(JsonInclude.Include.NON_NULL);
+                    .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+                    .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 
     private CanonicalJson() {}
 
