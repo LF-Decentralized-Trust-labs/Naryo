@@ -4,6 +4,8 @@ import io.naryo.application.configuration.revision.RevisionOperationState;
 import io.naryo.application.configuration.revision.RevisionOperationStatus;
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryRevisionOperationStoreTest {
@@ -11,7 +13,7 @@ class InMemoryRevisionOperationStoreTest {
     @Test
     void accepted_op_is_pending_and_timestamped() {
         InMemoryRevisionOperationStore store = new InMemoryRevisionOperationStore();
-        String opId = "op-1";
+        UUID opId = UUID.randomUUID();
 
         store.accepted(opId);
 
@@ -28,7 +30,7 @@ class InMemoryRevisionOperationStoreTest {
     @Test
     void accepted_op_is_idempotent_and_updates_lastUpdated_only() throws InterruptedException {
         InMemoryRevisionOperationStore store = new InMemoryRevisionOperationStore();
-        String opId = "op-2";
+        UUID opId = UUID.randomUUID();
 
         store.accepted(opId);
         RevisionOperationStatus first = store.get(opId).orElseThrow();
@@ -44,7 +46,7 @@ class InMemoryRevisionOperationStoreTest {
     @Test
     void running_op_transitions_from_Pending_to_Running() {
         InMemoryRevisionOperationStore store = new InMemoryRevisionOperationStore();
-        String opId = "op-3";
+        UUID opId = UUID.randomUUID();
 
         store.accepted(opId);
         store.running(opId);
@@ -56,7 +58,7 @@ class InMemoryRevisionOperationStoreTest {
     @Test
     void running_op_is_idempotent_when_already_Running() throws InterruptedException {
         InMemoryRevisionOperationStore store = new InMemoryRevisionOperationStore();
-        String opId = "op-4";
+        UUID opId = UUID.randomUUID();
 
         store.accepted(opId);
         store.running(opId);
@@ -74,7 +76,7 @@ class InMemoryRevisionOperationStoreTest {
     @Test
     void succeeded_sets_succeeded_state_and_clears_errors_and_stores_revision_and_hash() {
         InMemoryRevisionOperationStore store = new InMemoryRevisionOperationStore();
-        String opId = "op-5";
+        UUID opId = UUID.randomUUID();
 
         store.accepted(opId);
         store.running(opId);
@@ -91,7 +93,7 @@ class InMemoryRevisionOperationStoreTest {
     @Test
     void failed_sets_failed_state_andStoresError_andClearsOutput() {
         InMemoryRevisionOperationStore store = new InMemoryRevisionOperationStore();
-        String opId = "op-6";
+        UUID opId = UUID.randomUUID();
 
         store.accepted(opId);
         store.running(opId);
@@ -108,7 +110,7 @@ class InMemoryRevisionOperationStoreTest {
     @Test
     void succeeded_overwrites_previous_Failure_idempotent_rewrite_to_final_state() {
         InMemoryRevisionOperationStore store = new InMemoryRevisionOperationStore();
-        String opId = "op-7";
+        UUID opId = UUID.randomUUID();
 
         store.accepted(opId);
         store.failed(opId, "E_OLD", "Old failure");
@@ -136,6 +138,6 @@ class InMemoryRevisionOperationStoreTest {
     @Test
     void get_returns_empty_for_unknown_operation() {
         InMemoryRevisionOperationStore store = new InMemoryRevisionOperationStore();
-        assertTrue(store.get("unknown-op").isEmpty());
+        assertTrue(store.get(UUID.randomUUID()).isEmpty());
     }
 }

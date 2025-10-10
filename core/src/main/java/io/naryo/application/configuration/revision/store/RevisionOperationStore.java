@@ -1,18 +1,19 @@
 package io.naryo.application.configuration.revision.store;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import io.naryo.application.configuration.revision.RevisionOperationStatus;
 
 public interface RevisionOperationStore {
 
-    void accepted(String operationId);
+    void accepted(UUID operationId);
 
-    void running(String operationId);
+    void running(UUID operationId);
 
-    void succeeded(String operationId, long revision, String hash);
+    void succeeded(UUID operationId, long revision, String hash);
 
-    void failed(String operationId, String errorCode, String errorMessage);
+    void failed(UUID operationId, String errorCode, String errorMessage);
 
-    Optional<RevisionOperationStatus> get(String operationId);
+    Optional<RevisionOperationStatus> get(UUID operationId);
 }

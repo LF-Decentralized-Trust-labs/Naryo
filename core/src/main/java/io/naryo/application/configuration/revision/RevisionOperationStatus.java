@@ -1,9 +1,10 @@
 package io.naryo.application.configuration.revision;
 
 import java.time.Instant;
+import java.util.UUID;
 
 public record RevisionOperationStatus(
-        String operationId,
+        UUID operationId,
         RevisionOperationState state,
         Long revision,
         String hash,
