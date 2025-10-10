@@ -2,7 +2,9 @@ package io.naryo.domain.filter.event.sync;
 
 import io.naryo.domain.filter.event.FilterSyncState;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+@ToString
 @EqualsAndHashCode
 public final class NoFilterSyncState implements FilterSyncState {
     // This class represents a state where no synchronization is needed.

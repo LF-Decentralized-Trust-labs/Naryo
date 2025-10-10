@@ -218,7 +218,10 @@ public class BlockProcessorPermanentTrigger<N extends Node, I extends BlockInter
 
     protected Stream<EventFilter> findActiveEventFilters() {
         return filters.active().domainItems().stream()
-                .filter(f -> f.getType() == FilterType.EVENT && f.getNodeId() == node.getId())
+                .filter(
+                        f ->
+                                f.getType().equals(FilterType.EVENT)
+                                        && f.getNodeId().equals(node.getId()))
                 .map(EventFilter.class::cast);
     }
 }
