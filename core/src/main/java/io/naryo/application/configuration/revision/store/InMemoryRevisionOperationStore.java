@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.naryo.application.configuration.revision.RevisionOperationState;
@@ -12,7 +13,7 @@ import io.naryo.application.configuration.revision.RevisionOperationStatus;
 public class InMemoryRevisionOperationStore implements RevisionOperationStore {
 
     private static final class Entry {
-        final String operationId;
+        final UUID operationId;
         volatile RevisionOperationState state;
         volatile Long revision;
         volatile String hash;
@@ -21,7 +22,7 @@ public class InMemoryRevisionOperationStore implements RevisionOperationStore {
         volatile Instant lastUpdatedAt;
         volatile Instant acceptedAt;
 
-        Entry(String operationId) {
+        Entry(UUID operationId) {
             this.operationId = operationId;
             this.acceptedAt = Instant.now();
             this.lastUpdatedAt = this.acceptedAt;
@@ -49,10 +50,10 @@ public class InMemoryRevisionOperationStore implements RevisionOperationStore {
         }
     }
 
-    private final Map<String, Entry> entries = new ConcurrentHashMap<>();
+    private final Map<UUID, Entry> entries = new ConcurrentHashMap<>();
 
     @Override
-    public void accepted(String operationId) {
+    public void accepted(UUID operationId) {
         Objects.requireNonNull(operationId, "operationId");
         entries.compute(
                 operationId,
@@ -66,7 +67,7 @@ public class InMemoryRevisionOperationStore implements RevisionOperationStore {
     }
 
     @Override
-    public void running(String operationId) {
+    public void running(UUID operationId) {
         Objects.requireNonNull(operationId, "operationId");
         entries.computeIfPresent(
                 operationId,
@@ -81,7 +82,7 @@ public class InMemoryRevisionOperationStore implements RevisionOperationStore {
     }
 
     @Override
-    public void succeeded(String operationId, long revision, String hash) {
+    public void succeeded(UUID operationId, long revision, String hash) {
         Objects.requireNonNull(operationId, "operationId");
         Objects.requireNonNull(hash, "hash");
         entries.compute(
@@ -101,7 +102,7 @@ public class InMemoryRevisionOperationStore implements RevisionOperationStore {
     }
 
     @Override
-    public void failed(String operationId, String errorCode, String errorMessage) {
+    public void failed(UUID operationId, String errorCode, String errorMessage) {
         Objects.requireNonNull(operationId, "operationId");
         entries.compute(
                 operationId,
@@ -120,7 +121,7 @@ public class InMemoryRevisionOperationStore implements RevisionOperationStore {
     }
 
     @Override
-    public Optional<RevisionOperationStatus> get(String operationId) {
+    public Optional<RevisionOperationStatus> get(UUID operationId) {
         Objects.requireNonNull(operationId, "operationId");
         var e = entries.get(operationId);
         return Optional.ofNullable(e).map(Entry::snapshot);

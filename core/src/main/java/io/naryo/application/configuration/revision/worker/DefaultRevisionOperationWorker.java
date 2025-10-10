@@ -47,27 +47,27 @@ public final class DefaultRevisionOperationWorker<T> implements RevisionOperatio
                 OperationId opId = task.id();
                 RevisionOperation<T> op = task.op();
 
-                store.running(opId.getValue());
+                store.running(opId.value());
 
                 try {
                     this.manager.apply(op);
                     var liveView = manager.liveView();
                     if (liveView != null && liveView.revision() != null) {
                         store.succeeded(
-                                opId.getValue(),
+                                opId.value(),
                                 liveView.revision().version(),
                                 liveView.revision().hash());
                     } else {
                         store.failed(
-                                opId.getValue(),
+                                opId.value(),
                                 "PUBLICATION_ERROR",
                                 "Live view not updated after apply");
                     }
                 } catch (RevisionConflictException e) {
-                    store.failed(opId.getValue(), "REVISION_CONFLICT", safeMsg(e));
+                    store.failed(opId.value(), "REVISION_CONFLICT", safeMsg(e));
                 } catch (Exception e) {
                     store.failed(
-                            opId.getValue(),
+                            opId.value(),
                             "UNEXPECTED_ERROR",
                             e.getClass().getSimpleName() + ": " + safeMsg(e));
                 }

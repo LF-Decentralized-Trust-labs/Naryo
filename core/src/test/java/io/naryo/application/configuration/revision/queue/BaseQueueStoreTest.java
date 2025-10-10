@@ -22,7 +22,7 @@ abstract class BaseQueueStoreTest<Q extends RevisionOperationQueue<T>, T> {
 
     protected OperationId enqueueAndVerifyAccepted(RevisionOperation<T> op) {
         OperationId id = queue.enqueue(op);
-        verify(store).accepted(id.getValue());
+        verify(store).accepted(id.value());
         return id;
     }
 }

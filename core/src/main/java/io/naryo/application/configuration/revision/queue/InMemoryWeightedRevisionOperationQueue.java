@@ -60,7 +60,7 @@ public class InMemoryWeightedRevisionOperationQueue<T>
                 throw new QueueOverflowException("High lane is full", "HIGH", op.kind().name());
             }
         }
-        store.accepted(opId.getValue());
+        store.accepted(opId.value());
         return opId;
     }
 

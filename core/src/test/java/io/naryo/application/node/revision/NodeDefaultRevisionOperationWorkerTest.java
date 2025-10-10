@@ -63,8 +63,8 @@ public class NodeDefaultRevisionOperationWorkerTest
         TimeUnit.MILLISECONDS.sleep(100);
         worker.close();
 
-        verify(this.store).running(opId.getValue());
-        verify(this.store).succeeded(opId.getValue(), 1L, "hash1");
+        verify(this.store).running(opId.value());
+        verify(this.store).succeeded(opId.value(), 1L, "hash1");
     }
 
     @Test
@@ -92,9 +92,8 @@ public class NodeDefaultRevisionOperationWorkerTest
         TimeUnit.MILLISECONDS.sleep(100);
         worker.close();
 
-        verify(this.store).running(opId.getValue());
-        verify(this.store)
-                .failed(eq(opId.getValue()), eq("REVISION_CONFLICT"), contains("conflict"));
+        verify(this.store).running(opId.value());
+        verify(this.store).failed(eq(opId.value()), eq("REVISION_CONFLICT"), contains("conflict"));
     }
 
     @Test
@@ -123,10 +122,10 @@ public class NodeDefaultRevisionOperationWorkerTest
         TimeUnit.MILLISECONDS.sleep(100);
         worker.close();
 
-        verify(this.store).running(opId.getValue());
+        verify(this.store).running(opId.value());
         verify(this.store)
                 .failed(
-                        eq(opId.getValue()),
+                        eq(opId.value()),
                         eq("PUBLICATION_ERROR"),
                         contains("Live view not updated"));
     }
