@@ -12,5 +12,4 @@ public record OperationId(UUID value) {
     public static OperationId random() {
         return new OperationId(UUID.randomUUID());
     }
-
 }

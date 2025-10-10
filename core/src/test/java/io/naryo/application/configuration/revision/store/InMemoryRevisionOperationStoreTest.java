@@ -1,10 +1,10 @@
 package io.naryo.application.configuration.revision.store;
 
+import java.util.UUID;
+
 import io.naryo.application.configuration.revision.RevisionOperationState;
 import io.naryo.application.configuration.revision.RevisionOperationStatus;
 import org.junit.jupiter.api.Test;
-
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 

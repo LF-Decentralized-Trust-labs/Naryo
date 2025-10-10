@@ -92,8 +92,7 @@ public class BroadcasterRevisionWorkerTest
         worker.close();
 
         verify(this.store).running(opId.value());
-        verify(this.store)
-                .failed(eq(opId.value()), eq("REVISION_CONFLICT"), contains("conflict"));
+        verify(this.store).failed(eq(opId.value()), eq("REVISION_CONFLICT"), contains("conflict"));
     }
 
     @Test
