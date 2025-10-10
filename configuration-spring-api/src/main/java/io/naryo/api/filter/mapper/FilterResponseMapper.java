@@ -1,0 +1,73 @@
+package io.naryo.api.filter.mapper;
+
+import java.util.Objects;
+
+import io.naryo.api.filter.response.ContractEventFilterResponse;
+import io.naryo.api.filter.response.FilterResponse;
+import io.naryo.api.filter.response.GlobalEventFilterResponse;
+import io.naryo.api.filter.response.TransactionFilterResponse;
+import io.naryo.domain.filter.Filter;
+import io.naryo.domain.filter.event.*;
+import io.naryo.domain.filter.transaction.TransactionFilter;
+
+public final class FilterResponseMapper {
+
+    public static FilterResponse map(Filter filter) {
+
+        Objects.requireNonNull(filter, "filter must not be null");
+
+        return switch (filter) {
+            case TransactionFilter tf ->
+                    TransactionFilterResponse.builder()
+                            .id(tf.getId())
+                            .name(tf.getName().value())
+                            .nodeId(tf.getNodeId())
+                            .identifierType(tf.getIdentifierType())
+                            .value(tf.getValue())
+                            .statuses(tf.getStatuses())
+                            .build();
+            case EventFilter ef -> {
+                EventFilterSpecification spec = ef.getSpecification();
+                EventFilterVisibilityConfiguration vis = ef.getVisibilityConfiguration();
+
+                String signature = spec.getEventSignature();
+                Integer correlation =
+                        spec.correlationId() == null ? null : spec.correlationId().position();
+                boolean visible = vis.isVisible();
+                String privacy = visible ? null : vis.getPrivacyGroupId();
+
+                if (ef instanceof GlobalEventFilter) {
+                    yield GlobalEventFilterResponse.builder()
+                            .id(ef.getId())
+                            .name(ef.getName().value())
+                            .nodeId(ef.getNodeId())
+                            .signature(signature)
+                            .correlationId(correlation)
+                            .statuses(ef.getStatuses())
+                            .visible(visible)
+                            .privacyGroupId(privacy)
+                            .build();
+                }
+                if (ef instanceof ContractEventFilter cef) {
+                    yield ContractEventFilterResponse.builder()
+                            .id(ef.getId())
+                            .name(ef.getName().value())
+                            .nodeId(ef.getNodeId())
+                            .signature(signature)
+                            .correlationId(correlation)
+                            .statuses(ef.getStatuses())
+                            .visible(visible)
+                            .privacyGroupId(privacy)
+                            .address(cef.getContractAddress())
+                            .build();
+                } else {
+                    throw new IllegalArgumentException(
+                            "Unsupported event filter subtype: " + ef.getClass().getName());
+                }
+            }
+            default ->
+                    throw new IllegalArgumentException(
+                            "Unsupported filter type: " + filter.getClass().getName());
+        };
+    }
+}
