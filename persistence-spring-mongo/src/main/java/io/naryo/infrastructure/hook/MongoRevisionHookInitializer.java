@@ -6,11 +6,11 @@ import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;
 import io.naryo.domain.configuration.store.StoreConfiguration;
 import io.naryo.domain.filter.Filter;
 import io.naryo.domain.node.Node;
-import io.naryo.infrastructure.configuration.beans.env.EnvironmentInitializer;
+import io.naryo.infrastructure.configuration.beans.revision.HookInitializer;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MongoRevisionHookInitializer implements EnvironmentInitializer {
+public class MongoRevisionHookInitializer implements HookInitializer {
 
     private final RevisionHookBinder revisionHookBinder;
     private final NodeDocumentRevisionHook nodeDocumentRevisionHook;

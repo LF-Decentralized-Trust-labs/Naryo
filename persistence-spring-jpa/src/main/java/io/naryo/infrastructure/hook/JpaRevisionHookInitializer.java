@@ -6,11 +6,11 @@ import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;
 import io.naryo.domain.configuration.store.StoreConfiguration;
 import io.naryo.domain.filter.Filter;
 import io.naryo.domain.node.Node;
-import io.naryo.infrastructure.configuration.beans.env.EnvironmentInitializer;
+import io.naryo.infrastructure.configuration.beans.revision.HookInitializer;
 import org.springframework.stereotype.Component;
 
 @Component
-public class JpaRevisionHookInitializer implements EnvironmentInitializer {
+public class JpaRevisionHookInitializer implements HookInitializer {
 
     private final RevisionHookBinder revisionHookBinder;
     private final NodeRevisionHook nodeRevisionHook;
