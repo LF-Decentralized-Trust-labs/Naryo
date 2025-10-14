@@ -15,12 +15,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class RestExceptionHandler {
 
     @ExceptionHandler({
         MethodArgumentNotValidException.class,
         BindException.class,
-        ConstraintViolationException.class
+        ConstraintViolationException.class,
+        HttpMessageNotReadableException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidation(Exception ex, HttpServletRequest req) {
@@ -41,21 +42,12 @@ public class GlobalExceptionHandler {
                                     .map(v -> v.getPropertyPath() + ": " + v.getMessage())
                                     .reduce((a, b) -> a + "; " + b)
                                     .orElse("Validation failed");
+                    case HttpMessageNotReadableException nre ->
+                        "Malformed JSON: " + nre.getMostSpecificCause().getMessage();
                     default -> "Validation failed";
                 };
         return ErrorResponse.of(
                 HttpStatus.BAD_REQUEST.value(), "Bad Request", msg, req.getRequestURI());
-    }
-
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleMalformedJson(
-            HttpMessageNotReadableException ex, HttpServletRequest req) {
-        return ErrorResponse.of(
-                HttpStatus.BAD_REQUEST.value(),
-                "Bad Request",
-                "Malformed JSON: " + ex.getMostSpecificCause().getMessage(),
-                req.getRequestURI());
     }
 
     @ExceptionHandler(RevisionConflictException.class)
@@ -86,23 +78,13 @@ public class GlobalExceptionHandler {
                 req.getRequestURI());
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler({ Exception.class, ValidationException.class })
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleUnknown(Exception ex, HttpServletRequest req) {
         return ErrorResponse.of(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Internal Server Error",
-                ex.getMessage() != null ? ex.getMessage() : "Unexpected error",
-                req.getRequestURI());
-    }
-
-    @ExceptionHandler(ValidationException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleValidationDomain(ValidationException ex, HttpServletRequest req) {
-        return ErrorResponse.of(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Internal Server Error",
-                ex.getMessage(),
+            "Unexpected error",
                 req.getRequestURI());
     }
 }
