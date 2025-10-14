@@ -15,6 +15,9 @@ dependencies {
 
     implementation(libs.springBootStarterWeb)
 
+    compileOnly(libs.lombok)
+    annotationProcessor(libs.lombok)
+
     testImplementation(testFixtures(project(':core')))
     testImplementation(libs.springBootStarterTest)
 }
