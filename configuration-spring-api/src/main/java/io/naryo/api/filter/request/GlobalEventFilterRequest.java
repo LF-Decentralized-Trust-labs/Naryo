@@ -24,11 +24,5 @@ public record GlobalEventFilterRequest(
 
     public GlobalEventFilterRequest {
         type = "global-event";
-        if (statuses == null || statuses.isEmpty()) {
-            statuses = Set.of(ContractEventStatus.values());
-        }
-        if (visibilityConfiguration == null) {
-            visibilityConfiguration = EventFilterVisibilityConfiguration.visible();
-        }
     }
 }

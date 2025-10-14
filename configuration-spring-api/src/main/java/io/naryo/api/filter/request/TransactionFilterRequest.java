@@ -21,8 +21,5 @@ public record TransactionFilterRequest(
 
     public TransactionFilterRequest {
         type = "transaction";
-        if (statuses == null || statuses.isEmpty()) {
-            statuses = Set.of(TransactionStatus.values());
-        }
     }
 }

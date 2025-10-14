@@ -25,11 +25,5 @@ public record ContractEventFilterRequest(
 
     public ContractEventFilterRequest {
         type = "contract-event";
-        if (statuses == null || statuses.isEmpty()) {
-            statuses = Set.of(ContractEventStatus.values());
-        }
-        if (visibilityConfiguration == null) {
-            visibilityConfiguration = EventFilterVisibilityConfiguration.visible();
-        }
     }
 }
