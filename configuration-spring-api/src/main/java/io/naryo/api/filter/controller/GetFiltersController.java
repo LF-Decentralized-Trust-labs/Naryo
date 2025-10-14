@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @RestController
 @RequiredArgsConstructor
-public class QueryFilterController extends FilterController {
+public class GetFiltersController extends FilterController {
 
     private final FilterConfigurationRevisionManager filterConfigurationRevisionManager;
 
