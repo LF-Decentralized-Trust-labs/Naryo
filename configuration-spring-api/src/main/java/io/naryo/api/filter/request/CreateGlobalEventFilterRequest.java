@@ -27,12 +27,12 @@ public record CreateGlobalEventFilterRequest(
     public static EventFilter toDomain(CreateGlobalEventFilterRequest req) {
         var name = new FilterName(req.name());
         return new GlobalEventFilter(
-            UUID.randomUUID(),
-            name,
-            req.nodeId(),
-            req.specification(),
-            req.statuses(),
-            req.filterSyncState(),
-            req.visibilityConfiguration());
+                UUID.randomUUID(),
+                name,
+                req.nodeId(),
+                req.specification(),
+                req.statuses(),
+                req.filterSyncState(),
+                req.visibilityConfiguration());
     }
 }

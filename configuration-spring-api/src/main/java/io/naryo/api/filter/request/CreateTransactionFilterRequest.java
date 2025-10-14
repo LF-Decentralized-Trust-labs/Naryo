@@ -27,6 +27,11 @@ public record CreateTransactionFilterRequest(
     public static TransactionFilter toDomain(CreateTransactionFilterRequest req) {
         var name = new FilterName(req.name());
         return new TransactionFilter(
-            UUID.randomUUID(), name, req.nodeId(), req.identifierType(), req.value(), req.statuses());
+                UUID.randomUUID(),
+                name,
+                req.nodeId(),
+                req.identifierType(),
+                req.value(),
+                req.statuses());
     }
 }

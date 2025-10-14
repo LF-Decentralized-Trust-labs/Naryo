@@ -33,10 +33,7 @@ public class CreateFilterController extends FilterController {
         RevisionOperation<Filter> op = new AddOperation<>(filter);
         OperationId opId = operationQueue.enqueue(op);
         return operationStore
-            .get(opId.value())
-            .orElseThrow(
-                () ->
-                    new ValidationException(
-                        "Operation status not found"));
+                .get(opId.value())
+                .orElseThrow(() -> new ValidationException("Operation status not found"));
     }
 }

@@ -28,13 +28,13 @@ public record CreateContractEventFilterRequest(
     public static EventFilter toDomain(CreateContractEventFilterRequest req) {
         var name = new FilterName(req.name());
         return new ContractEventFilter(
-            UUID.randomUUID(),
-            name,
-            req.nodeId(),
-            req.specification(),
-            req.statuses(),
-            req.filterSyncState(),
-            req.visibilityConfiguration(),
-            req.contractAddress());
+                UUID.randomUUID(),
+                name,
+                req.nodeId(),
+                req.specification(),
+                req.statuses(),
+                req.filterSyncState(),
+                req.visibilityConfiguration(),
+                req.contractAddress());
     }
 }

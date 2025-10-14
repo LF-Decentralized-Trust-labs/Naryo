@@ -1,5 +1,7 @@
 package io.naryo.api.filter.controller;
 
+import java.util.UUID;
+
 import io.naryo.api.error.ConfigurationApiErrors;
 import io.naryo.api.filter.request.UpdateFilterRequest;
 import io.naryo.application.configuration.revision.OperationId;
@@ -17,8 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 @Validated
 @RestController
 @RequiredArgsConstructor
@@ -31,17 +31,14 @@ public class UpdateFilterController extends FilterController {
     @ConfigurationApiErrors
     @ResponseStatus(HttpStatus.ACCEPTED)
     public RevisionOperationStatus update(
-        @PathVariable("id") UUID id,
-        @PathVariable("prevItemHash") String prevItemHash,
-        @Valid @RequestBody UpdateFilterRequest filterToUpdate) {
+            @PathVariable("id") UUID id,
+            @PathVariable("prevItemHash") String prevItemHash,
+            @Valid @RequestBody UpdateFilterRequest filterToUpdate) {
         Filter proposed = UpdateFilterRequest.toDomain(filterToUpdate, id);
         RevisionOperation<Filter> op = new UpdateOperation<>(id, prevItemHash, proposed);
         OperationId opId = operationQueue.enqueue(op);
         return operationStore
-            .get(opId.value())
-            .orElseThrow(
-                () ->
-                    new ValidationException(
-                        "Operation status not found"));
+                .get(opId.value())
+                .orElseThrow(() -> new ValidationException("Operation status not found"));
     }
 }

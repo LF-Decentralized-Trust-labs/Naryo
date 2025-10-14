@@ -1,5 +1,7 @@
 package io.naryo.api.filter.controller;
 
+import java.util.UUID;
+
 import io.naryo.api.error.ConfigurationApiErrors;
 import io.naryo.application.configuration.revision.RevisionOperationStatus;
 import io.naryo.application.configuration.revision.operation.RemoveOperation;
@@ -14,8 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 @Validated
 @RestController
 @RequiredArgsConstructor
@@ -28,14 +28,11 @@ public class DeleteFilterController extends FilterController {
     @ConfigurationApiErrors
     @ResponseStatus(HttpStatus.ACCEPTED)
     public RevisionOperationStatus delete(
-        @PathVariable("id") UUID id, @PathVariable("prevItemHash") String prevItemHash) {
+            @PathVariable("id") UUID id, @PathVariable("prevItemHash") String prevItemHash) {
         RevisionOperation<Filter> op = new RemoveOperation<>(id, prevItemHash);
         var opId = operationQueue.enqueue(op);
         return operationStore
-            .get(opId.value())
-            .orElseThrow(
-                () ->
-                    new ValidationException(
-                        "Operation status not found"));
+                .get(opId.value())
+                .orElseThrow(() -> new ValidationException("Operation status not found"));
     }
 }

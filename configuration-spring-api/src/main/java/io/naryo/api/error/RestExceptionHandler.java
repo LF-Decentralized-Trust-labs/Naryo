@@ -43,7 +43,7 @@ public class RestExceptionHandler {
                                     .reduce((a, b) -> a + "; " + b)
                                     .orElse("Validation failed");
                     case HttpMessageNotReadableException nre ->
-                        "Malformed JSON: " + nre.getMostSpecificCause().getMessage();
+                            "Malformed JSON: " + nre.getMostSpecificCause().getMessage();
                     default -> "Validation failed";
                 };
         return ErrorResponse.of(
@@ -78,13 +78,13 @@ public class RestExceptionHandler {
                 req.getRequestURI());
     }
 
-    @ExceptionHandler({ Exception.class, ValidationException.class })
+    @ExceptionHandler({Exception.class, ValidationException.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleUnknown(Exception ex, HttpServletRequest req) {
         return ErrorResponse.of(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Internal Server Error",
-            "Unexpected error",
+                "Unexpected error",
                 req.getRequestURI());
     }
 }

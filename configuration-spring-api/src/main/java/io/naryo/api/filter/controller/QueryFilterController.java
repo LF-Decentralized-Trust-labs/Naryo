@@ -24,7 +24,7 @@ public class QueryFilterController extends FilterController {
         var liveView = filterConfigurationRevisionManager.liveView();
         var fingerprints = liveView.itemFingerprintById();
         return liveView.revision().domainItems().stream()
-            .map(f -> FilterResponse.map(f, fingerprints))
-            .toList();
+                .map(f -> FilterResponse.map(f, fingerprints))
+                .toList();
     }
 }

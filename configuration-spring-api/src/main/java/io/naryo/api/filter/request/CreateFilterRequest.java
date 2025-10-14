@@ -11,7 +11,9 @@ import io.naryo.domain.filter.Filter;
     @JsonSubTypes.Type(value = CreateGlobalEventFilterRequest.class, name = "global-event")
 })
 public sealed interface CreateFilterRequest
-        permits CreateTransactionFilterRequest, CreateGlobalEventFilterRequest, CreateContractEventFilterRequest {
+        permits CreateTransactionFilterRequest,
+                CreateGlobalEventFilterRequest,
+                CreateContractEventFilterRequest {
 
     static Filter toDomain(CreateFilterRequest req) {
         return switch (req) {
