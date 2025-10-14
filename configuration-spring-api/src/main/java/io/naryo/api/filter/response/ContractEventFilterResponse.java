@@ -16,5 +16,6 @@ public record ContractEventFilterResponse(
         Set<ContractEventStatus> statuses,
         Boolean visible,
         String privacyGroupId,
-        String address)
+        String address,
+        String currentItemHash)
         implements FilterResponse {}

@@ -15,5 +15,6 @@ public record GlobalEventFilterResponse(
         Integer correlationId,
         Set<ContractEventStatus> statuses,
         Boolean visible,
-        String privacyGroupId)
+        String privacyGroupId,
+        String currentItemHash)
         implements FilterResponse {}

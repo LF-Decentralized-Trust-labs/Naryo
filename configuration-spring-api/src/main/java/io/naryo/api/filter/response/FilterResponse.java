@@ -4,14 +4,17 @@ import io.naryo.domain.filter.Filter;
 import io.naryo.domain.filter.event.*;
 import io.naryo.domain.filter.transaction.TransactionFilter;
 
+import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 public sealed interface FilterResponse
         permits GlobalEventFilterResponse, ContractEventFilterResponse, TransactionFilterResponse {
 
-    static FilterResponse map(Filter filter) {
+    static FilterResponse map(Filter filter, Map<UUID, String> fingerprints) {
 
         Objects.requireNonNull(filter, "filter must not be null");
+        String hash = fingerprints.get(filter.getId());
 
         return switch (filter) {
             case TransactionFilter tf ->
@@ -22,6 +25,7 @@ public sealed interface FilterResponse
                     .identifierType(tf.getIdentifierType())
                     .value(tf.getValue())
                     .statuses(tf.getStatuses())
+                    .currentItemHash(hash)
                     .build();
             case EventFilter ef -> {
                 EventFilterSpecification spec = ef.getSpecification();
@@ -43,6 +47,7 @@ public sealed interface FilterResponse
                         .statuses(ef.getStatuses())
                         .visible(visible)
                         .privacyGroupId(privacy)
+                        .currentItemHash(hash)
                         .build();
                 }
                 if (ef instanceof ContractEventFilter cef) {
@@ -56,6 +61,7 @@ public sealed interface FilterResponse
                         .visible(visible)
                         .privacyGroupId(privacy)
                         .address(cef.getContractAddress())
+                        .currentItemHash(hash)
                         .build();
                 } else {
                     throw new IllegalArgumentException(

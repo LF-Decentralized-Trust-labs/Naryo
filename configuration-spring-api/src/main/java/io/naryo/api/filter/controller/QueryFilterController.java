@@ -21,8 +21,10 @@ public class QueryFilterController extends FilterController {
     @ConfigurationApiErrors
     @ResponseStatus(HttpStatus.OK)
     public List<FilterResponse> getAll() {
-        return filterConfigurationRevisionManager.liveRegistry().active().domainItems().stream()
-                .map(FilterResponse::map)
-                .toList();
+        var liveView = filterConfigurationRevisionManager.liveView();
+        var fingerprints = liveView.itemFingerprintById();
+        return liveView.revision().domainItems().stream()
+            .map(f -> FilterResponse.map(f, fingerprints))
+            .toList();
     }
 }

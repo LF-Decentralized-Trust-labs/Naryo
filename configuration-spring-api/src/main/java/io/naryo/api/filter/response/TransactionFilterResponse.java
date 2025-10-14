@@ -14,5 +14,6 @@ public record TransactionFilterResponse(
         UUID nodeId,
         IdentifierType identifierType,
         String value,
-        Set<TransactionStatus> statuses)
+        Set<TransactionStatus> statuses,
+        String currentItemHash)
         implements FilterResponse {}

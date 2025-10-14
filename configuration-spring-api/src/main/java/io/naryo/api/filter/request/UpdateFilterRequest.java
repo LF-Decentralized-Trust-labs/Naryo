@@ -16,9 +16,9 @@ public sealed interface UpdateFilterRequest permits UpdateContractEventFilterReq
 
     static Filter toDomain(UpdateFilterRequest req, UUID idFromPath) {
         return switch (req) {
-            case UpdateTransactionFilterRequest t -> toDomain(t, idFromPath);
-            case UpdateGlobalEventFilterRequest g -> toDomain(g, idFromPath);
-            case UpdateContractEventFilterRequest c -> toDomain(c, idFromPath);
+            case UpdateTransactionFilterRequest t -> UpdateTransactionFilterRequest.toDomain(t, idFromPath);
+            case UpdateGlobalEventFilterRequest g -> UpdateGlobalEventFilterRequest.toDomain(g, idFromPath);
+            case UpdateContractEventFilterRequest c -> UpdateContractEventFilterRequest.toDomain(c, idFromPath);
         };
     }
 }
