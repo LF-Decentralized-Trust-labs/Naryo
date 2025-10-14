@@ -17,7 +17,8 @@ public record UpdateTransactionFilterRequest(
         @NotNull UUID nodeId,
         @NotNull IdentifierType identifierType,
         @NotBlank String value,
-        Set<TransactionStatus> statuses)
+        Set<TransactionStatus> statuses,
+        @NotBlank String prevItemHash)
         implements UpdateFilterRequest {
 
     public UpdateTransactionFilterRequest {

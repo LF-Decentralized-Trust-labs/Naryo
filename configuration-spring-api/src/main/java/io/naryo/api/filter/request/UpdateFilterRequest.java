@@ -17,6 +17,8 @@ public sealed interface UpdateFilterRequest
                 UpdateGlobalEventFilterRequest,
                 UpdateTransactionFilterRequest {
 
+    String prevItemHash();
+
     static Filter toDomain(UpdateFilterRequest req, UUID idFromPath) {
         return switch (req) {
             case UpdateTransactionFilterRequest t ->

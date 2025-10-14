@@ -20,7 +20,8 @@ public record UpdateGlobalEventFilterRequest(
         @NotNull EventFilterSpecification specification,
         Set<ContractEventStatus> statuses,
         @NotNull FilterSyncState filterSyncState,
-        EventFilterVisibilityConfiguration visibilityConfiguration)
+        EventFilterVisibilityConfiguration visibilityConfiguration,
+        @NotBlank String prevItemHash)
         implements UpdateFilterRequest {
 
     public UpdateGlobalEventFilterRequest {

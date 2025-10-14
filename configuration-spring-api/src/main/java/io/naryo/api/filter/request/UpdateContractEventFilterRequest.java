@@ -21,7 +21,8 @@ public record UpdateContractEventFilterRequest(
         Set<ContractEventStatus> statuses,
         @NotNull FilterSyncState filterSyncState,
         EventFilterVisibilityConfiguration visibilityConfiguration,
-        @NotBlank String contractAddress)
+        @NotBlank String contractAddress,
+        @NotBlank String prevItemHash)
         implements UpdateFilterRequest {
 
     public UpdateContractEventFilterRequest {

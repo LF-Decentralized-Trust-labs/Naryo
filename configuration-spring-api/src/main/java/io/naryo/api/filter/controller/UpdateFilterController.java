@@ -32,13 +32,13 @@ public class UpdateFilterController extends FilterController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public RevisionOperationStatus update(
             @PathVariable("id") UUID id,
-            @PathVariable("prevItemHash") String prevItemHash,
             @Valid @RequestBody UpdateFilterRequest filterToUpdate) {
         Filter proposed = UpdateFilterRequest.toDomain(filterToUpdate, id);
+        String prevItemHash = filterToUpdate.prevItemHash();
         RevisionOperation<Filter> op = new UpdateOperation<>(id, prevItemHash, proposed);
         OperationId opId = operationQueue.enqueue(op);
         return operationStore
-                .get(opId.value())
-                .orElseThrow(() -> new ValidationException("Operation status not found"));
+            .get(opId.value())
+            .orElseThrow(() -> new ValidationException("Operation status not found"));
     }
 }
