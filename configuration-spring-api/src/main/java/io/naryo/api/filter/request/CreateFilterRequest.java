@@ -15,9 +15,9 @@ public sealed interface CreateFilterRequest
 
     static Filter toDomain(CreateFilterRequest req) {
         return switch (req) {
-            case CreateTransactionFilterRequest t -> toDomain(t);
-            case CreateGlobalEventFilterRequest g -> toDomain(g);
-            case CreateContractEventFilterRequest c -> toDomain(c);
+            case CreateTransactionFilterRequest t -> CreateTransactionFilterRequest.toDomain(t);
+            case CreateGlobalEventFilterRequest g -> CreateGlobalEventFilterRequest.toDomain(g);
+            case CreateContractEventFilterRequest c -> CreateContractEventFilterRequest.toDomain(c);
         };
     }
 }
