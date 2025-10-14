@@ -1,4 +1,4 @@
-package io.naryo.api.filter.request;
+package io.naryo.api.filter.update;
 
 import java.util.Set;
 import java.util.UUID;
@@ -11,24 +11,24 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record CreateTransactionFilterRequest(
+public record UpdateTransactionFilterRequest(
         @Schema(example = "transaction") String type,
         @NotBlank String name,
         @NotNull UUID nodeId,
         @NotNull IdentifierType identifierType,
         @NotBlank String value,
-        Set<TransactionStatus> statuses)
-        implements CreateFilterRequest {
+        Set<TransactionStatus> statuses,
+        @NotBlank String prevItemHash)
+        implements UpdateFilterRequest {
 
-    public CreateTransactionFilterRequest {
+    public UpdateTransactionFilterRequest {
         type = "transaction";
     }
 
-    public static TransactionFilter toDomain(CreateTransactionFilterRequest req) {
-        var name = new FilterName(req.name());
+    public static TransactionFilter toDomain(UpdateTransactionFilterRequest req, UUID idFromPath) {
         return new TransactionFilter(
-                UUID.randomUUID(),
-                name,
+                idFromPath,
+                new FilterName(req.name()),
                 req.nodeId(),
                 req.identifierType(),
                 req.value(),

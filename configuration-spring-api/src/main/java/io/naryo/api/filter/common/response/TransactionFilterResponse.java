@@ -1,4 +1,4 @@
-package io.naryo.api.filter.response;
+package io.naryo.api.filter.common.response;
 
 import java.util.Set;
 import java.util.UUID;

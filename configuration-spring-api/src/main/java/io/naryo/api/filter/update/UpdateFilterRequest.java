@@ -1,4 +1,4 @@
-package io.naryo.api.filter.request;
+package io.naryo.api.filter.update;
 
 import java.util.UUID;
 

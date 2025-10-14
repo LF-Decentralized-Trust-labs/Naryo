@@ -1,4 +1,4 @@
-package io.naryo.api.filter.request;
+package io.naryo.api.filter.create;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

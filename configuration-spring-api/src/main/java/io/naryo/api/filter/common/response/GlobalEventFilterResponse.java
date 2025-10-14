@@ -1,4 +1,4 @@
-package io.naryo.api.filter.response;
+package io.naryo.api.filter.common.response;
 
 import java.util.Set;
 import java.util.UUID;
@@ -7,7 +7,7 @@ import io.naryo.domain.common.event.ContractEventStatus;
 import lombok.Builder;
 
 @Builder
-public record ContractEventFilterResponse(
+public record GlobalEventFilterResponse(
         UUID id,
         String name,
         UUID nodeId,
@@ -16,6 +16,5 @@ public record ContractEventFilterResponse(
         Set<ContractEventStatus> statuses,
         Boolean visible,
         String privacyGroupId,
-        String address,
         String currentItemHash)
         implements FilterResponse {}

@@ -1,4 +1,4 @@
-package io.naryo.api.filter.request;
+package io.naryo.api.filter.create;
 
 import java.util.Set;
 import java.util.UUID;
@@ -10,31 +10,29 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record CreateContractEventFilterRequest(
-        @Schema(example = "contract-event") String type,
+public record CreateGlobalEventFilterRequest(
+        @Schema(example = "global-event") String type,
         @NotBlank String name,
         @NotNull UUID nodeId,
         @NotNull EventFilterSpecification specification,
         Set<ContractEventStatus> statuses,
         @NotNull FilterSyncState filterSyncState,
-        EventFilterVisibilityConfiguration visibilityConfiguration,
-        @NotBlank String contractAddress)
+        EventFilterVisibilityConfiguration visibilityConfiguration)
         implements CreateFilterRequest {
 
-    public CreateContractEventFilterRequest {
-        type = "contract-event";
+    public CreateGlobalEventFilterRequest {
+        type = "global-event";
     }
 
-    public static EventFilter toDomain(CreateContractEventFilterRequest req) {
+    public static EventFilter toDomain(CreateGlobalEventFilterRequest req) {
         var name = new FilterName(req.name());
-        return new ContractEventFilter(
+        return new GlobalEventFilter(
                 UUID.randomUUID(),
                 name,
                 req.nodeId(),
                 req.specification(),
                 req.statuses(),
                 req.filterSyncState(),
-                req.visibilityConfiguration(),
-                req.contractAddress());
+                req.visibilityConfiguration());
     }
 }

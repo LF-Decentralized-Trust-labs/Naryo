@@ -1,14 +1,15 @@
-package io.naryo.api.filter.controller;
-
-import java.util.UUID;
+package io.naryo.api.filter.create;
 
 import io.naryo.api.error.ConfigurationApiErrors;
+import io.naryo.api.filter.FilterController;
+import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.RevisionOperationStatus;
-import io.naryo.application.configuration.revision.operation.RemoveOperation;
+import io.naryo.application.configuration.revision.operation.AddOperation;
 import io.naryo.application.configuration.revision.operation.RevisionOperation;
 import io.naryo.application.configuration.revision.queue.RevisionOperationQueue;
 import io.naryo.application.configuration.revision.store.RevisionOperationStore;
 import io.naryo.domain.filter.Filter;
+import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,18 +20,18 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @RestController
 @RequiredArgsConstructor
-public class DeleteFilterController extends FilterController {
+public class CreateFilterController extends FilterController {
 
-    private final @Qualifier("filterRevisionQueue") RevisionOperationQueue<Filter> operationQueue;
-    private final RevisionOperationStore operationStore;
+    protected final @Qualifier("filterRevisionQueue") RevisionOperationQueue<Filter> operationQueue;
+    protected final RevisionOperationStore operationStore;
 
-    @DeleteMapping("/{id}/{prevItemHash}")
+    @PostMapping
     @ConfigurationApiErrors
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public RevisionOperationStatus delete(
-            @PathVariable("id") UUID id, @PathVariable("prevItemHash") String prevItemHash) {
-        RevisionOperation<Filter> op = new RemoveOperation<>(id, prevItemHash);
-        var opId = operationQueue.enqueue(op);
+    public RevisionOperationStatus create(@Valid @RequestBody CreateFilterRequest filterRequest) {
+        Filter filter = CreateFilterRequest.toDomain(filterRequest);
+        RevisionOperation<Filter> op = new AddOperation<>(filter);
+        OperationId opId = operationQueue.enqueue(op);
         return operationStore
                 .get(opId.value())
                 .orElseThrow(() -> new ValidationException("Operation status not found"));
