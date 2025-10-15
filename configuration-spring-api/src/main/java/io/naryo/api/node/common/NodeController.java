@@ -1,4 +1,4 @@
-package io.naryo.api.node;
+package io.naryo.api.node.common;
 
 import org.springframework.web.bind.annotation.*;
 

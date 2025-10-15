@@ -1,3 +1,5 @@
 package io.naryo.api.node.delete;
 
-public record DeleteNodeRequest(String prevItemHash) {}
+import jakarta.validation.constraints.NotBlank;
+
+public record DeleteNodeRequest(@NotBlank String prevItemHash) {}
