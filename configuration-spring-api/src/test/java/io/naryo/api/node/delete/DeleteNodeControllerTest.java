@@ -1,5 +1,7 @@
 package io.naryo.api.node.delete;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.queue.RevisionOperationQueue;
@@ -11,8 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.UUID;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -22,14 +22,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(DeleteNodeController.class)
 class DeleteNodeControllerTest {
 
-    @Autowired
-    MockMvc mvc;
+    @Autowired MockMvc mvc;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    @Autowired ObjectMapper objectMapper;
 
-    @MockitoBean
-    RevisionOperationQueue<Node> operationQueue;
+    @MockitoBean RevisionOperationQueue<Node> operationQueue;
 
     @Test
     void deleteNode_ok() throws Exception {
@@ -38,19 +35,16 @@ class DeleteNodeControllerTest {
 
         when(operationQueue.enqueue(any())).thenReturn(opId);
 
-        String expectedResponse =
-            objectMapper.writeValueAsString(opId);
+        String expectedResponse = objectMapper.writeValueAsString(opId);
 
         mvc.perform(
-                delete("/api/v1/nodes/" + nodeId)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsBytes(new DeleteNodeRequest("prevItemHash")))
-            )
-            .andExpect(status().isOk())
-            .andExpect(content().json(expectedResponse));
-
+                        delete("/api/v1/nodes/" + nodeId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(
+                                        objectMapper.writeValueAsBytes(
+                                                new DeleteNodeRequest("prevItemHash"))))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse));
     }
-
-
 }

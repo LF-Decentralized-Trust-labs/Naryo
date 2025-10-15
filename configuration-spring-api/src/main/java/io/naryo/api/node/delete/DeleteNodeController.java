@@ -24,8 +24,7 @@ public final class DeleteNodeController extends NodeController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public OperationId delete(
-        @PathVariable("id") UUID id,
-        @RequestBody @NotNull DeleteNodeRequest request) {
+            @PathVariable("id") UUID id, @RequestBody @NotNull DeleteNodeRequest request) {
         return operationQueue.enqueue(new RemoveOperation<>(id, request.prevItemHash()));
     }
 }
