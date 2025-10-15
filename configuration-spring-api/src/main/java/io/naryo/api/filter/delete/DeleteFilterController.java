@@ -8,7 +8,6 @@ import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.operation.RemoveOperation;
 import io.naryo.application.configuration.revision.operation.RevisionOperation;
 import io.naryo.application.configuration.revision.queue.RevisionOperationQueue;
-import io.naryo.application.configuration.revision.store.RevisionOperationStore;
 import io.naryo.domain.filter.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 public class DeleteFilterController extends FilterController {
 
     private final @Qualifier("filterRevisionQueue") RevisionOperationQueue<Filter> operationQueue;
-    private final RevisionOperationStore operationStore;
 
     @DeleteMapping("/{id}/{prevItemHash}")
     @ConfigurationApiErrors

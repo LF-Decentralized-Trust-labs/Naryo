@@ -6,7 +6,6 @@ import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.operation.AddOperation;
 import io.naryo.application.configuration.revision.operation.RevisionOperation;
 import io.naryo.application.configuration.revision.queue.RevisionOperationQueue;
-import io.naryo.application.configuration.revision.store.RevisionOperationStore;
 import io.naryo.domain.filter.Filter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 public class CreateFilterController extends FilterController {
 
     protected final @Qualifier("filterRevisionQueue") RevisionOperationQueue<Filter> operationQueue;
-    protected final RevisionOperationStore operationStore;
 
     @PostMapping
     @ConfigurationApiErrors
