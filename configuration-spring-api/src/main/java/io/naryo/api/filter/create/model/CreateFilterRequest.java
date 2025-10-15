@@ -1,13 +1,13 @@
 package io.naryo.api.filter.create.model;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.naryo.domain.filter.Filter;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-
-import java.util.UUID;
 
 @Getter
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
@@ -18,11 +18,9 @@ import java.util.UUID;
 })
 public abstract class CreateFilterRequest {
 
-    @NotBlank
-    protected String name;
+    protected @NotBlank String name;
 
-    @NotNull
-    protected UUID nodeId;
+    protected @NotNull UUID nodeId;
 
     protected CreateFilterRequest(String name, UUID nodeId) {
         this.name = name;

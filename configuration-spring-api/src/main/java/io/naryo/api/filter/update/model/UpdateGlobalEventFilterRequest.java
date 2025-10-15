@@ -21,24 +21,22 @@ public final class UpdateGlobalEventFilterRequest extends UpdateFilterRequest {
     @Schema(example = "GLOBAL-EVENT", requiredMode = Schema.RequiredMode.REQUIRED)
     private final String type = "GLOBAL-EVENT";
 
-    @NotNull
-    private final EventFilterSpecification specification;
+    private final @NotNull EventFilterSpecification specification;
 
     private final Set<ContractEventStatus> statuses;
 
-    @NotNull
-    private final FilterSyncState filterSyncState;
+    private final @NotNull FilterSyncState filterSyncState;
 
     EventFilterVisibilityConfiguration visibilityConfiguration;
 
     public UpdateGlobalEventFilterRequest(
-        String name,
-        UUID nodeId,
-        String prevItemHash,
-        EventFilterSpecification specification,
-        Set<ContractEventStatus> statuses,
-        FilterSyncState filterSyncState,
-        EventFilterVisibilityConfiguration visibilityConfiguration) {
+            String name,
+            UUID nodeId,
+            String prevItemHash,
+            EventFilterSpecification specification,
+            Set<ContractEventStatus> statuses,
+            FilterSyncState filterSyncState,
+            EventFilterVisibilityConfiguration visibilityConfiguration) {
         super(name, nodeId, prevItemHash);
         this.specification = specification;
         this.statuses = statuses;
@@ -49,13 +47,12 @@ public final class UpdateGlobalEventFilterRequest extends UpdateFilterRequest {
     @Override
     public GlobalEventFilter toDomain(UUID idFromPath) {
         return new GlobalEventFilter(
-            idFromPath,
-            new FilterName(name),
-            nodeId,
-            specification,
-            statuses,
-            filterSyncState,
-            visibilityConfiguration
-        );
+                idFromPath,
+                new FilterName(name),
+                nodeId,
+                specification,
+                statuses,
+                filterSyncState,
+                visibilityConfiguration);
     }
 }

@@ -20,15 +20,19 @@ public final class UpdateTransactionFilterRequest extends UpdateFilterRequest {
     @Schema(example = "TRANSACTION", requiredMode = Schema.RequiredMode.REQUIRED)
     private final String type = "TRANSACTION";
 
-    @NotNull
-    private final IdentifierType identifierType;
+    private final @NotNull IdentifierType identifierType;
 
-    @NotBlank
-    private final String value;
+    private final @NotBlank String value;
 
     private final Set<TransactionStatus> statuses;
 
-    public UpdateTransactionFilterRequest(String name, UUID nodeId, String prevItemHash, IdentifierType identifierType, String value, Set<TransactionStatus> statuses) {
+    public UpdateTransactionFilterRequest(
+            String name,
+            UUID nodeId,
+            String prevItemHash,
+            IdentifierType identifierType,
+            String value,
+            Set<TransactionStatus> statuses) {
         super(name, nodeId, prevItemHash);
         this.identifierType = identifierType;
         this.value = value;
@@ -38,11 +42,6 @@ public final class UpdateTransactionFilterRequest extends UpdateFilterRequest {
     @Override
     public TransactionFilter toDomain(UUID idFromPath) {
         return new TransactionFilter(
-                idFromPath,
-                new FilterName(name),
-                nodeId,
-                identifierType,
-                value,
-                statuses);
+                idFromPath, new FilterName(name), nodeId, identifierType, value, statuses);
     }
 }

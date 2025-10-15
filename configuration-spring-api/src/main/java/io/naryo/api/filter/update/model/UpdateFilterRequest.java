@@ -20,14 +20,11 @@ import lombok.Getter;
 })
 public abstract class UpdateFilterRequest {
 
-    @NotBlank
-    protected String name;
+    protected @NotBlank String name;
 
-    @NotNull
-    protected UUID nodeId;
+    protected @NotNull UUID nodeId;
 
-    @NotBlank
-    protected String prevItemHash;
+    protected @NotBlank String prevItemHash;
 
     protected UpdateFilterRequest(String name, UUID nodeId, String prevItemHash) {
         this.name = name;

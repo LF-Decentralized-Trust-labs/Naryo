@@ -22,29 +22,26 @@ public final class UpdateContractEventFilterRequest extends UpdateFilterRequest 
     @Schema(example = "CONTRACT-EVENT", requiredMode = Schema.RequiredMode.REQUIRED)
     private final String type = "CONTRACT-EVENT";
 
-    @NotNull
-    private final EventFilterSpecification specification;
+    private final @NotNull EventFilterSpecification specification;
 
     private final Set<ContractEventStatus> statuses;
 
-    @NotNull
-    private final FilterSyncState filterSyncState;
+    private final @NotNull FilterSyncState filterSyncState;
 
     private final EventFilterVisibilityConfiguration visibilityConfiguration;
 
-    @NotBlank
-    private final String contractAddress;
+    private final @NotBlank String contractAddress;
 
     public UpdateContractEventFilterRequest(
-        String name,
-        UUID nodeId,
-        EventFilterSpecification specification,
-        Set<ContractEventStatus> statuses,
-        FilterSyncState filterSyncState,
-        EventFilterVisibilityConfiguration visibilityConfiguration,
-        String contractAddress,
-        String prevItemHash) {
-        super( name, nodeId, prevItemHash);
+            String name,
+            UUID nodeId,
+            EventFilterSpecification specification,
+            Set<ContractEventStatus> statuses,
+            FilterSyncState filterSyncState,
+            EventFilterVisibilityConfiguration visibilityConfiguration,
+            String contractAddress,
+            String prevItemHash) {
+        super(name, nodeId, prevItemHash);
         this.specification = specification;
         this.statuses = statuses;
         this.filterSyncState = filterSyncState;
@@ -53,15 +50,15 @@ public final class UpdateContractEventFilterRequest extends UpdateFilterRequest 
     }
 
     @Override
-    public ContractEventFilter toDomain( UUID idFromPath) {
+    public ContractEventFilter toDomain(UUID idFromPath) {
         return new ContractEventFilter(
-            idFromPath,
-            new FilterName(name),
-            nodeId,
-            specification,
-            statuses,
-            filterSyncState,
-            visibilityConfiguration,
-            contractAddress);
+                idFromPath,
+                new FilterName(name),
+                nodeId,
+                specification,
+                statuses,
+                filterSyncState,
+                visibilityConfiguration,
+                contractAddress);
     }
 }
