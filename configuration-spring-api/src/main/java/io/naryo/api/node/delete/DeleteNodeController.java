@@ -2,6 +2,7 @@ package io.naryo.api.node.delete;
 
 import java.util.UUID;
 
+import io.naryo.api.error.ConfigurationApiErrors;
 import io.naryo.api.node.common.NodeController;
 import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.operation.RemoveOperation;
@@ -22,6 +23,7 @@ public final class DeleteNodeController extends NodeController {
     private final @Qualifier("nodeRevisionQueue") RevisionOperationQueue<Node> operationQueue;
 
     @DeleteMapping("/{id}")
+    @ConfigurationApiErrors
     @ResponseStatus(HttpStatus.OK)
     public OperationId delete(
             @PathVariable("id") UUID id, @RequestBody @NotNull DeleteNodeRequest request) {

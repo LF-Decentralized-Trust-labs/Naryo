@@ -1,5 +1,6 @@
 package io.naryo.api.node.create;
 
+import io.naryo.api.error.ConfigurationApiErrors;
 import io.naryo.api.node.common.NodeController;
 import io.naryo.api.node.create.model.CreateNodeRequest;
 import io.naryo.application.configuration.revision.OperationId;
@@ -24,6 +25,7 @@ public final class CreateNodeController extends NodeController {
     private final @Qualifier("nodeRevisionQueue") RevisionOperationQueue<Node> operationQueue;
 
     @PostMapping
+    @ConfigurationApiErrors
     @ResponseStatus(HttpStatus.OK)
     public OperationId create(@RequestBody @NotNull CreateNodeRequest request) {
         return operationQueue.enqueue(new AddOperation<>(request.toDomain()));

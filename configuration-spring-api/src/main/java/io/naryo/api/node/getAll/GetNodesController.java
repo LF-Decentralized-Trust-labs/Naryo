@@ -2,6 +2,7 @@ package io.naryo.api.node.getAll;
 
 import java.util.List;
 
+import io.naryo.api.error.ConfigurationApiErrors;
 import io.naryo.api.node.common.NodeController;
 import io.naryo.api.node.common.response.NodeResponse;
 import io.naryo.application.node.revision.NodeConfigurationRevisionManager;
@@ -20,6 +21,7 @@ public class GetNodesController extends NodeController {
     private final NodeConfigurationRevisionManager nodeConfigurationRevisionManager;
 
     @GetMapping
+    @ConfigurationApiErrors
     @ResponseStatus(HttpStatus.OK)
     public List<NodeResponse> getAll() {
         return nodeConfigurationRevisionManager.liveRegistry().active().domainItems().stream()
