@@ -9,14 +9,16 @@ import io.naryo.domain.filter.FilterName;
 import io.naryo.domain.filter.transaction.IdentifierType;
 import io.naryo.domain.filter.transaction.TransactionFilter;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
+@Valid
 @Getter
 public final class CreateTransactionFilterRequest extends CreateFilterRequest {
 
-    @Schema(example = "TRANSACTION")
+    @Schema(example = "TRANSACTION", requiredMode = Schema.RequiredMode.REQUIRED)
     private final String type = "TRANSACTION";
 
     @NotNull
@@ -39,7 +41,7 @@ public final class CreateTransactionFilterRequest extends CreateFilterRequest {
     }
 
     @Override
-    public Filter toDomain() {
+    public TransactionFilter toDomain() {
         return new TransactionFilter(
             UUID.randomUUID(),
             new FilterName(this.name),

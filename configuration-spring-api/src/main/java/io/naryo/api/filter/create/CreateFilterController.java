@@ -1,7 +1,7 @@
 package io.naryo.api.filter.create;
 
 import io.naryo.api.error.ConfigurationApiErrors;
-import io.naryo.api.filter.FilterController;
+import io.naryo.api.filter.common.FilterController;
 import io.naryo.api.filter.create.model.CreateFilterRequest;
 import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.operation.AddOperation;

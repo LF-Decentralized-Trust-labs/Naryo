@@ -1,4 +1,4 @@
-package io.naryo.api.filter;
+package io.naryo.api.filter.common;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 

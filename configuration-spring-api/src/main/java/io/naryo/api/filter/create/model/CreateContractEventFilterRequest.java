@@ -1,20 +1,21 @@
 package io.naryo.api.filter.create.model;
 
 import io.naryo.domain.common.event.ContractEventStatus;
-import io.naryo.domain.filter.Filter;
 import io.naryo.domain.filter.FilterName;
 import io.naryo.domain.filter.event.*;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 import java.util.Set;
 import java.util.UUID;
 
+@Valid
 @Getter
 public final class CreateContractEventFilterRequest extends CreateFilterRequest {
 
-    @Schema(example = "CONTRACT-EVENT")
+    @Schema(example = "CONTRACT-EVENT", requiredMode = Schema.RequiredMode.REQUIRED)
     private final String type = "CONTRACT-EVENT";
 
     @NotNull
@@ -26,8 +27,6 @@ public final class CreateContractEventFilterRequest extends CreateFilterRequest 
     private final FilterSyncState filterSyncState;
 
     private final String contractAddress;
-
-
 
     public CreateContractEventFilterRequest(String name,
                                             UUID nodeId,
@@ -43,7 +42,7 @@ public final class CreateContractEventFilterRequest extends CreateFilterRequest 
     }
 
     @Override
-    public Filter toDomain() {
+    public ContractEventFilter toDomain() {
         return new ContractEventFilter(
             UUID.randomUUID(),
             new FilterName(this.name),

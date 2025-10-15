@@ -1,4 +1,7 @@
-package io.naryo.api.filter.create.model;
+package io.naryo.api.filter.update.model;
+
+import java.util.Set;
+import java.util.UUID;
 
 import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.filter.FilterName;
@@ -11,12 +14,9 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
-import java.util.Set;
-import java.util.UUID;
-
 @Valid
 @Getter
-public final class CreateGlobalEventFilterRequest extends CreateFilterRequest {
+public final class UpdateGlobalEventFilterRequest extends UpdateFilterRequest {
 
     @Schema(example = "GLOBAL-EVENT", requiredMode = Schema.RequiredMode.REQUIRED)
     private final String type = "GLOBAL-EVENT";
@@ -29,32 +29,33 @@ public final class CreateGlobalEventFilterRequest extends CreateFilterRequest {
     @NotNull
     private final FilterSyncState filterSyncState;
 
-    private final EventFilterVisibilityConfiguration visibilityConfiguration;
+    EventFilterVisibilityConfiguration visibilityConfiguration;
 
-    public CreateGlobalEventFilterRequest(String name,
-                                          UUID nodeId,
-                                          EventFilterSpecification specification,
-                                          Set<ContractEventStatus> statuses,
-                                          FilterSyncState filterSyncState,
-                                          EventFilterVisibilityConfiguration visibilityConfiguration) {
-        super(name, nodeId);
+    public UpdateGlobalEventFilterRequest(
+        String name,
+        UUID nodeId,
+        String prevItemHash,
+        EventFilterSpecification specification,
+        Set<ContractEventStatus> statuses,
+        FilterSyncState filterSyncState,
+        EventFilterVisibilityConfiguration visibilityConfiguration) {
+        super(name, nodeId, prevItemHash);
         this.specification = specification;
         this.statuses = statuses;
         this.filterSyncState = filterSyncState;
         this.visibilityConfiguration = visibilityConfiguration;
     }
 
-
     @Override
-    public GlobalEventFilter toDomain() {
+    public GlobalEventFilter toDomain(UUID idFromPath) {
         return new GlobalEventFilter(
-            UUID.randomUUID(),
+            idFromPath,
             new FilterName(name),
-            this.nodeId,
-            this.specification,
-            this.statuses,
-            this.filterSyncState,
-            this.visibilityConfiguration
+            nodeId,
+            specification,
+            statuses,
+            filterSyncState,
+            visibilityConfiguration
         );
     }
 }
