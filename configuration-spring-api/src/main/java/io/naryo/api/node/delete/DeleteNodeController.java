@@ -21,10 +21,10 @@ public final class DeleteNodeController extends NodeController {
         this.operationQueue = operationQueue;
     }
 
-    @PostMapping("/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public OperationId delete(@PathVariable("id") UUID id, @RequestBody DeleteNodeRequest request) {
-        RevisionOperation<Node> op = new RemoveOperation<>(id, request.getPrevItemHash());
+        RevisionOperation<Node> op = new RemoveOperation<>(id, request.prevItemHash());
         return operationQueue.enqueue(op);
     }
 }
