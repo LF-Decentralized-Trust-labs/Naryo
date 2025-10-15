@@ -14,10 +14,9 @@ dependencies {
     implementation project(':core')
 
     implementation(libs.springBootStarterWeb)
-
+    implementation(libs.springDocOpenApiStarter)
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
-
     testImplementation(testFixtures(project(':core')))
     testImplementation(libs.springBootStarterTest)
 }

@@ -17,6 +17,7 @@ spotless = "7.0.2"
 freefair-lombok = "8.12.1"
 picocli = "4.7.7"
 mustache = "0.9.10"
+spring-doc-OpenApi = "2.8.13"
 
 [plugins]
 springBoot = { id = "org.springframework.boot", version.ref = "spring-boot" }
@@ -42,6 +43,7 @@ springBootStarterWeb = { group = "org.springframework.boot", name = "spring-boot
 springKafka = { group = "org.springframework.kafka", name = "spring-kafka" }
 springkafkaTest = { group = "org.springframework.kafka", name = "spring-kafka-test" }
 springBootStarterTest = { group = "org.springframework.boot", name = "spring-boot-starter-test" }
+springDocOpenApiStarter = { group = "org.springdoc", name = "springdoc-openapi-starter-webmvc-ui", version.ref = "spring-doc-OpenApi"}
 resilience4jAll = { group = "io.github.resilience4j", name = "resilience4j-all", version.ref = "resilience4j" }
 lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lombok" }
 junitJupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit" }
