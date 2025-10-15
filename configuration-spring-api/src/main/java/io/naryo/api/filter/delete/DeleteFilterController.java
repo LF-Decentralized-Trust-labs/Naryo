@@ -4,13 +4,12 @@ import java.util.UUID;
 
 import io.naryo.api.error.ConfigurationApiErrors;
 import io.naryo.api.filter.FilterController;
-import io.naryo.application.configuration.revision.RevisionOperationStatus;
+import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.operation.RemoveOperation;
 import io.naryo.application.configuration.revision.operation.RevisionOperation;
 import io.naryo.application.configuration.revision.queue.RevisionOperationQueue;
 import io.naryo.application.configuration.revision.store.RevisionOperationStore;
 import io.naryo.domain.filter.Filter;
-import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -28,12 +27,9 @@ public class DeleteFilterController extends FilterController {
     @DeleteMapping("/{id}/{prevItemHash}")
     @ConfigurationApiErrors
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public RevisionOperationStatus delete(
+    public OperationId delete(
             @PathVariable("id") UUID id, @PathVariable("prevItemHash") String prevItemHash) {
         RevisionOperation<Filter> op = new RemoveOperation<>(id, prevItemHash);
-        var opId = operationQueue.enqueue(op);
-        return operationStore
-                .get(opId.value())
-                .orElseThrow(() -> new ValidationException("Operation status not found"));
+        return operationQueue.enqueue(op);
     }
 }
