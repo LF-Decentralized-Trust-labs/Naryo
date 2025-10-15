@@ -4,28 +4,25 @@ import io.naryo.domain.node.interaction.InteractionConfiguration;
 import io.naryo.domain.node.interaction.block.ethereum.EthereumRpcBlockInteractionConfiguration;
 import io.naryo.domain.node.interaction.block.hedera.HederaMirrorNodeBlockInteractionConfiguration;
 
-public abstract class InteractionConfigurationResponse {
+public sealed interface InteractionConfigurationResponse
+        permits EthereumRpcBlockInteractionConfigurationResponse,
+                HederaMirrorNodeBlockInteractionConfigurationResponse {
 
-    private final String strategy;
-    private final String mode;
-
-    public InteractionConfigurationResponse(String strategy, String mode) {
-        this.strategy = strategy;
-        this.mode = mode;
-    }
-
-    public static InteractionConfigurationResponse fromDomain(
+    static InteractionConfigurationResponse fromDomain(
             InteractionConfiguration interactionConfiguration) {
         return switch (interactionConfiguration) {
             case HederaMirrorNodeBlockInteractionConfiguration hedera ->
-                    new HederaMirrorNodeBlockInteractionConfigurationResponse(
-                            hedera.getStrategy().name(),
-                            hedera.getMode().name(),
-                            hedera.getLimitPerRequest().value(),
-                            hedera.getRetriesPerRequest().value());
+                    HederaMirrorNodeBlockInteractionConfigurationResponse.builder()
+                            .strategy(hedera.getStrategy().name())
+                            .mode(hedera.getMode().name())
+                            .limitPerRequest(hedera.getLimitPerRequest().value())
+                            .retriesPerRequest(hedera.getRetriesPerRequest().value())
+                            .build();
             case EthereumRpcBlockInteractionConfiguration ethereum ->
-                    new EthereumRpcBlockInteractionConfigurationResponse(
-                            ethereum.getStrategy().name(), ethereum.getMode().name());
+                    EthereumRpcBlockInteractionConfigurationResponse.builder()
+                            .strategy(ethereum.getStrategy().name())
+                            .mode(ethereum.getMode().name())
+                            .build();
             default ->
                     throw new IllegalStateException(
                             "Unexpected value: " + interactionConfiguration);

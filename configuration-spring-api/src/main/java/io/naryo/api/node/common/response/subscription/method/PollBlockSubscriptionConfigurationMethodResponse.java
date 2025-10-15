@@ -2,13 +2,8 @@ package io.naryo.api.node.common.response.subscription.method;
 
 import java.time.Duration;
 
-public final class PollBlockSubscriptionConfigurationMethodResponse
-        extends BlockSubscriptionMethodConfigurationResponse {
+import lombok.Builder;
 
-    private Duration interval;
-
-    public PollBlockSubscriptionConfigurationMethodResponse(String method, Duration interval) {
-        super(method);
-        this.interval = interval;
-    }
-}
+@Builder
+public record PollBlockSubscriptionConfigurationMethodResponse(String method, Duration interval)
+        implements BlockSubscriptionMethodConfigurationResponse {}

@@ -7,11 +7,13 @@ import io.naryo.api.node.common.response.NodeResponse;
 import io.naryo.application.node.revision.NodeConfigurationRevisionManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public final class GetNodesController extends NodeController {
+@RequestMapping("api/v1/nodes")
+public class GetNodesController extends NodeController {
 
     private final NodeConfigurationRevisionManager nodeConfigurationRevisionManager;
 

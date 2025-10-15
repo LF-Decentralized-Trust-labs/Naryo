@@ -1,9 +1,7 @@
 package io.naryo.api.node.common.response.interaction;
 
-public final class EthereumRpcBlockInteractionConfigurationResponse
-        extends InteractionConfigurationResponse {
+import lombok.Builder;
 
-    public EthereumRpcBlockInteractionConfigurationResponse(String strategy, String mode) {
-        super(strategy, mode);
-    }
-}
+@Builder
+public record EthereumRpcBlockInteractionConfigurationResponse(String strategy, String mode)
+        implements InteractionConfigurationResponse {}

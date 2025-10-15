@@ -1,9 +1,7 @@
 package io.naryo.api.node.common.response.subscription.method;
 
-public final class PubSubBlockSubscriptionConfigurationMethodResponse
-        extends BlockSubscriptionMethodConfigurationResponse {
+import lombok.Builder;
 
-    public PubSubBlockSubscriptionConfigurationMethodResponse(String method) {
-        super(method);
-    }
-}
+@Builder
+public record PubSubBlockSubscriptionConfigurationMethodResponse(String method)
+        implements BlockSubscriptionMethodConfigurationResponse {}
