@@ -1,9 +1,8 @@
 package io.naryo.infrastructure.configuration.persistence.entity.store;
 
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import io.naryo.application.configuration.source.model.store.StoreConfigurationDescriptor;
 import io.naryo.domain.configuration.store.StoreConfiguration;
@@ -34,22 +33,20 @@ public abstract class StoreConfigurationEntity implements StoreConfigurationDesc
 
     public static StoreConfigurationEntity fromDomain(StoreConfiguration source) {
         return switch (source) {
-            case ActiveStoreConfiguration active ->
-                    new ActiveStoreConfigurationEntity(
-                            active.getNodeId(),
-                            active.getType().getName(),
-                            StoreFeatureConfigurationEntity.flatFeaturesMap(
-                                    active.getFeatures().entrySet().stream()
-                                            .collect(
-                                                    Collectors.toMap(
-                                                            Map.Entry::getKey,
-                                                            e ->
-                                                                    StoreFeatureConfigurationEntity
-                                                                            .fromDomain(
-                                                                                    e
-                                                                                            .getValue())))),
-                            new HashMap<>());
-            case InactiveStoreConfiguration inactive -> new InactiveStoreConfigurationEntity();
+            case ActiveStoreConfiguration active -> {
+                List<StoreFeatureConfigurationEntity> storeFeatureConfigurationEntities =
+                        active.getFeatures().values().stream()
+                                .map(StoreFeatureConfigurationEntity::fromDomain)
+                                .toList();
+
+                yield new ActiveStoreConfigurationEntity(
+                        active.getNodeId(),
+                        active.getType().getName(),
+                        storeFeatureConfigurationEntities,
+                        new HashMap<>());
+            }
+            case InactiveStoreConfiguration ignored ->
+                    new InactiveStoreConfigurationEntity(source.getNodeId());
             default ->
                     throw new IllegalArgumentException(
                             "Unsupported store type: " + source.getClass());

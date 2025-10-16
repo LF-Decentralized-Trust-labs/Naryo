@@ -5,6 +5,7 @@ import java.util.List;
 import io.naryo.application.store.configuration.manager.DefaultStoreConfigurationManager;
 import io.naryo.application.store.configuration.manager.StoreConfigurationManager;
 import io.naryo.application.store.configuration.mapper.ActiveStoreConfigurationMapperRegistry;
+import io.naryo.application.store.configuration.mapper.StoreConfigurationDescriptorToDomainMapper;
 import io.naryo.application.store.configuration.normalization.ActiveStoreConfigurationNormalizerRegistry;
 import io.naryo.application.store.configuration.provider.StoreSourceProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -15,10 +16,19 @@ import org.springframework.context.annotation.Configuration;
 public class StoreAutoConfiguration {
 
     @Bean
+    @ConditionalOnMissingBean(StoreConfigurationDescriptorToDomainMapper.class)
+    public StoreConfigurationDescriptorToDomainMapper storeConfigurationDescriptorToDomainMapper(
+            ActiveStoreConfigurationMapperRegistry registry) {
+        return new StoreConfigurationDescriptorToDomainMapper(registry);
+    }
+
+    @Bean
     @ConditionalOnMissingBean(StoreConfigurationManager.class)
     public StoreConfigurationManager storeConfigurationManager(
-            List<StoreSourceProvider> providers, ActiveStoreConfigurationMapperRegistry registry) {
-        return new DefaultStoreConfigurationManager(providers, registry);
+            List<StoreSourceProvider> providers,
+            StoreConfigurationDescriptorToDomainMapper storeConfigurationDescriptorToDomainMapper) {
+        return new DefaultStoreConfigurationManager(
+                providers, storeConfigurationDescriptorToDomainMapper);
     }
 
     @Bean

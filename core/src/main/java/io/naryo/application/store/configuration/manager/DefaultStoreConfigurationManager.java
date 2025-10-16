@@ -9,26 +9,23 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import io.naryo.application.configuration.manager.BaseCollectionConfigurationManager;
-import io.naryo.application.configuration.source.model.store.ActiveStoreConfigurationDescriptor;
-import io.naryo.application.configuration.source.model.store.InactiveStoreConfigurationDescriptor;
 import io.naryo.application.configuration.source.model.store.StoreConfigurationDescriptor;
-import io.naryo.application.store.configuration.mapper.ActiveStoreConfigurationMapperRegistry;
+import io.naryo.application.store.configuration.mapper.StoreConfigurationDescriptorToDomainMapper;
 import io.naryo.application.store.configuration.provider.StoreSourceProvider;
 import io.naryo.domain.configuration.store.StoreConfiguration;
-import io.naryo.domain.configuration.store.inactive.InactiveStoreConfiguration;
 
 public final class DefaultStoreConfigurationManager
         extends BaseCollectionConfigurationManager<
                 StoreConfiguration, StoreConfigurationDescriptor, UUID>
         implements StoreConfigurationManager {
 
-    private final ActiveStoreConfigurationMapperRegistry registry;
+    private final StoreConfigurationDescriptorToDomainMapper descriptorToDomainMapper;
 
     public DefaultStoreConfigurationManager(
             List<StoreSourceProvider> sourceProviders,
-            ActiveStoreConfigurationMapperRegistry registry) {
+            StoreConfigurationDescriptorToDomainMapper descriptorToDomainMapper) {
         super(sourceProviders);
-        this.registry = registry;
+        this.descriptorToDomainMapper = descriptorToDomainMapper;
     }
 
     @Override
@@ -43,12 +40,6 @@ public final class DefaultStoreConfigurationManager
 
     @Override
     protected StoreConfiguration map(StoreConfigurationDescriptor source) {
-        return switch (source) {
-            case InactiveStoreConfigurationDescriptor ignored ->
-                    new InactiveStoreConfiguration(source.getNodeId());
-            case ActiveStoreConfigurationDescriptor active ->
-                    registry.map(active.getType().getName(), active);
-            default -> throw new IllegalStateException("Unexpected value: " + source);
-        };
+        return descriptorToDomainMapper.map(source);
     }
 }
