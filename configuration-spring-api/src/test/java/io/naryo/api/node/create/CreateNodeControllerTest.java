@@ -63,15 +63,15 @@ class CreateNodeControllerTest {
         String expectedResponse = objectMapper.writeValueAsString(opId);
 
         mvc.perform(
-                post(PATH)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .content(
-                        objectMapper
-                            .writerFor(CreateNodeRequest.class)
-                            .writeValueAsBytes(input)))
-            .andExpect(status().isAccepted())
-            .andExpect(content().json(expectedResponse));
+                        post(PATH)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(
+                                        objectMapper
+                                                .writerFor(CreateNodeRequest.class)
+                                                .writeValueAsBytes(input)))
+                .andExpect(status().isAccepted())
+                .andExpect(content().json(expectedResponse));
     }
 
     @Test
@@ -84,14 +84,14 @@ class CreateNodeControllerTest {
         String expectedResponse = objectMapper.writeValueAsString(opId);
 
         mvc.perform(
-                post(PATH)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .content(
-                        objectMapper
-                            .writerFor(CreateNodeRequest.class)
-                            .writeValueAsBytes(input)))
-            .andExpect(status().isAccepted())
-            .andExpect(content().json(expectedResponse));
+                        post(PATH)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(
+                                        objectMapper
+                                                .writerFor(CreateNodeRequest.class)
+                                                .writeValueAsBytes(input)))
+                .andExpect(status().isAccepted())
+                .andExpect(content().json(expectedResponse));
     }
 }

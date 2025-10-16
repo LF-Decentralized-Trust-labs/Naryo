@@ -65,15 +65,15 @@ class UpdateNodeControllerTest {
         String expectedResponse = objectMapper.writeValueAsString(opId);
 
         mvc.perform(
-                put(PATH + nodeId)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .content(
-                        objectMapper
-                            .writerFor(UpdateNodeRequest.class)
-                            .writeValueAsBytes(input)))
-            .andExpect(status().isAccepted())
-            .andExpect(content().json(expectedResponse));
+                        put(PATH + nodeId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(
+                                        objectMapper
+                                                .writerFor(UpdateNodeRequest.class)
+                                                .writeValueAsBytes(input)))
+                .andExpect(status().isAccepted())
+                .andExpect(content().json(expectedResponse));
     }
 
     @Test
@@ -87,14 +87,14 @@ class UpdateNodeControllerTest {
         String expectedResponse = objectMapper.writeValueAsString(opId);
 
         mvc.perform(
-                put(PATH + nodeId)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .content(
-                        objectMapper
-                            .writerFor(UpdateNodeRequest.class)
-                            .writeValueAsBytes(input)))
-            .andExpect(status().isAccepted())
-            .andExpect(content().json(expectedResponse));
+                        put(PATH + nodeId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(
+                                        objectMapper
+                                                .writerFor(UpdateNodeRequest.class)
+                                                .writeValueAsBytes(input)))
+                .andExpect(status().isAccepted())
+                .andExpect(content().json(expectedResponse));
     }
 }
