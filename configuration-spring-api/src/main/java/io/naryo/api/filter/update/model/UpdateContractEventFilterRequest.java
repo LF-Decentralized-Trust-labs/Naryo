@@ -3,12 +3,12 @@ package io.naryo.api.filter.update.model;
 import java.util.Set;
 import java.util.UUID;
 
+import io.naryo.api.filter.common.request.EventFilterSpecificationRequest;
+import io.naryo.api.filter.common.request.EventFilterVisibilityConfigurationRequest;
+import io.naryo.api.filter.common.request.FilterSyncStateRequest;
 import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.filter.FilterName;
 import io.naryo.domain.filter.event.ContractEventFilter;
-import io.naryo.domain.filter.event.EventFilterSpecification;
-import io.naryo.domain.filter.event.EventFilterVisibilityConfiguration;
-import io.naryo.domain.filter.event.FilterSyncState;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -19,28 +19,25 @@ import lombok.Getter;
 @Getter
 public final class UpdateContractEventFilterRequest extends UpdateFilterRequest {
 
-    @Schema(example = "CONTRACT-EVENT", requiredMode = Schema.RequiredMode.REQUIRED)
-    private final String type = "CONTRACT-EVENT";
-
-    private final @NotNull EventFilterSpecification specification;
+    private final @NotNull @Valid EventFilterSpecificationRequest specification;
 
     private final Set<ContractEventStatus> statuses;
 
-    private final @NotNull FilterSyncState filterSyncState;
+    private final @NotNull @Valid FilterSyncStateRequest filterSyncState;
 
-    private final EventFilterVisibilityConfiguration visibilityConfiguration;
+    private final @Valid EventFilterVisibilityConfigurationRequest visibilityConfiguration;
 
     private final @NotBlank String contractAddress;
 
     public UpdateContractEventFilterRequest(
             String name,
             UUID nodeId,
-            EventFilterSpecification specification,
+            String prevItemHash,
+            EventFilterSpecificationRequest specification,
             Set<ContractEventStatus> statuses,
-            FilterSyncState filterSyncState,
-            EventFilterVisibilityConfiguration visibilityConfiguration,
-            String contractAddress,
-            String prevItemHash) {
+            FilterSyncStateRequest filterSyncState,
+            EventFilterVisibilityConfigurationRequest visibilityConfiguration,
+            String contractAddress) {
         super(name, nodeId, prevItemHash);
         this.specification = specification;
         this.statuses = statuses;
@@ -55,10 +52,10 @@ public final class UpdateContractEventFilterRequest extends UpdateFilterRequest 
                 idFromPath,
                 new FilterName(name),
                 nodeId,
-                specification,
+                specification.toDomain(),
                 statuses,
-                filterSyncState,
-                visibilityConfiguration,
+                filterSyncState.toDomain(),
+                visibilityConfiguration != null ? visibilityConfiguration.toDomain() : null,
                 contractAddress);
     }
 }

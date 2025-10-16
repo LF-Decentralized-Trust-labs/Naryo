@@ -1,6 +1,7 @@
 package io.naryo.api.node.common.connection;
 
-import io.naryo.api.node.RequestBuilder;
+
+import io.naryo.api.RequestBuilder;
 import io.naryo.api.node.common.request.connection.ConnectionEndpointRequest;
 import io.naryo.api.node.common.request.connection.NodeConnectionRequest;
 import io.naryo.api.node.common.request.connection.RetryConfigurationRequest;

@@ -1,4 +1,4 @@
-package io.naryo.api.filter.get;
+package io.naryo.api.filter.getAll;
 
 import java.util.List;
 
