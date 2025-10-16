@@ -10,9 +10,9 @@ import io.naryo.domain.node.NodeName;
 import io.naryo.domain.node.NodeType;
 import io.naryo.domain.node.hedera.HederaNode;
 
-public final class HederaNodeRequest extends CreateNodeRequest {
+public final class CreateHederaNodeRequest extends CreateNodeRequest {
 
-    HederaNodeRequest(
+    CreateHederaNodeRequest(
             String name,
             SubscriptionConfigurationRequest subscription,
             InteractionConfigurationRequest interaction,

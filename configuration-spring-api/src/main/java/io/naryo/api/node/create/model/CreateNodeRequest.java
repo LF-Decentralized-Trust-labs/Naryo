@@ -12,8 +12,8 @@ import jakarta.validation.constraints.NotNull;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = EthereumNodeRequest.class, name = "ETHEREUM"),
-    @JsonSubTypes.Type(value = HederaNodeRequest.class, name = "HEDERA"),
+    @JsonSubTypes.Type(value = CreateEthereumNodeRequest.class, name = "ETHEREUM"),
+    @JsonSubTypes.Type(value = CreateHederaNodeRequest.class, name = "HEDERA"),
 })
 public abstract class CreateNodeRequest {
 

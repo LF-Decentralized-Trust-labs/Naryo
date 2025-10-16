@@ -10,9 +10,9 @@ import io.naryo.domain.node.NodeName;
 import io.naryo.domain.node.ethereum.EthereumNodeVisibility;
 import io.naryo.domain.node.ethereum.pub.PublicEthereumNode;
 
-public final class PublicEthereumNodeRequest extends EthereumNodeRequest {
+public final class CreatePublicEthereumNodeRequest extends CreateEthereumNodeRequest {
 
-    public PublicEthereumNodeRequest(
+    public CreatePublicEthereumNodeRequest(
             String name,
             SubscriptionConfigurationRequest subscription,
             InteractionConfigurationRequest interaction,

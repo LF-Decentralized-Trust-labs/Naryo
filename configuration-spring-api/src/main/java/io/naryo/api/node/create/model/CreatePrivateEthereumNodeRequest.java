@@ -15,12 +15,12 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
-public final class PrivateEthereumNodeRequest extends EthereumNodeRequest {
+public final class CreatePrivateEthereumNodeRequest extends CreateEthereumNodeRequest {
 
     private final @NotBlank String groupId;
     private final @NotBlank String precompiledAddress;
 
-    public PrivateEthereumNodeRequest(
+    public CreatePrivateEthereumNodeRequest(
             String name,
             SubscriptionConfigurationRequest subscription,
             InteractionConfigurationRequest interaction,

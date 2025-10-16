@@ -11,14 +11,14 @@ import jakarta.validation.constraints.NotNull;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "visibility")
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = PublicEthereumNodeRequest.class, name = "PUBLIC"),
-    @JsonSubTypes.Type(value = PrivateEthereumNodeRequest.class, name = "PRIVATE"),
+    @JsonSubTypes.Type(value = CreatePublicEthereumNodeRequest.class, name = "PUBLIC"),
+    @JsonSubTypes.Type(value = CreatePrivateEthereumNodeRequest.class, name = "PRIVATE"),
 })
-public abstract class EthereumNodeRequest extends CreateNodeRequest {
+public abstract class CreateEthereumNodeRequest extends CreateNodeRequest {
 
     protected final @NotNull EthereumNodeVisibility visibility;
 
-    public EthereumNodeRequest(
+    public CreateEthereumNodeRequest(
             String name,
             SubscriptionConfigurationRequest subscription,
             InteractionConfigurationRequest interaction,
