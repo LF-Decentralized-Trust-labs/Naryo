@@ -27,8 +27,7 @@ public class StoreAutoConfiguration {
     public StoreConfigurationManager storeConfigurationManager(
             List<StoreSourceProvider> providers,
             StoreConfigurationDescriptorMapper storeConfigurationDescriptorMapper) {
-        return new DefaultStoreConfigurationManager(
-                providers, storeConfigurationDescriptorMapper);
+        return new DefaultStoreConfigurationManager(providers, storeConfigurationDescriptorMapper);
     }
 
     @Bean

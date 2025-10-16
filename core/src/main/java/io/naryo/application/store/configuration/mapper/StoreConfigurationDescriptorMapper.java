@@ -12,8 +12,7 @@ public class StoreConfigurationDescriptorMapper
 
     private final ActiveStoreConfigurationMapperRegistry registry;
 
-    public StoreConfigurationDescriptorMapper(
-            ActiveStoreConfigurationMapperRegistry registry) {
+    public StoreConfigurationDescriptorMapper(ActiveStoreConfigurationMapperRegistry registry) {
         this.registry = registry;
     }
 

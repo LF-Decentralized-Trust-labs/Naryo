@@ -39,8 +39,7 @@ class CreateStoreConfigurationControllerTest {
 
     @Autowired ObjectMapper objectMapper;
 
-    @MockitoBean
-    StoreConfigurationDescriptorMapper descriptorToDomainMapper;
+    @MockitoBean StoreConfigurationDescriptorMapper descriptorToDomainMapper;
 
     @MockitoBean(name = "storeConfigRevisionQueue")
     RevisionOperationQueue<StoreConfiguration> storeConfigRevisionQueue;
