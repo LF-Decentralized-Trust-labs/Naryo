@@ -3,14 +3,13 @@ package io.naryo.api.operation;
 import java.util.Optional;
 import java.util.UUID;
 
+import io.naryo.api.error.ConfigurationApiErrors;
+import io.naryo.api.operation.error.OperationNotFoundException;
 import io.naryo.api.operation.response.RevisionOperationStatusResponse;
 import io.naryo.application.configuration.revision.RevisionOperationStatus;
 import io.naryo.application.configuration.revision.store.RevisionOperationStore;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -24,15 +23,13 @@ public class OperationController {
     }
 
     @GetMapping("/{id}")
+    @ConfigurationApiErrors
+    @ResponseStatus(HttpStatus.OK)
     public RevisionOperationStatusResponse getOperation(@PathVariable UUID id) {
         Optional<RevisionOperationStatus> operationStatus = revisionOperationStore.get(id);
 
         return operationStatus
                 .map(RevisionOperationStatusResponse::fromRevisionOperationStatus)
-                .orElseThrow(
-                        () ->
-                                new ResponseStatusException(
-                                        HttpStatus.NOT_FOUND,
-                                        "Operation with id " + id + " not found"));
+                .orElseThrow(() -> new OperationNotFoundException(id));
     }
 }
