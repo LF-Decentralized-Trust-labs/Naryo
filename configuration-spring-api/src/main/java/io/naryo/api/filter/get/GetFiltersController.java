@@ -3,7 +3,7 @@ package io.naryo.api.filter.get;
 import java.util.List;
 
 import io.naryo.api.error.ConfigurationApiErrors;
-import io.naryo.api.filter.FilterController;
+import io.naryo.api.filter.common.FilterController;
 import io.naryo.api.filter.common.response.FilterResponse;
 import io.naryo.application.filter.revision.FilterConfigurationRevisionManager;
 import lombok.RequiredArgsConstructor;

@@ -3,7 +3,7 @@ package io.naryo.api.filter.delete;
 import java.util.UUID;
 
 import io.naryo.api.error.ConfigurationApiErrors;
-import io.naryo.api.filter.FilterController;
+import io.naryo.api.filter.common.FilterController;
 import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.operation.RemoveOperation;
 import io.naryo.application.configuration.revision.operation.RevisionOperation;

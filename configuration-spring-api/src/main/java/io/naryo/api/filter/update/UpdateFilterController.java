@@ -3,7 +3,8 @@ package io.naryo.api.filter.update;
 import java.util.UUID;
 
 import io.naryo.api.error.ConfigurationApiErrors;
-import io.naryo.api.filter.FilterController;
+import io.naryo.api.filter.common.FilterController;
+import io.naryo.api.filter.update.model.UpdateFilterRequest;
 import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.operation.RevisionOperation;
 import io.naryo.application.configuration.revision.operation.UpdateOperation;
@@ -28,8 +29,8 @@ public class UpdateFilterController extends FilterController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public OperationId update(
             @PathVariable("id") UUID id, @Valid @RequestBody UpdateFilterRequest filterToUpdate) {
-        Filter proposed = UpdateFilterRequest.toDomain(filterToUpdate, id);
-        String prevItemHash = filterToUpdate.prevItemHash();
+        Filter proposed = filterToUpdate.toDomain(id);
+        String prevItemHash = filterToUpdate.getPrevItemHash();
         RevisionOperation<Filter> op = new UpdateOperation<>(id, prevItemHash, proposed);
         return operationQueue.enqueue(op);
     }
