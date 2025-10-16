@@ -9,12 +9,14 @@ import io.naryo.domain.node.Node;
 import io.naryo.domain.node.NodeType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
     @JsonSubTypes.Type(value = CreateEthereumNodeRequest.class, name = "ETHEREUM"),
     @JsonSubTypes.Type(value = CreateHederaNodeRequest.class, name = "HEDERA"),
 })
+@Getter
 public abstract class CreateNodeRequest {
 
     protected final @NotBlank String name;

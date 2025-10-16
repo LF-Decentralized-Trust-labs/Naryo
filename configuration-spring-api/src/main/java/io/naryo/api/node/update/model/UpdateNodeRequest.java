@@ -2,6 +2,8 @@ package io.naryo.api.node.update.model;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.naryo.api.node.common.request.connection.NodeConnectionRequest;
 import io.naryo.api.node.common.request.interaction.InteractionConfigurationRequest;
 import io.naryo.api.node.common.request.subscription.SubscriptionConfigurationRequest;
@@ -11,6 +13,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = UpdateEthereumNodeRequest.class, name = "ETHEREUM"),
+    @JsonSubTypes.Type(value = UpdateHederaNodeRequest.class, name = "HEDERA"),
+})
 @Getter
 public abstract class UpdateNodeRequest {
 

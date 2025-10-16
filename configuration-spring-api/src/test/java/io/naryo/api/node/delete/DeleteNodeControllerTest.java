@@ -22,10 +22,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(DeleteNodeController.class)
 class DeleteNodeControllerTest {
 
+    private final String PATH = "/api/v1/nodes/";
+
     @Autowired MockMvc mvc;
-
     @Autowired ObjectMapper objectMapper;
-
     @MockitoBean RevisionOperationQueue<Node> operationQueue;
 
     @Test
@@ -38,13 +38,13 @@ class DeleteNodeControllerTest {
         String expectedResponse = objectMapper.writeValueAsString(opId);
 
         mvc.perform(
-                        delete("/api/v1/nodes/" + nodeId)
+                        delete(PATH + nodeId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(
                                         objectMapper.writeValueAsBytes(
                                                 new DeleteNodeRequest("prevItemHash"))))
-                .andExpect(status().isOk())
+                .andExpect(status().isAccepted())
                 .andExpect(content().json(expectedResponse));
     }
 }

@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @RestController
 @RequiredArgsConstructor
-public final class DeleteNodeController extends NodeController {
+public class DeleteNodeController extends NodeController {
 
     private final @Qualifier("nodeRevisionQueue") RevisionOperationQueue<Node> operationQueue;
 
     @DeleteMapping("/{id}")
     @ConfigurationApiErrors
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public OperationId delete(
             @PathVariable("id") UUID id, @RequestBody @NotNull DeleteNodeRequest request) {
         return operationQueue.enqueue(new RemoveOperation<>(id, request.prevItemHash()));

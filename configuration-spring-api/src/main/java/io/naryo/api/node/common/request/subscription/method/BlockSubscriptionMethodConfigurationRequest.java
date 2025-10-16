@@ -5,8 +5,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.naryo.domain.node.subscription.block.method.BlockSubscriptionMethod;
 import io.naryo.domain.node.subscription.block.method.BlockSubscriptionMethodConfiguration;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "method")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "method")
 @JsonSubTypes({
     @JsonSubTypes.Type(
             value = PollBlockSubscriptionConfigurationMethodRequest.class,
@@ -15,6 +16,7 @@ import jakarta.validation.constraints.NotNull;
             value = PubSubBlockSubscriptionConfigurationMethodRequest.class,
             name = "PUBSUB")
 })
+@Getter
 public abstract class BlockSubscriptionMethodConfigurationRequest {
 
     protected final @NotNull BlockSubscriptionMethod method;

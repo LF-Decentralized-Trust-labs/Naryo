@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
+    id 'java-test-fixtures'
     alias(libs.plugins.springBoot)
     alias(libs.plugins.springDependencyManagement)
 }
@@ -19,6 +20,9 @@ dependencies {
     annotationProcessor(libs.lombok)
     testImplementation(testFixtures(project(':core')))
     testImplementation(libs.springBootStarterTest)
+
+    testFixturesApi(libs.instancioJunit)
+    testFixturesImplementation(project(':core'))
 }
 
 tasks.named('bootJar') { enabled = false }

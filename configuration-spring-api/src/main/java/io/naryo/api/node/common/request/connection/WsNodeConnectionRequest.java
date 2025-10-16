@@ -7,9 +7,9 @@ import io.naryo.domain.node.connection.ws.WsNodeConnection;
 public final class WsNodeConnectionRequest extends NodeConnectionRequest {
 
     public WsNodeConnectionRequest(
-            RetryConfigurationRequest retryConfiguration,
-            ConnectionEndpointRequest connectionEndpoint) {
-        super(NodeConnectionType.WS, retryConfiguration, connectionEndpoint);
+            ConnectionEndpointRequest connectionEndpoint,
+            RetryConfigurationRequest retryConfiguration) {
+        super(NodeConnectionType.WS, connectionEndpoint, retryConfiguration);
     }
 
     @Override

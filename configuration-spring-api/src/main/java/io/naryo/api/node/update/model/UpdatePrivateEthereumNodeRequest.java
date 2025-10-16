@@ -12,7 +12,9 @@ import io.naryo.domain.node.ethereum.priv.GroupId;
 import io.naryo.domain.node.ethereum.priv.PrecompiledAddress;
 import io.naryo.domain.node.ethereum.priv.PrivateEthereumNode;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
 
+@Getter
 public final class UpdatePrivateEthereumNodeRequest extends UpdateEthereumNodeRequest {
 
     private final @NotBlank String groupId;

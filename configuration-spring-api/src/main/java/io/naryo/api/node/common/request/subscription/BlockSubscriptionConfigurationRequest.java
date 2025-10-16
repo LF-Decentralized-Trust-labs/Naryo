@@ -8,7 +8,9 @@ import io.naryo.domain.node.subscription.SubscriptionConfiguration;
 import io.naryo.domain.node.subscription.SubscriptionStrategy;
 import io.naryo.domain.node.subscription.block.BlockSubscriptionConfiguration;
 import jakarta.validation.Valid;
+import lombok.Getter;
 
+@Getter
 public final class BlockSubscriptionConfigurationRequest extends SubscriptionConfigurationRequest {
 
     private final @Valid BlockSubscriptionMethodConfigurationRequest method;
@@ -19,7 +21,7 @@ public final class BlockSubscriptionConfigurationRequest extends SubscriptionCon
     private final BigInteger replayBlockOffset;
     private final BigInteger syncBlockLimit;
 
-    BlockSubscriptionConfigurationRequest(
+    public BlockSubscriptionConfigurationRequest(
             BlockSubscriptionMethodConfigurationRequest method,
             BigInteger initialBlock,
             BigInteger confirmationBlocks,

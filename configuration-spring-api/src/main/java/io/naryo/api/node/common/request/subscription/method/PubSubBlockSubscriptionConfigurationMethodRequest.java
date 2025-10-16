@@ -7,7 +7,7 @@ import io.naryo.domain.node.subscription.block.method.pubsub.PubSubBlockSubscrip
 public final class PubSubBlockSubscriptionConfigurationMethodRequest
         extends BlockSubscriptionMethodConfigurationRequest {
 
-    PubSubBlockSubscriptionConfigurationMethodRequest() {
+    public PubSubBlockSubscriptionConfigurationMethodRequest() {
         super(BlockSubscriptionMethod.PUBSUB);
     }
 

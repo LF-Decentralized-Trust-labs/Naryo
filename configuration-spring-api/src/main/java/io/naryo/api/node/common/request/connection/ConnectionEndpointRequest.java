@@ -6,7 +6,9 @@ import io.naryo.domain.common.connection.endpoint.ConnectionEndpoint;
 import io.naryo.domain.common.connection.endpoint.Protocol;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 
+@Builder(toBuilder = true)
 public record ConnectionEndpointRequest(
         @NotNull Protocol protocol,
         @NotBlank String host,

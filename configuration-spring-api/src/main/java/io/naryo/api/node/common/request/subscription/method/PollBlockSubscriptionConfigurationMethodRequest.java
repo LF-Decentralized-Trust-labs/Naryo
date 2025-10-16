@@ -6,13 +6,15 @@ import io.naryo.domain.node.subscription.block.method.BlockSubscriptionMethod;
 import io.naryo.domain.node.subscription.block.method.BlockSubscriptionMethodConfiguration;
 import io.naryo.domain.node.subscription.block.method.poll.Interval;
 import io.naryo.domain.node.subscription.block.method.poll.PollBlockSubscriptionMethodConfiguration;
+import lombok.Getter;
 
+@Getter
 public final class PollBlockSubscriptionConfigurationMethodRequest
         extends BlockSubscriptionMethodConfigurationRequest {
 
     private final Duration interval;
 
-    PollBlockSubscriptionConfigurationMethodRequest(Duration interval) {
+    public PollBlockSubscriptionConfigurationMethodRequest(Duration interval) {
         super(BlockSubscriptionMethod.POLL);
         this.interval = interval;
     }

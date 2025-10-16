@@ -9,7 +9,10 @@ import io.naryo.domain.node.NodeType;
 import io.naryo.domain.node.ethereum.EthereumNodeVisibility;
 import jakarta.validation.constraints.NotNull;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "visibility")
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "visibility")
 @JsonSubTypes({
     @JsonSubTypes.Type(value = CreatePublicEthereumNodeRequest.class, name = "PUBLIC"),
     @JsonSubTypes.Type(value = CreatePrivateEthereumNodeRequest.class, name = "PRIVATE"),

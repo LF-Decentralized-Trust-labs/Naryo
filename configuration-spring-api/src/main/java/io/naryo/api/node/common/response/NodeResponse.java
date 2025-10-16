@@ -8,6 +8,7 @@ import io.naryo.domain.node.Node;
 import io.naryo.domain.node.connection.NodeConnection;
 import io.naryo.domain.node.ethereum.EthereumNode;
 import io.naryo.domain.node.ethereum.priv.PrivateEthereumNode;
+import io.naryo.domain.node.ethereum.pub.PublicEthereumNode;
 import io.naryo.domain.node.interaction.InteractionConfiguration;
 import io.naryo.domain.node.subscription.SubscriptionConfiguration;
 
@@ -45,7 +46,9 @@ public abstract class NodeResponse {
             case ETHEREUM -> {
                 var ethereumNode = (EthereumNode) node;
                 yield switch (ethereumNode.getVisibility()) {
-                    case PUBLIC -> PublicEthereumNodeResponse.fromDomain(ethereumNode);
+                    case PUBLIC ->
+                            PublicEthereumNodeResponse.fromDomain(
+                                    (PublicEthereumNode) ethereumNode);
                     case PRIVATE ->
                             PrivateEthereumNodeResponse.fromDomain(
                                     (PrivateEthereumNode) ethereumNode);

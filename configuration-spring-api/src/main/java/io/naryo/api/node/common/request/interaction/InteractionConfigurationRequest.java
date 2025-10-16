@@ -6,6 +6,7 @@ import io.naryo.domain.node.interaction.InteractionConfiguration;
 import io.naryo.domain.node.interaction.InteractionStrategy;
 import io.naryo.domain.node.interaction.block.InteractionMode;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "mode")
 @JsonSubTypes({
@@ -16,6 +17,7 @@ import jakarta.validation.constraints.NotNull;
             value = EthereumRpcBlockInteractionConfigurationRequest.class,
             name = "ETHEREUM_RPC")
 })
+@Getter
 public abstract class InteractionConfigurationRequest {
 
     protected final @NotNull InteractionStrategy strategy;

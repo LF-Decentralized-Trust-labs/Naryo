@@ -20,13 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequiredArgsConstructor
-public final class CreateNodeController extends NodeController {
+public class CreateNodeController extends NodeController {
 
     private final @Qualifier("nodeRevisionQueue") RevisionOperationQueue<Node> operationQueue;
 
     @PostMapping
     @ConfigurationApiErrors
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public OperationId create(@RequestBody @NotNull CreateNodeRequest request) {
         return operationQueue.enqueue(new AddOperation<>(request.toDomain()));
     }

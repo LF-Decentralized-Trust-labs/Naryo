@@ -12,7 +12,7 @@ import io.naryo.domain.node.hedera.HederaNode;
 
 public final class UpdateHederaNodeRequest extends UpdateNodeRequest {
 
-    UpdateHederaNodeRequest(
+    public UpdateHederaNodeRequest(
             String name,
             SubscriptionConfigurationRequest subscription,
             InteractionConfigurationRequest interaction,

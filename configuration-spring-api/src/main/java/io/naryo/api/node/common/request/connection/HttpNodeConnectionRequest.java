@@ -5,22 +5,24 @@ import java.time.Duration;
 import io.naryo.domain.node.connection.NodeConnection;
 import io.naryo.domain.node.connection.NodeConnectionType;
 import io.naryo.domain.node.connection.http.*;
+import lombok.Getter;
 
+@Getter
 public final class HttpNodeConnectionRequest extends NodeConnectionRequest {
 
-    private final int maxIdleConnections;
+    private final Integer maxIdleConnections;
     private final Duration keepAliveDuration;
     private final Duration connectionTimeout;
     private final Duration readTimeout;
 
     public HttpNodeConnectionRequest(
-            RetryConfigurationRequest retryConfiguration,
             ConnectionEndpointRequest connectionEndpoint,
+            RetryConfigurationRequest retryConfiguration,
             int maxIdleConnections,
             Duration keepAliveDuration,
             Duration connectionTimeout,
             Duration readTimeout) {
-        super(NodeConnectionType.HTTP, retryConfiguration, connectionEndpoint);
+        super(NodeConnectionType.HTTP, connectionEndpoint, retryConfiguration);
         this.maxIdleConnections = maxIdleConnections;
         this.keepAliveDuration = keepAliveDuration;
         this.connectionTimeout = connectionTimeout;

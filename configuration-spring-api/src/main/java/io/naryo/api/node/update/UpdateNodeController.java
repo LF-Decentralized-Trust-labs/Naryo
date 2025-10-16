@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @RestController
 @RequiredArgsConstructor
-public final class UpdateNodeController extends NodeController {
+public class UpdateNodeController extends NodeController {
 
     private final @Qualifier("nodeRevisionQueue") RevisionOperationQueue<Node> operationQueue;
 
-    @PutMapping("/{id")
+    @PutMapping("/{id}")
     @ConfigurationApiErrors
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public OperationId update(
             @PathVariable("id") UUID id, @RequestBody @NotNull UpdateNodeRequest request) {
         return operationQueue.enqueue(

@@ -31,6 +31,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(GetNodesController.class)
 class GetNodesControllerTest {
 
+    private final String PATH = "/api/v1/nodes";
+
     @Autowired MockMvc mvc;
     @Autowired ObjectMapper objectMapper;
     @MockitoBean NodeConfigurationManager nodeConfigurationManager;
@@ -58,7 +60,7 @@ class GetNodesControllerTest {
         String expectedResponse =
                 objectMapper.writeValueAsString(List.of(NodeResponse.fromDomain(node)));
 
-        mvc.perform(get("/api/v1/nodes"))
+        mvc.perform(get(PATH))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));
     }
@@ -66,12 +68,10 @@ class GetNodesControllerTest {
     @Test
     void getNodes_empty() throws Exception {
         when(liveRegistry.active()).thenReturn(new Revision<>(1, "hash", List.of()));
-        mvc.perform(get("/api/v1/nodes"))
-                .andExpect(status().isOk())
-                .andExpect(content().json("[]"));
+        mvc.perform(get(PATH)).andExpect(status().isOk()).andExpect(content().json("[]"));
     }
 
-    protected Node createInput() {
+    private Node createInput() {
         var random = new Random().nextInt(3);
         NodeBuilder<?, ?> builder =
                 switch (random) {
