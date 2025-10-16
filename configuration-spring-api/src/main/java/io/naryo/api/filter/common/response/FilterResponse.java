@@ -7,26 +7,38 @@ import java.util.UUID;
 import io.naryo.domain.filter.Filter;
 import io.naryo.domain.filter.event.*;
 import io.naryo.domain.filter.transaction.TransactionFilter;
+import lombok.Getter;
 
-public sealed interface FilterResponse
-        permits GlobalEventFilterResponse, ContractEventFilterResponse, TransactionFilterResponse {
+@Getter
+public abstract class FilterResponse {
 
-    static FilterResponse map(Filter filter, Map<UUID, String> fingerprints) {
+    protected UUID id;
+    protected String name;
+    protected UUID nodeId;
+    protected String currentItemHash;
+
+    protected FilterResponse(UUID id, String name, UUID nodeId, String currentItemHash) {
+        this.id = id;
+        this.name = name;
+        this.nodeId = nodeId;
+        this.currentItemHash = currentItemHash;
+    }
+
+    public static FilterResponse map(Filter filter, Map<UUID, String> fingerprints) {
 
         Objects.requireNonNull(filter, "filter must not be null");
         String hash = fingerprints.get(filter.getId());
 
         return switch (filter) {
             case TransactionFilter tf ->
-                    TransactionFilterResponse.builder()
-                            .id(tf.getId())
-                            .name(tf.getName().value())
-                            .nodeId(tf.getNodeId())
-                            .identifierType(tf.getIdentifierType())
-                            .value(tf.getValue())
-                            .statuses(tf.getStatuses())
-                            .currentItemHash(hash)
-                            .build();
+                    new TransactionFilterResponse(
+                            tf.getId(),
+                            tf.getName().value(),
+                            tf.getNodeId(),
+                            tf.getIdentifierType(),
+                            tf.getValue(),
+                            tf.getStatuses(),
+                            hash);
             case EventFilter ef -> {
                 EventFilterSpecification spec = ef.getSpecification();
                 EventFilterVisibilityConfiguration vis = ef.getVisibilityConfiguration();
@@ -38,31 +50,29 @@ public sealed interface FilterResponse
                 String privacy = visible ? null : vis.getPrivacyGroupId();
 
                 if (ef instanceof GlobalEventFilter) {
-                    yield GlobalEventFilterResponse.builder()
-                            .id(ef.getId())
-                            .name(ef.getName().value())
-                            .nodeId(ef.getNodeId())
-                            .signature(signature)
-                            .correlationId(correlation)
-                            .statuses(ef.getStatuses())
-                            .visible(visible)
-                            .privacyGroupId(privacy)
-                            .currentItemHash(hash)
-                            .build();
+                    yield new GlobalEventFilterResponse(
+                            ef.getId(),
+                            ef.getName().value(),
+                            ef.getNodeId(),
+                            signature,
+                            correlation,
+                            ef.getStatuses(),
+                            visible,
+                            privacy,
+                            hash);
                 }
                 if (ef instanceof ContractEventFilter cef) {
-                    yield ContractEventFilterResponse.builder()
-                            .id(ef.getId())
-                            .name(ef.getName().value())
-                            .nodeId(ef.getNodeId())
-                            .signature(signature)
-                            .correlationId(correlation)
-                            .statuses(ef.getStatuses())
-                            .visible(visible)
-                            .privacyGroupId(privacy)
-                            .address(cef.getContractAddress())
-                            .currentItemHash(hash)
-                            .build();
+                    yield new ContractEventFilterResponse(
+                            ef.getId(),
+                            ef.getName().value(),
+                            ef.getNodeId(),
+                            signature,
+                            correlation,
+                            ef.getStatuses(),
+                            visible,
+                            privacy,
+                            cef.getContractAddress(),
+                            hash);
                 } else {
                     throw new IllegalArgumentException(
                             "Unsupported event filter subtype: " + ef.getClass().getName());
