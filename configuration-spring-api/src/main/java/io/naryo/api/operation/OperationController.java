@@ -10,7 +10,6 @@ import io.naryo.application.configuration.revision.RevisionOperationStatus;
 import io.naryo.application.configuration.revision.store.RevisionOperationStore;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("api/v1/operations")

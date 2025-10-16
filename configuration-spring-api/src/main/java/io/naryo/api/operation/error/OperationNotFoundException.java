@@ -1,8 +1,8 @@
 package io.naryo.api.operation.error;
 
-import io.naryo.api.error.NotFoundException;
-
 import java.util.UUID;
+
+import io.naryo.api.error.NotFoundException;
 
 public class OperationNotFoundException extends NotFoundException {
 
