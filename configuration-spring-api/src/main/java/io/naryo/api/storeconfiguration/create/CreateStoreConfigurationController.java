@@ -1,7 +1,5 @@
 package io.naryo.api.storeconfiguration.create;
 
-import java.util.UUID;
-
 import io.naryo.api.storeconfiguration.StoreConfigurationController;
 import io.naryo.api.storeconfiguration.common.request.ActiveStoreConfigurationRequest;
 import io.naryo.api.storeconfiguration.common.request.StoreConfigurationRequest;
@@ -39,8 +37,8 @@ public class CreateStoreConfigurationController extends StoreConfigurationContro
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public UUID create(@Valid @RequestBody StoreConfigurationRequest request) {
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public OperationId create(@Valid @RequestBody StoreConfigurationRequest request) {
         if (request instanceof ActiveStoreConfigurationRequest activeStoreConfigurationRequest) {
             String storeType = activeStoreConfigurationRequest.getType().getName();
             ConfigurationSchema schema =
@@ -52,8 +50,6 @@ public class CreateStoreConfigurationController extends StoreConfigurationContro
 
         StoreConfiguration storeConfiguration = descriptorToDomainMapper.map(request);
         RevisionOperation<StoreConfiguration> op = new AddOperation<>(storeConfiguration);
-        OperationId opId = storeConfigRevisionQueue.enqueue(op);
-
-        return opId.value();
+        return storeConfigRevisionQueue.enqueue(op);
     }
 }

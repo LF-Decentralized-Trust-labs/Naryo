@@ -47,7 +47,7 @@ class CreateStoreConfigurationControllerTest {
     @MockitoBean ConfigurationSchemaRegistry schemaRegistry;
 
     @Test
-    public void getOperations_inactiveStore() throws Exception {
+    public void createStoreConfiguration_inactive() throws Exception {
         InactiveStoreConfigurationRequest request =
                 new InactiveStoreConfigurationRequestBuilder().build();
 
@@ -60,18 +60,18 @@ class CreateStoreConfigurationControllerTest {
                 new AddOperation<>(dummyStoreConfiguration);
         when(storeConfigRevisionQueue.enqueue(expectedOperation)).thenReturn(operationId);
 
-        String expectedResponse = objectMapper.writeValueAsString(operationId.value());
+        String expectedResponse = objectMapper.writeValueAsString(operationId);
 
         mvc.perform(
                         post("/api/v1/store-configuration")
                                 .contentType(APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated())
+                .andExpect(status().isAccepted())
                 .andExpect(content().json(expectedResponse));
     }
 
     @Test
-    public void getOperations_activeStore() throws Exception {
+    public void createStoreConfiguration_active() throws Exception {
         String additionalPropertyKey = Instancio.create(String.class);
         Object additionalPropertyValue =
                 new HttpStoreInitializer.HttpBroadcasterEndpoint(Instancio.create(String.class));
@@ -101,13 +101,13 @@ class CreateStoreConfigurationControllerTest {
                 new AddOperation<>(dummyStoreConfiguration);
         when(storeConfigRevisionQueue.enqueue(expectedOperation)).thenReturn(operationId);
 
-        String expectedResponse = objectMapper.writeValueAsString(operationId.value());
+        String expectedResponse = objectMapper.writeValueAsString(operationId);
 
         mvc.perform(
                         post("/api/v1/store-configuration")
                                 .contentType(APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated())
+                .andExpect(status().isAccepted())
                 .andExpect(content().json(expectedResponse));
     }
 }
