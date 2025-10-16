@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import io.naryo.application.configuration.manager.BaseCollectionConfigurationManager;
 import io.naryo.application.configuration.source.model.store.StoreConfigurationDescriptor;
-import io.naryo.application.store.configuration.mapper.StoreConfigurationDescriptorToDomainMapper;
+import io.naryo.application.store.configuration.mapper.StoreConfigurationDescriptorMapper;
 import io.naryo.application.store.configuration.provider.StoreSourceProvider;
 import io.naryo.domain.configuration.store.StoreConfiguration;
 
@@ -19,11 +19,11 @@ public final class DefaultStoreConfigurationManager
                 StoreConfiguration, StoreConfigurationDescriptor, UUID>
         implements StoreConfigurationManager {
 
-    private final StoreConfigurationDescriptorToDomainMapper descriptorToDomainMapper;
+    private final StoreConfigurationDescriptorMapper descriptorToDomainMapper;
 
     public DefaultStoreConfigurationManager(
             List<StoreSourceProvider> sourceProviders,
-            StoreConfigurationDescriptorToDomainMapper descriptorToDomainMapper) {
+            StoreConfigurationDescriptorMapper descriptorToDomainMapper) {
         super(sourceProviders);
         this.descriptorToDomainMapper = descriptorToDomainMapper;
     }

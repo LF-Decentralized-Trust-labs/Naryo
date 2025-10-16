@@ -7,12 +7,12 @@ import io.naryo.application.configuration.source.model.store.StoreConfigurationD
 import io.naryo.domain.configuration.store.StoreConfiguration;
 import io.naryo.domain.configuration.store.inactive.InactiveStoreConfiguration;
 
-public class StoreConfigurationDescriptorToDomainMapper
+public class StoreConfigurationDescriptorMapper
         implements DescriptorToDomainMapper<StoreConfiguration, StoreConfigurationDescriptor> {
 
     private final ActiveStoreConfigurationMapperRegistry registry;
 
-    public StoreConfigurationDescriptorToDomainMapper(
+    public StoreConfigurationDescriptorMapper(
             ActiveStoreConfigurationMapperRegistry registry) {
         this.registry = registry;
     }

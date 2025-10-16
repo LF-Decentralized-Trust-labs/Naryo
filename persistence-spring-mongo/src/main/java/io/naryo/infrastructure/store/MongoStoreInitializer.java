@@ -5,7 +5,7 @@ import java.util.List;
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaRegistry;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaType;
-import io.naryo.application.configuration.source.mapper.StoreConfigurationDescriptorMapper;
+import io.naryo.application.store.configuration.mapper.ActiveStoreConfigurationDescriptorMapper;
 import io.naryo.application.configuration.source.model.store.ActiveStoreConfigurationDescriptor;
 import io.naryo.application.store.configuration.mapper.ActiveStoreConfigurationMapperRegistry;
 import io.naryo.application.store.configuration.normalization.ActiveStoreConfigurationNormalizerRegistry;
@@ -40,7 +40,7 @@ public final class MongoStoreInitializer implements EnvironmentInitializer {
                 properties ->
                         new MongoStoreConfiguration(
                                 properties.getNodeId(),
-                                StoreConfigurationDescriptorMapper.map(properties)));
+                                ActiveStoreConfigurationDescriptorMapper.map(properties)));
 
         schemaRegistry.register(
                 ConfigurationSchemaType.STORE,

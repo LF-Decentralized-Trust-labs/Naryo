@@ -10,7 +10,7 @@ import io.naryo.application.configuration.revision.queue.RevisionOperationQueue;
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaRegistry;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaType;
-import io.naryo.application.store.configuration.mapper.StoreConfigurationDescriptorToDomainMapper;
+import io.naryo.application.store.configuration.mapper.StoreConfigurationDescriptorMapper;
 import io.naryo.domain.configuration.store.StoreConfiguration;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,16 +23,16 @@ import static io.naryo.infrastructure.util.serialization.ConfigurationSchemaConv
 public class CreateStoreConfigurationController extends StoreConfigurationController {
 
     private final RevisionOperationQueue<StoreConfiguration> storeConfigRevisionQueue;
-    private final StoreConfigurationDescriptorToDomainMapper descriptorToDomainMapper;
+    private final StoreConfigurationDescriptorMapper storeConfigurationDescriptorMapper;
     private final ConfigurationSchemaRegistry schemaRegistry;
 
     public CreateStoreConfigurationController(
             @Qualifier("storeConfigRevisionQueue")
                     RevisionOperationQueue<StoreConfiguration> storeConfigRevisionQueue,
-            StoreConfigurationDescriptorToDomainMapper descriptorToDomainMapper,
+            StoreConfigurationDescriptorMapper storeConfigurationDescriptorMapper,
             ConfigurationSchemaRegistry schemaRegistry) {
         this.storeConfigRevisionQueue = storeConfigRevisionQueue;
-        this.descriptorToDomainMapper = descriptorToDomainMapper;
+        this.storeConfigurationDescriptorMapper = storeConfigurationDescriptorMapper;
         this.schemaRegistry = schemaRegistry;
     }
 
@@ -48,7 +48,7 @@ public class CreateStoreConfigurationController extends StoreConfigurationContro
                             activeStoreConfigurationRequest.getAdditionalProperties(), schema));
         }
 
-        StoreConfiguration storeConfiguration = descriptorToDomainMapper.map(request);
+        StoreConfiguration storeConfiguration = storeConfigurationDescriptorMapper.map(request);
         RevisionOperation<StoreConfiguration> op = new AddOperation<>(storeConfiguration);
         return storeConfigRevisionQueue.enqueue(op);
     }

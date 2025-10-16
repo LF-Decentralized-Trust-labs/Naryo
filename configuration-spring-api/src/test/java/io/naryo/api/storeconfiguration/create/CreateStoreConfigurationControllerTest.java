@@ -15,7 +15,7 @@ import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.definition.FieldDefinition;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaRegistry;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaType;
-import io.naryo.application.store.configuration.mapper.StoreConfigurationDescriptorToDomainMapper;
+import io.naryo.application.store.configuration.mapper.StoreConfigurationDescriptorMapper;
 import io.naryo.domain.configuration.store.StoreConfiguration;
 import io.naryo.domain.configuration.store.active.HttpStoreConfigurationBuilder;
 import io.naryo.infrastructure.configuration.beans.store.http.HttpStoreInitializer;
@@ -39,7 +39,8 @@ class CreateStoreConfigurationControllerTest {
 
     @Autowired ObjectMapper objectMapper;
 
-    @MockitoBean StoreConfigurationDescriptorToDomainMapper descriptorToDomainMapper;
+    @MockitoBean
+    StoreConfigurationDescriptorMapper descriptorToDomainMapper;
 
     @MockitoBean(name = "storeConfigRevisionQueue")
     RevisionOperationQueue<StoreConfiguration> storeConfigRevisionQueue;
