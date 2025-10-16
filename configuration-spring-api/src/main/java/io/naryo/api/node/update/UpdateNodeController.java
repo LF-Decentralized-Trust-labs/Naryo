@@ -29,6 +29,6 @@ public final class UpdateNodeController extends NodeController {
     public OperationId update(
             @PathVariable("id") UUID id, @RequestBody @NotNull UpdateNodeRequest request) {
         return operationQueue.enqueue(
-                new UpdateOperation<>(id, request.getPrevItemHash(), request.toDomain()));
+                new UpdateOperation<>(id, request.getPrevItemHash(), request.toDomain(id)));
     }
 }

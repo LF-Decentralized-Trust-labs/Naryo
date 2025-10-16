@@ -3,11 +3,12 @@ package io.naryo.api.node.common.request.subscription;
 import java.math.BigInteger;
 
 import io.naryo.api.node.common.request.subscription.method.BlockSubscriptionMethodConfigurationRequest;
+import io.naryo.domain.common.NonNegativeBlockNumber;
+import io.naryo.domain.node.subscription.SubscriptionConfiguration;
 import io.naryo.domain.node.subscription.SubscriptionStrategy;
+import io.naryo.domain.node.subscription.block.BlockSubscriptionConfiguration;
 import jakarta.validation.Valid;
-import lombok.Getter;
 
-@Getter
 public final class BlockSubscriptionConfigurationRequest extends SubscriptionConfigurationRequest {
 
     private final @Valid BlockSubscriptionMethodConfigurationRequest method;
@@ -19,7 +20,6 @@ public final class BlockSubscriptionConfigurationRequest extends SubscriptionCon
     private final BigInteger syncBlockLimit;
 
     BlockSubscriptionConfigurationRequest(
-            String strategy,
             BlockSubscriptionMethodConfigurationRequest method,
             BigInteger initialBlock,
             BigInteger confirmationBlocks,
@@ -35,5 +35,17 @@ public final class BlockSubscriptionConfigurationRequest extends SubscriptionCon
         this.eventInvalidationBlockThreshold = eventInvalidationBlockThreshold;
         this.replayBlockOffset = replayBlockOffset;
         this.syncBlockLimit = syncBlockLimit;
+    }
+
+    @Override
+    public SubscriptionConfiguration toDomain() {
+        return new BlockSubscriptionConfiguration(
+                this.method.toDomain(),
+                this.initialBlock,
+                new NonNegativeBlockNumber(this.confirmationBlocks),
+                new NonNegativeBlockNumber(this.missingTxRetryBlocks),
+                new NonNegativeBlockNumber(this.eventInvalidationBlockThreshold),
+                new NonNegativeBlockNumber(this.replayBlockOffset),
+                new NonNegativeBlockNumber(this.syncBlockLimit));
     }
 }

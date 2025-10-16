@@ -8,17 +8,15 @@ import io.naryo.api.node.common.request.subscription.SubscriptionConfigurationRe
 import io.naryo.domain.node.NodeType;
 import io.naryo.domain.node.ethereum.EthereumNodeVisibility;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "visibility")
 @JsonSubTypes({
     @JsonSubTypes.Type(value = PublicEthereumNodeRequest.class, name = "PUBLIC"),
     @JsonSubTypes.Type(value = PrivateEthereumNodeRequest.class, name = "PRIVATE"),
 })
-@Getter
 public abstract class EthereumNodeRequest extends CreateNodeRequest {
 
-    private final @NotNull EthereumNodeVisibility visibility;
+    protected final @NotNull EthereumNodeVisibility visibility;
 
     public EthereumNodeRequest(
             String name,

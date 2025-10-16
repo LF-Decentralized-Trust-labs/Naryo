@@ -2,10 +2,10 @@ package io.naryo.api.node.common.request.connection;
 
 import java.time.Duration;
 
+import io.naryo.domain.node.connection.NodeConnection;
 import io.naryo.domain.node.connection.NodeConnectionType;
-import lombok.Getter;
+import io.naryo.domain.node.connection.http.*;
 
-@Getter
 public final class HttpNodeConnectionRequest extends NodeConnectionRequest {
 
     private final int maxIdleConnections;
@@ -25,5 +25,16 @@ public final class HttpNodeConnectionRequest extends NodeConnectionRequest {
         this.keepAliveDuration = keepAliveDuration;
         this.connectionTimeout = connectionTimeout;
         this.readTimeout = readTimeout;
+    }
+
+    @Override
+    public NodeConnection toDomain() {
+        return new HttpNodeConnection(
+                this.connectionEndpoint.toDomain(),
+                this.retryConfiguration.toDomain(),
+                new MaxIdleConnections(this.maxIdleConnections),
+                new KeepAliveDuration(this.keepAliveDuration),
+                new ConnectionTimeout(this.connectionTimeout),
+                new ReadTimeout(this.readTimeout));
     }
 }

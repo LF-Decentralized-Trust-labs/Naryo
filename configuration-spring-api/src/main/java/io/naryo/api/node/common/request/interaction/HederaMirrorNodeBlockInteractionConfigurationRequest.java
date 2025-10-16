@@ -1,5 +1,6 @@
 package io.naryo.api.node.common.request.interaction;
 
+import io.naryo.domain.node.interaction.InteractionConfiguration;
 import io.naryo.domain.node.interaction.block.InteractionMode;
 import io.naryo.domain.node.interaction.block.hedera.HederaMirrorNodeBlockInteractionConfiguration;
 import io.naryo.domain.node.interaction.block.hedera.LimitPerRequest;
@@ -20,7 +21,8 @@ public final class HederaMirrorNodeBlockInteractionConfigurationRequest
         this.retriesPerRequest = retriesPerRequest;
     }
 
-    public HederaMirrorNodeBlockInteractionConfiguration toDomain() {
+    @Override
+    public InteractionConfiguration toDomain() {
         return new HederaMirrorNodeBlockInteractionConfiguration(
                 new LimitPerRequest(this.limitPerRequest),
                 new RetriesPerRequest(this.retriesPerRequest));
