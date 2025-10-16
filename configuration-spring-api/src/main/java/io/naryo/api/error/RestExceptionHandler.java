@@ -87,4 +87,11 @@ public class RestExceptionHandler {
                 "Unexpected error",
                 req.getRequestURI());
     }
+
+    @ExceptionHandler({NotFoundException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleNotFound(Exception ex, HttpServletRequest req) {
+        return ErrorResponse.of(
+                HttpStatus.NOT_FOUND.value(), "Not Found", ex.getMessage(), req.getRequestURI());
+    }
 }

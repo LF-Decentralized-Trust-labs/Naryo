@@ -11,6 +11,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
             description = "Validation error / malformed JSON",
             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     @ApiResponse(
+            responseCode = "404",
+            description = "Not found",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+    @ApiResponse(
             responseCode = "409",
             description = "Revision conflict",
             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),

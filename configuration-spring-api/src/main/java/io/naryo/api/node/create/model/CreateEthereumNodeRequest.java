@@ -1,0 +1,33 @@
+package io.naryo.api.node.create.model;
+
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.naryo.api.node.common.request.connection.NodeConnectionRequest;
+import io.naryo.api.node.common.request.interaction.InteractionConfigurationRequest;
+import io.naryo.api.node.common.request.subscription.SubscriptionConfigurationRequest;
+import io.naryo.domain.node.NodeType;
+import io.naryo.domain.node.ethereum.EthereumNodeVisibility;
+import jakarta.validation.constraints.NotNull;
+
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "visibility")
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = CreatePublicEthereumNodeRequest.class, name = "PUBLIC"),
+    @JsonSubTypes.Type(value = CreatePrivateEthereumNodeRequest.class, name = "PRIVATE"),
+})
+public abstract class CreateEthereumNodeRequest extends CreateNodeRequest {
+
+    protected final @NotNull EthereumNodeVisibility visibility;
+
+    public CreateEthereumNodeRequest(
+            String name,
+            SubscriptionConfigurationRequest subscription,
+            InteractionConfigurationRequest interaction,
+            NodeConnectionRequest connection,
+            EthereumNodeVisibility visibility) {
+        super(name, NodeType.ETHEREUM, subscription, interaction, connection);
+        this.visibility = visibility;
+    }
+}
