@@ -1,6 +1,5 @@
 package io.naryo.api.filter.common.request;
 
-import io.naryo.domain.common.event.EventName;
 import io.naryo.domain.filter.event.CorrelationId;
 import io.naryo.domain.filter.event.EventFilterSpecification;
 import jakarta.validation.constraints.NotBlank;
@@ -18,9 +17,8 @@ public class EventFilterSpecificationRequest {
     }
 
     public EventFilterSpecification toDomain() {
-        CorrelationId correlationId = correlationIdPosition != null
-            ? new CorrelationId(correlationIdPosition)
-            : null;
+        CorrelationId correlationId =
+                correlationIdPosition != null ? new CorrelationId(correlationIdPosition) : null;
         return new EventFilterSpecification(eventSignature, correlationId);
     }
 }

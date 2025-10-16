@@ -9,7 +9,6 @@ import io.naryo.api.filter.common.request.FilterSyncStateRequest;
 import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.filter.FilterName;
 import io.naryo.domain.filter.event.GlobalEventFilter;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -49,6 +48,8 @@ public final class CreateGlobalEventFilterRequest extends CreateFilterRequest {
                 this.specification.toDomain(),
                 this.statuses,
                 this.filterSyncState.toDomain(),
-                this.visibilityConfiguration != null ? this.visibilityConfiguration.toDomain() : null);
+                this.visibilityConfiguration != null
+                        ? this.visibilityConfiguration.toDomain()
+                        : null);
     }
 }

@@ -1,6 +1,5 @@
 package io.naryo.api.node.create;
 
-
 import io.naryo.api.RequestBuilder;
 import io.naryo.api.node.common.connection.HttpNodeConnectionRequestBuilder;
 import io.naryo.api.node.common.interaction.block.EthereumRpcBlockInteractionConfigurationRequestBuilder;

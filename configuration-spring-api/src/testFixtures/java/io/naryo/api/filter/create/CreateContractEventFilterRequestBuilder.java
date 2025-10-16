@@ -1,5 +1,7 @@
 package io.naryo.api.filter.create;
 
+import java.util.Set;
+
 import io.naryo.api.filter.common.EventFilterSpecificationRequestBuilder;
 import io.naryo.api.filter.common.FilterSyncStateRequestBuilder;
 import io.naryo.api.filter.common.request.EventFilterSpecificationRequest;
@@ -8,16 +10,17 @@ import io.naryo.api.filter.create.model.CreateContractEventFilterRequest;
 import io.naryo.domain.common.event.ContractEventStatus;
 import org.instancio.Instancio;
 
-import java.util.Set;
-
-public class CreateContractEventFilterRequestBuilder extends CreateFilterRequestBuilder<CreateContractEventFilterRequestBuilder, CreateContractEventFilterRequest> {
+public class CreateContractEventFilterRequestBuilder
+        extends CreateFilterRequestBuilder<
+                CreateContractEventFilterRequestBuilder, CreateContractEventFilterRequest> {
 
     private EventFilterSpecificationRequest specification;
     private Set<ContractEventStatus> statuses;
     private FilterSyncStateRequest filterSyncState;
     private String contractAddress;
 
-    public CreateContractEventFilterRequestBuilder withSpecification(EventFilterSpecificationRequest specification) {
+    public CreateContractEventFilterRequestBuilder withSpecification(
+            EventFilterSpecificationRequest specification) {
         this.specification = specification;
         return self();
     }
@@ -27,7 +30,8 @@ public class CreateContractEventFilterRequestBuilder extends CreateFilterRequest
         return self();
     }
 
-    public CreateContractEventFilterRequestBuilder withFilterSyncState(FilterSyncStateRequest filterSyncState) {
+    public CreateContractEventFilterRequestBuilder withFilterSyncState(
+            FilterSyncStateRequest filterSyncState) {
         this.filterSyncState = filterSyncState;
         return self();
     }
@@ -38,15 +42,21 @@ public class CreateContractEventFilterRequestBuilder extends CreateFilterRequest
     }
 
     public EventFilterSpecificationRequest getSpecification() {
-        return this.specification == null ? new EventFilterSpecificationRequestBuilder().build() : this.specification;
+        return this.specification == null
+                ? new EventFilterSpecificationRequestBuilder().build()
+                : this.specification;
     }
 
     public Set<ContractEventStatus> getStatuses() {
-        return this.statuses == null ? Instancio.ofSet(ContractEventStatus.class).size(2).create() : this.statuses;
+        return this.statuses == null
+                ? Instancio.ofSet(ContractEventStatus.class).size(2).create()
+                : this.statuses;
     }
 
     public FilterSyncStateRequest getFilterSyncState() {
-        return this.filterSyncState == null ? new FilterSyncStateRequestBuilder().build() : this.filterSyncState;
+        return this.filterSyncState == null
+                ? new FilterSyncStateRequestBuilder().build()
+                : this.filterSyncState;
     }
 
     public String getContractAddress() {
@@ -61,12 +71,11 @@ public class CreateContractEventFilterRequestBuilder extends CreateFilterRequest
     @Override
     public CreateContractEventFilterRequest build() {
         return new CreateContractEventFilterRequest(
-            getName(),
-            getNodeId(),
-            getSpecification(),
-            getStatuses(),
-            getFilterSyncState(),
-            getContractAddress()
-        );
+                getName(),
+                getNodeId(),
+                getSpecification(),
+                getStatuses(),
+                getFilterSyncState(),
+                getContractAddress());
     }
 }

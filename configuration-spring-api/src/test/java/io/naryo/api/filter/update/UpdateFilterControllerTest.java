@@ -1,5 +1,7 @@
 package io.naryo.api.filter.update;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.naryo.api.filter.update.model.UpdateContractEventFilterRequest;
 import io.naryo.api.filter.update.model.UpdateGlobalEventFilterRequest;
@@ -17,8 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.UUID;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -31,11 +31,9 @@ class UpdateFilterControllerTest {
 
     private final String URI = "/api/v1/filters";
 
-    @Autowired
-    MockMvc mvc;
+    @Autowired MockMvc mvc;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    @Autowired ObjectMapper objectMapper;
 
     @MockitoBean
     @SuppressWarnings("unchecked")
@@ -52,15 +50,15 @@ class UpdateFilterControllerTest {
         String expectedResponse = objectMapper.writeValueAsString(opId);
 
         mvc.perform(
-                put(URI + "/" + filterId)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .content(
-                        objectMapper
-                            .writerFor(UpdateTransactionFilterRequest.class)
-                            .writeValueAsBytes(input)))
-            .andExpect(status().isAccepted())
-            .andExpect(content().json(expectedResponse));
+                        put(URI + "/" + filterId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(
+                                        objectMapper
+                                                .writerFor(UpdateTransactionFilterRequest.class)
+                                                .writeValueAsBytes(input)))
+                .andExpect(status().isAccepted())
+                .andExpect(content().json(expectedResponse));
     }
 
     @Test
@@ -74,15 +72,15 @@ class UpdateFilterControllerTest {
         String expectedResponse = objectMapper.writeValueAsString(opId);
 
         mvc.perform(
-                put(URI + "/" + filterId)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .content(
-                        objectMapper
-                            .writerFor(UpdateGlobalEventFilterRequest.class)
-                            .writeValueAsBytes(input)))
-            .andExpect(status().isAccepted())
-            .andExpect(content().json(expectedResponse));
+                        put(URI + "/" + filterId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(
+                                        objectMapper
+                                                .writerFor(UpdateGlobalEventFilterRequest.class)
+                                                .writeValueAsBytes(input)))
+                .andExpect(status().isAccepted())
+                .andExpect(content().json(expectedResponse));
     }
 
     @Test
@@ -96,15 +94,15 @@ class UpdateFilterControllerTest {
         String expectedResponse = objectMapper.writeValueAsString(opId);
 
         mvc.perform(
-                put(URI + "/" + filterId)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .content(
-                        objectMapper
-                            .writerFor(UpdateContractEventFilterRequest.class)
-                            .writeValueAsBytes(input)))
-            .andExpect(status().isAccepted())
-            .andExpect(content().json(expectedResponse));
+                        put(URI + "/" + filterId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(
+                                        objectMapper
+                                                .writerFor(UpdateContractEventFilterRequest.class)
+                                                .writeValueAsBytes(input)))
+                .andExpect(status().isAccepted())
+                .andExpect(content().json(expectedResponse));
     }
 
     @Test
@@ -113,10 +111,10 @@ class UpdateFilterControllerTest {
         String malformedJson = "{ \"name\": \"x\", ";
 
         mvc.perform(
-                put(URI + "/" + filterId)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(malformedJson))
-            .andExpect(status().isBadRequest());
+                        put(URI + "/" + filterId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(malformedJson))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -125,14 +123,14 @@ class UpdateFilterControllerTest {
         var input = new UpdateTransactionFilterRequestBuilder().build();
 
         doThrow(new QueueOverflowException("Low lane full", "LOW", "UPDATE"))
-            .when(operationQueue)
-            .enqueue(any(RevisionOperation.class));
+                .when(operationQueue)
+                .enqueue(any(RevisionOperation.class));
 
         mvc.perform(
-                put(URI + "/" + filterId)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(input)))
-            .andExpect(status().isTooManyRequests());
+                        put(URI + "/" + filterId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(input)))
+                .andExpect(status().isTooManyRequests());
     }
 
     @Test
@@ -141,13 +139,13 @@ class UpdateFilterControllerTest {
         var input = new UpdateTransactionFilterRequestBuilder().build();
 
         doThrow(new QueueClosedException())
-            .when(operationQueue)
-            .enqueue(any(RevisionOperation.class));
+                .when(operationQueue)
+                .enqueue(any(RevisionOperation.class));
 
         mvc.perform(
-                put(URI + "/" + filterId)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(input)))
-            .andExpect(status().isServiceUnavailable());
+                        put(URI + "/" + filterId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(input)))
+                .andExpect(status().isServiceUnavailable());
     }
 }

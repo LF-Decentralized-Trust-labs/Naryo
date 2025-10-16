@@ -1,12 +1,14 @@
 package io.naryo.api.filter.update;
 
+import java.util.UUID;
+
 import io.naryo.api.RequestBuilder;
 import io.naryo.api.filter.update.model.UpdateFilterRequest;
 import org.instancio.Instancio;
 
-import java.util.UUID;
-
-public abstract class UpdateFilterRequestBuilder< T extends UpdateFilterRequestBuilder<T, Y>, Y extends UpdateFilterRequest> implements RequestBuilder<T, Y> {
+public abstract class UpdateFilterRequestBuilder<
+                T extends UpdateFilterRequestBuilder<T, Y>, Y extends UpdateFilterRequest>
+        implements RequestBuilder<T, Y> {
 
     private String name;
     private UUID nodeId;

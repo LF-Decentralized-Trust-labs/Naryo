@@ -1,12 +1,12 @@
 package io.naryo.api.filter.common;
 
+import java.util.Set;
+
 import io.naryo.domain.common.event.EventName;
 import io.naryo.domain.filter.event.CorrelationId;
 import io.naryo.domain.filter.event.EventFilterSpecification;
 import io.naryo.domain.filter.event.ParameterDefinition;
 import io.naryo.domain.filter.event.parameter.AddressParameterDefinition;
-
-import java.util.Set;
 
 public class EventFilterSpecificationBuilder {
     private EventName eventName;
@@ -30,10 +30,9 @@ public class EventFilterSpecificationBuilder {
 
     public EventFilterSpecification build() {
         return new EventFilterSpecification(
-            eventName != null ? eventName : new EventName("Test"),
-            correlationId != null ? correlationId : new CorrelationId(0),
-            parameters != null ? parameters : defaultParameters()
-        );
+                eventName != null ? eventName : new EventName("Test"),
+                correlationId != null ? correlationId : new CorrelationId(0),
+                parameters != null ? parameters : defaultParameters());
     }
 
     private Set<ParameterDefinition> defaultParameters() {

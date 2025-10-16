@@ -1,13 +1,15 @@
 package io.naryo.api.filter.create;
 
+import java.util.Set;
+
 import io.naryo.api.filter.create.model.CreateTransactionFilterRequest;
 import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.filter.transaction.IdentifierType;
 import org.instancio.Instancio;
 
-import java.util.Set;
-
-public class CreateTransactionFilterRequestBuilder extends CreateFilterRequestBuilder<CreateTransactionFilterRequestBuilder, CreateTransactionFilterRequest> {
+public class CreateTransactionFilterRequestBuilder
+        extends CreateFilterRequestBuilder<
+                CreateTransactionFilterRequestBuilder, CreateTransactionFilterRequest> {
 
     private IdentifierType identifierType;
     private String value;
@@ -19,7 +21,9 @@ public class CreateTransactionFilterRequestBuilder extends CreateFilterRequestBu
     }
 
     public IdentifierType getIdentifierType() {
-        return this.identifierType == null ? Instancio.create(IdentifierType.class) : this.identifierType;
+        return this.identifierType == null
+                ? Instancio.create(IdentifierType.class)
+                : this.identifierType;
     }
 
     public CreateTransactionFilterRequestBuilder withValue(String value) {
@@ -38,8 +42,8 @@ public class CreateTransactionFilterRequestBuilder extends CreateFilterRequestBu
 
     public Set<TransactionStatus> getStatuses() {
         return this.statuses == null
-            ? Instancio.ofSet(TransactionStatus.class).size(2).create()
-            : this.statuses;
+                ? Instancio.ofSet(TransactionStatus.class).size(2).create()
+                : this.statuses;
     }
 
     @Override
@@ -50,11 +54,6 @@ public class CreateTransactionFilterRequestBuilder extends CreateFilterRequestBu
     @Override
     public CreateTransactionFilterRequest build() {
         return new CreateTransactionFilterRequest(
-            getName(),
-            getNodeId(),
-            getIdentifierType(),
-            getValue(),
-            getStatuses()
-        );
+                getName(), getNodeId(), getIdentifierType(), getValue(), getStatuses());
     }
 }

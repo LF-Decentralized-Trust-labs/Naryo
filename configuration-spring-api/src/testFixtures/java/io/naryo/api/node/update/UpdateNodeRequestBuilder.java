@@ -2,7 +2,6 @@ package io.naryo.api.node.update;
 
 import java.util.UUID;
 
-
 import io.naryo.api.RequestBuilder;
 import io.naryo.api.node.common.connection.HttpNodeConnectionRequestBuilder;
 import io.naryo.api.node.common.interaction.block.EthereumRpcBlockInteractionConfigurationRequestBuilder;

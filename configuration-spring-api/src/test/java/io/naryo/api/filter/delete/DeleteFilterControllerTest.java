@@ -1,5 +1,7 @@
 package io.naryo.api.filter.delete;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.operation.RevisionOperation;
@@ -14,8 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.UUID;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -28,11 +28,9 @@ class DeleteFilterControllerTest {
 
     private final String URI = "/api/v1/filters";
 
-    @Autowired
-    MockMvc mvc;
+    @Autowired MockMvc mvc;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    @Autowired ObjectMapper objectMapper;
 
     @MockitoBean
     @SuppressWarnings("unchecked")
@@ -49,11 +47,11 @@ class DeleteFilterControllerTest {
         String expectedResponse = objectMapper.writeValueAsString(opId);
 
         mvc.perform(
-                delete(URI + "/" + filterId + "/" + prevItemHash)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isAccepted())
-            .andExpect(content().json(expectedResponse));
+                        delete(URI + "/" + filterId + "/" + prevItemHash)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isAccepted())
+                .andExpect(content().json(expectedResponse));
     }
 
     @Test
@@ -62,13 +60,13 @@ class DeleteFilterControllerTest {
         var prevItemHash = "hash123";
 
         doThrow(new QueueOverflowException("Low lane full", "LOW", "REMOVE"))
-            .when(operationQueue)
-            .enqueue(any(RevisionOperation.class));
+                .when(operationQueue)
+                .enqueue(any(RevisionOperation.class));
 
         mvc.perform(
-                delete(URI + "/" + filterId + "/" + prevItemHash)
-                    .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isTooManyRequests());
+                        delete(URI + "/" + filterId + "/" + prevItemHash)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isTooManyRequests());
     }
 
     @Test
@@ -77,12 +75,12 @@ class DeleteFilterControllerTest {
         var prevItemHash = "hash123";
 
         doThrow(new QueueClosedException())
-            .when(operationQueue)
-            .enqueue(any(RevisionOperation.class));
+                .when(operationQueue)
+                .enqueue(any(RevisionOperation.class));
 
         mvc.perform(
-                delete(URI + "/" + filterId + "/" + prevItemHash)
-                    .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isServiceUnavailable());
+                        delete(URI + "/" + filterId + "/" + prevItemHash)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isServiceUnavailable());
     }
 }

@@ -13,7 +13,8 @@ public class EventFilterVisibilityConfigurationRequestBuilder {
         return this;
     }
 
-    public EventFilterVisibilityConfigurationRequestBuilder withPrivacyGroupId(String privacyGroupId) {
+    public EventFilterVisibilityConfigurationRequestBuilder withPrivacyGroupId(
+            String privacyGroupId) {
         this.privacyGroupId = privacyGroupId;
         return this;
     }
@@ -27,9 +28,6 @@ public class EventFilterVisibilityConfigurationRequestBuilder {
     }
 
     public EventFilterVisibilityConfigurationRequest build() {
-        return new EventFilterVisibilityConfigurationRequest(
-            getVisible(),
-            getPrivacyGroupId()
-        );
+        return new EventFilterVisibilityConfigurationRequest(getVisible(), getPrivacyGroupId());
     }
 }

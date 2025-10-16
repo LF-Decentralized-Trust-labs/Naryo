@@ -1,7 +1,6 @@
 package io.naryo.api.filter.common;
 
 import io.naryo.api.filter.common.request.EventFilterSpecificationRequest;
-import org.instancio.Instancio;
 
 public class EventFilterSpecificationRequestBuilder {
 
@@ -13,13 +12,16 @@ public class EventFilterSpecificationRequestBuilder {
         return this;
     }
 
-    public EventFilterSpecificationRequestBuilder withCorrelationIdPosition(Integer correlationIdPosition) {
+    public EventFilterSpecificationRequestBuilder withCorrelationIdPosition(
+            Integer correlationIdPosition) {
         this.correlationIdPosition = correlationIdPosition;
         return this;
     }
 
     public String getEventSignature() {
-        return this.eventSignature != null ? this.eventSignature : "Transfer(address,address,uint256)";
+        return this.eventSignature != null
+                ? this.eventSignature
+                : "Transfer(address,address,uint256)";
     }
 
     public Integer getCorrelationIdPosition() {
@@ -27,9 +29,6 @@ public class EventFilterSpecificationRequestBuilder {
     }
 
     public EventFilterSpecificationRequest build() {
-        return new EventFilterSpecificationRequest(
-            getEventSignature(),
-            getCorrelationIdPosition()
-        );
+        return new EventFilterSpecificationRequest(getEventSignature(), getCorrelationIdPosition());
     }
 }
