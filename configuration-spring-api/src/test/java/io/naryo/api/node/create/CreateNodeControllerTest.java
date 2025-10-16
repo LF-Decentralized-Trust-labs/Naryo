@@ -1,6 +1,5 @@
 package io.naryo.api.node.create;
 
-import java.util.Random;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,9 +33,9 @@ class CreateNodeControllerTest {
     @MockitoBean RevisionOperationQueue<Node> operationQueue;
 
     @Test
-    void addNode_ok() throws Exception {
+    void createHederaNode_ok() throws Exception {
         var opId = new OperationId(UUID.randomUUID());
-        var input = this.createInput();
+        var input = new CreateHederaNodeRequestBuilder().build();
 
         when(operationQueue.enqueue(any())).thenReturn(opId);
 
@@ -54,16 +53,45 @@ class CreateNodeControllerTest {
                 .andExpect(content().json(expectedResponse));
     }
 
-    private CreateNodeRequest createInput() {
-        var random = new Random().nextInt(3);
-        CreateNodeRequestBuilder<?, ?> builder =
-                switch (random) {
-                    case 0 -> new CreatePublicEthereumNodeRequestBuilder();
-                    case 1 -> new CreatePrivateEthereumNodeRequestBuilder();
-                    case 2 -> new CreateHederaNodeRequestBuilder();
-                    default -> throw new IllegalStateException("Unexpected value: " + random);
-                };
+    @Test
+    void createPublicEthNode_ok() throws Exception {
+        var opId = new OperationId(UUID.randomUUID());
+        var input = new CreatePublicEthereumNodeRequestBuilder().build();
 
-        return builder.build();
+        when(operationQueue.enqueue(any())).thenReturn(opId);
+
+        String expectedResponse = objectMapper.writeValueAsString(opId);
+
+        mvc.perform(
+                post(PATH)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .content(
+                        objectMapper
+                            .writerFor(CreateNodeRequest.class)
+                            .writeValueAsBytes(input)))
+            .andExpect(status().isAccepted())
+            .andExpect(content().json(expectedResponse));
+    }
+
+    @Test
+    void createPrivateEthNode_ok() throws Exception {
+        var opId = new OperationId(UUID.randomUUID());
+        var input = new CreatePrivateEthereumNodeRequestBuilder().build();
+
+        when(operationQueue.enqueue(any())).thenReturn(opId);
+
+        String expectedResponse = objectMapper.writeValueAsString(opId);
+
+        mvc.perform(
+                post(PATH)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .content(
+                        objectMapper
+                            .writerFor(CreateNodeRequest.class)
+                            .writeValueAsBytes(input)))
+            .andExpect(status().isAccepted())
+            .andExpect(content().json(expectedResponse));
     }
 }
