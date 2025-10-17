@@ -1,14 +1,14 @@
-package io.naryo.api.storeconfiguration.fixtures;
+package io.naryo.api.storeconfiguration.common;
 
 import java.util.UUID;
 
+import io.naryo.api.RequestBuilder;
 import io.naryo.api.storeconfiguration.common.request.StoreConfigurationRequest;
-import io.naryo.domain.DomainBuilder;
 
 public abstract class StoreConfigurationRequestBuilder<
                 T extends StoreConfigurationRequestBuilder<T, Y>,
                 Y extends StoreConfigurationRequest>
-        implements DomainBuilder<T, Y> {
+        implements RequestBuilder<T, Y> {
 
     private UUID nodeId;
 

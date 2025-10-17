@@ -1,13 +1,13 @@
-package io.naryo.api.storeconfiguration.fixtures;
+package io.naryo.api.storeconfiguration.common;
 
+import io.naryo.api.RequestBuilder;
 import io.naryo.api.storeconfiguration.common.request.FilterStoreFeatureConfigurationRequest;
-import io.naryo.domain.DomainBuilder;
 import org.instancio.Instancio;
 
 public class FilterStoreFeatureConfigurationRequestBuilder
-        implements DomainBuilder<
-                FilterStoreFeatureConfigurationRequestBuilder,
-                FilterStoreFeatureConfigurationRequest> {
+        implements RequestBuilder<
+                        FilterStoreFeatureConfigurationRequestBuilder,
+                        FilterStoreFeatureConfigurationRequest> {
 
     private String destination;
 

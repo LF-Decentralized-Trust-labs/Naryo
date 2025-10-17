@@ -1,4 +1,4 @@
-package io.naryo.api.storeconfiguration.fixtures;
+package io.naryo.api.storeconfiguration.common;
 
 import io.naryo.api.storeconfiguration.common.request.InactiveStoreConfigurationRequest;
 

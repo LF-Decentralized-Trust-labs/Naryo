@@ -1,12 +1,12 @@
-package io.naryo.api.storeconfiguration.fixtures;
+package io.naryo.api.storeconfiguration.common;
 
+import io.naryo.api.RequestBuilder;
 import io.naryo.api.storeconfiguration.common.request.EventStoreTargetRequest;
-import io.naryo.domain.DomainBuilder;
 import io.naryo.domain.configuration.store.active.feature.event.block.TargetType;
 import org.instancio.Instancio;
 
 public class EventStoreTargetRequestBuilder
-        implements DomainBuilder<EventStoreTargetRequestBuilder, EventStoreTargetRequest> {
+        implements RequestBuilder<EventStoreTargetRequestBuilder, EventStoreTargetRequest> {
 
     private TargetType type;
     private String destination;

@@ -1,17 +1,17 @@
-package io.naryo.api.storeconfiguration.fixtures;
+package io.naryo.api.storeconfiguration.common;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import io.naryo.api.RequestBuilder;
 import io.naryo.api.storeconfiguration.common.request.BlockEventStoreFeatureConfigurationRequest;
 import io.naryo.api.storeconfiguration.common.request.EventStoreTargetRequest;
-import io.naryo.domain.DomainBuilder;
 import io.naryo.domain.configuration.store.active.feature.event.block.TargetType;
 
 public class BlockEventStoreFeatureConfigurationRequestBuilder
-        implements DomainBuilder<
-                BlockEventStoreFeatureConfigurationRequestBuilder,
-                BlockEventStoreFeatureConfigurationRequest> {
+        implements RequestBuilder<
+                        BlockEventStoreFeatureConfigurationRequestBuilder,
+                        BlockEventStoreFeatureConfigurationRequest> {
 
     private Set<EventStoreTargetRequest> targets;
 

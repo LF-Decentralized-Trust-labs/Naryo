@@ -1,6 +1,6 @@
 package io.naryo.api.node.common.interaction;
 
-import io.naryo.api.node.RequestBuilder;
+import io.naryo.api.RequestBuilder;
 import io.naryo.api.node.common.request.interaction.InteractionConfigurationRequest;
 
 public abstract class InteractionConfigurationRequestBuilder<
