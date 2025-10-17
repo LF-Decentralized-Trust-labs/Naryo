@@ -1,11 +1,11 @@
-package io.naryo.api.storeconfiguration.create;
+package io.naryo.api.storeconfiguration.update;
 
 import io.naryo.api.storeconfiguration.StoreConfigurationController;
 import io.naryo.api.storeconfiguration.common.request.ActiveStoreConfigurationRequest;
-import io.naryo.api.storeconfiguration.common.request.StoreConfigurationRequest;
+import io.naryo.api.storeconfiguration.update.model.UpdateStoreConfigurationRequest;
 import io.naryo.application.configuration.revision.OperationId;
-import io.naryo.application.configuration.revision.operation.AddOperation;
 import io.naryo.application.configuration.revision.operation.RevisionOperation;
+import io.naryo.application.configuration.revision.operation.UpdateOperation;
 import io.naryo.application.configuration.revision.queue.RevisionOperationQueue;
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaRegistry;
@@ -21,16 +21,17 @@ import static io.naryo.infrastructure.util.serialization.ConfigurationSchemaConv
 
 @RestController
 @AllArgsConstructor
-public class CreateStoreConfigurationController extends StoreConfigurationController {
+public class UpdateStoreConfigurationController extends StoreConfigurationController {
 
     private final RevisionOperationQueue<StoreConfiguration> storeConfigRevisionQueue;
-    private final StoreConfigurationDescriptorMapper storeConfigurationDescriptorMapper;
+    private final StoreConfigurationDescriptorMapper descriptorToDomainMapper;
     private final ConfigurationSchemaRegistry schemaRegistry;
 
-    @PostMapping
+    @PutMapping()
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public OperationId create(@Valid @RequestBody StoreConfigurationRequest request) {
-        if (request instanceof ActiveStoreConfigurationRequest activeStoreConfigurationRequest) {
+    public OperationId update(@Valid @RequestBody UpdateStoreConfigurationRequest request) {
+        if (request.target()
+                instanceof ActiveStoreConfigurationRequest activeStoreConfigurationRequest) {
             String storeType = activeStoreConfigurationRequest.getType().getName();
             ConfigurationSchema schema =
                     schemaRegistry.getSchema(ConfigurationSchemaType.STORE, storeType);
@@ -39,8 +40,12 @@ public class CreateStoreConfigurationController extends StoreConfigurationContro
                             activeStoreConfigurationRequest.getAdditionalProperties(), schema));
         }
 
-        StoreConfiguration storeConfiguration = storeConfigurationDescriptorMapper.map(request);
-        RevisionOperation<StoreConfiguration> op = new AddOperation<>(storeConfiguration);
-        return storeConfigRevisionQueue.enqueue(op);
+        StoreConfiguration storeConfiguration = descriptorToDomainMapper.map(request.target());
+
+        RevisionOperation<StoreConfiguration> operation =
+                new UpdateOperation<>(
+                        storeConfiguration.getNodeId(), request.prevItemHash(), storeConfiguration);
+
+        return storeConfigRevisionQueue.enqueue(operation);
     }
 }

@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 public final class BlockStoreConfigurationEntity extends EventStoreConfigurationEntity
         implements BlockEventStoreConfigurationDescriptor {
 
-    private @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) @JoinColumn(
-            name = "event_store_id") Set<EventStoreTargetEntity> targets;
+    private @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "event_store_id") Set<EventStoreTargetEntity> targets;
 
     public BlockStoreConfigurationEntity(Set<EventStoreTargetEntity> targets) {
         super();
