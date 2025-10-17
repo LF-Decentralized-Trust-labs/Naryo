@@ -1,4 +1,4 @@
-package io.naryo.api.node.create.model;
+package io.naryo.api.node.common.request;
 
 import java.util.UUID;
 
@@ -7,23 +7,33 @@ import io.naryo.api.node.common.request.interaction.InteractionConfigurationRequ
 import io.naryo.api.node.common.request.subscription.SubscriptionConfigurationRequest;
 import io.naryo.domain.node.Node;
 import io.naryo.domain.node.NodeName;
-import io.naryo.domain.node.NodeType;
-import io.naryo.domain.node.hedera.HederaNode;
+import io.naryo.domain.node.ethereum.EthereumNodeVisibility;
+import io.naryo.domain.node.ethereum.pub.PublicEthereumNode;
 
-public final class CreateHederaNodeRequest extends CreateNodeRequest {
+public final class PublicEthereumNodeRequest extends EthereumNodeRequest {
 
-    public CreateHederaNodeRequest(
+    public PublicEthereumNodeRequest(
             String name,
             SubscriptionConfigurationRequest subscription,
             InteractionConfigurationRequest interaction,
             NodeConnectionRequest connection) {
-        super(name, NodeType.HEDERA, subscription, interaction, connection);
+        super(name, subscription, interaction, connection, EthereumNodeVisibility.PUBLIC);
     }
 
     @Override
     public Node toDomain() {
-        return new HederaNode(
+        return new PublicEthereumNode(
                 UUID.randomUUID(),
+                new NodeName(this.name),
+                this.subscription.toDomain(),
+                this.interaction.toDomain(),
+                this.connection.toDomain());
+    }
+
+    @Override
+    public Node toDomain(UUID nodeId) {
+        return new PublicEthereumNode(
+                nodeId,
                 new NodeName(this.name),
                 this.subscription.toDomain(),
                 this.interaction.toDomain(),

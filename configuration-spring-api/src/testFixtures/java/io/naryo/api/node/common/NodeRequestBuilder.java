@@ -1,17 +1,16 @@
-package io.naryo.api.node.create;
+package io.naryo.api.node.common;
 
 import io.naryo.api.RequestBuilder;
 import io.naryo.api.node.common.connection.HttpNodeConnectionRequestBuilder;
 import io.naryo.api.node.common.interaction.block.EthereumRpcBlockInteractionConfigurationRequestBuilder;
+import io.naryo.api.node.common.request.NodeRequest;
 import io.naryo.api.node.common.request.connection.NodeConnectionRequest;
 import io.naryo.api.node.common.request.interaction.InteractionConfigurationRequest;
 import io.naryo.api.node.common.request.subscription.SubscriptionConfigurationRequest;
 import io.naryo.api.node.common.subscription.BlockSubscriptionConfigurationRequestBuilder;
-import io.naryo.api.node.create.model.CreateNodeRequest;
 import org.instancio.Instancio;
 
-public abstract class CreateNodeRequestBuilder<
-                T extends CreateNodeRequestBuilder<T, Y>, Y extends CreateNodeRequest>
+public abstract class NodeRequestBuilder<T extends NodeRequestBuilder<T, Y>, Y extends NodeRequest>
         implements RequestBuilder<T, Y> {
 
     private String name;
@@ -19,7 +18,7 @@ public abstract class CreateNodeRequestBuilder<
     private InteractionConfigurationRequest interactionConfiguration;
     private NodeConnectionRequest connection;
 
-    public CreateNodeRequestBuilder<T, Y> withName(String name) {
+    public NodeRequestBuilder<T, Y> withName(String name) {
         this.name = name;
         return self();
     }
@@ -28,7 +27,7 @@ public abstract class CreateNodeRequestBuilder<
         return this.name == null ? Instancio.create(String.class) : this.name;
     }
 
-    public CreateNodeRequestBuilder<T, Y> withSubscriptionConfiguration(
+    public NodeRequestBuilder<T, Y> withSubscriptionConfiguration(
             SubscriptionConfigurationRequest subscriptionConfiguration) {
         this.subscriptionConfiguration = subscriptionConfiguration;
         return self();
@@ -40,7 +39,7 @@ public abstract class CreateNodeRequestBuilder<
                 : this.subscriptionConfiguration;
     }
 
-    public CreateNodeRequestBuilder<T, Y> withInteractionConfiguration(
+    public NodeRequestBuilder<T, Y> withInteractionConfiguration(
             InteractionConfigurationRequest interactionConfiguration) {
         this.interactionConfiguration = interactionConfiguration;
         return self();
@@ -52,7 +51,7 @@ public abstract class CreateNodeRequestBuilder<
                 : this.interactionConfiguration;
     }
 
-    public CreateNodeRequestBuilder<T, Y> withConnection(NodeConnectionRequest connection) {
+    public NodeRequestBuilder<T, Y> withConnection(NodeConnectionRequest connection) {
         this.connection = connection;
         return self();
     }
