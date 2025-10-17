@@ -3,9 +3,9 @@ package io.naryo.api.node.update;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.naryo.api.node.update.eth.priv.UpdatePrivateEthereumNodeRequestBuilder;
-import io.naryo.api.node.update.eth.pub.UpdatePublicEthereumNodeRequestBuilder;
-import io.naryo.api.node.update.hedera.UpdateHederaNodeRequestBuilder;
+import io.naryo.api.node.common.eth.priv.PrivateEthereumNodeRequestBuilder;
+import io.naryo.api.node.common.eth.pub.PublicEthereumNodeRequestBuilder;
+import io.naryo.api.node.common.hedera.HederaNodeRequestBuilder;
 import io.naryo.api.node.update.model.UpdateNodeRequest;
 import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.queue.RevisionOperationQueue;
@@ -36,7 +36,10 @@ class UpdateNodeControllerTest {
     void updateHederaNode_ok() throws Exception {
         var nodeId = UUID.randomUUID();
         var opId = new OperationId(UUID.randomUUID());
-        var input = new UpdateHederaNodeRequestBuilder().build();
+        var input =
+                new UpdateNodeRequestBuilder()
+                        .withNode(new HederaNodeRequestBuilder().build())
+                        .build();
 
         when(operationQueue.enqueue(any())).thenReturn(opId);
 
@@ -58,7 +61,10 @@ class UpdateNodeControllerTest {
     void updatePublicEthNode_ok() throws Exception {
         var nodeId = UUID.randomUUID();
         var opId = new OperationId(UUID.randomUUID());
-        var input = new UpdatePublicEthereumNodeRequestBuilder().build();
+        var input =
+                new UpdateNodeRequestBuilder()
+                        .withNode(new PublicEthereumNodeRequestBuilder().build())
+                        .build();
 
         when(operationQueue.enqueue(any())).thenReturn(opId);
 
@@ -80,7 +86,10 @@ class UpdateNodeControllerTest {
     void updatePrivateEthNode_ok() throws Exception {
         var nodeId = UUID.randomUUID();
         var opId = new OperationId(UUID.randomUUID());
-        var input = new UpdatePrivateEthereumNodeRequestBuilder().build();
+        var input =
+                new UpdateNodeRequestBuilder()
+                        .withNode(new PrivateEthereumNodeRequestBuilder().build())
+                        .build();
 
         when(operationQueue.enqueue(any())).thenReturn(opId);
 

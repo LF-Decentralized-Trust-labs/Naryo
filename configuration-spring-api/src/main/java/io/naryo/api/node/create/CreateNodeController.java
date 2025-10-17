@@ -28,6 +28,6 @@ public class CreateNodeController extends NodeController {
     @ConfigurationApiErrors
     @ResponseStatus(HttpStatus.ACCEPTED)
     public OperationId create(@RequestBody @NotNull CreateNodeRequest request) {
-        return operationQueue.enqueue(new AddOperation<>(request.toDomain()));
+        return operationQueue.enqueue(new AddOperation<>(request.node().toDomain()));
     }
 }

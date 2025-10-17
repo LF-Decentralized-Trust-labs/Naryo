@@ -1,4 +1,4 @@
-package io.naryo.api.node.update.model;
+package io.naryo.api.node.common.request;
 
 import java.util.UUID;
 
@@ -15,28 +15,33 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
-public final class UpdatePrivateEthereumNodeRequest extends UpdateEthereumNodeRequest {
+public final class PrivateEthereumNodeRequest extends EthereumNodeRequest {
 
     private final @NotBlank String groupId;
     private final @NotBlank String precompiledAddress;
 
-    public UpdatePrivateEthereumNodeRequest(
+    public PrivateEthereumNodeRequest(
             String name,
             SubscriptionConfigurationRequest subscription,
             InteractionConfigurationRequest interaction,
             NodeConnectionRequest connection,
             String groupId,
-            String precompiledAddress,
-            String prevItemHash) {
-        super(
-                name,
-                subscription,
-                interaction,
-                connection,
-                EthereumNodeVisibility.PRIVATE,
-                prevItemHash);
+            String precompiledAddress) {
+        super(name, subscription, interaction, connection, EthereumNodeVisibility.PRIVATE);
         this.groupId = groupId;
         this.precompiledAddress = precompiledAddress;
+    }
+
+    @Override
+    public Node toDomain() {
+        return new PrivateEthereumNode(
+                UUID.randomUUID(),
+                new NodeName(this.name),
+                this.subscription.toDomain(),
+                this.interaction.toDomain(),
+                this.connection.toDomain(),
+                new GroupId(this.getGroupId()),
+                new PrecompiledAddress(this.getPrecompiledAddress()));
     }
 
     @Override

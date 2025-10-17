@@ -1,65 +1,49 @@
 package io.naryo.api.node.create;
 
+import java.util.Random;
+
 import io.naryo.api.RequestBuilder;
-import io.naryo.api.node.common.connection.HttpNodeConnectionRequestBuilder;
-import io.naryo.api.node.common.interaction.block.EthereumRpcBlockInteractionConfigurationRequestBuilder;
-import io.naryo.api.node.common.request.connection.NodeConnectionRequest;
-import io.naryo.api.node.common.request.interaction.InteractionConfigurationRequest;
-import io.naryo.api.node.common.request.subscription.SubscriptionConfigurationRequest;
-import io.naryo.api.node.common.subscription.BlockSubscriptionConfigurationRequestBuilder;
+import io.naryo.api.node.common.NodeRequestBuilder;
+import io.naryo.api.node.common.eth.priv.PrivateEthereumNodeRequestBuilder;
+import io.naryo.api.node.common.eth.pub.PublicEthereumNodeRequestBuilder;
+import io.naryo.api.node.common.hedera.HederaNodeRequestBuilder;
+import io.naryo.api.node.common.request.NodeRequest;
 import io.naryo.api.node.create.model.CreateNodeRequest;
-import org.instancio.Instancio;
 
-public abstract class CreateNodeRequestBuilder<
-                T extends CreateNodeRequestBuilder<T, Y>, Y extends CreateNodeRequest>
-        implements RequestBuilder<T, Y> {
+public final class CreateNodeRequestBuilder
+        implements RequestBuilder<CreateNodeRequestBuilder, CreateNodeRequest> {
 
-    private String name;
-    private SubscriptionConfigurationRequest subscriptionConfiguration;
-    private InteractionConfigurationRequest interactionConfiguration;
-    private NodeConnectionRequest connection;
+    private NodeRequest node;
 
-    public CreateNodeRequestBuilder<T, Y> withName(String name) {
-        this.name = name;
+    @Override
+    public CreateNodeRequestBuilder self() {
+        return this;
+    }
+
+    @Override
+    public CreateNodeRequest build() {
+        return new CreateNodeRequest(getNode());
+    }
+
+    public CreateNodeRequestBuilder withNode(NodeRequest node) {
+        this.node = node;
         return self();
     }
 
-    public String getName() {
-        return this.name == null ? Instancio.create(String.class) : this.name;
+    public NodeRequest getNode() {
+        return this.node == null ? this.buildRandomNodeRequest() : this.node;
     }
 
-    public CreateNodeRequestBuilder<T, Y> withSubscriptionConfiguration(
-            SubscriptionConfigurationRequest subscriptionConfiguration) {
-        this.subscriptionConfiguration = subscriptionConfiguration;
-        return self();
-    }
+    private NodeRequest buildRandomNodeRequest() {
+        var random = new Random().nextInt(3);
+        NodeRequestBuilder<?, ?> builder =
+                switch (random) {
+                    case 0 -> new PublicEthereumNodeRequestBuilder();
+                    case 1 -> new PrivateEthereumNodeRequestBuilder();
+                    case 2 -> new HederaNodeRequestBuilder();
+                    default -> throw new IllegalStateException("Unexpected value: " + random);
+                };
 
-    public SubscriptionConfigurationRequest getSubscriptionConfiguration() {
-        return this.subscriptionConfiguration == null
-                ? new BlockSubscriptionConfigurationRequestBuilder().build()
-                : this.subscriptionConfiguration;
-    }
-
-    public CreateNodeRequestBuilder<T, Y> withInteractionConfiguration(
-            InteractionConfigurationRequest interactionConfiguration) {
-        this.interactionConfiguration = interactionConfiguration;
-        return self();
-    }
-
-    public InteractionConfigurationRequest getInteractionConfiguration() {
-        return this.interactionConfiguration == null
-                ? new EthereumRpcBlockInteractionConfigurationRequestBuilder().build()
-                : this.interactionConfiguration;
-    }
-
-    public CreateNodeRequestBuilder<T, Y> withConnection(NodeConnectionRequest connection) {
-        this.connection = connection;
-        return self();
-    }
-
-    public NodeConnectionRequest getConnection() {
-        return this.connection == null
-                ? new HttpNodeConnectionRequestBuilder().build()
-                : this.connection;
+        return builder.build();
     }
 }
