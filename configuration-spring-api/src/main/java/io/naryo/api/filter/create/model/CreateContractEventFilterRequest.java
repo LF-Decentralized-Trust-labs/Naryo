@@ -3,10 +3,11 @@ package io.naryo.api.filter.create.model;
 import java.util.Set;
 import java.util.UUID;
 
+import io.naryo.api.filter.common.request.EventFilterSpecificationRequest;
+import io.naryo.api.filter.common.request.FilterSyncStateRequest;
 import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.filter.FilterName;
 import io.naryo.domain.filter.event.*;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -15,23 +16,20 @@ import lombok.Getter;
 @Getter
 public final class CreateContractEventFilterRequest extends CreateFilterRequest {
 
-    @Schema(example = "CONTRACT-EVENT", requiredMode = Schema.RequiredMode.REQUIRED)
-    private final String type = "CONTRACT-EVENT";
-
-    private final @NotNull EventFilterSpecification specification;
+    private final @NotNull @Valid EventFilterSpecificationRequest specification;
 
     private final Set<ContractEventStatus> statuses;
 
-    private final @NotNull FilterSyncState filterSyncState;
+    private final @NotNull @Valid FilterSyncStateRequest filterSyncState;
 
     private final String contractAddress;
 
     public CreateContractEventFilterRequest(
             String name,
             UUID nodeId,
-            EventFilterSpecification specification,
+            EventFilterSpecificationRequest specification,
             Set<ContractEventStatus> statuses,
-            FilterSyncState filterSyncState,
+            FilterSyncStateRequest filterSyncState,
             String contractAddress) {
         super(name, nodeId);
         this.specification = specification;
@@ -46,9 +44,9 @@ public final class CreateContractEventFilterRequest extends CreateFilterRequest 
                 UUID.randomUUID(),
                 new FilterName(this.name),
                 this.nodeId,
-                this.specification,
+                this.specification.toDomain(),
                 this.statuses,
-                this.filterSyncState,
+                this.filterSyncState.toDomain(),
                 this.contractAddress);
     }
 }
