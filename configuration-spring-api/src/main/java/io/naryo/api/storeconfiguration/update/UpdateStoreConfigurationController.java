@@ -38,7 +38,7 @@ public class UpdateStoreConfigurationController extends StoreConfigurationContro
 
     @PutMapping()
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public OperationId create(@Valid @RequestBody UpdateStoreConfigurationRequest request) {
+    public OperationId update(@Valid @RequestBody UpdateStoreConfigurationRequest request) {
         if (request.target()
                 instanceof ActiveStoreConfigurationRequest activeStoreConfigurationRequest) {
             String storeType = activeStoreConfigurationRequest.getType().getName();
