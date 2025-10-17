@@ -16,6 +16,7 @@ dependencies {
 
     implementation(libs.springBootStarterWeb)
     implementation(libs.springDocOpenApiStarter)
+    implementation(libs.jakartaValidationApi)
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
     testImplementation(testFixtures(project(':core')))

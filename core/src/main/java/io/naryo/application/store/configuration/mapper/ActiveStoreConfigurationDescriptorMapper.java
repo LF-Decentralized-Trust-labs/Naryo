@@ -1,4 +1,4 @@
-package io.naryo.application.configuration.source.mapper;
+package io.naryo.application.store.configuration.mapper;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -15,7 +15,7 @@ import io.naryo.domain.configuration.store.active.feature.event.block.BlockEvent
 import io.naryo.domain.configuration.store.active.feature.event.block.EventStoreTarget;
 import io.naryo.domain.configuration.store.active.feature.filter.FilterStoreConfiguration;
 
-public abstract class StoreConfigurationDescriptorMapper {
+public abstract class ActiveStoreConfigurationDescriptorMapper {
 
     public static Map<StoreFeatureType, StoreFeatureConfiguration> map(
             ActiveStoreConfigurationDescriptor descriptor) {
