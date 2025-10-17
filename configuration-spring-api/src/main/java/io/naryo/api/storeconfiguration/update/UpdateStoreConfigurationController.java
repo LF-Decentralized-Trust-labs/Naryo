@@ -14,7 +14,6 @@ import io.naryo.application.store.configuration.mapper.StoreConfigurationDescrip
 import io.naryo.domain.configuration.store.StoreConfiguration;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
