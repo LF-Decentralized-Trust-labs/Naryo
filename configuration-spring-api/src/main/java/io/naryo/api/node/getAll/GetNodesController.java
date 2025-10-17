@@ -18,14 +18,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class GetNodesController extends NodeController {
 
-    private final NodeConfigurationRevisionManager nodeConfigurationRevisionManager;
+    private final NodeConfigurationRevisionManager revisionManager;
 
     @GetMapping
     @ConfigurationApiErrors
     @ResponseStatus(HttpStatus.OK)
     public List<NodeResponse> getAll() {
-        return nodeConfigurationRevisionManager.liveRegistry().active().domainItems().stream()
-                .map(NodeResponse::fromDomain)
+        var liveView = revisionManager.liveView();
+        var fingerprints = liveView.itemFingerprintById();
+        return liveView.revision().domainItems().stream()
+                .map(n -> NodeResponse.map(n, fingerprints))
                 .toList();
     }
 }

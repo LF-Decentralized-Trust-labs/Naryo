@@ -1,5 +1,6 @@
 package io.naryo.api.node.common.response;
 
+import java.util.Map;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -25,6 +26,7 @@ public abstract class NodeResponse {
     protected final SubscriptionConfiguration subscription;
     protected final InteractionConfiguration interaction;
     protected final NodeConnection connection;
+    protected String currentItemHash;
 
     protected NodeResponse(
             UUID id,
@@ -32,29 +34,31 @@ public abstract class NodeResponse {
             String type,
             SubscriptionConfiguration subscription,
             InteractionConfiguration interaction,
-            NodeConnection connection) {
+            NodeConnection connection,
+            String currentItemHash) {
         this.id = id;
         this.name = name;
         this.type = type;
         this.subscription = subscription;
         this.interaction = interaction;
         this.connection = connection;
+        this.currentItemHash = currentItemHash;
     }
 
-    public static NodeResponse fromDomain(Node node) {
+    public static NodeResponse map(Node node, Map<UUID, String> fingerprints) {
+        String hash = fingerprints.get(node.getId());
         return switch (node.getType()) {
             case ETHEREUM -> {
                 var ethereumNode = (EthereumNode) node;
                 yield switch (ethereumNode.getVisibility()) {
                     case PUBLIC ->
-                            PublicEthereumNodeResponse.fromDomain(
-                                    (PublicEthereumNode) ethereumNode);
+                            PublicEthereumNodeResponse.map((PublicEthereumNode) ethereumNode, hash);
                     case PRIVATE ->
-                            PrivateEthereumNodeResponse.fromDomain(
-                                    (PrivateEthereumNode) ethereumNode);
+                            PrivateEthereumNodeResponse.map(
+                                    (PrivateEthereumNode) ethereumNode, hash);
                 };
             }
-            case HEDERA -> HederaNodeResponse.fromDomain(node);
+            case HEDERA -> HederaNodeResponse.map(node, hash);
         };
     }
 }

@@ -19,6 +19,7 @@ public final class PrivateEthereumNodeResponse extends EthereumNodeResponse {
             SubscriptionConfiguration subscriptionConfiguration,
             InteractionConfiguration interactionConfiguration,
             NodeConnection connection,
+            String currentItemHash,
             String visibility,
             String groupId,
             String precompiledAddress) {
@@ -29,12 +30,14 @@ public final class PrivateEthereumNodeResponse extends EthereumNodeResponse {
                 subscriptionConfiguration,
                 interactionConfiguration,
                 connection,
+                currentItemHash,
                 visibility);
         this.groupId = groupId;
         this.precompiledAddress = precompiledAddress;
     }
 
-    public static PrivateEthereumNodeResponse fromDomain(PrivateEthereumNode node) {
+    public static PrivateEthereumNodeResponse map(
+            PrivateEthereumNode node, String currentItemHash) {
         return new PrivateEthereumNodeResponse(
                 node.getId(),
                 node.getType().name(),
@@ -42,6 +45,7 @@ public final class PrivateEthereumNodeResponse extends EthereumNodeResponse {
                 node.getSubscriptionConfiguration(),
                 node.getInteractionConfiguration(),
                 node.getConnection(),
+                currentItemHash,
                 node.getVisibility().name(),
                 node.getGroupId().value(),
                 node.getPrecompiledAddress().value());

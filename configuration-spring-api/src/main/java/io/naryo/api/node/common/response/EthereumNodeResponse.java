@@ -24,8 +24,16 @@ public abstract class EthereumNodeResponse extends NodeResponse {
             SubscriptionConfiguration subscriptionConfiguration,
             InteractionConfiguration interactionConfiguration,
             NodeConnection connection,
+            String currentItemHash,
             String visibility) {
-        super(id, type, name, subscriptionConfiguration, interactionConfiguration, connection);
+        super(
+                id,
+                type,
+                name,
+                subscriptionConfiguration,
+                interactionConfiguration,
+                connection,
+                currentItemHash);
         this.visibility = visibility;
     }
 }
