@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(CreateStoreConfigurationController.class)
 class CreateStoreConfigurationControllerTest {
 
-    private final String PATH = "/api/v1/store-configuration/";
+    private final String PATH = "/api/v1/store-configuration";
 
     @Autowired MockMvc mvc;
 

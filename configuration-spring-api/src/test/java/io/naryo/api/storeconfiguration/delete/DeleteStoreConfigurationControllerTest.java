@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(DeleteStoreConfigurationController.class)
 class DeleteStoreConfigurationControllerTest {
 
-    private final String PATH = "/api/v1/store-configuration/";
+    private final String PATH = "/api/v1/store-configuration";
 
     @Autowired MockMvc mvc;
     @Autowired ObjectMapper objectMapper;
@@ -44,7 +44,7 @@ class DeleteStoreConfigurationControllerTest {
         String expectedResponse = objectMapper.writeValueAsString(operationId);
 
         mvc.perform(
-                        delete(PATH + nodeId)
+                        delete(PATH + "/" + nodeId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsBytes(request)))
