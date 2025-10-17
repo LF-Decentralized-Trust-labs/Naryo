@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.naryo.api.node.common.eth.priv.PrivateEthereumNodeRequestBuilder;
 import io.naryo.api.node.common.eth.pub.PublicEthereumNodeRequestBuilder;
 import io.naryo.api.node.common.hedera.HederaNodeRequestBuilder;
-import io.naryo.api.node.create.model.CreateNodeRequest;
+import io.naryo.api.node.common.request.NodeRequest;
 import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.queue.RevisionOperationQueue;
 import io.naryo.domain.node.Node;
@@ -35,10 +35,7 @@ class CreateNodeControllerTest {
     @Test
     void createHederaNode_ok() throws Exception {
         var opId = new OperationId(UUID.randomUUID());
-        var input =
-                new CreateNodeRequestBuilder()
-                        .withNode(new HederaNodeRequestBuilder().build())
-                        .build();
+        var input = new HederaNodeRequestBuilder().build();
 
         when(operationQueue.enqueue(any())).thenReturn(opId);
 
@@ -50,7 +47,7 @@ class CreateNodeControllerTest {
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(
                                         objectMapper
-                                                .writerFor(CreateNodeRequest.class)
+                                                .writerFor(NodeRequest.class)
                                                 .writeValueAsBytes(input)))
                 .andExpect(status().isAccepted())
                 .andExpect(content().json(expectedResponse));
@@ -59,10 +56,7 @@ class CreateNodeControllerTest {
     @Test
     void createPublicEthNode_ok() throws Exception {
         var opId = new OperationId(UUID.randomUUID());
-        var input =
-                new CreateNodeRequestBuilder()
-                        .withNode(new PublicEthereumNodeRequestBuilder().build())
-                        .build();
+        var input = new PublicEthereumNodeRequestBuilder().build();
 
         when(operationQueue.enqueue(any())).thenReturn(opId);
 
@@ -74,7 +68,7 @@ class CreateNodeControllerTest {
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(
                                         objectMapper
-                                                .writerFor(CreateNodeRequest.class)
+                                                .writerFor(NodeRequest.class)
                                                 .writeValueAsBytes(input)))
                 .andExpect(status().isAccepted())
                 .andExpect(content().json(expectedResponse));
@@ -83,10 +77,7 @@ class CreateNodeControllerTest {
     @Test
     void createPrivateEthNode_ok() throws Exception {
         var opId = new OperationId(UUID.randomUUID());
-        var input =
-                new CreateNodeRequestBuilder()
-                        .withNode(new PrivateEthereumNodeRequestBuilder().build())
-                        .build();
+        var input = new PrivateEthereumNodeRequestBuilder().build();
 
         when(operationQueue.enqueue(any())).thenReturn(opId);
 
@@ -98,7 +89,7 @@ class CreateNodeControllerTest {
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(
                                         objectMapper
-                                                .writerFor(CreateNodeRequest.class)
+                                                .writerFor(NodeRequest.class)
                                                 .writeValueAsBytes(input)))
                 .andExpect(status().isAccepted())
                 .andExpect(content().json(expectedResponse));
