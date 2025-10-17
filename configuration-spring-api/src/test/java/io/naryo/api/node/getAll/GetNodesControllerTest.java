@@ -1,15 +1,14 @@
 package io.naryo.api.node.getAll;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.naryo.api.node.common.response.NodeResponse;
+import io.naryo.application.configuration.revision.LiveView;
 import io.naryo.application.configuration.revision.Revision;
-import io.naryo.application.configuration.revision.registry.LiveRegistry;
-import io.naryo.application.node.configuration.manager.NodeConfigurationManager;
 import io.naryo.application.node.revision.NodeConfigurationRevisionManager;
-import io.naryo.application.node.revision.NodeRevisionFingerprinter;
 import io.naryo.domain.node.Node;
 import io.naryo.domain.node.NodeBuilder;
 import io.naryo.domain.node.eth.priv.PrivateEthereumNodeBuilder;
@@ -18,8 +17,6 @@ import io.naryo.domain.node.hedera.HederaNodeBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -35,30 +32,19 @@ class GetNodesControllerTest {
 
     @Autowired MockMvc mvc;
     @Autowired ObjectMapper objectMapper;
-    @MockitoBean NodeConfigurationManager nodeConfigurationManager;
-    @MockitoBean NodeRevisionFingerprinter nodeRevisionFingerprinter;
-    @MockitoBean LiveRegistry<Node> liveRegistry;
-
-    @TestConfiguration
-    static class RealBeanConfig {
-        @Bean
-        NodeConfigurationRevisionManager nodeConfigurationRevisionManager(
-                NodeConfigurationManager nodeConfigurationManager,
-                NodeRevisionFingerprinter nodeRevisionFingerprinter,
-                LiveRegistry<Node> liveRegistry) {
-            return new NodeConfigurationRevisionManager(
-                    nodeConfigurationManager, nodeRevisionFingerprinter, liveRegistry);
-        }
-    }
+    @MockitoBean NodeConfigurationRevisionManager revisionManager;
 
     @Test
     void getNodes_ok() throws Exception {
         var node = this.createInput();
-        var revision = new Revision<>(1, "hash", List.of(node));
-        when(liveRegistry.active()).thenReturn(revision);
+        var revision = new Revision<>(1L, "hash", List.of(node));
+        var liveView =
+                new LiveView<>(revision, Map.of(node.getId(), node), Map.of(node.getId(), "hash"));
+        when(revisionManager.liveView()).thenReturn(liveView);
 
         String expectedResponse =
-                objectMapper.writeValueAsString(List.of(NodeResponse.fromDomain(node)));
+                objectMapper.writeValueAsString(
+                        List.of(NodeResponse.map(node, liveView.itemFingerprintById())));
 
         mvc.perform(get(PATH))
                 .andExpect(status().isOk())
@@ -67,7 +53,9 @@ class GetNodesControllerTest {
 
     @Test
     void getNodes_empty() throws Exception {
-        when(liveRegistry.active()).thenReturn(new Revision<>(1, "hash", List.of()));
+        var revision = new Revision<Node>(0L, "hash", List.of());
+        var liveView = new LiveView<Node>(revision, Map.of(), Map.of());
+        when(revisionManager.liveView()).thenReturn(liveView);
         mvc.perform(get(PATH)).andExpect(status().isOk()).andExpect(content().json("[]"));
     }
 

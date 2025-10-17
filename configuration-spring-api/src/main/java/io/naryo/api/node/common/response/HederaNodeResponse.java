@@ -15,17 +15,26 @@ public final class HederaNodeResponse extends NodeResponse {
             String name,
             SubscriptionConfiguration subscriptionConfiguration,
             InteractionConfiguration interactionConfiguration,
-            NodeConnection connection) {
-        super(id, type, name, subscriptionConfiguration, interactionConfiguration, connection);
+            NodeConnection connection,
+            String currentItemHash) {
+        super(
+                id,
+                type,
+                name,
+                subscriptionConfiguration,
+                interactionConfiguration,
+                connection,
+                currentItemHash);
     }
 
-    public static HederaNodeResponse fromDomain(Node node) {
+    public static HederaNodeResponse map(Node node, String currentItemHash) {
         return new HederaNodeResponse(
                 node.getId(),
                 node.getType().name(),
                 node.getName().value(),
                 node.getSubscriptionConfiguration(),
                 node.getInteractionConfiguration(),
-                node.getConnection());
+                node.getConnection(),
+                currentItemHash);
     }
 }

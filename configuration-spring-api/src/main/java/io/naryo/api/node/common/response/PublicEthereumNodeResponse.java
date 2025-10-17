@@ -16,6 +16,7 @@ public final class PublicEthereumNodeResponse extends EthereumNodeResponse {
             SubscriptionConfiguration subscriptionConfiguration,
             InteractionConfiguration interactionConfiguration,
             NodeConnection connection,
+            String currentItemHash,
             String visibility) {
         super(
                 id,
@@ -24,10 +25,11 @@ public final class PublicEthereumNodeResponse extends EthereumNodeResponse {
                 subscriptionConfiguration,
                 interactionConfiguration,
                 connection,
+                currentItemHash,
                 visibility);
     }
 
-    public static PublicEthereumNodeResponse fromDomain(PublicEthereumNode node) {
+    public static PublicEthereumNodeResponse map(PublicEthereumNode node, String currentItemHash) {
         return new PublicEthereumNodeResponse(
                 node.getId(),
                 node.getType().name(),
@@ -35,6 +37,7 @@ public final class PublicEthereumNodeResponse extends EthereumNodeResponse {
                 node.getSubscriptionConfiguration(),
                 node.getInteractionConfiguration(),
                 node.getConnection(),
+                currentItemHash,
                 node.getVisibility().name());
     }
 }
