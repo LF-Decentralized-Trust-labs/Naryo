@@ -13,7 +13,7 @@ public final class FilterBroadcasterTargetDTO extends BroadcasterTargetDTO {
 
     private final @NotNull UUID filterId;
 
-    FilterBroadcasterTargetDTO(@NotEmpty List<String> destinations, @NotNull UUID filterId) {
+    public FilterBroadcasterTargetDTO(@NotEmpty List<String> destinations, @NotNull UUID filterId) {
         super(BroadcasterTargetType.FILTER, destinations);
         this.filterId = filterId;
     }
