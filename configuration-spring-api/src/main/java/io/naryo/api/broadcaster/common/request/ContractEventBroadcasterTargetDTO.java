@@ -6,7 +6,7 @@ import io.naryo.domain.broadcaster.BroadcasterTargetType;
 import jakarta.validation.constraints.NotEmpty;
 
 public final class ContractEventBroadcasterTargetDTO extends BroadcasterTargetDTO {
-    ContractEventBroadcasterTargetDTO(@NotEmpty List<String> destinations) {
+    public ContractEventBroadcasterTargetDTO(@NotEmpty List<String> destinations) {
         super(BroadcasterTargetType.CONTRACT_EVENT, destinations);
     }
 }

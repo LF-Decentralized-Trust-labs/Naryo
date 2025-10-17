@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotEmpty;
 
 public final class BlockBroadcasterTargetDTO extends BroadcasterTargetDTO {
 
-    BlockBroadcasterTargetDTO(@NotEmpty List<String> destinations) {
+    public BlockBroadcasterTargetDTO(@NotEmpty List<String> destinations) {
         super(BroadcasterTargetType.BLOCK, destinations);
     }
 }

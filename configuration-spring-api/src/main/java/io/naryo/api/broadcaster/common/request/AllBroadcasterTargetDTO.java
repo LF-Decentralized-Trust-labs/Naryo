@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotEmpty;
 
 public final class AllBroadcasterTargetDTO extends BroadcasterTargetDTO {
 
-    AllBroadcasterTargetDTO(@NotEmpty List<String> destinations) {
+    public AllBroadcasterTargetDTO(@NotEmpty List<String> destinations) {
         super(BroadcasterTargetType.ALL, destinations);
     }
 

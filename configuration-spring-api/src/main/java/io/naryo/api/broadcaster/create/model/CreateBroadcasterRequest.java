@@ -9,8 +9,8 @@ import jakarta.validation.constraints.NotNull;
 public record CreateBroadcasterRequest(
         @NotNull UUID id, @NotNull BroadcasterTargetDTO target, @NotNull UUID configurationId) {
 
-    public CreateBroadcasterRequest {
-        id = id == null ? UUID.randomUUID() : id;
+    public CreateBroadcasterRequest(BroadcasterTargetDTO target, UUID configurationId) {
+        this(UUID.randomUUID(), target, configurationId);
     }
 
     public Broadcaster toDomain() {
