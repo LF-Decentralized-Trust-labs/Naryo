@@ -13,28 +13,19 @@ import io.naryo.application.configuration.source.definition.registry.Configurati
 import io.naryo.application.store.configuration.mapper.StoreConfigurationDescriptorMapper;
 import io.naryo.domain.configuration.store.StoreConfiguration;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import static io.naryo.infrastructure.util.serialization.ConfigurationSchemaConverter.rawObjectsToSchema;
 
 @RestController
+@AllArgsConstructor
 public class CreateStoreConfigurationController extends StoreConfigurationController {
 
     private final RevisionOperationQueue<StoreConfiguration> storeConfigRevisionQueue;
     private final StoreConfigurationDescriptorMapper storeConfigurationDescriptorMapper;
     private final ConfigurationSchemaRegistry schemaRegistry;
-
-    public CreateStoreConfigurationController(
-            @Qualifier("storeConfigRevisionQueue")
-                    RevisionOperationQueue<StoreConfiguration> storeConfigRevisionQueue,
-            StoreConfigurationDescriptorMapper storeConfigurationDescriptorMapper,
-            ConfigurationSchemaRegistry schemaRegistry) {
-        this.storeConfigRevisionQueue = storeConfigRevisionQueue;
-        this.storeConfigurationDescriptorMapper = storeConfigurationDescriptorMapper;
-        this.schemaRegistry = schemaRegistry;
-    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
