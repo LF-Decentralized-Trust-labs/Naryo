@@ -35,6 +35,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(CreateStoreConfigurationController.class)
 class CreateStoreConfigurationControllerTest {
 
+    private final String PATH = "/api/v1/store-configuration/";
+
     @Autowired MockMvc mvc;
 
     @Autowired ObjectMapper objectMapper;
@@ -63,7 +65,7 @@ class CreateStoreConfigurationControllerTest {
         String expectedResponse = objectMapper.writeValueAsString(operationId);
 
         mvc.perform(
-                        post("/api/v1/store-configuration")
+                        post(PATH)
                                 .contentType(APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isAccepted())
@@ -104,7 +106,7 @@ class CreateStoreConfigurationControllerTest {
         String expectedResponse = objectMapper.writeValueAsString(operationId);
 
         mvc.perform(
-                        post("/api/v1/store-configuration")
+                        post(PATH)
                                 .contentType(APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isAccepted())
