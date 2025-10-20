@@ -16,16 +16,4 @@ public abstract class StoreConfigurationResponse {
         this.nodeId = nodeId;
         this.currentItemHash = currentItemHash;
     }
-
-    //    public static StoreConfigurationResponse map(
-    //            StoreConfiguration storeConfiguration, String currentItemHash) {
-    //        return switch (storeConfiguration) {
-    //            case ActiveStoreConfiguration active ->
-    //                    ActiveStoreConfigurationResponse.map(active, currentItemHash);
-    //            case InactiveStoreConfiguration inactive ->
-    //                    InactiveStoreConfigurationResponse.map(inactive, currentItemHash);
-    //            default -> throw new IllegalStateException("Unexpected value: " +
-    // storeConfiguration);
-    //        };
-    //    }
 }
