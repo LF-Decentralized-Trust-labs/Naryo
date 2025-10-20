@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.naryo.api.storeconfiguration.common.ActiveStoreConfigurationRequestBuilder;
-import io.naryo.api.storeconfiguration.common.InactiveStoreConfigurationRequestBuilder;
 import io.naryo.api.storeconfiguration.common.request.ActiveStoreConfigurationRequest;
+import io.naryo.api.storeconfiguration.common.request.ActiveStoreConfigurationRequestBuilder;
 import io.naryo.api.storeconfiguration.common.request.InactiveStoreConfigurationRequest;
+import io.naryo.api.storeconfiguration.common.request.InactiveStoreConfigurationRequestBuilder;
 import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.operation.AddOperation;
 import io.naryo.application.configuration.revision.queue.RevisionOperationQueue;

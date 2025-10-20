@@ -1,11 +1,9 @@
-package io.naryo.api.storeconfiguration.common;
+package io.naryo.api.storeconfiguration.common.request;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import io.naryo.api.RequestBuilder;
-import io.naryo.api.storeconfiguration.common.request.BlockEventStoreFeatureConfigurationRequest;
-import io.naryo.api.storeconfiguration.common.request.EventStoreTargetRequest;
 import io.naryo.domain.configuration.store.active.feature.event.block.TargetType;
 
 public class BlockEventStoreFeatureConfigurationRequestBuilder

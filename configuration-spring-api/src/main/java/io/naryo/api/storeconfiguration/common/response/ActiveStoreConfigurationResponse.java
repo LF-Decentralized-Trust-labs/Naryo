@@ -18,10 +18,10 @@ public final class ActiveStoreConfigurationResponse extends StoreConfigurationRe
 
     public ActiveStoreConfigurationResponse(
             UUID nodeId,
+            String currentItemHash,
             String type,
             Map<String, Object> additionalProperties,
-            Map<StoreFeatureType, StoreFeatureConfigurationResponse> features,
-            String currentItemHash) {
+            Map<StoreFeatureType, StoreFeatureConfigurationResponse> features) {
         super(nodeId, currentItemHash);
         this.type = type;
         this.additionalProperties = additionalProperties;

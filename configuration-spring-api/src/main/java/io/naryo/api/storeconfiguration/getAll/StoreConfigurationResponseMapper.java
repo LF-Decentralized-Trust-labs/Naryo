@@ -60,9 +60,9 @@ public final class StoreConfigurationResponseMapper {
 
         return new ActiveStoreConfigurationResponse(
                 activeStoreConfiguration.getNodeId(),
+                currentItemHash,
                 activeStoreConfiguration.getType().getName(),
                 additionalProperties,
-                features,
-                currentItemHash);
+                features);
     }
 }

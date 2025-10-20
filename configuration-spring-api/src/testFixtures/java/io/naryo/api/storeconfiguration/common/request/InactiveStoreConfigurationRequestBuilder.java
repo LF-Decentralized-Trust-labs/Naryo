@@ -1,6 +1,4 @@
-package io.naryo.api.storeconfiguration.common;
-
-import io.naryo.api.storeconfiguration.common.request.InactiveStoreConfigurationRequest;
+package io.naryo.api.storeconfiguration.common.request;
 
 public class InactiveStoreConfigurationRequestBuilder
         extends StoreConfigurationRequestBuilder<
