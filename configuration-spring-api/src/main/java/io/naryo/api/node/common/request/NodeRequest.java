@@ -1,4 +1,6 @@
-package io.naryo.api.node.create.model;
+package io.naryo.api.node.common.request;
+
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -13,11 +15,11 @@ import lombok.Getter;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = CreateEthereumNodeRequest.class, name = "ETHEREUM"),
-    @JsonSubTypes.Type(value = CreateHederaNodeRequest.class, name = "HEDERA"),
+    @JsonSubTypes.Type(value = EthereumNodeRequest.class, name = "ETHEREUM"),
+    @JsonSubTypes.Type(value = HederaNodeRequest.class, name = "HEDERA"),
 })
 @Getter
-public abstract class CreateNodeRequest {
+public abstract class NodeRequest {
 
     protected final @NotBlank String name;
     protected final @NotNull NodeType type;
@@ -25,7 +27,7 @@ public abstract class CreateNodeRequest {
     protected final @NotNull InteractionConfigurationRequest interaction;
     protected final @NotNull NodeConnectionRequest connection;
 
-    protected CreateNodeRequest(
+    protected NodeRequest(
             String name,
             NodeType type,
             SubscriptionConfigurationRequest subscription,
@@ -39,4 +41,6 @@ public abstract class CreateNodeRequest {
     }
 
     public abstract Node toDomain();
+
+    public abstract Node toDomain(UUID nodeId);
 }

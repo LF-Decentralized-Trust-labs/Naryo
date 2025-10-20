@@ -2,7 +2,7 @@ package io.naryo.api.node.create;
 
 import io.naryo.api.error.ConfigurationApiErrors;
 import io.naryo.api.node.common.NodeController;
-import io.naryo.api.node.create.model.CreateNodeRequest;
+import io.naryo.api.node.common.request.NodeRequest;
 import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.operation.AddOperation;
 import io.naryo.application.configuration.revision.queue.RevisionOperationQueue;
@@ -27,7 +27,7 @@ public class CreateNodeController extends NodeController {
     @PostMapping
     @ConfigurationApiErrors
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public OperationId create(@RequestBody @NotNull CreateNodeRequest request) {
+    public OperationId create(@RequestBody @NotNull NodeRequest request) {
         return operationQueue.enqueue(new AddOperation<>(request.toDomain()));
     }
 }

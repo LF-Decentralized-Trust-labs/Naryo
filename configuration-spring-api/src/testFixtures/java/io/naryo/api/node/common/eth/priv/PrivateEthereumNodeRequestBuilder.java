@@ -1,24 +1,24 @@
-package io.naryo.api.node.create.eth.priv;
+package io.naryo.api.node.common.eth.priv;
 
-import io.naryo.api.node.create.eth.CreateEthereumNodeRequestBuilder;
-import io.naryo.api.node.create.model.CreatePrivateEthereumNodeRequest;
+import io.naryo.api.node.common.eth.EthereumNodeRequestBuilder;
+import io.naryo.api.node.common.request.PrivateEthereumNodeRequest;
 import org.instancio.Instancio;
 
-public final class CreatePrivateEthereumNodeRequestBuilder
-        extends CreateEthereumNodeRequestBuilder<
-                CreatePrivateEthereumNodeRequestBuilder, CreatePrivateEthereumNodeRequest> {
+public final class PrivateEthereumNodeRequestBuilder
+        extends EthereumNodeRequestBuilder<
+                PrivateEthereumNodeRequestBuilder, PrivateEthereumNodeRequest> {
 
     private String groupId;
     private String precompiledAddress;
 
     @Override
-    public CreatePrivateEthereumNodeRequestBuilder self() {
+    public PrivateEthereumNodeRequestBuilder self() {
         return this;
     }
 
     @Override
-    public CreatePrivateEthereumNodeRequest build() {
-        return new CreatePrivateEthereumNodeRequest(
+    public PrivateEthereumNodeRequest build() {
+        return new PrivateEthereumNodeRequest(
                 getName(),
                 getSubscriptionConfiguration(),
                 getInteractionConfiguration(),
@@ -27,7 +27,7 @@ public final class CreatePrivateEthereumNodeRequestBuilder
                 getPrecompiledAddress());
     }
 
-    public CreatePrivateEthereumNodeRequestBuilder withGroupId(String groupId) {
+    public PrivateEthereumNodeRequestBuilder withGroupId(String groupId) {
         this.groupId = groupId;
         return self();
     }
@@ -36,8 +36,7 @@ public final class CreatePrivateEthereumNodeRequestBuilder
         return this.groupId == null ? Instancio.create(String.class) : this.groupId;
     }
 
-    public CreatePrivateEthereumNodeRequestBuilder withPrecompiledAddress(
-            String precompiledAddress) {
+    public PrivateEthereumNodeRequestBuilder withPrecompiledAddress(String precompiledAddress) {
         this.precompiledAddress = precompiledAddress;
         return self();
     }
