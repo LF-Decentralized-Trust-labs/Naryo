@@ -3,6 +3,7 @@ package io.naryo.api.filter.delete;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.naryo.api.filter.delete.model.DeleteFilterRequest;
 import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.operation.RevisionOperation;
 import io.naryo.application.configuration.revision.queue.QueueClosedException;
@@ -41,15 +42,18 @@ class DeleteFilterControllerTest {
         var opId = new OperationId(UUID.randomUUID());
         var filterId = UUID.randomUUID();
         var prevItemHash = "hash123";
+        var request = new DeleteFilterRequest(prevItemHash);
 
         when(operationQueue.enqueue(any())).thenReturn(opId);
 
         String expectedResponse = objectMapper.writeValueAsString(opId);
+        String requestBody = objectMapper.writeValueAsString(request);
 
         mvc.perform(
-                        delete(URI + "/" + filterId + "/" + prevItemHash)
+                        delete(URI + "/" + filterId)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .accept(MediaType.APPLICATION_JSON))
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(requestBody))
                 .andExpect(status().isAccepted())
                 .andExpect(content().json(expectedResponse));
     }
@@ -58,14 +62,18 @@ class DeleteFilterControllerTest {
     void delete_but_queueOverflow() throws Exception {
         var filterId = UUID.randomUUID();
         var prevItemHash = "hash123";
+        var request = new DeleteFilterRequest(prevItemHash);
 
         doThrow(new QueueOverflowException("Low lane full", "LOW", "REMOVE"))
                 .when(operationQueue)
                 .enqueue(any(RevisionOperation.class));
 
+        String requestBody = objectMapper.writeValueAsString(request);
+
         mvc.perform(
-                        delete(URI + "/" + filterId + "/" + prevItemHash)
-                                .contentType(MediaType.APPLICATION_JSON))
+                        delete(URI + "/" + filterId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(requestBody))
                 .andExpect(status().isTooManyRequests());
     }
 
@@ -73,14 +81,18 @@ class DeleteFilterControllerTest {
     void delete_but_queueClosed() throws Exception {
         var filterId = UUID.randomUUID();
         var prevItemHash = "hash123";
+        var request = new DeleteFilterRequest(prevItemHash);
 
         doThrow(new QueueClosedException())
                 .when(operationQueue)
                 .enqueue(any(RevisionOperation.class));
 
+        String requestBody = objectMapper.writeValueAsString(request);
+
         mvc.perform(
-                        delete(URI + "/" + filterId + "/" + prevItemHash)
-                                .contentType(MediaType.APPLICATION_JSON))
+                        delete(URI + "/" + filterId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(requestBody))
                 .andExpect(status().isServiceUnavailable());
     }
 }
