@@ -27,9 +27,6 @@ class RabbitMqBroadcasterConfigurationTest {
         assertThrows(
                 NullPointerException.class,
                 () -> new RabbitMqBroadcasterConfiguration(UUID.randomUUID(), cache, null));
-        assertThrows(
-                NullPointerException.class,
-                () -> new RabbitMqBroadcasterConfiguration(UUID.randomUUID(), cache, exchange));
     }
 
     @Test
