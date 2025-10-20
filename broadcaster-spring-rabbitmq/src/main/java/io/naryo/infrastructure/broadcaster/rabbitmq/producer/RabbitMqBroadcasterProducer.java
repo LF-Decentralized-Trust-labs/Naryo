@@ -31,9 +31,17 @@ public final class RabbitMqBroadcasterProducer implements BroadcasterProducer {
     public void produce(
             Broadcaster broadcaster, BroadcasterConfiguration configuration, Event event) {
         final Exchange exchange = ((RabbitMqBroadcasterConfiguration) configuration).getExchange();
-        final RoutingKey routingKey =
-                ((RabbitMqBroadcasterConfiguration) configuration).getRoutingKey();
+        broadcaster
+                .getTarget()
+                .getDestinations()
+                .forEach(
+                        destination -> {
+                            RoutingKey routingKey = new RoutingKey(destination.value());
+                            this.produce(exchange, routingKey, event);
+                        });
+    }
 
+    private void produce(Exchange exchange, RoutingKey routingKey, Event event) {
         try {
             rabbitTemplate.convertAndSend(
                     exchange.value(), routingKey.value(), objectMapper.writeValueAsString(event));

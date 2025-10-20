@@ -15,7 +15,6 @@ import io.naryo.domain.configuration.broadcaster.BroadcasterCache;
 import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;
 import io.naryo.domain.configuration.broadcaster.rabbitmq.Exchange;
 import io.naryo.domain.configuration.broadcaster.rabbitmq.RabbitMqBroadcasterConfiguration;
-import io.naryo.domain.configuration.broadcaster.rabbitmq.RoutingKey;
 import io.naryo.domain.normalization.Normalizer;
 import io.naryo.infrastructure.configuration.beans.env.EnvironmentInitializer;
 import org.springframework.stereotype.Component;
@@ -53,8 +52,7 @@ public final class RabbitMqBroadcasterInitializer implements EnvironmentInitiali
                             properties.getId(),
                             new BroadcasterCache(
                                     valueOrNull(properties.getCache()).getExpirationTime()),
-                            new Exchange(destination == null ? null : destination.exchange()),
-                            new RoutingKey(destination == null ? null : destination.routingKey()));
+                            new Exchange(destination == null ? null : destination.exchange()));
                 });
 
         schemaRegistry.register(
@@ -75,10 +73,6 @@ public final class RabbitMqBroadcasterInitializer implements EnvironmentInitiali
                                                 new Exchange(
                                                         NormalizationUtil.normalize(
                                                                 typed.getExchange().value())))
-                                        .routingKey(
-                                                new RoutingKey(
-                                                        NormalizationUtil.normalize(
-                                                                typed.getRoutingKey().value())))
                                         .build();
                             }
                             return in;
@@ -87,5 +81,5 @@ public final class RabbitMqBroadcasterInitializer implements EnvironmentInitiali
                 RABBITMQ_TYPE, RabbitMqBroadcasterConfiguration.class, normalizer);
     }
 
-    public record RabbitMqDestination(String exchange, String routingKey) {}
+    public record RabbitMqDestination(String exchange) {}
 }
