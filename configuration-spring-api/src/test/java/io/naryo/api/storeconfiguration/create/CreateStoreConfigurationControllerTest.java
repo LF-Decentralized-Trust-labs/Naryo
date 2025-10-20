@@ -76,7 +76,7 @@ class CreateStoreConfigurationControllerTest {
     public void createStoreConfiguration_active() throws Exception {
         String additionalPropertyKey = Instancio.create(String.class);
         Object additionalPropertyValue =
-                new HttpStoreInitializer.HttpBroadcasterEndpoint(Instancio.create(String.class));
+                new HttpStoreInitializer.HttpStoreEndpoint(Instancio.create(String.class));
         ActiveStoreConfigurationRequest request =
                 new ActiveStoreConfigurationRequestBuilder()
                         .withAdditionalProperties(
@@ -87,7 +87,7 @@ class CreateStoreConfigurationControllerTest {
         FieldDefinition fieldDefinition =
                 new FieldDefinition(
                         additionalPropertyKey,
-                        HttpStoreInitializer.HttpBroadcasterEndpoint.class,
+                        HttpStoreInitializer.HttpStoreEndpoint.class,
                         true,
                         null);
         ConfigurationSchema dummyConfigurationSchema =
