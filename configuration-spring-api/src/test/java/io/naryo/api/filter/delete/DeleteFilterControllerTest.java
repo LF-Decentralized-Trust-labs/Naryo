@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.naryo.api.filter.delete.model.DeleteFilterRequest;
+import io.naryo.api.filter.delete.DeleteFilterRequestBuilder;
 import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.operation.RevisionOperation;
 import io.naryo.application.configuration.revision.queue.QueueClosedException;
@@ -41,8 +42,7 @@ class DeleteFilterControllerTest {
     void delete_filter_ok() throws Exception {
         var opId = new OperationId(UUID.randomUUID());
         var filterId = UUID.randomUUID();
-        var prevItemHash = "hash123";
-        var request = new DeleteFilterRequest(prevItemHash);
+        var request = new DeleteFilterRequestBuilder().build();
 
         when(operationQueue.enqueue(any())).thenReturn(opId);
 
@@ -61,8 +61,7 @@ class DeleteFilterControllerTest {
     @Test
     void delete_but_queueOverflow() throws Exception {
         var filterId = UUID.randomUUID();
-        var prevItemHash = "hash123";
-        var request = new DeleteFilterRequest(prevItemHash);
+        var request = new DeleteFilterRequestBuilder().build();
 
         doThrow(new QueueOverflowException("Low lane full", "LOW", "REMOVE"))
                 .when(operationQueue)
@@ -80,8 +79,7 @@ class DeleteFilterControllerTest {
     @Test
     void delete_but_queueClosed() throws Exception {
         var filterId = UUID.randomUUID();
-        var prevItemHash = "hash123";
-        var request = new DeleteFilterRequest(prevItemHash);
+        var request = new DeleteFilterRequestBuilder().build();
 
         doThrow(new QueueClosedException())
                 .when(operationQueue)
