@@ -45,14 +45,14 @@ public final class RabbitMqBroadcasterInitializer implements EnvironmentInitiali
                 BroadcasterConfigurationDescriptor.class,
                 properties -> {
                     Map<String, Object> props = properties.getAdditionalProperties();
-                    Object raw = props.isEmpty() ? null : props.get("exchange");
-                    Exchange exchange = (Exchange) raw;
+                    Object raw = props.isEmpty() ? null : props.get("destination");
+                    RabbitMqDestination destination = (RabbitMqDestination) raw;
 
                     return new RabbitMqBroadcasterConfiguration(
                             properties.getId(),
                             new BroadcasterCache(
                                     valueOrNull(properties.getCache()).getExpirationTime()),
-                            exchange);
+                            new Exchange(destination == null ? null : destination.exchange()));
                 });
 
         schemaRegistry.register(
@@ -60,7 +60,9 @@ public final class RabbitMqBroadcasterInitializer implements EnvironmentInitiali
                 RABBITMQ_TYPE,
                 new ConfigurationSchema(
                         RABBITMQ_TYPE,
-                        List.of(new FieldDefinition("exchange", Exchange.class, true, null))));
+                        List.of(
+                                new FieldDefinition(
+                                        "destination", RabbitMqDestination.class, true, null))));
 
         var normalizer =
                 (Normalizer<BroadcasterConfiguration>)
@@ -78,4 +80,6 @@ public final class RabbitMqBroadcasterInitializer implements EnvironmentInitiali
         normalizerRegistry.register(
                 RABBITMQ_TYPE, RabbitMqBroadcasterConfiguration.class, normalizer);
     }
+
+    public record RabbitMqDestination(String exchange) {}
 }
