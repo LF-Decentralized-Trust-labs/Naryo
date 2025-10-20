@@ -14,44 +14,34 @@ import static org.junit.jupiter.api.Assertions.*;
 class RabbitMqBroadcasterConfigurationTest {
 
     @Mock Exchange exchange;
-    @Mock RoutingKey routingKey;
     @Mock private BroadcasterCache cache;
 
     @Test
     void constructor_withNullValues() {
         assertThrows(
                 NullPointerException.class,
-                () -> new RabbitMqBroadcasterConfiguration(null, cache, exchange, routingKey));
+                () -> new RabbitMqBroadcasterConfiguration(null, cache, exchange));
         assertThrows(
                 NullPointerException.class,
-                () ->
-                        new RabbitMqBroadcasterConfiguration(
-                                UUID.randomUUID(), null, exchange, routingKey));
+                () -> new RabbitMqBroadcasterConfiguration(UUID.randomUUID(), null, exchange));
         assertThrows(
                 NullPointerException.class,
-                () ->
-                        new RabbitMqBroadcasterConfiguration(
-                                UUID.randomUUID(), cache, null, routingKey));
+                () -> new RabbitMqBroadcasterConfiguration(UUID.randomUUID(), cache, null));
         assertThrows(
                 NullPointerException.class,
-                () ->
-                        new RabbitMqBroadcasterConfiguration(
-                                UUID.randomUUID(), cache, exchange, null));
+                () -> new RabbitMqBroadcasterConfiguration(UUID.randomUUID(), cache, exchange));
     }
 
     @Test
     void constructor_withValidValues() {
         assertDoesNotThrow(
-                () ->
-                        new RabbitMqBroadcasterConfiguration(
-                                UUID.randomUUID(), cache, exchange, routingKey));
+                () -> new RabbitMqBroadcasterConfiguration(UUID.randomUUID(), cache, exchange));
     }
 
     @Test
     void getType() {
         RabbitMqBroadcasterConfiguration config =
-                new RabbitMqBroadcasterConfiguration(
-                        UUID.randomUUID(), cache, exchange, routingKey);
+                new RabbitMqBroadcasterConfiguration(UUID.randomUUID(), cache, exchange);
         assertDoesNotThrow(config::getType);
     }
 }
