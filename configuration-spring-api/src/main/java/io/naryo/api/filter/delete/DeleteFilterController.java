@@ -28,8 +28,7 @@ public class DeleteFilterController extends FilterController {
     @ConfigurationApiErrors
     @ResponseStatus(HttpStatus.ACCEPTED)
     public OperationId delete(
-            @PathVariable("id") UUID id,
-            @Valid @RequestBody @NotNull DeleteFilterRequest request) {
+            @PathVariable("id") UUID id, @Valid @RequestBody @NotNull DeleteFilterRequest request) {
         return operationQueue.enqueue(new RemoveOperation<>(id, request.prevItemHash()));
     }
 }
