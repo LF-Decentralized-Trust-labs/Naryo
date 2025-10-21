@@ -1,9 +1,8 @@
-package io.naryo.api.storeconfiguration.common;
+package io.naryo.api.storeconfiguration.common.request;
 
 import java.util.UUID;
 
 import io.naryo.api.RequestBuilder;
-import io.naryo.api.storeconfiguration.common.request.StoreConfigurationRequest;
 
 public abstract class StoreConfigurationRequestBuilder<
                 T extends StoreConfigurationRequestBuilder<T, Y>,

@@ -1,7 +1,7 @@
 package io.naryo.api.storeconfiguration.update;
 
 import io.naryo.api.RequestBuilder;
-import io.naryo.api.storeconfiguration.common.InactiveStoreConfigurationRequestBuilder;
+import io.naryo.api.storeconfiguration.common.request.InactiveStoreConfigurationRequestBuilder;
 import io.naryo.api.storeconfiguration.common.request.StoreConfigurationRequest;
 import io.naryo.api.storeconfiguration.update.model.UpdateStoreConfigurationRequest;
 import org.instancio.Instancio;

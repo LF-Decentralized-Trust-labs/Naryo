@@ -1,11 +1,13 @@
 package io.naryo.infrastructure.store;
 
 import java.util.List;
+import java.util.Map;
 
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaRegistry;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaType;
 import io.naryo.application.configuration.source.model.store.ActiveStoreConfigurationDescriptor;
+import io.naryo.application.store.configuration.mapper.ActiveStoreConfigurationAdditionalPropertiesMapperRegistry;
 import io.naryo.application.store.configuration.mapper.ActiveStoreConfigurationDescriptorMapper;
 import io.naryo.application.store.configuration.mapper.ActiveStoreConfigurationMapperRegistry;
 import io.naryo.application.store.configuration.normalization.ActiveStoreConfigurationNormalizerRegistry;
@@ -21,14 +23,19 @@ public final class JpaStoreInitializer implements EnvironmentInitializer {
 
     private final ActiveStoreConfigurationNormalizerRegistry normalizerRegistry;
     private final ActiveStoreConfigurationMapperRegistry mapperRegistry;
+    private final ActiveStoreConfigurationAdditionalPropertiesMapperRegistry
+            additionalPropertiesMapperRegistry;
     private final ConfigurationSchemaRegistry schemaRegistry;
 
     public JpaStoreInitializer(
             ActiveStoreConfigurationNormalizerRegistry normalizerRegistry,
             ActiveStoreConfigurationMapperRegistry mapperRegistry,
+            ActiveStoreConfigurationAdditionalPropertiesMapperRegistry
+                    additionalPropertiesMapperRegistry,
             ConfigurationSchemaRegistry schemaRegistry) {
         this.normalizerRegistry = normalizerRegistry;
         this.mapperRegistry = mapperRegistry;
+        this.additionalPropertiesMapperRegistry = additionalPropertiesMapperRegistry;
         this.schemaRegistry = schemaRegistry;
     }
 
@@ -41,6 +48,11 @@ public final class JpaStoreInitializer implements EnvironmentInitializer {
                         new JpaActiveStoreConfiguration(
                                 properties.getNodeId(),
                                 ActiveStoreConfigurationDescriptorMapper.map(properties)));
+
+        additionalPropertiesMapperRegistry.register(
+                JPA_TYPE,
+                JpaActiveStoreConfiguration.class,
+                jpaActiveStoreConfiguration -> Map.of());
 
         schemaRegistry.register(
                 ConfigurationSchemaType.STORE,

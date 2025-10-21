@@ -1,12 +1,14 @@
 package io.naryo.infrastructure.configuration.beans.store.http;
 
 import java.util.List;
+import java.util.Map;
 
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
 import io.naryo.application.configuration.source.definition.FieldDefinition;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaRegistry;
 import io.naryo.application.configuration.source.definition.registry.ConfigurationSchemaType;
 import io.naryo.application.configuration.source.model.store.ActiveStoreConfigurationDescriptor;
+import io.naryo.application.store.configuration.mapper.ActiveStoreConfigurationAdditionalPropertiesMapperRegistry;
 import io.naryo.application.store.configuration.mapper.ActiveStoreConfigurationDescriptorMapper;
 import io.naryo.application.store.configuration.mapper.ActiveStoreConfigurationMapperRegistry;
 import io.naryo.application.store.configuration.normalization.ActiveStoreConfigurationNormalizerRegistry;
@@ -22,16 +24,23 @@ import static io.naryo.domain.HttpConstants.HTTP_TYPE;
 @Component
 public final class HttpStoreInitializer implements EnvironmentInitializer {
 
+    private static final String FIELD_ENDPOINT = "endpoint";
+
     private final ActiveStoreConfigurationNormalizerRegistry normalizerRegistry;
     private final ActiveStoreConfigurationMapperRegistry mapperRegistry;
+    private final ActiveStoreConfigurationAdditionalPropertiesMapperRegistry
+            additionalPropertiesMapperRegistry;
     private final ConfigurationSchemaRegistry schemaRegistry;
 
     public HttpStoreInitializer(
             ActiveStoreConfigurationNormalizerRegistry normalizerRegistry,
             ActiveStoreConfigurationMapperRegistry mapperRegistry,
+            ActiveStoreConfigurationAdditionalPropertiesMapperRegistry
+                    additionalPropertiesMapperRegistry,
             ConfigurationSchemaRegistry schemaRegistry) {
         this.normalizerRegistry = normalizerRegistry;
         this.mapperRegistry = mapperRegistry;
+        this.additionalPropertiesMapperRegistry = additionalPropertiesMapperRegistry;
         this.schemaRegistry = schemaRegistry;
     }
 
@@ -46,12 +55,21 @@ public final class HttpStoreInitializer implements EnvironmentInitializer {
                                 ActiveStoreConfigurationDescriptorMapper.map(properties),
                                 new ConnectionEndpoint(
                                         !properties.getAdditionalProperties().isEmpty()
-                                                ? ((HttpBroadcasterEndpoint)
+                                                ? ((HttpStoreEndpoint)
                                                                 properties
                                                                         .getAdditionalProperties()
-                                                                        .get("endpoint"))
+                                                                        .get(FIELD_ENDPOINT))
                                                         .url()
                                                 : null)));
+
+        additionalPropertiesMapperRegistry.register(
+                HTTP_TYPE,
+                HttpStoreConfiguration.class,
+                httpStoreConfiguration ->
+                        Map.of(
+                                FIELD_ENDPOINT,
+                                new HttpStoreEndpoint(
+                                        httpStoreConfiguration.getEndpoint().getUrl())));
 
         schemaRegistry.register(
                 ConfigurationSchemaType.STORE,
@@ -60,7 +78,7 @@ public final class HttpStoreInitializer implements EnvironmentInitializer {
                         HTTP_TYPE,
                         List.of(
                                 new FieldDefinition(
-                                        "endpoint", HttpBroadcasterEndpoint.class, true, null))));
+                                        FIELD_ENDPOINT, HttpStoreEndpoint.class, true, null))));
 
         var normalizer =
                 new BaseActiveStoreNormalizer<HttpStoreConfiguration>() {
@@ -86,5 +104,5 @@ public final class HttpStoreInitializer implements EnvironmentInitializer {
                 });
     }
 
-    public record HttpBroadcasterEndpoint(String url) {}
+    public record HttpStoreEndpoint(String url) {}
 }

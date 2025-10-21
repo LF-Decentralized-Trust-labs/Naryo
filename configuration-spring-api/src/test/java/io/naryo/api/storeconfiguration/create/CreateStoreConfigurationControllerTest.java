@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.naryo.api.storeconfiguration.common.ActiveStoreConfigurationRequestBuilder;
-import io.naryo.api.storeconfiguration.common.InactiveStoreConfigurationRequestBuilder;
 import io.naryo.api.storeconfiguration.common.request.ActiveStoreConfigurationRequest;
+import io.naryo.api.storeconfiguration.common.request.ActiveStoreConfigurationRequestBuilder;
 import io.naryo.api.storeconfiguration.common.request.InactiveStoreConfigurationRequest;
+import io.naryo.api.storeconfiguration.common.request.InactiveStoreConfigurationRequestBuilder;
 import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.operation.AddOperation;
 import io.naryo.application.configuration.revision.queue.RevisionOperationQueue;
@@ -76,7 +76,7 @@ class CreateStoreConfigurationControllerTest {
     public void createStoreConfiguration_active() throws Exception {
         String additionalPropertyKey = Instancio.create(String.class);
         Object additionalPropertyValue =
-                new HttpStoreInitializer.HttpBroadcasterEndpoint(Instancio.create(String.class));
+                new HttpStoreInitializer.HttpStoreEndpoint(Instancio.create(String.class));
         ActiveStoreConfigurationRequest request =
                 new ActiveStoreConfigurationRequestBuilder()
                         .withAdditionalProperties(
@@ -87,7 +87,7 @@ class CreateStoreConfigurationControllerTest {
         FieldDefinition fieldDefinition =
                 new FieldDefinition(
                         additionalPropertyKey,
-                        HttpStoreInitializer.HttpBroadcasterEndpoint.class,
+                        HttpStoreInitializer.HttpStoreEndpoint.class,
                         true,
                         null);
         ConfigurationSchema dummyConfigurationSchema =

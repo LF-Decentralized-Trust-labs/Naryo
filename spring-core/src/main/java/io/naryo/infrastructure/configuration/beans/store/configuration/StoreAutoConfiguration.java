@@ -4,6 +4,7 @@ import java.util.List;
 
 import io.naryo.application.store.configuration.manager.DefaultStoreConfigurationManager;
 import io.naryo.application.store.configuration.manager.StoreConfigurationManager;
+import io.naryo.application.store.configuration.mapper.ActiveStoreConfigurationAdditionalPropertiesMapperRegistry;
 import io.naryo.application.store.configuration.mapper.ActiveStoreConfigurationMapperRegistry;
 import io.naryo.application.store.configuration.mapper.StoreConfigurationDescriptorMapper;
 import io.naryo.application.store.configuration.normalization.ActiveStoreConfigurationNormalizerRegistry;
@@ -34,6 +35,13 @@ public class StoreAutoConfiguration {
     @ConditionalOnMissingBean(ActiveStoreConfigurationMapperRegistry.class)
     public ActiveStoreConfigurationMapperRegistry storeConfigurationMapperRegistry() {
         return new ActiveStoreConfigurationMapperRegistry();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(ActiveStoreConfigurationAdditionalPropertiesMapperRegistry.class)
+    public ActiveStoreConfigurationAdditionalPropertiesMapperRegistry
+            activeStoreConfigurationAdditionalPropertiesMapperRegistry() {
+        return new ActiveStoreConfigurationAdditionalPropertiesMapperRegistry();
     }
 
     @Bean

@@ -1,7 +1,6 @@
-package io.naryo.api.storeconfiguration.common;
+package io.naryo.api.storeconfiguration.common.request;
 
 import io.naryo.api.RequestBuilder;
-import io.naryo.api.storeconfiguration.common.request.EventStoreTargetRequest;
 import io.naryo.domain.configuration.store.active.feature.event.block.TargetType;
 import org.instancio.Instancio;
 
