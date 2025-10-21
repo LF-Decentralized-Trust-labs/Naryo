@@ -1,4 +1,4 @@
-package io.naryo.api.storeconfiguration.getAll.update;
+package io.naryo.api.storeconfiguration.getAll;
 
 import java.util.List;
 import java.util.Map;
@@ -7,8 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.naryo.api.storeconfiguration.common.response.ActiveStoreConfigurationResponseBuilder;
 import io.naryo.api.storeconfiguration.common.response.InactiveStoreConfigurationResponseBuilder;
 import io.naryo.api.storeconfiguration.common.response.StoreConfigurationResponse;
-import io.naryo.api.storeconfiguration.getAll.GetAllStoreConfigurationController;
-import io.naryo.api.storeconfiguration.getAll.StoreConfigurationResponseMapper;
 import io.naryo.application.configuration.revision.LiveView;
 import io.naryo.application.configuration.revision.Revision;
 import io.naryo.application.store.revision.StoreConfigurationRevisionManager;
