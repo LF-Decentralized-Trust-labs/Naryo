@@ -43,14 +43,13 @@ public class UpdateBroadcasterConfigurationRequestBuilder
 
     public UpdateBroadcasterConfigurationRequestBuilder withRandomType() {
         var random = new Random().nextInt(3);
-           return switch (random) {
-                case 0 -> withHttpType();
-                case 1 -> withKafkaType();
-                case 2 -> withRabbitmqType();
-                default -> throw new IllegalStateException("Unexpected value: " + random);
-            };
+        return switch (random) {
+            case 0 -> withHttpType();
+            case 1 -> withKafkaType();
+            case 2 -> withRabbitmqType();
+            default -> throw new IllegalStateException("Unexpected value: " + random);
+        };
     }
-
 
     private UpdateBroadcasterConfigurationRequestBuilder withType(String type) {
         this.type = type;

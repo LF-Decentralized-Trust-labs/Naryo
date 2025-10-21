@@ -3,7 +3,6 @@ package io.naryo.api.broadcasterconfiguration.delete;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.naryo.api.broadcasterconfiguration.delete.model.DeleteBroadcasterConfigurationRequest;
 import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.operation.RevisionOperation;
 import io.naryo.application.configuration.revision.queue.QueueClosedException;

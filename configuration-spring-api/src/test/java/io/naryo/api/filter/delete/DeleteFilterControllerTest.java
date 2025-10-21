@@ -3,8 +3,6 @@ package io.naryo.api.filter.delete;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.naryo.api.filter.delete.model.DeleteFilterRequest;
-import io.naryo.api.filter.delete.DeleteFilterRequestBuilder;
 import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.operation.RevisionOperation;
 import io.naryo.application.configuration.revision.queue.QueueClosedException;

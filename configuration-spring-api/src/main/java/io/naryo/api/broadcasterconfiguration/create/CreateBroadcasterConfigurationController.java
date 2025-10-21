@@ -23,8 +23,9 @@ import static io.naryo.infrastructure.util.serialization.ConfigurationSchemaConv
 @RequiredArgsConstructor
 public class CreateBroadcasterConfigurationController extends BroadcasterConfigurationController {
 
-    private final @Qualifier("broadcasterConfigurationRevisionQueue")
-            RevisionOperationQueue<BroadcasterConfiguration> broadcasterConfigRevisionQueue;
+    private final @Qualifier("broadcasterConfigurationRevisionQueue") RevisionOperationQueue<
+                    BroadcasterConfiguration>
+            broadcasterConfigRevisionQueue;
     private final BroadcasterConfigurationMapperRegistry mapperRegistry;
     private final ConfigurationSchemaRegistry schemaRegistry;
 
@@ -39,7 +40,8 @@ public class CreateBroadcasterConfigurationController extends BroadcasterConfigu
 
         BroadcasterConfiguration broadcasterConfiguration =
                 mapperRegistry.map(broadcasterType, request);
-        RevisionOperation<BroadcasterConfiguration> op = new AddOperation<>(broadcasterConfiguration);
+        RevisionOperation<BroadcasterConfiguration> op =
+                new AddOperation<>(broadcasterConfiguration);
         return broadcasterConfigRevisionQueue.enqueue(op);
     }
 }

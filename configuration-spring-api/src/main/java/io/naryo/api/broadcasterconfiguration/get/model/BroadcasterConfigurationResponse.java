@@ -9,7 +9,11 @@ import java.util.UUID;
 import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;
 
 public record BroadcasterConfigurationResponse(
-        UUID id, String type, BroadcasterCacheResponse cache, Map<String, Object> additionalProperties, String itemHash) {
+        UUID id,
+        String type,
+        BroadcasterCacheResponse cache,
+        Map<String, Object> additionalProperties,
+        String itemHash) {
 
     public static BroadcasterConfigurationResponse map(
             BroadcasterConfiguration config,
@@ -19,10 +23,7 @@ public record BroadcasterConfigurationResponse(
 
         BroadcasterCacheResponse cacheResponse =
                 Optional.ofNullable(config.getCache())
-                        .map(
-                                c ->
-                                        new BroadcasterCacheResponse(
-                                                c.expirationTime()))
+                        .map(c -> new BroadcasterCacheResponse(c.expirationTime()))
                         .orElse(null);
 
         return new BroadcasterConfigurationResponse(

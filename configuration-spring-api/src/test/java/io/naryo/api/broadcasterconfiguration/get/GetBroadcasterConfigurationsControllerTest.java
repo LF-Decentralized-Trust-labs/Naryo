@@ -60,9 +60,7 @@ class GetBroadcasterConfigurationsControllerTest {
                             Map.of(
                                     "endpoint",
                                     new HttpBroadcasterInitializer.HttpBroadcasterEndpoint(
-                                            httpBroadcasterConfiguration
-                                                    .getEndpoint()
-                                                    .getUrl())));
+                                            httpBroadcasterConfiguration.getEndpoint().getUrl())));
 
             return registry;
         }
@@ -96,8 +94,7 @@ class GetBroadcasterConfigurationsControllerTest {
     }
 
     @Test
-    public void getBroadcasterConfigurations_withHttpBroadcaster_ok()
-            throws Exception {
+    public void getBroadcasterConfigurations_withHttpBroadcaster_ok() throws Exception {
         UUID id = UUID.randomUUID();
         String url = "http://example.com";
         HttpBroadcasterConfiguration httpConfig =
@@ -128,8 +125,7 @@ class GetBroadcasterConfigurationsControllerTest {
     }
 
     @Test
-    public void getBroadcasterConfigurations_withMultipleHttpBroadcasters_ok()
-                    throws Exception {
+    public void getBroadcasterConfigurations_withMultipleHttpBroadcasters_ok() throws Exception {
         UUID id1 = UUID.randomUUID();
         UUID id2 = UUID.randomUUID();
         String url1 = "http://example1.com";
@@ -156,11 +152,7 @@ class GetBroadcasterConfigurationsControllerTest {
                                 fingerprinter.revisionHash(
                                         broadcasterConfigurations, BroadcasterConfiguration::getId),
                                 broadcasterConfigurations),
-                        Map.of(
-                                httpConfig1.getId(),
-                                httpConfig1,
-                                httpConfig2.getId(),
-                                httpConfig2),
+                        Map.of(httpConfig1.getId(), httpConfig1, httpConfig2.getId(), httpConfig2),
                         Map.of(
                                 httpConfig1.getId(),
                                 fingerprinter.itemHash(httpConfig1),

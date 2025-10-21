@@ -1,7 +1,6 @@
 package io.naryo.api.broadcasterconfiguration.update;
 
 import java.util.List;
-import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.naryo.api.broadcasterconfiguration.update.model.UpdateBroadcasterConfigurationRequest;
@@ -64,8 +63,7 @@ class UpdateBroadcasterConfigurationControllerTest {
         BroadcasterConfiguration dummyBroadcasterConfiguration =
                 new HttpBroadcasterConfigurationBuilder().build();
         when(mapperRegistry.map(
-                        eq(broadcasterType),
-                        any(UpdateBroadcasterConfigurationRequest.class)))
+                        eq(broadcasterType), any(UpdateBroadcasterConfigurationRequest.class)))
                 .thenReturn(dummyBroadcasterConfiguration);
 
         OperationId operationId = OperationId.random();

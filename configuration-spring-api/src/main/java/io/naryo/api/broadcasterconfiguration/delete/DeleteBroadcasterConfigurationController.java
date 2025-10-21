@@ -22,8 +22,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class DeleteBroadcasterConfigurationController extends BroadcasterConfigurationController {
 
-    private final @Qualifier("broadcasterConfigurationRevisionQueue")
-            RevisionOperationQueue<BroadcasterConfiguration> queue;
+    private final @Qualifier("broadcasterConfigurationRevisionQueue") RevisionOperationQueue<
+                    BroadcasterConfiguration>
+            queue;
 
     @DeleteMapping("/{id}")
     @ConfigurationApiErrors
