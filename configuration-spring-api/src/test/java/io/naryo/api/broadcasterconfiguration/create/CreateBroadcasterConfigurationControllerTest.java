@@ -54,7 +54,7 @@ class CreateBroadcasterConfigurationControllerTest {
 
         CreateBroadcasterConfigurationRequest request =
                 new CreateBroadcasterConfigurationRequestBuilder()
-                        .withType("http")
+                        .withHttpType()
                         .withAdditionalProperties(Map.of(additionalPropertyKey, additionalPropertyValue))
                         .build();
 
@@ -90,7 +90,7 @@ class CreateBroadcasterConfigurationControllerTest {
     public void createBroadcasterConfiguration_withoutAdditionalProperties_accepted() throws Exception {
         CreateBroadcasterConfigurationRequest request =
                 new CreateBroadcasterConfigurationRequestBuilder()
-                        .withType("http")
+                        .withHttpType()
                         .withAdditionalProperties(Map.of())
                         .build();
 

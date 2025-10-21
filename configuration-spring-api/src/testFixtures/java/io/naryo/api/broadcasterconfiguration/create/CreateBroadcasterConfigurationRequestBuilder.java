@@ -2,11 +2,16 @@ package io.naryo.api.broadcasterconfiguration.create;
 
 import java.time.Duration;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 import io.naryo.api.RequestBuilder;
 import io.naryo.api.broadcasterconfiguration.common.model.BroadcasterCacheConfigurationRequest;
 import io.naryo.api.broadcasterconfiguration.create.model.CreateBroadcasterConfigurationRequest;
+import io.naryo.api.node.common.NodeRequestBuilder;
+import io.naryo.api.node.common.eth.priv.PrivateEthereumNodeRequestBuilder;
+import io.naryo.api.node.common.eth.pub.PublicEthereumNodeRequestBuilder;
+import io.naryo.api.node.common.hedera.HederaNodeRequestBuilder;
 
 public class CreateBroadcasterConfigurationRequestBuilder
         implements RequestBuilder<
@@ -38,9 +43,32 @@ public class CreateBroadcasterConfigurationRequestBuilder
         return this.id == null ? UUID.randomUUID() : this.id;
     }
 
-    public CreateBroadcasterConfigurationRequestBuilder withType(String type) {
+    public CreateBroadcasterConfigurationRequestBuilder withRandomType() {
+        var random = new Random().nextInt(3);
+           return switch (random) {
+                case 0 -> withHttpType();
+                case 1 -> withKafkaType();
+                case 2 -> withRabbitmqType();
+                default -> throw new IllegalStateException("Unexpected value: " + random);
+            };
+    }
+
+
+    private CreateBroadcasterConfigurationRequestBuilder withType(String type) {
         this.type = type;
         return self();
+    }
+
+    public CreateBroadcasterConfigurationRequestBuilder withHttpType() {
+        return withType("http");
+    }
+
+    public CreateBroadcasterConfigurationRequestBuilder withKafkaType() {
+        return withType("kafka");
+    }
+
+    public CreateBroadcasterConfigurationRequestBuilder withRabbitmqType() {
+        return withType("rabbitmq");
     }
 
     public String getType() {

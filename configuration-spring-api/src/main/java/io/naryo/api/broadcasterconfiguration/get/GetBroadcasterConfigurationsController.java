@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GetBroadcasterConfigurationsController extends BroadcasterConfigurationController {
 
     private final BroadcasterConfigurationConfigurationRevisionManager revisionManager;
+    private final BroadcasterConfigurationResponseMapper responseMapper;
 
     @GetMapping
     @ConfigurationApiErrors
@@ -26,8 +27,6 @@ public class GetBroadcasterConfigurationsController extends BroadcasterConfigura
     public List<BroadcasterConfigurationResponse> getBroadcasterConfigurations() {
         var liveView = revisionManager.liveView();
         var fingerprints = liveView.itemFingerprintById();
-        return liveView.revision().domainItems().stream()
-                .map(bc -> BroadcasterConfigurationResponse.map(bc, fingerprints))
-                .toList();
+        return responseMapper.map(liveView.revision().domainItems(), fingerprints);
     }
 }

@@ -6,6 +6,7 @@ import io.naryo.application.broadcaster.configuration.manager.BroadcasterConfigu
 import io.naryo.application.broadcaster.configuration.manager.BroadcasterConfigurationManager;
 import io.naryo.application.broadcaster.configuration.manager.DefaultBroadcasterConfigurationConfigurationManager;
 import io.naryo.application.broadcaster.configuration.manager.DefaultBroadcasterConfigurationManager;
+import io.naryo.application.broadcaster.configuration.mapper.BroadcasterConfigurationAdditionalPropertiesMapperRegistry;
 import io.naryo.application.broadcaster.configuration.mapper.BroadcasterConfigurationMapperRegistry;
 import io.naryo.application.broadcaster.configuration.normalization.BroadcasterConfigurationNormalizerRegistry;
 import io.naryo.application.configuration.source.provider.broadcaster.BroadcasterConfigurationSourceProvider;
@@ -20,6 +21,12 @@ public class BroadcasterAutoConfiguration {
     @Bean
     public BroadcasterConfigurationMapperRegistry broadcasterConfigurationMapperRegistry() {
         return new BroadcasterConfigurationMapperRegistry();
+    }
+
+    @Bean
+    public BroadcasterConfigurationAdditionalPropertiesMapperRegistry
+            broadcasterConfigurationAdditionalPropertiesMapperRegistry() {
+        return new BroadcasterConfigurationAdditionalPropertiesMapperRegistry();
     }
 
     @Bean

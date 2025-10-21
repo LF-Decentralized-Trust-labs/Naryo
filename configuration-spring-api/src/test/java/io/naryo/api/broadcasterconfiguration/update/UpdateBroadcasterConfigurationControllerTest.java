@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.naryo.api.broadcasterconfiguration.update.model.UpdateBroadcasterConfigurationRequest;
-import io.naryo.api.broadcasterconfiguration.update.model.UpdateBroadcasterConfigurationRequestTarget;
 import io.naryo.application.broadcaster.configuration.mapper.BroadcasterConfigurationMapperRegistry;
 import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.operation.UpdateOperation;
@@ -50,18 +49,11 @@ class UpdateBroadcasterConfigurationControllerTest {
     @Test
     public void updateBroadcasterConfiguration_accepted() throws Exception {
         String additionalPropertyKey = Instancio.create(String.class);
-        String additionalPropertyValue = Instancio.create(String.class);
-
-        UpdateBroadcasterConfigurationRequestTarget target =
-                new UpdateBroadcasterConfigurationRequestTargetBuilder()
-                        .withType("http")
-                        .withAdditionalProperties(Map.of(additionalPropertyKey, additionalPropertyValue))
-                        .build();
 
         UpdateBroadcasterConfigurationRequest request =
-                new UpdateBroadcasterConfigurationRequestBuilder().withTarget(target).build();
+                new UpdateBroadcasterConfigurationRequestBuilder().build();
 
-        String broadcasterType = target.getType().getName();
+        String broadcasterType = request.getType().getName();
         FieldDefinition fieldDefinition =
                 new FieldDefinition(additionalPropertyKey, String.class, true, null);
         ConfigurationSchema dummyConfigurationSchema =
@@ -73,14 +65,14 @@ class UpdateBroadcasterConfigurationControllerTest {
                 new HttpBroadcasterConfigurationBuilder().build();
         when(mapperRegistry.map(
                         eq(broadcasterType),
-                        any(UpdateBroadcasterConfigurationRequestTarget.class)))
+                        any(UpdateBroadcasterConfigurationRequest.class)))
                 .thenReturn(dummyBroadcasterConfiguration);
 
         OperationId operationId = OperationId.random();
         UpdateOperation<BroadcasterConfiguration> expectedOperation =
                 new UpdateOperation<>(
                         dummyBroadcasterConfiguration.getId(),
-                        request.prevItemHash(),
+                        request.getPrevItemHash(),
                         dummyBroadcasterConfiguration);
         when(broadcasterConfigRevisionQueue.enqueue(expectedOperation)).thenReturn(operationId);
 

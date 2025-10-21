@@ -1,7 +1,9 @@
 package io.naryo.infrastructure.configuration.broadcaster;
 
 import java.util.List;
+import java.util.Map;
 
+import io.naryo.application.broadcaster.configuration.mapper.BroadcasterConfigurationAdditionalPropertiesMapperRegistry;
 import io.naryo.application.broadcaster.configuration.mapper.BroadcasterConfigurationMapperRegistry;
 import io.naryo.application.broadcaster.configuration.normalization.BroadcasterConfigurationNormalizerRegistry;
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
@@ -20,14 +22,19 @@ public final class KafkaBroadcasterInitializer implements EnvironmentInitializer
 
     private final BroadcasterConfigurationNormalizerRegistry normalizerRegistry;
     private final BroadcasterConfigurationMapperRegistry mapperRegistry;
+    private final BroadcasterConfigurationAdditionalPropertiesMapperRegistry
+            additionalPropertiesMapperRegistry;
     private final ConfigurationSchemaRegistry schemaRegistry;
 
     public KafkaBroadcasterInitializer(
             BroadcasterConfigurationNormalizerRegistry normalizerRegistry,
             BroadcasterConfigurationMapperRegistry mapperRegistry,
+            BroadcasterConfigurationAdditionalPropertiesMapperRegistry
+                    additionalPropertiesMapperRegistry,
             ConfigurationSchemaRegistry schemaRegistry) {
         this.normalizerRegistry = normalizerRegistry;
         this.mapperRegistry = mapperRegistry;
+        this.additionalPropertiesMapperRegistry = additionalPropertiesMapperRegistry;
         this.schemaRegistry = schemaRegistry;
     }
 
@@ -41,6 +48,11 @@ public final class KafkaBroadcasterInitializer implements EnvironmentInitializer
                                 properties.getId(),
                                 new BroadcasterCache(
                                         valueOrNull(properties.getCache()).getExpirationTime())));
+
+        additionalPropertiesMapperRegistry.register(
+                KAFKA_TYPE,
+                KafkaBroadcasterConfiguration.class,
+                kafkaBroadcasterConfiguration -> Map.of());
 
         schemaRegistry.register(
                 ConfigurationSchemaType.BROADCASTER,

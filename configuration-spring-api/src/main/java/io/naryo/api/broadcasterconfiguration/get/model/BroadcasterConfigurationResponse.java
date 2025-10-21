@@ -12,9 +12,10 @@ public record BroadcasterConfigurationResponse(
         UUID id, String type, BroadcasterCacheResponse cache, Map<String, Object> additionalProperties, String itemHash) {
 
     public static BroadcasterConfigurationResponse map(
-            BroadcasterConfiguration config, Map<UUID, String> fingerprints) {
+            BroadcasterConfiguration config,
+            Map<String, Object> additionalProperties,
+            String itemHash) {
         Objects.requireNonNull(config, "config cannot be null");
-        String hash = fingerprints.get(config.getId());
 
         BroadcasterCacheResponse cacheResponse =
                 Optional.ofNullable(config.getCache())
@@ -28,8 +29,8 @@ public record BroadcasterConfigurationResponse(
                 config.getId(),
                 config.getType().getName(),
                 cacheResponse,
-                Map.of(),
-                hash);
+                additionalProperties,
+                itemHash);
     }
 
     public record BroadcasterCacheResponse(Duration expirationTime) {}
