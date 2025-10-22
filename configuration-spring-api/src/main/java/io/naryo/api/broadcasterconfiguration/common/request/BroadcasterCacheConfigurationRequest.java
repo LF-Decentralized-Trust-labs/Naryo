@@ -1,4 +1,4 @@
-package io.naryo.api.broadcasterconfiguration.common.model;
+package io.naryo.api.broadcasterconfiguration.common.request;
 
 import java.time.Duration;
 

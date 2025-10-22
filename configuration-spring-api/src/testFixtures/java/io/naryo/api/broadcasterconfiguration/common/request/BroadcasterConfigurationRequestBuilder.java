@@ -1,17 +1,14 @@
-package io.naryo.api.broadcasterconfiguration.create;
+package io.naryo.api.broadcasterconfiguration.common.request;
 
 import java.time.Duration;
 import java.util.Map;
 import java.util.UUID;
 
 import io.naryo.api.RequestBuilder;
-import io.naryo.api.broadcasterconfiguration.common.request.BroadcasterCacheConfigurationRequest;
-import io.naryo.api.broadcasterconfiguration.create.model.CreateBroadcasterConfigurationRequest;
 
-public class CreateBroadcasterConfigurationRequestBuilder
+public class BroadcasterConfigurationRequestBuilder
         implements RequestBuilder<
-                CreateBroadcasterConfigurationRequestBuilder,
-                CreateBroadcasterConfigurationRequest> {
+                BroadcasterConfigurationRequestBuilder, BroadcasterConfigurationRequest> {
 
     private UUID id;
     private String type;
@@ -19,39 +16,39 @@ public class CreateBroadcasterConfigurationRequestBuilder
     private Map<String, Object> additionalProperties;
 
     @Override
-    public CreateBroadcasterConfigurationRequestBuilder self() {
+    public BroadcasterConfigurationRequestBuilder self() {
         return this;
     }
 
     @Override
-    public CreateBroadcasterConfigurationRequest build() {
-        return new CreateBroadcasterConfigurationRequest(
-                getType(), getCache(), getAdditionalProperties());
+    public BroadcasterConfigurationRequest build() {
+        return new BroadcasterConfigurationRequest(
+                getId(), getType(), getCache(), getAdditionalProperties());
     }
 
-    public CreateBroadcasterConfigurationRequestBuilder withId(UUID id) {
+    public BroadcasterConfigurationRequestBuilder withId(UUID id) {
         this.id = id;
         return self();
     }
 
     public UUID getId() {
-        return this.id;
+        return this.id == null ? UUID.randomUUID() : this.id;
     }
 
-    private CreateBroadcasterConfigurationRequestBuilder withType(String type) {
-        this.type = type;
+    private BroadcasterConfigurationRequestBuilder withType() {
+        this.type = "http";
         return self();
     }
 
-    public CreateBroadcasterConfigurationRequestBuilder withHttpType() {
-        return withType("http");
+    public BroadcasterConfigurationRequestBuilder withHttpType() {
+        return withType();
     }
 
     public String getType() {
         return this.type == null ? "http" : this.type;
     }
 
-    public CreateBroadcasterConfigurationRequestBuilder withCache(
+    public BroadcasterConfigurationRequestBuilder withCache(
             BroadcasterCacheConfigurationRequest cache) {
         this.cache = cache;
         return self();
@@ -63,7 +60,7 @@ public class CreateBroadcasterConfigurationRequestBuilder
                 : this.cache;
     }
 
-    public CreateBroadcasterConfigurationRequestBuilder withAdditionalProperties(
+    public BroadcasterConfigurationRequestBuilder withAdditionalProperties(
             Map<String, Object> additionalProperties) {
         this.additionalProperties = additionalProperties;
         return self();

@@ -34,17 +34,21 @@ public class UpdateBroadcasterConfigurationController extends BroadcasterConfigu
     @PutMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
     public OperationId update(@Valid @RequestBody UpdateBroadcasterConfigurationRequest request) {
-        String broadcasterType = request.getType().getName();
+        String broadcasterType = request.broadcasterConfig().getType().getName();
         ConfigurationSchema schema =
                 schemaRegistry.getSchema(ConfigurationSchemaType.BROADCASTER, broadcasterType);
-        request.setAdditionalProperties(
-                rawObjectsToSchema(request.getAdditionalProperties(), schema));
+        request.broadcasterConfig()
+                .setAdditionalProperties(
+                        rawObjectsToSchema(
+                                request.broadcasterConfig().getAdditionalProperties(), schema));
 
         BroadcasterConfiguration broadcasterConfiguration =
                 mapperRegistry.map(broadcasterType, request);
         RevisionOperation<BroadcasterConfiguration> op =
                 new UpdateOperation<>(
-                        request.getId(), request.getPrevItemHash(), broadcasterConfiguration);
+                        request.broadcasterConfig().getId(),
+                        request.prevItemHash(),
+                        broadcasterConfiguration);
         return broadcasterConfigRevisionQueue.enqueue(op);
     }
 }

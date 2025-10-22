@@ -52,7 +52,7 @@ class UpdateBroadcasterConfigurationControllerTest {
         UpdateBroadcasterConfigurationRequest request =
                 new UpdateBroadcasterConfigurationRequestBuilder().build();
 
-        String broadcasterType = request.getType().getName();
+        String broadcasterType = request.broadcasterConfig().getType().getName();
         FieldDefinition fieldDefinition =
                 new FieldDefinition(additionalPropertyKey, String.class, true, null);
         ConfigurationSchema dummyConfigurationSchema =
@@ -69,7 +69,9 @@ class UpdateBroadcasterConfigurationControllerTest {
         OperationId operationId = OperationId.random();
         UpdateOperation<BroadcasterConfiguration> expectedOperation =
                 new UpdateOperation<>(
-                        request.getId(), request.getPrevItemHash(), dummyBroadcasterConfiguration);
+                        request.broadcasterConfig().getId(),
+                        request.prevItemHash(),
+                        dummyBroadcasterConfiguration);
         when(broadcasterConfigRevisionQueue.enqueue(expectedOperation)).thenReturn(operationId);
 
         String expectedResponse = objectMapper.writeValueAsString(operationId);
