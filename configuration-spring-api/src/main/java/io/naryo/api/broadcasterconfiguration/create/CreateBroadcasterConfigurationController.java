@@ -34,8 +34,6 @@ public class CreateBroadcasterConfigurationController extends BroadcasterConfigu
     @PostMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
     public OperationId create(@Valid @RequestBody CreateBroadcasterConfigurationRequest request) {
-        request.ensureId();
-
         String broadcasterType = request.getType().getName();
         ConfigurationSchema schema =
                 schemaRegistry.getSchema(ConfigurationSchemaType.BROADCASTER, broadcasterType);

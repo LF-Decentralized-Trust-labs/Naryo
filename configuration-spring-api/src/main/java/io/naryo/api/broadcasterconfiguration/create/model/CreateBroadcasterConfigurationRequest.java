@@ -74,8 +74,4 @@ public class CreateBroadcasterConfigurationRequest implements BroadcasterConfigu
     public void setAdditionalProperties(Map<String, Object> additionalProperties) {
         this.additionalProperties = additionalProperties;
     }
-
-    public void ensureId() {
-        this.id = UUID.randomUUID();
-    }
 }
