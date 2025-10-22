@@ -10,7 +10,7 @@ Ensure you have the following installed:
 * Java 21
 * Docker & Docker Compose
 * [Node.js 20.19.4 LTS & npm 10.8.2](https://nodejs.org/en/download)
-* [Hardhat](https://hardhat.org/)
+* [Hardhat 2.26.0](https://hardhat.org/)
 * Git
 
 ## 🎉 Step 0: Prepare your environment
@@ -70,10 +70,18 @@ minimal setup.
 mkdir erc20-contract && cd erc20-contract
 npm init -y
 npm install --save-dev hardhat
-npx hardhat init
+npx hardhat --init
 ```
 
-Choose: “Create a JavaScript project” and accept the defaults.
+- Choose Hardhat 2
+- then when prompted with "Please provide either a relative or an absolute path:", type . and press Enter (this is correct).
+- Next, select "A JavaScript project using Mocha and Ethers.js," skip the automatic installation, and install the dependencies manually afterward.
+```bash
+npm i -D hardhat@^2.26 \
+  @nomicfoundation/hardhat-toolbox@^6 \
+  @nomicfoundation/hardhat-ignition@^0.15 \
+  @nomicfoundation/hardhat-ignition-ethers@^0.15
+```
 
 ### 2. Define your contract:
 
@@ -214,7 +222,8 @@ naryo:
         configurationId: cd1bec0d-2998-46bc-828f-94459d42c17a
         target:
           type: ALL
-          destination: /events
+          destinations:
+            - /events
   filters:
     - id: a5605668-7a88-4e5c-b4ee-4a8417b7184d
       name: my-transfer-filter
@@ -331,4 +340,4 @@ You should see the output in the Node.js event listener server.
 * [Hardhat Docs](https://hardhat.org/)
 * [OpenZeppelin Contracts](https://docs.openzeppelin.com/contracts)
 * [Naryo Getting Started](../getting_started.md)
-* [Naryo Configuration](../configuration.md)
+* [Naryo Configuration](../configuration/index.md)
