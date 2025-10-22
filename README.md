@@ -63,7 +63,7 @@ events from a DLT network:
 ## 📝 Documentation
 
 - [Getting started](./docs/getting_started.md)
-- [Configuration](./docs/configuration.md)
+- [Configuration](./docs/configuration/index.md)
 
 ## 🙌 Contributing
 
