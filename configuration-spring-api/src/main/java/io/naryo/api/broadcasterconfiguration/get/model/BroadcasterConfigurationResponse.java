@@ -2,7 +2,6 @@ package io.naryo.api.broadcasterconfiguration.get.model;
 
 import java.time.Duration;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,7 +18,6 @@ public record BroadcasterConfigurationResponse(
             BroadcasterConfiguration config,
             Map<String, Object> additionalProperties,
             String itemHash) {
-        Objects.requireNonNull(config, "config cannot be null");
 
         BroadcasterCacheResponse cacheResponse =
                 Optional.ofNullable(config.getCache())
