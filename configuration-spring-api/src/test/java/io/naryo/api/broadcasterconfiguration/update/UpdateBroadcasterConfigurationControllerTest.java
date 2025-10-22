@@ -69,9 +69,7 @@ class UpdateBroadcasterConfigurationControllerTest {
         OperationId operationId = OperationId.random();
         UpdateOperation<BroadcasterConfiguration> expectedOperation =
                 new UpdateOperation<>(
-                        dummyBroadcasterConfiguration.getId(),
-                        request.getPrevItemHash(),
-                        dummyBroadcasterConfiguration);
+                        request.getId(), request.getPrevItemHash(), dummyBroadcasterConfiguration);
         when(broadcasterConfigRevisionQueue.enqueue(expectedOperation)).thenReturn(operationId);
 
         String expectedResponse = objectMapper.writeValueAsString(operationId);
@@ -79,6 +77,7 @@ class UpdateBroadcasterConfigurationControllerTest {
         mvc.perform(
                         put(PATH)
                                 .contentType(APPLICATION_JSON)
+                                .accept(APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isAccepted())
                 .andExpect(content().json(expectedResponse));

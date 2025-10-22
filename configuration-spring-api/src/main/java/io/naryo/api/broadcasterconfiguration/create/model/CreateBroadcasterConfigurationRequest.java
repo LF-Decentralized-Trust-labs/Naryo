@@ -5,27 +5,39 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.naryo.api.broadcasterconfiguration.common.model.BroadcasterCacheConfigurationRequest;
 import io.naryo.application.configuration.source.model.broadcaster.configuration.BroadcasterCacheConfigurationDescriptor;
 import io.naryo.application.configuration.source.model.broadcaster.configuration.BroadcasterConfigurationDescriptor;
 import io.naryo.domain.broadcaster.BroadcasterType;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 
-@AllArgsConstructor
 @EqualsAndHashCode
 @Getter
+@Setter
 public class CreateBroadcasterConfigurationRequest implements BroadcasterConfigurationDescriptor {
 
-    @NotNull private UUID id;
+    private @JsonIgnore @EqualsAndHashCode.Exclude UUID id;
 
-    @NotNull @NotNull @EqualsAndHashCode.Exclude private String type;
+    private @NotBlank String type;
 
     private BroadcasterCacheConfigurationRequest cache;
 
-    private Map<String, Object> additionalProperties;
+    private @NotNull Map<String, Object> additionalProperties;
+
+    public CreateBroadcasterConfigurationRequest(
+            String type,
+            BroadcasterCacheConfigurationRequest cache,
+            Map<String, Object> additionalProperties) {
+        this.id = UUID.randomUUID();
+        this.type = type;
+        this.cache = cache;
+        this.additionalProperties = additionalProperties;
+    }
 
     @Override
     public UUID getId() {
@@ -61,5 +73,9 @@ public class CreateBroadcasterConfigurationRequest implements BroadcasterConfigu
     @Override
     public void setAdditionalProperties(Map<String, Object> additionalProperties) {
         this.additionalProperties = additionalProperties;
+    }
+
+    public void ensureId() {
+        this.id = UUID.randomUUID();
     }
 }

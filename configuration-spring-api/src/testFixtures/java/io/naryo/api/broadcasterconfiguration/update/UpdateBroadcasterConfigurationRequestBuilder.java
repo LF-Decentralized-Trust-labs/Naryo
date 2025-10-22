@@ -2,7 +2,6 @@ package io.naryo.api.broadcasterconfiguration.update;
 
 import java.time.Duration;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 
 import io.naryo.api.RequestBuilder;
@@ -41,31 +40,13 @@ public class UpdateBroadcasterConfigurationRequestBuilder
         return this.id == null ? UUID.randomUUID() : this.id;
     }
 
-    public UpdateBroadcasterConfigurationRequestBuilder withRandomType() {
-        var random = new Random().nextInt(3);
-        return switch (random) {
-            case 0 -> withHttpType();
-            case 1 -> withKafkaType();
-            case 2 -> withRabbitmqType();
-            default -> throw new IllegalStateException("Unexpected value: " + random);
-        };
-    }
-
-    private UpdateBroadcasterConfigurationRequestBuilder withType(String type) {
-        this.type = type;
+    private UpdateBroadcasterConfigurationRequestBuilder withType() {
+        this.type = "http";
         return self();
     }
 
     public UpdateBroadcasterConfigurationRequestBuilder withHttpType() {
-        return withType("http");
-    }
-
-    public UpdateBroadcasterConfigurationRequestBuilder withKafkaType() {
-        return withType("kafka");
-    }
-
-    public UpdateBroadcasterConfigurationRequestBuilder withRabbitmqType() {
-        return withType("rabbitmq");
+        return withType();
     }
 
     public String getType() {

@@ -20,9 +20,9 @@ import lombok.Getter;
 @Getter
 public class UpdateBroadcasterConfigurationRequest implements BroadcasterConfigurationDescriptor {
 
-    @NotNull private UUID id;
+    private @NotNull UUID id;
 
-    @NotNull @EqualsAndHashCode.Exclude private String type;
+    private @NotNull String type;
 
     private BroadcasterCacheConfigurationRequest cache;
 

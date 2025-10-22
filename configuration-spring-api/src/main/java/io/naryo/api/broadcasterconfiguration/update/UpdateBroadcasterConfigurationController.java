@@ -31,7 +31,7 @@ public class UpdateBroadcasterConfigurationController extends BroadcasterConfigu
     private final BroadcasterConfigurationMapperRegistry mapperRegistry;
     private final ConfigurationSchemaRegistry schemaRegistry;
 
-    @PutMapping()
+    @PutMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
     public OperationId update(@Valid @RequestBody UpdateBroadcasterConfigurationRequest request) {
         String broadcasterType = request.getType().getName();
@@ -44,9 +44,7 @@ public class UpdateBroadcasterConfigurationController extends BroadcasterConfigu
                 mapperRegistry.map(broadcasterType, request);
         RevisionOperation<BroadcasterConfiguration> op =
                 new UpdateOperation<>(
-                        broadcasterConfiguration.getId(),
-                        request.getPrevItemHash(),
-                        broadcasterConfiguration);
+                        request.getId(), request.getPrevItemHash(), broadcasterConfiguration);
         return broadcasterConfigRevisionQueue.enqueue(op);
     }
 }

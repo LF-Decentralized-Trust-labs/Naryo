@@ -26,7 +26,7 @@ public class CreateBroadcasterConfigurationRequestBuilder
     @Override
     public CreateBroadcasterConfigurationRequest build() {
         return new CreateBroadcasterConfigurationRequest(
-                getId(), getType(), getCache(), getAdditionalProperties());
+                getType(), getCache(), getAdditionalProperties());
     }
 
     public CreateBroadcasterConfigurationRequestBuilder withId(UUID id) {
@@ -35,7 +35,7 @@ public class CreateBroadcasterConfigurationRequestBuilder
     }
 
     public UUID getId() {
-        return this.id == null ? UUID.randomUUID() : this.id;
+        return this.id;
     }
 
     private CreateBroadcasterConfigurationRequestBuilder withType(String type) {
