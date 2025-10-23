@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(UpdateBroadcasterConfigurationController.class)
 class UpdateBroadcasterConfigurationControllerTest {
 
-    private final String PATH = "/api/v1/broadcaster-configuration";
+    private final String PATH = "/api/v1/broadcaster-configurations";
 
     @Autowired MockMvc mvc;
 

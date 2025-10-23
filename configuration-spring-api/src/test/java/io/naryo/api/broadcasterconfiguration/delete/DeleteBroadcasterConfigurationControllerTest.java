@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(DeleteBroadcasterConfigurationController.class)
 class DeleteBroadcasterConfigurationControllerTest {
 
-    private final String URI = "/api/v1/broadcaster-configuration";
+    private final String URI = "/api/v1/broadcaster-configurations";
 
     @Autowired MockMvc mvc;
 

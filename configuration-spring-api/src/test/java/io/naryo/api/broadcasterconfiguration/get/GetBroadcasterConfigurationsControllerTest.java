@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(GetBroadcasterConfigurationsController.class)
 class GetBroadcasterConfigurationsControllerTest {
 
-    private final String PATH = "/api/v1/broadcaster-configuration";
+    private final String PATH = "/api/v1/broadcaster-configurations";
     private final BroadcasterConfigurationRevisionFingerprinter fingerprinter =
             new BroadcasterConfigurationRevisionFingerprinter(
                     new BroadcasterConfigurationNormalizer(
