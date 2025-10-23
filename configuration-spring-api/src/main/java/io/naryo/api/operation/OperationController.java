@@ -8,9 +8,11 @@ import io.naryo.api.operation.error.OperationNotFoundException;
 import io.naryo.api.operation.response.RevisionOperationStatusResponse;
 import io.naryo.application.configuration.revision.RevisionOperationStatus;
 import io.naryo.application.configuration.revision.store.RevisionOperationStore;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "Operations", description = "Operations related endpoints")
 @RestController
 @RequestMapping("api/v1/operations")
 public class OperationController {

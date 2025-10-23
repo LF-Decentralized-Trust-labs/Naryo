@@ -7,9 +7,11 @@ import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.node.subscription.SubscriptionConfiguration;
 import io.naryo.domain.node.subscription.SubscriptionStrategy;
 import io.naryo.domain.node.subscription.block.BlockSubscriptionConfiguration;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import lombok.Getter;
 
+@Schema(description = "Block subscription" )
 @Getter
 public final class BlockSubscriptionConfigurationRequest extends SubscriptionConfigurationRequest {
 
@@ -29,7 +31,6 @@ public final class BlockSubscriptionConfigurationRequest extends SubscriptionCon
             BigInteger eventInvalidationBlockThreshold,
             BigInteger replayBlockOffset,
             BigInteger syncBlockLimit) {
-        super(SubscriptionStrategy.BLOCK_BASED);
         this.method = method;
         this.initialBlock = initialBlock;
         this.confirmationBlocks = confirmationBlocks;

@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(DeleteStoreConfigurationController.class)
 class DeleteStoreConfigurationControllerTest {
 
-    private final String PATH = "/api/v1/store-configuration";
+    private final String PATH = "/api/v1/store-configurations";
 
     @Autowired MockMvc mvc;
     @Autowired ObjectMapper objectMapper;

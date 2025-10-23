@@ -5,8 +5,10 @@ import java.time.Duration;
 import io.naryo.domain.node.connection.NodeConnection;
 import io.naryo.domain.node.connection.NodeConnectionType;
 import io.naryo.domain.node.connection.http.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
+@Schema(description = "HTTP node connection" )
 @Getter
 public final class HttpNodeConnectionRequest extends NodeConnectionRequest {
 
@@ -22,7 +24,7 @@ public final class HttpNodeConnectionRequest extends NodeConnectionRequest {
             Duration keepAliveDuration,
             Duration connectionTimeout,
             Duration readTimeout) {
-        super(NodeConnectionType.HTTP, connectionEndpoint, retryConfiguration);
+        super(connectionEndpoint, retryConfiguration);
         this.maxIdleConnections = maxIdleConnections;
         this.keepAliveDuration = keepAliveDuration;
         this.connectionTimeout = connectionTimeout;
