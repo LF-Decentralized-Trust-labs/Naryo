@@ -1,7 +1,6 @@
 package io.naryo.api.node.common.request.interaction;
 
 import io.naryo.domain.node.interaction.InteractionConfiguration;
-import io.naryo.domain.node.interaction.block.InteractionMode;
 import io.naryo.domain.node.interaction.block.hedera.HederaMirrorNodeBlockInteractionConfiguration;
 import io.naryo.domain.node.interaction.block.hedera.LimitPerRequest;
 import io.naryo.domain.node.interaction.block.hedera.RetriesPerRequest;

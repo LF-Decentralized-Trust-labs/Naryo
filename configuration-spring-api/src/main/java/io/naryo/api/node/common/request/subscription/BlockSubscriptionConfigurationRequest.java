@@ -5,13 +5,12 @@ import java.math.BigInteger;
 import io.naryo.api.node.common.request.subscription.method.BlockSubscriptionMethodConfigurationRequest;
 import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.node.subscription.SubscriptionConfiguration;
-import io.naryo.domain.node.subscription.SubscriptionStrategy;
 import io.naryo.domain.node.subscription.block.BlockSubscriptionConfiguration;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import lombok.Getter;
 
-@Schema(description = "Block subscription" )
+@Schema(description = "Block subscription")
 @Getter
 public final class BlockSubscriptionConfigurationRequest extends SubscriptionConfigurationRequest {
 

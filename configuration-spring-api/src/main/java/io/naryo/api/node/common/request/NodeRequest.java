@@ -10,7 +10,6 @@ import io.naryo.api.node.common.request.subscription.SubscriptionConfigurationRe
 import io.naryo.domain.node.Node;
 import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -22,14 +21,17 @@ import lombok.Getter;
     @JsonSubTypes.Type(value = HederaNodeRequest.class, name = "HEDERA"),
 })
 @Schema(
-    description = "Base class for node",
-    discriminatorProperty = "type",
-    discriminatorMapping = {
-        @DiscriminatorMapping(value = "ETHEREUM_PUBLIC", schema = PublicEthereumNodeRequest.class),
-        @DiscriminatorMapping(value = "ETHEREUM_PRIVATE", schema = PrivateEthereumNodeRequest.class),
-        @DiscriminatorMapping(value = "HEDERA", schema = HederaNodeRequest.class)
-    }
-)
+        description = "Base class for node",
+        discriminatorProperty = "type",
+        discriminatorMapping = {
+            @DiscriminatorMapping(
+                    value = "ETHEREUM_PUBLIC",
+                    schema = PublicEthereumNodeRequest.class),
+            @DiscriminatorMapping(
+                    value = "ETHEREUM_PRIVATE",
+                    schema = PrivateEthereumNodeRequest.class),
+            @DiscriminatorMapping(value = "HEDERA", schema = HederaNodeRequest.class)
+        })
 @Getter
 public abstract class NodeRequest {
 

@@ -1,9 +1,7 @@
 package io.naryo.api.node.common.request.connection;
 
 import io.naryo.domain.node.connection.NodeConnection;
-import io.naryo.domain.node.connection.NodeConnectionType;
 import io.naryo.domain.node.connection.ws.WsNodeConnection;
-import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 

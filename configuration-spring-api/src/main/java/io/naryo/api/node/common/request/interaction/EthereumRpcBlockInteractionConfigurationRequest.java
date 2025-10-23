@@ -1,7 +1,6 @@
 package io.naryo.api.node.common.request.interaction;
 
 import io.naryo.domain.node.interaction.InteractionConfiguration;
-import io.naryo.domain.node.interaction.block.InteractionMode;
 import io.naryo.domain.node.interaction.block.ethereum.EthereumRpcBlockInteractionConfiguration;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -11,8 +10,7 @@ import lombok.Getter;
 public final class EthereumRpcBlockInteractionConfigurationRequest
         extends BlockInteractionConfigurationRequest {
 
-    public EthereumRpcBlockInteractionConfigurationRequest() {
-    }
+    public EthereumRpcBlockInteractionConfigurationRequest() {}
 
     @Override
     public InteractionConfiguration toDomain() {

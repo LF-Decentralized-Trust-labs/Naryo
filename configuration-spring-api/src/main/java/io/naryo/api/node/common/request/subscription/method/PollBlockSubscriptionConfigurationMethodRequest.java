@@ -2,7 +2,6 @@ package io.naryo.api.node.common.request.subscription.method;
 
 import java.time.Duration;
 
-import io.naryo.domain.node.subscription.block.method.BlockSubscriptionMethod;
 import io.naryo.domain.node.subscription.block.method.BlockSubscriptionMethodConfiguration;
 import io.naryo.domain.node.subscription.block.method.poll.Interval;
 import io.naryo.domain.node.subscription.block.method.poll.PollBlockSubscriptionMethodConfiguration;

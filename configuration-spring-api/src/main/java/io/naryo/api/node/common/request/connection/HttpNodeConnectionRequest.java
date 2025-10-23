@@ -3,12 +3,11 @@ package io.naryo.api.node.common.request.connection;
 import java.time.Duration;
 
 import io.naryo.domain.node.connection.NodeConnection;
-import io.naryo.domain.node.connection.NodeConnectionType;
 import io.naryo.domain.node.connection.http.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
-@Schema(description = "HTTP node connection" )
+@Schema(description = "HTTP node connection")
 @Getter
 public final class HttpNodeConnectionRequest extends NodeConnectionRequest {
 
