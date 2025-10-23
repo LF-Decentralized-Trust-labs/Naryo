@@ -79,7 +79,15 @@ And add this repository to your `pom.xml`:
 <details>
 <summary>Gradle</summary>
 
+Add Spring Boot plugin and dependency management (recommended setup, see more in [here](https://docs.spring.io/spring-boot/gradle-plugin/managing-dependencies.html)):
+
 ```groovy
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.5.4'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
 ext {
     naryoVersion = "0.0.1" // Replace with the actual version
 }
@@ -89,7 +97,13 @@ dependencies {
     implementation("io.naryo:core:${naryoVersion}")
 
     // Spring Boot integration
-    implementation("io.naryo:core-spring:${naryoVersion}")
+    implementation("io.naryo:spring-core:${naryoVersion}")
+
+    // Typical Spring Boot starters you may need
+    implementation("org.springframework.boot:spring-boot-starter")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+
+    // ...
 }
 ```
 
@@ -98,26 +112,48 @@ dependencies {
 <details>
 <summary>Maven</summary>
 
+Add Spring Boot parent for dependency management and starters:
+
 ```xml
+<parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.5.4</version>
+</parent>
 
 <variables>
-    <naryoVersion>0.0.1</naryoVersion>
+    <naryoVersion>0.0.1</naryoVersion> // Replace with the actual version
 </variables>
 
 <dependencies>
-<!-- Core module -->
-<dependency>
-    <groupId>io.naryo</groupId>
-    <artifactId>core</artifactId>
-    <version>${naryoVersion}</version>
-</dependency>
+    <!-- Core module -->
+    <dependency>
+        <groupId>io.naryo</groupId>
+        <artifactId>core</artifactId>
+        <version>${naryoVersion}</version>
+    </dependency>
 
-<!-- Spring Boot integration -->
-<dependency>
-    <groupId>io.naryo</groupId>
-    <artifactId>core-spring</artifactId>
-    <version>${naryoVersion}</version>
-</dependency>
+    <!-- Spring Boot integration -->
+    <dependency>
+        <groupId>io.naryo</groupId>
+        <artifactId>spring-core</artifactId>
+        <version>${naryoVersion}</version>
+    </dependency>
+
+    <!-- Spring Boot starters -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
 </dependencies>
 ```
 
@@ -129,7 +165,10 @@ dependencies {
 
 #### ✅ Using Spring Boot (recommended)
 
-1. Add the Spring Boot starter dependency (see above).
+1. Add the Spring Boot plugin and dependency management
+   (for Gradle: `org.springframework.boot` and `io.spring.dependency-management`;
+   for Maven: use `spring-boot-starter-parent`)
+   and include the needed Spring Boot starters (for example, `spring-boot-starter`, `spring-boot-starter-web`) along with Naryo’s spring-core dependency.
 2. Define your configuration in `application.yml`:
 
     ```yaml
