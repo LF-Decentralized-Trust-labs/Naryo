@@ -21,6 +21,8 @@ import lombok.Setter;
 @Setter
 public class CreateBroadcasterConfigurationRequest implements BroadcasterConfigurationDescriptor {
 
+    // This field is ignored in the schema since it's internally created with random UUID.
+    // It must be present anyway as a field due to descriptor implementation and later mapping.
     private @JsonIgnore @EqualsAndHashCode.Exclude UUID id;
 
     private @NotBlank String type;
