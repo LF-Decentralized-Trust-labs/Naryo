@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.naryo.domain.filter.event.FilterSyncState;
 import io.naryo.domain.filter.event.sync.SyncStrategy;
+import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
@@ -11,6 +13,14 @@ import lombok.Getter;
 @JsonSubTypes({
     @JsonSubTypes.Type(value = BlockActiveFilterSyncStateRequest.class, name = "BLOCK_BASED")
 })
+@Schema(
+        description = "Base class for filter sync state request",
+        discriminatorProperty = "strategy",
+        discriminatorMapping = {
+            @DiscriminatorMapping(
+                    value = "BLOCK_BASED",
+                    schema = BlockActiveFilterSyncStateRequest.class)
+        })
 @Getter
 public abstract class FilterSyncStateRequest {
 

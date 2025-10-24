@@ -1,4 +1,4 @@
-package io.naryo.api.filter.update.model;
+package io.naryo.api.filter.common.request;
 
 import java.util.Set;
 import java.util.UUID;
@@ -13,12 +13,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
+@Schema(description = "Transaction filter request")
 @Valid
 @Getter
-public final class UpdateTransactionFilterRequest extends UpdateFilterRequest {
-
-    @Schema(example = "TRANSACTION", requiredMode = Schema.RequiredMode.REQUIRED)
-    private final String type = "TRANSACTION";
+public final class TransactionFilterRequest extends FilterRequest {
 
     private final @NotNull IdentifierType identifierType;
 
@@ -26,22 +24,26 @@ public final class UpdateTransactionFilterRequest extends UpdateFilterRequest {
 
     private final Set<TransactionStatus> statuses;
 
-    public UpdateTransactionFilterRequest(
+    public TransactionFilterRequest(
             String name,
             UUID nodeId,
-            String prevItemHash,
             IdentifierType identifierType,
             String value,
             Set<TransactionStatus> statuses) {
-        super(name, nodeId, prevItemHash);
+        super(name, nodeId);
         this.identifierType = identifierType;
         this.value = value;
         this.statuses = statuses;
     }
 
     @Override
-    public TransactionFilter toDomain(UUID idFromPath) {
+    public TransactionFilter toDomain(UUID id) {
         return new TransactionFilter(
-                idFromPath, new FilterName(name), nodeId, identifierType, value, statuses);
+                id,
+                new FilterName(this.name),
+                this.nodeId,
+                this.identifierType,
+                this.value,
+                this.statuses);
     }
 }

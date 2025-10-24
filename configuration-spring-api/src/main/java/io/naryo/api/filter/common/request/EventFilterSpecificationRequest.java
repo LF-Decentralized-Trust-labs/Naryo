@@ -2,9 +2,11 @@ package io.naryo.api.filter.common.request;
 
 import io.naryo.domain.filter.event.CorrelationId;
 import io.naryo.domain.filter.event.EventFilterSpecification;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
+@Schema(description = "Event filter specification request")
 @Getter
 public class EventFilterSpecificationRequest {
 

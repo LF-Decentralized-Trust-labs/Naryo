@@ -21,19 +21,19 @@ import lombok.Getter;
     @JsonSubTypes.Type(value = ContractEventBroadcasterTargetDTO.class, name = "CONTRACT_EVENT")
 })
 @Schema(
-    description = "Base class for broadcaster",
-    discriminatorProperty = "type",
-    discriminatorMapping = {
-        @DiscriminatorMapping(
-            value = "ALL",
-            schema = AllBroadcasterTargetDTO.class),
-        @DiscriminatorMapping(
-            value = "BLOCK",
-            schema = BlockBroadcasterTargetDTO.class),
-        @DiscriminatorMapping(value = "FILTER", schema = FilterBroadcasterTargetDTO.class),
-        @DiscriminatorMapping(value = "TRANSACTION", schema = TransactionBroadcasterTargetDTO.class),
-        @DiscriminatorMapping(value = "CONTRACT_EVENT", schema = ContractEventBroadcasterTargetDTO.class)
-    })
+        description = "Base class for broadcaster",
+        discriminatorProperty = "type",
+        discriminatorMapping = {
+            @DiscriminatorMapping(value = "ALL", schema = AllBroadcasterTargetDTO.class),
+            @DiscriminatorMapping(value = "BLOCK", schema = BlockBroadcasterTargetDTO.class),
+            @DiscriminatorMapping(value = "FILTER", schema = FilterBroadcasterTargetDTO.class),
+            @DiscriminatorMapping(
+                    value = "TRANSACTION",
+                    schema = TransactionBroadcasterTargetDTO.class),
+            @DiscriminatorMapping(
+                    value = "CONTRACT_EVENT",
+                    schema = ContractEventBroadcasterTargetDTO.class)
+        })
 @Getter
 public abstract class BroadcasterTargetDTO {
 

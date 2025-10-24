@@ -3,9 +3,9 @@ package io.naryo.api.filter.update;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.naryo.api.filter.update.model.UpdateContractEventFilterRequest;
-import io.naryo.api.filter.update.model.UpdateGlobalEventFilterRequest;
-import io.naryo.api.filter.update.model.UpdateTransactionFilterRequest;
+import io.naryo.api.filter.common.ContractEventFilterRequestBuilder;
+import io.naryo.api.filter.common.GlobalEventFilterRequestBuilder;
+import io.naryo.api.filter.common.TransactionFilterRequestBuilder;
 import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.operation.RevisionOperation;
 import io.naryo.application.configuration.revision.queue.QueueClosedException;
@@ -43,7 +43,10 @@ class UpdateFilterControllerTest {
     void update_transaction_filter_ok() throws Exception {
         var opId = new OperationId(UUID.randomUUID());
         var filterId = UUID.randomUUID();
-        var input = new UpdateTransactionFilterRequestBuilder().build();
+        var input =
+                new UpdateFilterRequestBuilder()
+                        .withTarget(new TransactionFilterRequestBuilder().build())
+                        .build();
 
         when(operationQueue.enqueue(any())).thenReturn(opId);
 
@@ -53,10 +56,7 @@ class UpdateFilterControllerTest {
                         put(URI + "/" + filterId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
-                                .content(
-                                        objectMapper
-                                                .writerFor(UpdateTransactionFilterRequest.class)
-                                                .writeValueAsBytes(input)))
+                                .content(objectMapper.writeValueAsBytes(input)))
                 .andExpect(status().isAccepted())
                 .andExpect(content().json(expectedResponse));
     }
@@ -65,7 +65,10 @@ class UpdateFilterControllerTest {
     void update_global_event_filter_ok() throws Exception {
         var opId = new OperationId(UUID.randomUUID());
         var filterId = UUID.randomUUID();
-        var input = new UpdateGlobalEventFilterRequestBuilder().build();
+        var input =
+                new UpdateFilterRequestBuilder()
+                        .withTarget(new GlobalEventFilterRequestBuilder().build())
+                        .build();
 
         when(operationQueue.enqueue(any())).thenReturn(opId);
 
@@ -75,10 +78,7 @@ class UpdateFilterControllerTest {
                         put(URI + "/" + filterId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
-                                .content(
-                                        objectMapper
-                                                .writerFor(UpdateGlobalEventFilterRequest.class)
-                                                .writeValueAsBytes(input)))
+                                .content(objectMapper.writeValueAsBytes(input)))
                 .andExpect(status().isAccepted())
                 .andExpect(content().json(expectedResponse));
     }
@@ -87,7 +87,10 @@ class UpdateFilterControllerTest {
     void update_contract_event_filter_ok() throws Exception {
         var opId = new OperationId(UUID.randomUUID());
         var filterId = UUID.randomUUID();
-        var input = new UpdateContractEventFilterRequestBuilder().build();
+        var input =
+                new UpdateFilterRequestBuilder()
+                        .withTarget(new ContractEventFilterRequestBuilder().build())
+                        .build();
 
         when(operationQueue.enqueue(any())).thenReturn(opId);
 
@@ -97,10 +100,7 @@ class UpdateFilterControllerTest {
                         put(URI + "/" + filterId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
-                                .content(
-                                        objectMapper
-                                                .writerFor(UpdateContractEventFilterRequest.class)
-                                                .writeValueAsBytes(input)))
+                                .content(objectMapper.writeValueAsBytes(input)))
                 .andExpect(status().isAccepted())
                 .andExpect(content().json(expectedResponse));
     }
@@ -120,7 +120,7 @@ class UpdateFilterControllerTest {
     @Test
     void update_but_queueOverflow() throws Exception {
         var filterId = UUID.randomUUID();
-        var input = new UpdateTransactionFilterRequestBuilder().build();
+        var input = new UpdateFilterRequestBuilder().build();
 
         doThrow(new QueueOverflowException("Low lane full", "LOW", "UPDATE"))
                 .when(operationQueue)
@@ -136,7 +136,7 @@ class UpdateFilterControllerTest {
     @Test
     void update_but_queueClosed() throws Exception {
         var filterId = UUID.randomUUID();
-        var input = new UpdateTransactionFilterRequestBuilder().build();
+        var input = new UpdateFilterRequestBuilder().build();
 
         doThrow(new QueueClosedException())
                 .when(operationQueue)

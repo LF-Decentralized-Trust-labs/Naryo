@@ -1,19 +1,19 @@
-package io.naryo.api.filter.create;
+package io.naryo.api.filter.common;
 
 import java.util.UUID;
 
 import io.naryo.api.RequestBuilder;
-import io.naryo.api.filter.create.model.CreateFilterRequest;
+import io.naryo.api.filter.common.request.FilterRequest;
 import org.instancio.Instancio;
 
-public abstract class CreateFilterRequestBuilder<
-                T extends CreateFilterRequestBuilder<T, Y>, Y extends CreateFilterRequest>
+public abstract class FilterRequestBuilder<
+                T extends FilterRequestBuilder<T, Y>, Y extends FilterRequest>
         implements RequestBuilder<T, Y> {
 
     private String name;
     private UUID nodeId;
 
-    public CreateFilterRequestBuilder<T, Y> withName(String name) {
+    public FilterRequestBuilder<T, Y> withName(String name) {
         this.name = name;
         return self();
     }
@@ -22,7 +22,7 @@ public abstract class CreateFilterRequestBuilder<
         return this.name == null ? Instancio.create(String.class) : this.name;
     }
 
-    public CreateFilterRequestBuilder<T, Y> withNodeId(UUID nodeId) {
+    public FilterRequestBuilder<T, Y> withNodeId(UUID nodeId) {
         this.nodeId = nodeId;
         return self();
     }
