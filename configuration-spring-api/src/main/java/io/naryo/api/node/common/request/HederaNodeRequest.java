@@ -7,9 +7,10 @@ import io.naryo.api.node.common.request.interaction.InteractionConfigurationRequ
 import io.naryo.api.node.common.request.subscription.SubscriptionConfigurationRequest;
 import io.naryo.domain.node.Node;
 import io.naryo.domain.node.NodeName;
-import io.naryo.domain.node.NodeType;
 import io.naryo.domain.node.hedera.HederaNode;
+import io.swagger.v3.oas.annotations.media.Schema;
 
+@Schema(description = "Hedera node")
 public final class HederaNodeRequest extends NodeRequest {
 
     public HederaNodeRequest(
@@ -17,7 +18,7 @@ public final class HederaNodeRequest extends NodeRequest {
             SubscriptionConfigurationRequest subscription,
             InteractionConfigurationRequest interaction,
             NodeConnectionRequest connection) {
-        super(name, NodeType.HEDERA, subscription, interaction, connection);
+        super(name, subscription, interaction, connection);
     }
 
     @Override

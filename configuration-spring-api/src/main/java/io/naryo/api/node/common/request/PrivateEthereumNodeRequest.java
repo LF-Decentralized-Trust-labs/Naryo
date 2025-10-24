@@ -7,13 +7,14 @@ import io.naryo.api.node.common.request.interaction.InteractionConfigurationRequ
 import io.naryo.api.node.common.request.subscription.SubscriptionConfigurationRequest;
 import io.naryo.domain.node.Node;
 import io.naryo.domain.node.NodeName;
-import io.naryo.domain.node.ethereum.EthereumNodeVisibility;
 import io.naryo.domain.node.ethereum.priv.GroupId;
 import io.naryo.domain.node.ethereum.priv.PrecompiledAddress;
 import io.naryo.domain.node.ethereum.priv.PrivateEthereumNode;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
+@Schema(description = "Private Ethereum node")
 @Getter
 public final class PrivateEthereumNodeRequest extends EthereumNodeRequest {
 
@@ -27,7 +28,7 @@ public final class PrivateEthereumNodeRequest extends EthereumNodeRequest {
             NodeConnectionRequest connection,
             String groupId,
             String precompiledAddress) {
-        super(name, subscription, interaction, connection, EthereumNodeVisibility.PRIVATE);
+        super(name, subscription, interaction, connection);
         this.groupId = groupId;
         this.precompiledAddress = precompiledAddress;
     }
@@ -40,8 +41,8 @@ public final class PrivateEthereumNodeRequest extends EthereumNodeRequest {
                 this.subscription.toDomain(),
                 this.interaction.toDomain(),
                 this.connection.toDomain(),
-                new GroupId(this.getGroupId()),
-                new PrecompiledAddress(this.getPrecompiledAddress()));
+                new GroupId(groupId),
+                new PrecompiledAddress(precompiledAddress));
     }
 
     @Override

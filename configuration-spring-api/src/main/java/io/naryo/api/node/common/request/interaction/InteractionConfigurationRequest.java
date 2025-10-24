@@ -3,30 +3,32 @@ package io.naryo.api.node.common.request.interaction;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.naryo.domain.node.interaction.InteractionConfiguration;
-import io.naryo.domain.node.interaction.InteractionStrategy;
-import io.naryo.domain.node.interaction.block.InteractionMode;
-import jakarta.validation.constraints.NotNull;
+import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "mode")
 @JsonSubTypes({
     @JsonSubTypes.Type(
             value = HederaMirrorNodeBlockInteractionConfigurationRequest.class,
-            name = "HEDERA_MIRROR_NODE"),
+            name = "BLOCK_HEDERA_MIRROR_NODE"),
     @JsonSubTypes.Type(
             value = EthereumRpcBlockInteractionConfigurationRequest.class,
-            name = "ETHEREUM_RPC")
+            name = "BLOCK_ETHEREUM_RPC")
 })
+@Schema(
+        description = "Base class for interaction configuration",
+        discriminatorProperty = "mode",
+        discriminatorMapping = {
+            @DiscriminatorMapping(
+                    value = "BLOCK_HEDERA_MIRROR_NODE",
+                    schema = HederaMirrorNodeBlockInteractionConfigurationRequest.class),
+            @DiscriminatorMapping(
+                    value = "BLOCK_ETHEREUM_RPC",
+                    schema = EthereumRpcBlockInteractionConfigurationRequest.class)
+        })
 @Getter
 public abstract class InteractionConfigurationRequest {
-
-    protected final @NotNull InteractionStrategy strategy;
-    protected final @NotNull InteractionMode mode;
-
-    protected InteractionConfigurationRequest(InteractionMode mode) {
-        this.strategy = InteractionStrategy.BLOCK_BASED;
-        this.mode = mode;
-    }
 
     public abstract InteractionConfiguration toDomain();
 }

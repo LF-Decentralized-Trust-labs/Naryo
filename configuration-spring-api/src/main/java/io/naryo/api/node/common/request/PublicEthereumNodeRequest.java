@@ -7,9 +7,12 @@ import io.naryo.api.node.common.request.interaction.InteractionConfigurationRequ
 import io.naryo.api.node.common.request.subscription.SubscriptionConfigurationRequest;
 import io.naryo.domain.node.Node;
 import io.naryo.domain.node.NodeName;
-import io.naryo.domain.node.ethereum.EthereumNodeVisibility;
 import io.naryo.domain.node.ethereum.pub.PublicEthereumNode;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
 
+@Schema(description = "Public Ethereum node")
+@Getter
 public final class PublicEthereumNodeRequest extends EthereumNodeRequest {
 
     public PublicEthereumNodeRequest(
@@ -17,7 +20,7 @@ public final class PublicEthereumNodeRequest extends EthereumNodeRequest {
             SubscriptionConfigurationRequest subscription,
             InteractionConfigurationRequest interaction,
             NodeConnectionRequest connection) {
-        super(name, subscription, interaction, connection, EthereumNodeVisibility.PUBLIC);
+        super(name, subscription, interaction, connection);
     }
 
     @Override

@@ -19,6 +19,7 @@ It complements the YAML-based configuration provided by **`spring-core`**, enabl
 
 - [Persistence Spring JPA Configuration](#persistence-spring-jpa-configuration)
 - [Polymorphism & TypeAlias](#polymorphism--typealias)
+- [📧 HttpClient Configuration](#-httpclient-configuration)
 - [🌐️ Node Configuration](#-node-configuration)
 - [📡 Broadcasting Configuration](#-broadcasting-configuration)
 - [☁️ Filter Configuration](#-filter-configuration)
