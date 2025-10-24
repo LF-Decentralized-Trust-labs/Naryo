@@ -1,4 +1,4 @@
-package io.naryo.api.filter.common.response;
+package io.naryo.api.filter.getAll.model;
 
 import io.naryo.domain.filter.event.sync.SyncStrategy;
 import io.naryo.domain.filter.event.sync.block.BlockActiveFilterSyncState;

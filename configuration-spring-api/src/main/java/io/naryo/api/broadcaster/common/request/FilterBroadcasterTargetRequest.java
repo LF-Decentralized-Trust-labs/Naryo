@@ -10,13 +10,14 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
-@Schema(description = "FILTER Broadcaster")
+@Schema(description = "Filter event broadcaster target request")
 @Getter
-public final class FilterBroadcasterTargetDTO extends BroadcasterTargetDTO {
+public final class FilterBroadcasterTargetRequest extends BroadcasterTargetRequest {
 
     private final @NotNull UUID filterId;
 
-    public FilterBroadcasterTargetDTO(@NotEmpty List<String> destinations, @NotNull UUID filterId) {
+    public FilterBroadcasterTargetRequest(
+            @NotEmpty List<String> destinations, @NotNull UUID filterId) {
         super(destinations);
         this.filterId = filterId;
     }

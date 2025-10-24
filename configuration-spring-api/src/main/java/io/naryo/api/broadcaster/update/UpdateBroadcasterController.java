@@ -29,6 +29,7 @@ public class UpdateBroadcasterController extends BroadcasterController {
     public OperationId update(
             @PathVariable("id") UUID id, @Valid @RequestBody UpdateBroadcasterRequest request) {
         return queue.enqueue(
-                new UpdateOperation<>(id, request.prevItemHash(), request.toDomain(id)));
+                new UpdateOperation<>(
+                        id, request.prevItemHash(), request.broadcaster().toDomain(id)));
     }
 }

@@ -29,6 +29,6 @@ public class UpdateFilterController extends FilterController {
     public OperationId update(
             @PathVariable("id") UUID id, @Valid @RequestBody UpdateFilterRequest request) {
         return operationQueue.enqueue(
-                new UpdateOperation<>(id, request.prevItemHash(), request.target().toDomain(id)));
+                new UpdateOperation<>(id, request.prevItemHash(), request.filter().toDomain(id)));
     }
 }

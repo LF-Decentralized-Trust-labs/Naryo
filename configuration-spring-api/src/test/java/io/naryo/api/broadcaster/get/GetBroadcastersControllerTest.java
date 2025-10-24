@@ -61,9 +61,12 @@ class GetBroadcastersControllerTest {
                         broadcasters.stream()
                                 .map(
                                         b ->
-                                                BroadcasterResponse.map(
-                                                        b, liveView.itemFingerprintById()))
+                                                BroadcasterResponse.fromDomain(
+                                                        b,
+                                                        liveView.itemFingerprintById()
+                                                                .get(b.getId())))
                                 .toList());
+
         mvc.perform(get(PATH))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));

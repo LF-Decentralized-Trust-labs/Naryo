@@ -1,7 +1,7 @@
 package io.naryo.api.broadcaster.create;
 
 import io.naryo.api.broadcaster.common.BroadcasterController;
-import io.naryo.api.broadcaster.create.model.CreateBroadcasterRequest;
+import io.naryo.api.broadcaster.common.request.BroadcasterRequest;
 import io.naryo.api.error.ConfigurationApiErrors;
 import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.operation.AddOperation;
@@ -25,7 +25,7 @@ public class CreateBroadcasterController extends BroadcasterController {
     @PostMapping
     @ConfigurationApiErrors
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public OperationId create(@Valid @NotNull @RequestBody CreateBroadcasterRequest request) {
+    public OperationId create(@Valid @NotNull @RequestBody BroadcasterRequest request) {
         return queue.enqueue(new AddOperation<>(request.toDomain()));
     }
 }

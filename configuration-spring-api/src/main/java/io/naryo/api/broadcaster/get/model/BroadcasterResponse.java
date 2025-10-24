@@ -1,25 +1,29 @@
 package io.naryo.api.broadcaster.get.model;
 
-import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
-import io.naryo.api.broadcaster.common.request.BroadcasterTargetDTO;
 import io.naryo.domain.broadcaster.Broadcaster;
-import io.naryo.domain.broadcaster.BroadcasterTarget;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
 
-public record BroadcasterResponse(
-        UUID id, BroadcasterTargetDTO target, UUID configurationId, String itemHash) {
+@Schema(description = "Broadcaster")
+@Getter
+public class BroadcasterResponse {
 
-    public static BroadcasterResponse map(Broadcaster broadcaster, Map<UUID, String> fingerprints) {
-        Objects.requireNonNull(broadcaster, "broadcaster cannot be null");
-        String hash = fingerprints.get(broadcaster.getId());
-        BroadcasterTarget target = broadcaster.getTarget();
+    private final UUID id;
+    private final BroadcasterTargetResponse target;
+    private final String currentItemHash;
 
+    private BroadcasterResponse(UUID id, BroadcasterTargetResponse target, String currentItemHash) {
+        this.id = id;
+        this.target = target;
+        this.currentItemHash = currentItemHash;
+    }
+
+    public static BroadcasterResponse fromDomain(Broadcaster broadcaster, String currentItemHash) {
         return new BroadcasterResponse(
                 broadcaster.getId(),
-                BroadcasterTargetDTO.fromDomain(target),
-                broadcaster.getConfigurationId(),
-                hash);
+                BroadcasterTargetResponse.fromDomain(broadcaster.getTarget()),
+                currentItemHash);
     }
 }

@@ -1,4 +1,4 @@
-package io.naryo.api.filter.common.response;
+package io.naryo.api.filter.getAll.model;
 
 import java.util.Set;
 import java.util.UUID;
@@ -23,10 +23,10 @@ public final class GlobalEventFilterResponse extends EventFilterResponse {
             EventFilterVisibilityConfigurationResponse visibilityConfiguration) {
         super(
                 id,
-            name,
+                name,
                 nodeId,
                 currentItemHash,
-            specification,
+                specification,
                 statuses,
                 filterSyncState,
                 visibilityConfiguration);
@@ -36,10 +36,10 @@ public final class GlobalEventFilterResponse extends EventFilterResponse {
             GlobalEventFilter globalEventFilter, String currentItemHash) {
         return new GlobalEventFilterResponse(
                 globalEventFilter.getId(),
-            globalEventFilter.getName().value(),
+                globalEventFilter.getName().value(),
                 globalEventFilter.getNodeId(),
                 currentItemHash,
-            EventFilterSpecificationResponse.fromDomain(globalEventFilter.getSpecification()),
+                EventFilterSpecificationResponse.fromDomain(globalEventFilter.getSpecification()),
                 globalEventFilter.getStatuses(),
                 FilterSyncStateResponse.fromDomain(globalEventFilter.getFilterSyncState()),
                 EventFilterVisibilityConfigurationResponse.fromDomain(

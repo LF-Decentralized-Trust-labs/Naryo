@@ -14,48 +14,48 @@ import lombok.Getter;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = AllBroadcasterTargetDTO.class, name = "ALL"),
-    @JsonSubTypes.Type(value = BlockBroadcasterTargetDTO.class, name = "BLOCK"),
-    @JsonSubTypes.Type(value = FilterBroadcasterTargetDTO.class, name = "FILTER"),
-    @JsonSubTypes.Type(value = TransactionBroadcasterTargetDTO.class, name = "TRANSACTION"),
-    @JsonSubTypes.Type(value = ContractEventBroadcasterTargetDTO.class, name = "CONTRACT_EVENT")
+    @JsonSubTypes.Type(value = AllBroadcasterTargetRequest.class, name = "ALL"),
+    @JsonSubTypes.Type(value = BlockBroadcasterTargetRequest.class, name = "BLOCK"),
+    @JsonSubTypes.Type(value = FilterBroadcasterTargetRequest.class, name = "FILTER"),
+    @JsonSubTypes.Type(value = TransactionBroadcasterTargetRequest.class, name = "TRANSACTION"),
+    @JsonSubTypes.Type(value = ContractEventBroadcasterTargetRequest.class, name = "CONTRACT_EVENT")
 })
 @Schema(
         description = "Base class for broadcaster",
         discriminatorProperty = "type",
         discriminatorMapping = {
-            @DiscriminatorMapping(value = "ALL", schema = AllBroadcasterTargetDTO.class),
-            @DiscriminatorMapping(value = "BLOCK", schema = BlockBroadcasterTargetDTO.class),
-            @DiscriminatorMapping(value = "FILTER", schema = FilterBroadcasterTargetDTO.class),
+            @DiscriminatorMapping(value = "ALL", schema = AllBroadcasterTargetRequest.class),
+            @DiscriminatorMapping(value = "BLOCK", schema = BlockBroadcasterTargetRequest.class),
+            @DiscriminatorMapping(value = "FILTER", schema = FilterBroadcasterTargetRequest.class),
             @DiscriminatorMapping(
                     value = "TRANSACTION",
-                    schema = TransactionBroadcasterTargetDTO.class),
+                    schema = TransactionBroadcasterTargetRequest.class),
             @DiscriminatorMapping(
                     value = "CONTRACT_EVENT",
-                    schema = ContractEventBroadcasterTargetDTO.class)
+                    schema = ContractEventBroadcasterTargetRequest.class)
         })
 @Getter
-public abstract class BroadcasterTargetDTO {
+public abstract class BroadcasterTargetRequest {
 
     private final @NotEmpty List<String> destinations;
 
-    protected BroadcasterTargetDTO(@NotEmpty List<String> destinations) {
+    protected BroadcasterTargetRequest(@NotEmpty List<String> destinations) {
         this.destinations = destinations;
     }
 
     public abstract BroadcasterTarget toDomain();
 
-    public static BroadcasterTargetDTO fromDomain(BroadcasterTarget target) {
+    public static BroadcasterTargetRequest fromDomain(BroadcasterTarget target) {
         List<String> destinations =
                 target.getDestinations().stream().map(Destination::value).toList();
         return switch (target.getType()) {
-            case ALL -> new AllBroadcasterTargetDTO(destinations);
-            case BLOCK -> new BlockBroadcasterTargetDTO(destinations);
+            case ALL -> new AllBroadcasterTargetRequest(destinations);
+            case BLOCK -> new BlockBroadcasterTargetRequest(destinations);
             case FILTER ->
-                    new FilterBroadcasterTargetDTO(
+                    new FilterBroadcasterTargetRequest(
                             destinations, ((FilterEventBroadcasterTarget) target).getFilterId());
-            case TRANSACTION -> new TransactionBroadcasterTargetDTO(destinations);
-            case CONTRACT_EVENT -> new ContractEventBroadcasterTargetDTO(destinations);
+            case TRANSACTION -> new TransactionBroadcasterTargetRequest(destinations);
+            case CONTRACT_EVENT -> new ContractEventBroadcasterTargetRequest(destinations);
         };
     }
 
