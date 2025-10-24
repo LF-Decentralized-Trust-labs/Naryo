@@ -87,8 +87,8 @@ class EventFilterSpecificationTest {
         ParameterDefinition parameterDefinition7 =
                 new StructParameterDefinition(
                         6, Set.of(parameterDefinition1, parameterDefinition2));
-        ParameterDefinition parameterDefinition8 = new StringParameterDefinition(7);
-        ParameterDefinition parameterDefinition9 = new BytesParameterDefinition(8);
+        ParameterDefinition parameterDefinition8 = new StringParameterDefinition(7, false);
+        ParameterDefinition parameterDefinition9 = new BytesParameterDefinition(8, false);
 
         EventName name = new EventName("Test");
 

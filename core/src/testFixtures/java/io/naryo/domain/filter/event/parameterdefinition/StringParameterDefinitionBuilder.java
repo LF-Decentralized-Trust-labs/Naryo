@@ -13,6 +13,6 @@ public class StringParameterDefinitionBuilder
 
     @Override
     public StringParameterDefinition build() {
-        return new StringParameterDefinition(this.getPosition());
+        return new StringParameterDefinition(this.getPosition(), this.isIndexed());
     }
 }

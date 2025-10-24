@@ -9,7 +9,7 @@ public final class StringParameterDefinition extends ParameterDefinition {
         super(ParameterType.STRING);
     }
 
-    public StringParameterDefinition(int position) {
-        super(ParameterType.STRING, position, false);
+    public StringParameterDefinition(int position, boolean isIndexed) {
+        super(ParameterType.STRING, position, isIndexed);
     }
 }
