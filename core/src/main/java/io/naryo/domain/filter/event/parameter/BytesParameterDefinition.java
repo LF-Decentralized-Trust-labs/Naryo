@@ -9,7 +9,7 @@ public final class BytesParameterDefinition extends ParameterDefinition {
         super(ParameterType.BYTES);
     }
 
-    public BytesParameterDefinition(int position) {
-        super(ParameterType.BYTES, position, false);
+    public BytesParameterDefinition(int position, boolean isIndexed) {
+        super(ParameterType.BYTES, position, isIndexed);
     }
 }

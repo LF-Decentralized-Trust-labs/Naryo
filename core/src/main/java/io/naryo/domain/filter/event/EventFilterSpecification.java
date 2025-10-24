@@ -138,8 +138,8 @@ public record EventFilterSpecification(
             return switch (type) {
                 case "bool" -> new BoolParameterDefinition(position, isIndexed);
                 case "address" -> new AddressParameterDefinition(position, isIndexed);
-                case "string" -> new StringParameterDefinition(position);
-                case "bytes" -> new BytesParameterDefinition(position);
+                case "string" -> new StringParameterDefinition(position, isIndexed);
+                case "bytes" -> new BytesParameterDefinition(position, isIndexed);
                 default -> throw new IllegalArgumentException("Unknown type: " + type);
             };
         }
