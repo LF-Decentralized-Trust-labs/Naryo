@@ -1,47 +1,38 @@
-package io.naryo.api.filter.create.model;
+package io.naryo.api.filter.common.request;
 
 import java.util.Set;
 import java.util.UUID;
 
-import io.naryo.api.filter.common.request.EventFilterSpecificationRequest;
-import io.naryo.api.filter.common.request.FilterSyncStateRequest;
 import io.naryo.domain.common.event.ContractEventStatus;
 import io.naryo.domain.filter.FilterName;
 import io.naryo.domain.filter.event.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
+@Schema(description = "Contract event filter request")
 @Valid
 @Getter
-public final class CreateContractEventFilterRequest extends CreateFilterRequest {
-
-    private final @NotNull @Valid EventFilterSpecificationRequest specification;
-
-    private final Set<ContractEventStatus> statuses;
-
-    private final @NotNull @Valid FilterSyncStateRequest filterSyncState;
+public final class ContractEventFilterRequest extends EventFilterRequest {
 
     private final String contractAddress;
 
-    public CreateContractEventFilterRequest(
+    public ContractEventFilterRequest(
             String name,
             UUID nodeId,
             EventFilterSpecificationRequest specification,
             Set<ContractEventStatus> statuses,
             FilterSyncStateRequest filterSyncState,
+            EventFilterVisibilityConfigurationRequest visibilityConfiguration,
             String contractAddress) {
-        super(name, nodeId);
-        this.specification = specification;
-        this.statuses = statuses;
-        this.filterSyncState = filterSyncState;
+        super(name, nodeId, specification, statuses, filterSyncState, visibilityConfiguration);
         this.contractAddress = contractAddress;
     }
 
     @Override
-    public ContractEventFilter toDomain() {
+    public ContractEventFilter toDomain(UUID id) {
         return new ContractEventFilter(
-                UUID.randomUUID(),
+                id,
                 new FilterName(this.name),
                 this.nodeId,
                 this.specification.toDomain(),

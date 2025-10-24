@@ -1,21 +1,20 @@
-package io.naryo.api.filter.create;
+package io.naryo.api.filter.common;
 
 import java.util.Set;
 
-import io.naryo.api.filter.create.model.CreateTransactionFilterRequest;
+import io.naryo.api.filter.common.request.TransactionFilterRequest;
 import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.filter.transaction.IdentifierType;
 import org.instancio.Instancio;
 
-public class CreateTransactionFilterRequestBuilder
-        extends CreateFilterRequestBuilder<
-                CreateTransactionFilterRequestBuilder, CreateTransactionFilterRequest> {
+public class TransactionFilterRequestBuilder
+        extends FilterRequestBuilder<TransactionFilterRequestBuilder, TransactionFilterRequest> {
 
     private IdentifierType identifierType;
     private String value;
     private Set<TransactionStatus> statuses;
 
-    public CreateTransactionFilterRequestBuilder withIdentifierType(IdentifierType identifierType) {
+    public TransactionFilterRequestBuilder withIdentifierType(IdentifierType identifierType) {
         this.identifierType = identifierType;
         return self();
     }
@@ -26,7 +25,7 @@ public class CreateTransactionFilterRequestBuilder
                 : this.identifierType;
     }
 
-    public CreateTransactionFilterRequestBuilder withValue(String value) {
+    public TransactionFilterRequestBuilder withValue(String value) {
         this.value = value;
         return self();
     }
@@ -35,7 +34,7 @@ public class CreateTransactionFilterRequestBuilder
         return this.value == null ? Instancio.create(String.class) : this.value;
     }
 
-    public CreateTransactionFilterRequestBuilder withStatuses(Set<TransactionStatus> statuses) {
+    public TransactionFilterRequestBuilder withStatuses(Set<TransactionStatus> statuses) {
         this.statuses = statuses;
         return self();
     }
@@ -47,13 +46,13 @@ public class CreateTransactionFilterRequestBuilder
     }
 
     @Override
-    public CreateTransactionFilterRequestBuilder self() {
+    public TransactionFilterRequestBuilder self() {
         return this;
     }
 
     @Override
-    public CreateTransactionFilterRequest build() {
-        return new CreateTransactionFilterRequest(
+    public TransactionFilterRequest build() {
+        return new TransactionFilterRequest(
                 getName(), getNodeId(), getIdentifierType(), getValue(), getStatuses());
     }
 }

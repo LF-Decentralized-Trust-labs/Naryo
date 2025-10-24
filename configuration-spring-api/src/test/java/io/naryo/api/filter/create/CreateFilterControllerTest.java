@@ -3,9 +3,12 @@ package io.naryo.api.filter.create;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.naryo.api.filter.create.model.CreateContractEventFilterRequest;
-import io.naryo.api.filter.create.model.CreateGlobalEventFilterRequest;
-import io.naryo.api.filter.create.model.CreateTransactionFilterRequest;
+import io.naryo.api.filter.common.ContractEventFilterRequestBuilder;
+import io.naryo.api.filter.common.GlobalEventFilterRequestBuilder;
+import io.naryo.api.filter.common.TransactionFilterRequestBuilder;
+import io.naryo.api.filter.common.request.ContractEventFilterRequest;
+import io.naryo.api.filter.common.request.GlobalEventFilterRequest;
+import io.naryo.api.filter.common.request.TransactionFilterRequest;
 import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.operation.RevisionOperation;
 import io.naryo.application.configuration.revision.queue.QueueClosedException;
@@ -42,7 +45,7 @@ class CreateFilterControllerTest {
     @Test
     void create_new_transaction_filter_ok() throws Exception {
         var opId = new OperationId(UUID.randomUUID());
-        var input = new CreateTransactionFilterRequestBuilder().build();
+        var input = new TransactionFilterRequestBuilder().build();
 
         when(operationQueue.enqueue(any())).thenReturn(opId);
 
@@ -54,7 +57,7 @@ class CreateFilterControllerTest {
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(
                                         objectMapper
-                                                .writerFor(CreateTransactionFilterRequest.class)
+                                                .writerFor(TransactionFilterRequest.class)
                                                 .writeValueAsBytes(input)))
                 .andExpect(status().isAccepted())
                 .andExpect(content().json(expectedResponse));
@@ -63,7 +66,7 @@ class CreateFilterControllerTest {
     @Test
     void create_new_global_event_filter_ok() throws Exception {
         var opId = new OperationId(UUID.randomUUID());
-        var input = new CreateGlobalEventFilterRequestBuilder().build();
+        var input = new GlobalEventFilterRequestBuilder().build();
 
         when(operationQueue.enqueue(any())).thenReturn(opId);
 
@@ -75,7 +78,7 @@ class CreateFilterControllerTest {
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(
                                         objectMapper
-                                                .writerFor(CreateGlobalEventFilterRequest.class)
+                                                .writerFor(GlobalEventFilterRequest.class)
                                                 .writeValueAsBytes(input)))
                 .andExpect(status().isAccepted())
                 .andExpect(content().json(expectedResponse));
@@ -84,7 +87,7 @@ class CreateFilterControllerTest {
     @Test
     void create_new_contract_event_filter_ok() throws Exception {
         var opId = new OperationId(UUID.randomUUID());
-        var input = new CreateContractEventFilterRequestBuilder().build();
+        var input = new ContractEventFilterRequestBuilder().build();
         when(operationQueue.enqueue(any())).thenReturn(opId);
 
         String expectedResponse = objectMapper.writeValueAsString(opId);
@@ -95,7 +98,7 @@ class CreateFilterControllerTest {
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(
                                         objectMapper
-                                                .writerFor(CreateContractEventFilterRequest.class)
+                                                .writerFor(ContractEventFilterRequest.class)
                                                 .writeValueAsBytes(input)))
                 .andExpect(status().isAccepted())
                 .andExpect(content().json(expectedResponse));
@@ -111,7 +114,7 @@ class CreateFilterControllerTest {
 
     @Test
     void create_but_queueOverflow() throws Exception {
-        var input = new CreateContractEventFilterRequestBuilder().build();
+        var input = new ContractEventFilterRequestBuilder().build();
 
         doThrow(new QueueOverflowException("Low lane full", "LOW", "ADD"))
                 .when(operationQueue)
@@ -126,7 +129,7 @@ class CreateFilterControllerTest {
 
     @Test
     void create_but_queueClosed() throws Exception {
-        var input = new CreateContractEventFilterRequestBuilder().build();
+        var input = new ContractEventFilterRequestBuilder().build();
         doThrow(new QueueClosedException())
                 .when(operationQueue)
                 .enqueue(any(RevisionOperation.class));

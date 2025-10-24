@@ -4,32 +4,45 @@ import java.util.Set;
 import java.util.UUID;
 
 import io.naryo.domain.common.event.ContractEventStatus;
+import io.naryo.domain.filter.event.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
+@Schema(description = "Global event filter")
 @Getter
-public final class GlobalEventFilterResponse extends FilterResponse {
+public final class GlobalEventFilterResponse extends EventFilterResponse {
 
-    private final String signature;
-    private final Integer correlationId;
-    private final Set<ContractEventStatus> statuses;
-    private final Boolean visible;
-    private final String privacyGroupId;
-
-    public GlobalEventFilterResponse(
+    private GlobalEventFilterResponse(
             UUID id,
             String name,
             UUID nodeId,
-            String signature,
-            Integer correlationId,
+            String currentItemHash,
+            EventFilterSpecificationResponse specification,
             Set<ContractEventStatus> statuses,
-            Boolean visible,
-            String privacyGroupId,
-            String currentItemHash) {
-        super(id, name, nodeId, currentItemHash);
-        this.signature = signature;
-        this.correlationId = correlationId;
-        this.statuses = statuses;
-        this.visible = visible;
-        this.privacyGroupId = privacyGroupId;
+            FilterSyncStateResponse filterSyncState,
+            EventFilterVisibilityConfigurationResponse visibilityConfiguration) {
+        super(
+                id,
+            name,
+                nodeId,
+                currentItemHash,
+            specification,
+                statuses,
+                filterSyncState,
+                visibilityConfiguration);
+    }
+
+    public static EventFilterResponse fromDomain(
+            GlobalEventFilter globalEventFilter, String currentItemHash) {
+        return new GlobalEventFilterResponse(
+                globalEventFilter.getId(),
+            globalEventFilter.getName().value(),
+                globalEventFilter.getNodeId(),
+                currentItemHash,
+            EventFilterSpecificationResponse.fromDomain(globalEventFilter.getSpecification()),
+                globalEventFilter.getStatuses(),
+                FilterSyncStateResponse.fromDomain(globalEventFilter.getFilterSyncState()),
+                EventFilterVisibilityConfigurationResponse.fromDomain(
+                        globalEventFilter.getVisibilityConfiguration()));
     }
 }

@@ -1,44 +1,36 @@
-package io.naryo.api.filter.update;
+package io.naryo.api.filter.common;
 
 import java.util.Set;
 
-import io.naryo.api.filter.common.EventFilterSpecificationRequestBuilder;
-import io.naryo.api.filter.common.EventFilterVisibilityConfigurationRequestBuilder;
-import io.naryo.api.filter.common.FilterSyncStateRequestBuilder;
-import io.naryo.api.filter.common.request.EventFilterSpecificationRequest;
-import io.naryo.api.filter.common.request.EventFilterVisibilityConfigurationRequest;
-import io.naryo.api.filter.common.request.FilterSyncStateRequest;
-import io.naryo.api.filter.update.model.UpdateGlobalEventFilterRequest;
+import io.naryo.api.filter.common.request.*;
 import io.naryo.domain.common.event.ContractEventStatus;
 import org.instancio.Instancio;
 
-public class UpdateGlobalEventFilterRequestBuilder
-        extends UpdateFilterRequestBuilder<
-                UpdateGlobalEventFilterRequestBuilder, UpdateGlobalEventFilterRequest> {
+public abstract class EventFilterRequestBuilder<
+                T extends EventFilterRequestBuilder<T, Y>, Y extends EventFilterRequest>
+        extends FilterRequestBuilder<T, Y> {
 
     private EventFilterSpecificationRequest specification;
     private Set<ContractEventStatus> statuses;
     private FilterSyncStateRequest filterSyncState;
     private EventFilterVisibilityConfigurationRequest visibilityConfiguration;
 
-    public UpdateGlobalEventFilterRequestBuilder withSpecification(
-            EventFilterSpecificationRequest specification) {
+    public T withSpecification(EventFilterSpecificationRequest specification) {
         this.specification = specification;
         return self();
     }
 
-    public UpdateGlobalEventFilterRequestBuilder withStatuses(Set<ContractEventStatus> statuses) {
+    public T withStatuses(Set<ContractEventStatus> statuses) {
         this.statuses = statuses;
         return self();
     }
 
-    public UpdateGlobalEventFilterRequestBuilder withFilterSyncState(
-            FilterSyncStateRequest filterSyncState) {
+    public T withFilterSyncState(FilterSyncStateRequest filterSyncState) {
         this.filterSyncState = filterSyncState;
         return self();
     }
 
-    public UpdateGlobalEventFilterRequestBuilder withVisibilityConfiguration(
+    public T withVisibilityConfiguration(
             EventFilterVisibilityConfigurationRequest visibilityConfiguration) {
         this.visibilityConfiguration = visibilityConfiguration;
         return self();
@@ -66,22 +58,5 @@ public class UpdateGlobalEventFilterRequestBuilder
         return this.visibilityConfiguration == null
                 ? new EventFilterVisibilityConfigurationRequestBuilder().build()
                 : this.visibilityConfiguration;
-    }
-
-    @Override
-    public UpdateGlobalEventFilterRequestBuilder self() {
-        return this;
-    }
-
-    @Override
-    public UpdateGlobalEventFilterRequest build() {
-        return new UpdateGlobalEventFilterRequest(
-                getName(),
-                getNodeId(),
-                getPrevItemHash(),
-                getSpecification(),
-                getStatuses(),
-                getFilterSyncState(),
-                getVisibilityConfiguration());
     }
 }
