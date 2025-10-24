@@ -1,4 +1,4 @@
-package io.naryo.api.filter.delete;
+package io.naryo.api.broadcasterconfiguration.delete;
 
 import java.util.UUID;
 
@@ -8,7 +8,7 @@ import io.naryo.application.configuration.revision.operation.RevisionOperation;
 import io.naryo.application.configuration.revision.queue.QueueClosedException;
 import io.naryo.application.configuration.revision.queue.QueueOverflowException;
 import io.naryo.application.configuration.revision.queue.RevisionOperationQueue;
-import io.naryo.domain.filter.Filter;
+import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -23,24 +23,24 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(DeleteFilterController.class)
-class DeleteFilterControllerTest {
+@WebMvcTest(DeleteBroadcasterConfigurationController.class)
+class DeleteBroadcasterConfigurationControllerTest {
 
-    private final String URI = "/api/v1/filters";
+    private final String URI = "/api/v1/broadcaster-configurations";
 
     @Autowired MockMvc mvc;
 
     @Autowired ObjectMapper objectMapper;
 
-    @MockitoBean
+    @MockitoBean(name = "broadcasterConfigurationRevisionQueue")
     @SuppressWarnings("unchecked")
-    RevisionOperationQueue<Filter> operationQueue;
+    RevisionOperationQueue<BroadcasterConfiguration> operationQueue;
 
     @Test
-    void delete_filter_ok() throws Exception {
+    void deleteBroadcasterConfiguration_ok() throws Exception {
         var opId = new OperationId(UUID.randomUUID());
-        var filterId = UUID.randomUUID();
-        var request = new DeleteFilterRequestBuilder().build();
+        var broadcasterConfigId = UUID.randomUUID();
+        var request = new DeleteBroadcasterConfigurationRequestBuilder().build();
 
         when(operationQueue.enqueue(any())).thenReturn(opId);
 
@@ -48,7 +48,7 @@ class DeleteFilterControllerTest {
         String requestBody = objectMapper.writeValueAsString(request);
 
         mvc.perform(
-                        delete(URI + "/" + filterId)
+                        delete(URI + "/" + broadcasterConfigId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(requestBody))
@@ -58,8 +58,8 @@ class DeleteFilterControllerTest {
 
     @Test
     void delete_but_queueOverflow() throws Exception {
-        var filterId = UUID.randomUUID();
-        var request = new DeleteFilterRequestBuilder().build();
+        var broadcasterConfigId = UUID.randomUUID();
+        var request = new DeleteBroadcasterConfigurationRequestBuilder().build();
 
         doThrow(new QueueOverflowException("Low lane full", "LOW", "REMOVE"))
                 .when(operationQueue)
@@ -68,7 +68,7 @@ class DeleteFilterControllerTest {
         String requestBody = objectMapper.writeValueAsString(request);
 
         mvc.perform(
-                        delete(URI + "/" + filterId)
+                        delete(URI + "/" + broadcasterConfigId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(requestBody))
                 .andExpect(status().isTooManyRequests());
@@ -76,8 +76,8 @@ class DeleteFilterControllerTest {
 
     @Test
     void delete_but_queueClosed() throws Exception {
-        var filterId = UUID.randomUUID();
-        var request = new DeleteFilterRequestBuilder().build();
+        var broadcasterConfigId = UUID.randomUUID();
+        var request = new DeleteBroadcasterConfigurationRequestBuilder().build();
 
         doThrow(new QueueClosedException())
                 .when(operationQueue)
@@ -86,7 +86,7 @@ class DeleteFilterControllerTest {
         String requestBody = objectMapper.writeValueAsString(request);
 
         mvc.perform(
-                        delete(URI + "/" + filterId)
+                        delete(URI + "/" + broadcasterConfigId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(requestBody))
                 .andExpect(status().isServiceUnavailable());
