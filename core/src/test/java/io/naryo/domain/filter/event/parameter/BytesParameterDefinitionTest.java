@@ -9,7 +9,7 @@ class BytesParameterDefinitionTest {
 
     @Test
     void testConstructor() {
-        BytesParameterDefinition parameterDefinition = new BytesParameterDefinition(1);
+        BytesParameterDefinition parameterDefinition = new BytesParameterDefinition(1, false);
         assertEquals(ParameterType.BYTES, parameterDefinition.getType());
         assertEquals(1, parameterDefinition.getPosition());
     }
