@@ -1,4 +1,4 @@
-package io.naryo.api.filter.common.response;
+package io.naryo.api.filter.getAll.model;
 
 import java.util.Set;
 import java.util.UUID;
@@ -26,10 +26,10 @@ public final class ContractEventFilterResponse extends EventFilterResponse {
             String contractAddress) {
         super(
                 id,
-            name,
+                name,
                 nodeId,
                 currentItemHash,
-            specification,
+                specification,
                 statuses,
                 filterSyncState,
                 visibilityConfiguration);
@@ -40,10 +40,10 @@ public final class ContractEventFilterResponse extends EventFilterResponse {
             ContractEventFilter contractEventFilter, String currentItemHash) {
         return new ContractEventFilterResponse(
                 contractEventFilter.getId(),
-            contractEventFilter.getName().value(),
+                contractEventFilter.getName().value(),
                 contractEventFilter.getNodeId(),
                 currentItemHash,
-            EventFilterSpecificationResponse.fromDomain(contractEventFilter.getSpecification()),
+                EventFilterSpecificationResponse.fromDomain(contractEventFilter.getSpecification()),
                 contractEventFilter.getStatuses(),
                 FilterSyncStateResponse.fromDomain(contractEventFilter.getFilterSyncState()),
                 EventFilterVisibilityConfigurationResponse.fromDomain(

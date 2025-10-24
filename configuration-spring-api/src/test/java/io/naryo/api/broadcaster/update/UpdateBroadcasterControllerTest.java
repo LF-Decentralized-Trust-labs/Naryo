@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.naryo.api.broadcaster.common.request.AllBroadcasterTargetDTO;
+import io.naryo.api.broadcaster.common.request.AllBroadcasterTargetRequest;
+import io.naryo.api.broadcaster.common.request.BroadcasterRequest;
 import io.naryo.api.broadcaster.update.model.UpdateBroadcasterRequest;
 import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.queue.RevisionOperationQueue;
@@ -35,8 +36,8 @@ class UpdateBroadcasterControllerTest {
         var opId = new OperationId(UUID.randomUUID());
         var input =
                 new UpdateBroadcasterRequest(
-                        new AllBroadcasterTargetDTO(List.of("t1")),
-                        UUID.randomUUID(),
+                        new BroadcasterRequest(
+                                new AllBroadcasterTargetRequest(List.of("t1")), UUID.randomUUID()),
                         "prevItemHash");
 
         when(operationQueue.enqueue(any())).thenReturn(opId);

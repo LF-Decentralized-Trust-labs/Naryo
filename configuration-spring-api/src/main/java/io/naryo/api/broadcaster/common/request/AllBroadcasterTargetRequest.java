@@ -8,11 +8,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 
-@Schema(description = "ALL Broadcaster")
+@Schema(description = "All broadcaster target request")
 @Getter
-public final class AllBroadcasterTargetDTO extends BroadcasterTargetDTO {
+public final class AllBroadcasterTargetRequest extends BroadcasterTargetRequest {
 
-    public AllBroadcasterTargetDTO(@NotEmpty List<String> destinations) {
+    public AllBroadcasterTargetRequest(@NotEmpty List<String> destinations) {
         super(destinations);
     }
 

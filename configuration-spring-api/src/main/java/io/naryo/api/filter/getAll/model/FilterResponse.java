@@ -1,4 +1,4 @@
-package io.naryo.api.filter.common.response;
+package io.naryo.api.filter.getAll.model;
 
 import java.util.Map;
 import java.util.Objects;
@@ -20,15 +20,15 @@ import lombok.Getter;
     @JsonSubTypes.Type(value = GlobalEventFilterResponse.class, name = "EVENT_GLOBAL")
 })
 @Schema(
-    description = "Base class for filter",
-    discriminatorProperty = "type",
-    discriminatorMapping = {
-        @DiscriminatorMapping(value = "TRANSACTION", schema = TransactionFilterResponse.class),
-        @DiscriminatorMapping(
-            value = "EVENT_CONTRACT",
-            schema = ContractEventFilterResponse.class),
-        @DiscriminatorMapping(value = "EVENT_GLOBAL", schema = GlobalEventFilterResponse.class)
-    })
+        description = "Base class for filter",
+        discriminatorProperty = "type",
+        discriminatorMapping = {
+            @DiscriminatorMapping(value = "TRANSACTION", schema = TransactionFilterResponse.class),
+            @DiscriminatorMapping(
+                    value = "EVENT_CONTRACT",
+                    schema = ContractEventFilterResponse.class),
+            @DiscriminatorMapping(value = "EVENT_GLOBAL", schema = GlobalEventFilterResponse.class)
+        })
 @Getter
 public abstract class FilterResponse {
 

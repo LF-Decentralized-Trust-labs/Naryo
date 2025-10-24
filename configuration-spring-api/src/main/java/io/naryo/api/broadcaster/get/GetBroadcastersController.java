@@ -27,7 +27,11 @@ public class GetBroadcastersController extends BroadcasterController {
         var liveView = revisionManager.liveView();
         var fingerprints = liveView.itemFingerprintById();
         return liveView.revision().domainItems().stream()
-                .map(bc -> BroadcasterResponse.map(bc, fingerprints))
+                .map(
+                        bc -> {
+                            String currentItemHash = fingerprints.get(bc.getId());
+                            return BroadcasterResponse.fromDomain(bc, currentItemHash);
+                        })
                 .toList();
     }
 }

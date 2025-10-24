@@ -1,4 +1,4 @@
-package io.naryo.api.filter.common.response;
+package io.naryo.api.filter.getAll.model;
 
 import java.util.Set;
 import java.util.UUID;
