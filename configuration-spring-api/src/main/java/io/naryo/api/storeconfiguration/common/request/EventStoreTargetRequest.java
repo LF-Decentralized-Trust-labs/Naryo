@@ -2,10 +2,13 @@ package io.naryo.api.storeconfiguration.common.request;
 
 import io.naryo.application.configuration.source.model.store.event.EventStoreTargetDescriptor;
 import io.naryo.domain.configuration.store.active.feature.event.block.TargetType;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
+@Schema(description = "Event store target request")
 @AllArgsConstructor
 @EqualsAndHashCode
 public class EventStoreTargetRequest implements EventStoreTargetDescriptor {
@@ -15,12 +18,12 @@ public class EventStoreTargetRequest implements EventStoreTargetDescriptor {
     @NotNull private String destination;
 
     @Override
-    public TargetType type() {
+    public TargetType getType() {
         return type;
     }
 
     @Override
-    public String destination() {
+    public String getDestination() {
         return destination;
     }
 }

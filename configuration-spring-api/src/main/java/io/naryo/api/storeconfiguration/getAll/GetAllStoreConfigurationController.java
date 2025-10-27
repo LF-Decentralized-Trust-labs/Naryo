@@ -5,8 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import io.naryo.api.storeconfiguration.StoreConfigurationController;
-import io.naryo.api.storeconfiguration.common.response.StoreConfigurationResponse;
+import io.naryo.api.storeconfiguration.common.StoreConfigurationController;
+import io.naryo.api.storeconfiguration.getAll.model.StoreConfigurationResponse;
+import io.naryo.api.storeconfiguration.getAll.model.mapper.StoreConfigurationResponseMapper;
 import io.naryo.application.configuration.revision.LiveView;
 import io.naryo.application.store.revision.StoreConfigurationRevisionManager;
 import io.naryo.domain.configuration.store.StoreConfiguration;

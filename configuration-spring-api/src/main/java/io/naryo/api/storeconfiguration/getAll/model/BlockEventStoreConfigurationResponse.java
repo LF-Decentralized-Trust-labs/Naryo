@@ -1,12 +1,14 @@
-package io.naryo.api.storeconfiguration.common.response;
+package io.naryo.api.storeconfiguration.getAll.model;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.naryo.domain.configuration.store.active.feature.event.EventStoreStrategy;
 import io.naryo.domain.configuration.store.active.feature.event.block.BlockEventStoreConfiguration;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
+@Schema(description = "Block event store configuration")
 @Getter
 public class BlockEventStoreConfigurationResponse extends EventStoreConfigurationResponse {
 
@@ -18,11 +20,11 @@ public class BlockEventStoreConfigurationResponse extends EventStoreConfiguratio
         this.targets = targets;
     }
 
-    static BlockEventStoreConfigurationResponse map(
+    static BlockEventStoreConfigurationResponse fromDomain(
             BlockEventStoreConfiguration blockEventStoreConfiguration) {
         Set<EventStoreTargetResponse> targets =
                 blockEventStoreConfiguration.getTargets().stream()
-                        .map(EventStoreTargetResponse::map)
+                        .map(EventStoreTargetResponse::fromDomain)
                         .collect(Collectors.toSet());
 
         return new BlockEventStoreConfigurationResponse(

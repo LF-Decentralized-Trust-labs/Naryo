@@ -6,7 +6,8 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.naryo.api.storeconfiguration.common.response.ActiveStoreConfigurationResponseBuilder;
 import io.naryo.api.storeconfiguration.common.response.InactiveStoreConfigurationResponseBuilder;
-import io.naryo.api.storeconfiguration.common.response.StoreConfigurationResponse;
+import io.naryo.api.storeconfiguration.getAll.model.StoreConfigurationResponse;
+import io.naryo.api.storeconfiguration.getAll.model.mapper.StoreConfigurationResponseMapper;
 import io.naryo.application.configuration.revision.LiveView;
 import io.naryo.application.configuration.revision.Revision;
 import io.naryo.application.store.revision.StoreConfigurationRevisionManager;
@@ -38,7 +39,8 @@ class GetAllStoreConfigurationControllerTest {
 
     @MockitoBean StoreConfigurationRevisionManager storeConfigurationRevisionManager;
 
-    @MockitoBean StoreConfigurationResponseMapper storeConfigurationResponseMapper;
+    @MockitoBean
+    StoreConfigurationResponseMapper storeConfigurationResponseMapper;
 
     @Test
     public void getAll_ok() throws Exception {

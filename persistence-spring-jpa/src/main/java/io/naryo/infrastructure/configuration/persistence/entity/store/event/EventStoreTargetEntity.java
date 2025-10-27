@@ -5,9 +5,11 @@ import java.util.UUID;
 import io.naryo.application.configuration.source.model.store.event.EventStoreTargetDescriptor;
 import io.naryo.domain.configuration.store.active.feature.event.block.TargetType;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @Table(name = "event_store_target")
 @NoArgsConstructor
 public final class EventStoreTargetEntity implements EventStoreTargetDescriptor {
@@ -22,15 +24,5 @@ public final class EventStoreTargetEntity implements EventStoreTargetDescriptor 
     public EventStoreTargetEntity(TargetType type, String destination) {
         this.type = type;
         this.destination = destination;
-    }
-
-    @Override
-    public TargetType type() {
-        return this.type;
-    }
-
-    @Override
-    public String destination() {
-        return this.destination;
     }
 }

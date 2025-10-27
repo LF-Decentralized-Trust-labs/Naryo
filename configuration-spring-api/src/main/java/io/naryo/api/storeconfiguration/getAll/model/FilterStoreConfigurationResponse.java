@@ -1,8 +1,10 @@
-package io.naryo.api.storeconfiguration.common.response;
+package io.naryo.api.storeconfiguration.getAll.model;
 
 import io.naryo.domain.configuration.store.active.feature.filter.FilterStoreConfiguration;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
+@Schema(description = "Filter store feature configuration")
 @Getter
 public class FilterStoreConfigurationResponse extends StoreFeatureConfigurationResponse {
 
@@ -12,7 +14,7 @@ public class FilterStoreConfigurationResponse extends StoreFeatureConfigurationR
         this.destination = destination;
     }
 
-    static FilterStoreConfigurationResponse map(FilterStoreConfiguration filterStoreConfiguration) {
+    static FilterStoreConfigurationResponse fromDomain(FilterStoreConfiguration filterStoreConfiguration) {
         return new FilterStoreConfigurationResponse(
                 filterStoreConfiguration.getDestination().value());
     }

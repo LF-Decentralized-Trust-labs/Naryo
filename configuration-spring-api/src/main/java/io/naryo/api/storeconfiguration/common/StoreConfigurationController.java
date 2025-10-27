@@ -1,4 +1,4 @@
-package io.naryo.api.storeconfiguration;
+package io.naryo.api.storeconfiguration.common;
 
 import io.naryo.api.error.ConfigurationApiErrors;
 import io.swagger.v3.oas.annotations.tags.Tag;

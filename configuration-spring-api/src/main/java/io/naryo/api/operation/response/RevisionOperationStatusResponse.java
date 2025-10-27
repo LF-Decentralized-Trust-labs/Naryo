@@ -6,7 +6,9 @@ import java.util.UUID;
 import io.naryo.api.utils.IsoDateFormat;
 import io.naryo.application.configuration.revision.RevisionOperationState;
 import io.naryo.application.configuration.revision.RevisionOperationStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
 
+@Schema(description = "Revision operation status")
 public record RevisionOperationStatusResponse(
         UUID operationId,
         RevisionOperationState state,

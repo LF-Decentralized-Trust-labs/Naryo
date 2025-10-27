@@ -1,11 +1,14 @@
-package io.naryo.api.storeconfiguration.common.response;
+package io.naryo.api.storeconfiguration.getAll.model;
 
 import java.util.*;
 
+import io.naryo.domain.configuration.store.active.ActiveStoreConfiguration;
 import io.naryo.domain.configuration.store.active.feature.StoreFeatureType;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+@Schema(description = "Active store configuration")
 @EqualsAndHashCode(callSuper = true)
 @Getter
 public final class ActiveStoreConfigurationResponse extends StoreConfigurationResponse {

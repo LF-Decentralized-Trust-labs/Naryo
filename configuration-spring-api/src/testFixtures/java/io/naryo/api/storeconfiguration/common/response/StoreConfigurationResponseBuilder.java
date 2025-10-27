@@ -3,6 +3,7 @@ package io.naryo.api.storeconfiguration.common.response;
 import java.util.UUID;
 
 import io.naryo.api.RequestBuilder;
+import io.naryo.api.storeconfiguration.getAll.model.StoreConfigurationResponse;
 import org.instancio.Instancio;
 
 public abstract class StoreConfigurationResponseBuilder<

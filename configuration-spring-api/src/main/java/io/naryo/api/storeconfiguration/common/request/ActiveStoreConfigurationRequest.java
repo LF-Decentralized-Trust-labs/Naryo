@@ -8,9 +8,12 @@ import io.naryo.application.configuration.source.model.store.ActiveStoreConfigur
 import io.naryo.application.configuration.source.model.store.StoreFeatureConfigurationDescriptor;
 import io.naryo.domain.configuration.store.active.StoreType;
 import io.naryo.domain.configuration.store.active.feature.StoreFeatureType;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
+@Schema(description = "Active store configuration request")
 @EqualsAndHashCode(callSuper = true)
 public final class ActiveStoreConfigurationRequest extends StoreConfigurationRequest
         implements ActiveStoreConfigurationDescriptor {
@@ -44,7 +47,7 @@ public final class ActiveStoreConfigurationRequest extends StoreConfigurationReq
     }
 
     @Override
-    public Map<StoreFeatureType, ? extends StoreFeatureConfigurationDescriptor> getFeatures() {
+    public Map<StoreFeatureType, StoreFeatureConfigurationRequest> getFeatures() {
         return features;
     }
 

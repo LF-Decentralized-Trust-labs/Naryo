@@ -44,8 +44,8 @@ public abstract class ActiveStoreConfigurationDescriptorMapper {
                         .map(
                                 target ->
                                         new EventStoreTarget(
-                                                target.type(),
-                                                new Destination(target.destination())))
+                                                target.getType(),
+                                                new Destination(target.getDestination())))
                         .collect(Collectors.toSet()));
     }
 

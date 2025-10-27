@@ -1,12 +1,12 @@
-package io.naryo.api.storeconfiguration.getAll;
+package io.naryo.api.storeconfiguration.getAll.model.mapper;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import io.naryo.api.storeconfiguration.common.response.ActiveStoreConfigurationResponse;
-import io.naryo.api.storeconfiguration.common.response.InactiveStoreConfigurationResponse;
-import io.naryo.api.storeconfiguration.common.response.StoreConfigurationResponse;
-import io.naryo.api.storeconfiguration.common.response.StoreFeatureConfigurationResponse;
+import io.naryo.api.storeconfiguration.getAll.model.ActiveStoreConfigurationResponse;
+import io.naryo.api.storeconfiguration.getAll.model.InactiveStoreConfigurationResponse;
+import io.naryo.api.storeconfiguration.getAll.model.StoreConfigurationResponse;
+import io.naryo.api.storeconfiguration.getAll.model.StoreFeatureConfigurationResponse;
 import io.naryo.application.store.configuration.mapper.ActiveStoreConfigurationAdditionalPropertiesMapperRegistry;
 import io.naryo.domain.configuration.store.StoreConfiguration;
 import io.naryo.domain.configuration.store.active.ActiveStoreConfiguration;
@@ -38,7 +38,7 @@ public final class StoreConfigurationResponseMapper {
         return switch (storeConfiguration) {
             case ActiveStoreConfiguration active -> mapActive(active, currentItemHash);
             case InactiveStoreConfiguration inactive ->
-                    InactiveStoreConfigurationResponse.map(inactive, currentItemHash);
+                    InactiveStoreConfigurationResponse.fromDomain(inactive, currentItemHash);
             default -> throw new IllegalStateException("Unexpected value: " + storeConfiguration);
         };
     }
@@ -51,7 +51,7 @@ public final class StoreConfigurationResponseMapper {
                                 Collectors.toMap(
                                         Map.Entry::getKey,
                                         entry ->
-                                                StoreFeatureConfigurationResponse.map(
+                                                StoreFeatureConfigurationResponse.fromDomain(
                                                         entry.getValue())));
 
         Map<String, Object> additionalProperties =

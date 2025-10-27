@@ -1,6 +1,7 @@
 package io.naryo.api.storeconfiguration.common.response;
 
 import io.naryo.api.RequestBuilder;
+import io.naryo.api.storeconfiguration.getAll.model.FilterStoreConfigurationResponse;
 import org.instancio.Instancio;
 
 public class FilterStoreConfigurationResponseBuilder

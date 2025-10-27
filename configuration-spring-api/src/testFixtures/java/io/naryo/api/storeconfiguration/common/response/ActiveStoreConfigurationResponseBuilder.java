@@ -2,6 +2,8 @@ package io.naryo.api.storeconfiguration.common.response;
 
 import java.util.Map;
 
+import io.naryo.api.storeconfiguration.getAll.model.ActiveStoreConfigurationResponse;
+import io.naryo.api.storeconfiguration.getAll.model.StoreFeatureConfigurationResponse;
 import io.naryo.domain.configuration.store.active.feature.StoreFeatureType;
 import org.instancio.Instancio;
 
