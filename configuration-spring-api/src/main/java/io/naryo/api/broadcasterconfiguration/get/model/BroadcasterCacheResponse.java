@@ -1,9 +1,9 @@
 package io.naryo.api.broadcasterconfiguration.get.model;
 
+import java.time.Duration;
+
 import io.naryo.domain.configuration.broadcaster.BroadcasterCache;
 import io.swagger.v3.oas.annotations.media.Schema;
-
-import java.time.Duration;
 
 @Schema(description = "Broadcaster cache")
 public record BroadcasterCacheResponse(Duration expirationTime) {

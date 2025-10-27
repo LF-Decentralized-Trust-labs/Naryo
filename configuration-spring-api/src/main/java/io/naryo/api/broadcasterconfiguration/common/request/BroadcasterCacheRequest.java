@@ -13,8 +13,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter
-public class BroadcasterCacheRequest
-        implements BroadcasterCacheConfigurationDescriptor {
+public class BroadcasterCacheRequest implements BroadcasterCacheConfigurationDescriptor {
 
     @NotNull private Duration expirationTime;
 }

@@ -69,8 +69,7 @@ class CreateBroadcasterConfigurationControllerTest {
 
         BroadcasterConfiguration dummyBroadcasterConfiguration =
                 new HttpBroadcasterConfigurationBuilder().build();
-        when(mapperRegistry.map(
-                        eq(broadcasterType), any(BroadcasterConfigurationRequest.class)))
+        when(mapperRegistry.map(eq(broadcasterType), any(BroadcasterConfigurationRequest.class)))
                 .thenReturn(dummyBroadcasterConfiguration);
 
         OperationId operationId = OperationId.random();
@@ -105,8 +104,7 @@ class CreateBroadcasterConfigurationControllerTest {
 
         BroadcasterConfiguration dummyBroadcasterConfiguration =
                 new HttpBroadcasterConfigurationBuilder().build();
-        when(mapperRegistry.map(
-                        eq(broadcasterType), any(BroadcasterConfigurationRequest.class)))
+        when(mapperRegistry.map(eq(broadcasterType), any(BroadcasterConfigurationRequest.class)))
                 .thenReturn(dummyBroadcasterConfiguration);
 
         OperationId operationId = OperationId.random();

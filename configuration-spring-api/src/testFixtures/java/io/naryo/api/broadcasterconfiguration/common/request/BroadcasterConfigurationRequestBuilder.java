@@ -48,16 +48,13 @@ public class BroadcasterConfigurationRequestBuilder
         return this.type == null ? "http" : this.type;
     }
 
-    public BroadcasterConfigurationRequestBuilder withCache(
-            BroadcasterCacheRequest cache) {
+    public BroadcasterConfigurationRequestBuilder withCache(BroadcasterCacheRequest cache) {
         this.cache = cache;
         return self();
     }
 
     public BroadcasterCacheRequest getCache() {
-        return this.cache == null
-                ? new BroadcasterCacheRequest(Duration.ofMinutes(5))
-                : this.cache;
+        return this.cache == null ? new BroadcasterCacheRequest(Duration.ofMinutes(5)) : this.cache;
     }
 
     public BroadcasterConfigurationRequestBuilder withAdditionalProperties(

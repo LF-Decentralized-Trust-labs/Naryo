@@ -11,7 +11,6 @@ import io.naryo.domain.configuration.store.active.feature.StoreFeatureType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
 @Schema(description = "Active store configuration request")
 @EqualsAndHashCode(callSuper = true)

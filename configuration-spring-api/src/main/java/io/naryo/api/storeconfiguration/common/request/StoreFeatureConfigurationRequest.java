@@ -6,25 +6,23 @@ import io.naryo.application.configuration.source.model.store.StoreFeatureConfigu
 import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
     @JsonSubTypes.Type(value = FilterStoreConfigurationRequest.class, name = "FILTER_SYNC"),
-    @JsonSubTypes.Type(
-            value = BlockEventStoreConfigurationRequest.class,
-            name = "EVENT_BLOCK"),
+    @JsonSubTypes.Type(value = BlockEventStoreConfigurationRequest.class, name = "EVENT_BLOCK"),
 })
 @Schema(
-    description = "Base class for store feature configuration request",
-    discriminatorProperty = "type",
-    discriminatorMapping = {
-        @DiscriminatorMapping(
-            value = "FILTER_SYNC",
-            schema = FilterStoreConfigurationRequest.class),
-        @DiscriminatorMapping(
-            value = "EVENT_BLOCK",
-            schema = BlockEventStoreConfigurationRequest.class)
-    })
+        description = "Base class for store feature configuration request",
+        discriminatorProperty = "type",
+        discriminatorMapping = {
+            @DiscriminatorMapping(
+                    value = "FILTER_SYNC",
+                    schema = FilterStoreConfigurationRequest.class),
+            @DiscriminatorMapping(
+                    value = "EVENT_BLOCK",
+                    schema = BlockEventStoreConfigurationRequest.class)
+        })
 @EqualsAndHashCode
-public abstract class StoreFeatureConfigurationRequest implements StoreFeatureConfigurationDescriptor {}
+public abstract class StoreFeatureConfigurationRequest
+        implements StoreFeatureConfigurationDescriptor {}

@@ -9,7 +9,7 @@ import io.naryo.domain.configuration.store.active.feature.event.block.TargetType
 public class BlockEventStoreFeatureConfigurationRequestBuilder
         implements RequestBuilder<
                 BlockEventStoreFeatureConfigurationRequestBuilder,
-        BlockEventStoreConfigurationRequest> {
+                BlockEventStoreConfigurationRequest> {
 
     private Set<EventStoreTargetRequest> targets;
 

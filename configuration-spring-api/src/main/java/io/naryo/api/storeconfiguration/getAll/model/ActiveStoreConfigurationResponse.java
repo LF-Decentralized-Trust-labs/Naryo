@@ -2,7 +2,6 @@ package io.naryo.api.storeconfiguration.getAll.model;
 
 import java.util.*;
 
-import io.naryo.domain.configuration.store.active.ActiveStoreConfiguration;
 import io.naryo.domain.configuration.store.active.feature.StoreFeatureType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;

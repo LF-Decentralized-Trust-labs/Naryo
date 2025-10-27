@@ -4,8 +4,6 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import io.naryo.api.storeconfiguration.common.request.ActiveStoreConfigurationRequest;
-import io.naryo.api.storeconfiguration.common.request.InactiveStoreConfigurationRequest;
 import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.EqualsAndHashCode;
@@ -17,16 +15,16 @@ import lombok.Getter;
     @JsonSubTypes.Type(value = InactiveStoreConfigurationResponse.class, name = "INACTIVE"),
 })
 @Schema(
-    description = "Base class for store configuration request",
-    discriminatorProperty = "state",
-    discriminatorMapping = {
-        @DiscriminatorMapping(
-            value = "ACTIVE",
-            schema = ActiveStoreConfigurationResponse.class),
-        @DiscriminatorMapping(
-            value = "INACTIVE",
-            schema = InactiveStoreConfigurationResponse.class)
-    })
+        description = "Base class for store configuration request",
+        discriminatorProperty = "state",
+        discriminatorMapping = {
+            @DiscriminatorMapping(
+                    value = "ACTIVE",
+                    schema = ActiveStoreConfigurationResponse.class),
+            @DiscriminatorMapping(
+                    value = "INACTIVE",
+                    schema = InactiveStoreConfigurationResponse.class)
+        })
 @EqualsAndHashCode
 @Getter
 public abstract class StoreConfigurationResponse {

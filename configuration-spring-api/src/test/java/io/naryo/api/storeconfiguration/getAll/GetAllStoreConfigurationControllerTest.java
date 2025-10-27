@@ -39,8 +39,7 @@ class GetAllStoreConfigurationControllerTest {
 
     @MockitoBean StoreConfigurationRevisionManager storeConfigurationRevisionManager;
 
-    @MockitoBean
-    StoreConfigurationResponseMapper storeConfigurationResponseMapper;
+    @MockitoBean StoreConfigurationResponseMapper storeConfigurationResponseMapper;
 
     @Test
     public void getAll_ok() throws Exception {

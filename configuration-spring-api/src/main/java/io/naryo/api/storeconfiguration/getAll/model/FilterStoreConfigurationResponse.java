@@ -14,7 +14,8 @@ public class FilterStoreConfigurationResponse extends StoreFeatureConfigurationR
         this.destination = destination;
     }
 
-    static FilterStoreConfigurationResponse fromDomain(FilterStoreConfiguration filterStoreConfiguration) {
+    static FilterStoreConfigurationResponse fromDomain(
+            FilterStoreConfiguration filterStoreConfiguration) {
         return new FilterStoreConfigurationResponse(
                 filterStoreConfiguration.getDestination().value());
     }
