@@ -3,6 +3,7 @@ package io.naryo.infrastructure.configuration.beans.broadcaster.http;
 import java.util.List;
 import java.util.Map;
 
+import io.naryo.application.broadcaster.configuration.mapper.BroadcasterConfigurationAdditionalPropertiesMapperRegistry;
 import io.naryo.application.broadcaster.configuration.mapper.BroadcasterConfigurationMapperRegistry;
 import io.naryo.application.broadcaster.configuration.normalization.BroadcasterConfigurationNormalizerRegistry;
 import io.naryo.application.configuration.source.definition.ConfigurationSchema;
@@ -27,14 +28,19 @@ public final class HttpBroadcasterInitializer implements EnvironmentInitializer 
 
     private final BroadcasterConfigurationNormalizerRegistry normalizerRegistry;
     private final BroadcasterConfigurationMapperRegistry mapperRegistry;
+    private final BroadcasterConfigurationAdditionalPropertiesMapperRegistry
+            additionalPropertiesMapperRegistry;
     private final ConfigurationSchemaRegistry schemaRegistry;
 
     public HttpBroadcasterInitializer(
             BroadcasterConfigurationNormalizerRegistry normalizerRegistry,
             BroadcasterConfigurationMapperRegistry mapperRegistry,
+            BroadcasterConfigurationAdditionalPropertiesMapperRegistry
+                    additionalPropertiesMapperRegistry,
             ConfigurationSchemaRegistry schemaRegistry) {
         this.normalizerRegistry = normalizerRegistry;
         this.mapperRegistry = mapperRegistry;
+        this.additionalPropertiesMapperRegistry = additionalPropertiesMapperRegistry;
         this.schemaRegistry = schemaRegistry;
     }
 
@@ -62,6 +68,15 @@ public final class HttpBroadcasterInitializer implements EnvironmentInitializer 
                                     valueOrNull(properties.getCache()).getExpirationTime()),
                             new ConnectionEndpoint(endpoint.url));
                 });
+
+        additionalPropertiesMapperRegistry.register(
+                HTTP_TYPE,
+                HttpBroadcasterConfiguration.class,
+                httpBroadcasterConfiguration ->
+                        Map.of(
+                                "endpoint",
+                                new HttpBroadcasterEndpoint(
+                                        httpBroadcasterConfiguration.getEndpoint().getUrl())));
 
         schemaRegistry.register(
                 ConfigurationSchemaType.BROADCASTER,
