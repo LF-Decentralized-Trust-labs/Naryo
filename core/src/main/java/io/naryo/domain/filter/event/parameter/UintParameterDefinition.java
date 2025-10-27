@@ -24,4 +24,9 @@ public final class UintParameterDefinition extends ParameterDefinition {
         if (bitSize < 8 || bitSize > 256 || bitSize % 8 != 0)
             throw new IllegalArgumentException("Invalid uint bit size: " + bitSize);
     }
+
+    @Override
+    public boolean isDynamic() {
+        return false;
+    }
 }

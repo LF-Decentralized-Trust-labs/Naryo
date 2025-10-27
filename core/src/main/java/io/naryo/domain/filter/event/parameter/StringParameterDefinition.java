@@ -12,4 +12,9 @@ public final class StringParameterDefinition extends ParameterDefinition {
     public StringParameterDefinition(int position, boolean isIndexed) {
         super(ParameterType.STRING, position, isIndexed);
     }
+
+    @Override
+    public boolean isDynamic() {
+        return true;
+    }
 }

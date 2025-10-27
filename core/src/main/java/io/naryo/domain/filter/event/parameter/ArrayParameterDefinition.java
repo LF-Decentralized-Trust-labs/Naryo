@@ -18,4 +18,9 @@ public final class ArrayParameterDefinition extends ParameterDefinition {
         this.elementType = elementType;
         this.fixedLength = fixedLength;
     }
+
+    @Override
+    public boolean isDynamic() {
+        return this.fixedLength == null;
+    }
 }

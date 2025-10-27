@@ -12,4 +12,9 @@ public final class AddressParameterDefinition extends ParameterDefinition {
     public AddressParameterDefinition(int position, boolean indexed) {
         super(ParameterType.ADDRESS, position, indexed);
     }
+
+    @Override
+    public boolean isDynamic() {
+        return false;
+    }
 }

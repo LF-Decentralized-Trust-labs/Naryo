@@ -27,4 +27,6 @@ public abstract class ParameterDefinition {
             throw new IllegalArgumentException("Position cannot be negative");
         }
     }
+
+    public abstract boolean isDynamic();
 }

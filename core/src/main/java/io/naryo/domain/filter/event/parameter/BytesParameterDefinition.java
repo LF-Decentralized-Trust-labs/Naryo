@@ -12,4 +12,9 @@ public final class BytesParameterDefinition extends ParameterDefinition {
     public BytesParameterDefinition(int position, boolean isIndexed) {
         super(ParameterType.BYTES, position, isIndexed);
     }
+
+    @Override
+    public boolean isDynamic() {
+        return true;
+    }
 }

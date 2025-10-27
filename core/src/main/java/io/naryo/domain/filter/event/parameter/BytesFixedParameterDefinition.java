@@ -24,4 +24,9 @@ public final class BytesFixedParameterDefinition extends ParameterDefinition {
         if (byteLength < 1 || byteLength > 32)
             throw new IllegalArgumentException("Invalid bytes length: " + byteLength);
     }
+
+    @Override
+    public boolean isDynamic() {
+        return false;
+    }
 }

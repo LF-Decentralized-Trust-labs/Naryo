@@ -12,4 +12,9 @@ public final class BoolParameterDefinition extends ParameterDefinition {
     public BoolParameterDefinition(int position, boolean indexed) {
         super(ParameterType.BOOL, position, indexed);
     }
+
+    @Override
+    public boolean isDynamic() {
+        return false;
+    }
 }
