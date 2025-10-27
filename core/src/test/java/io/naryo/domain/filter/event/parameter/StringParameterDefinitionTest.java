@@ -9,7 +9,8 @@ class StringParameterDefinitionTest {
 
     @Test
     void testStringParameterDefinition() {
-        StringParameterDefinition stringParameterDefinition = new StringParameterDefinition(1);
+        StringParameterDefinition stringParameterDefinition =
+                new StringParameterDefinition(1, false);
         assertEquals(ParameterType.STRING, stringParameterDefinition.getType());
         assertEquals(1, stringParameterDefinition.getPosition());
     }

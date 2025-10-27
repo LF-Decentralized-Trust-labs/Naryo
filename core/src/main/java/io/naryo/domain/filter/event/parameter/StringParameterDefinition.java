@@ -6,10 +6,10 @@ import io.naryo.domain.filter.event.ParameterDefinition;
 public final class StringParameterDefinition extends ParameterDefinition {
 
     public StringParameterDefinition() {
-        super(ParameterType.STRING);
+        super(ParameterType.STRING, true);
     }
 
-    public StringParameterDefinition(int position) {
-        super(ParameterType.STRING, position, false);
+    public StringParameterDefinition(int position, boolean isIndexed) {
+        super(ParameterType.STRING, position, isIndexed, true);
     }
 }

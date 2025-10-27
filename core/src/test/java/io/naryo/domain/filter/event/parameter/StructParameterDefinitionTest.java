@@ -12,7 +12,7 @@ class StructParameterDefinitionTest {
     @Test
     void testStructParameterDefinition() {
         StructParameterDefinition structParamDef =
-                new StructParameterDefinition(1, Set.of(new StringParameterDefinition(1)));
+                new StructParameterDefinition(1, Set.of(new StringParameterDefinition(1, false)));
         assertEquals(1, structParamDef.getPosition());
         assertEquals(ParameterType.STRUCT, structParamDef.getType());
         assertNotNull(structParamDef.getParameterDefinitions());

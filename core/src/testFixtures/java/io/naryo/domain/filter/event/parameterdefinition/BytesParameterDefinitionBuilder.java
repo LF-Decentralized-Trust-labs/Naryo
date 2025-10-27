@@ -13,6 +13,6 @@ public class BytesParameterDefinitionBuilder
 
     @Override
     public BytesParameterDefinition build() {
-        return new BytesParameterDefinition(this.getPosition());
+        return new BytesParameterDefinition(this.getPosition(), this.isIndexed());
     }
 }

@@ -6,10 +6,10 @@ import io.naryo.domain.filter.event.ParameterDefinition;
 public final class BoolParameterDefinition extends ParameterDefinition {
 
     public BoolParameterDefinition() {
-        super(ParameterType.BOOL);
+        super(ParameterType.BOOL, false);
     }
 
     public BoolParameterDefinition(int position, boolean indexed) {
-        super(ParameterType.BOOL, position, indexed);
+        super(ParameterType.BOOL, position, indexed, false);
     }
 }

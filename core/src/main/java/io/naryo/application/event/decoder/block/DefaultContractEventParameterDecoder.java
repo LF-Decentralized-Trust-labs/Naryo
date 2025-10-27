@@ -21,8 +21,10 @@ import static io.naryo.application.common.util.EncryptionUtil.hexlify;
 
 public final class DefaultContractEventParameterDecoder implements ContractEventParameterDecoder {
 
+    static final int WORD = 32;
+
     private static int asInt(byte[] data, int offset) {
-        byte[] slice = Arrays.copyOfRange(data, offset + 28, offset + 32);
+        byte[] slice = Arrays.copyOfRange(data, offset + 28, offset + WORD);
         return ByteBuffer.wrap(slice).getInt();
     }
 
@@ -54,7 +56,15 @@ public final class DefaultContractEventParameterDecoder implements ContractEvent
                                             true,
                                             def.getPosition(),
                                             log.topics().get(topicPosition));
-                            case UINT, INT, BOOL -> decodeParameter(def, data, 0).parameter();
+                            case UINT, INT, BOOL ->
+                                    decodeParameter(
+                                                    def,
+                                                    log.topics()
+                                                            .get(topicPosition)
+                                                            .getBytes(StandardCharsets.UTF_8),
+                                                    0,
+                                                    0)
+                                            .parameter();
                             default ->
                                     throw new IllegalStateException(
                                             "Unexpected value: " + def.getType());
@@ -62,78 +72,79 @@ public final class DefaultContractEventParameterDecoder implements ContractEvent
                 result.add(value);
                 continue;
             }
-            DecodeResult decoded = decodeParameter(def, data, offset);
+            DecodeResult decoded = decodeParameter(def, data, offset, 0);
             result.add(decoded.parameter());
             offset = decoded.newOffset();
         }
         return result;
     }
 
-    public DecodeResult decodeParameter(ParameterDefinition definition, byte[] data, int offset) {
+    public DecodeResult decodeParameter(
+            ParameterDefinition definition, byte[] data, int offset, int baseHead) {
         return switch (definition.getType()) {
             case ADDRESS -> decodeAddress(data, offset, definition);
             case UINT -> decodeUint(data, offset, definition);
             case INT -> decodeInt(data, offset, definition);
             case BOOL -> decodeBool(data, offset, definition);
-            case STRING -> decodeString(data, offset, definition);
-            case BYTES -> decodeBytes(data, offset, definition);
+            case STRING -> decodeString(data, offset, baseHead, definition);
+            case BYTES -> decodeBytes(data, offset, baseHead, definition);
             case BYTES_FIXED ->
                     decodeFixedBytes(data, offset, (BytesFixedParameterDefinition) definition);
-            case ARRAY -> decodeArray(data, offset, (ArrayParameterDefinition) definition);
-            case STRUCT -> decodeStruct(data, offset, (StructParameterDefinition) definition);
+            case ARRAY ->
+                    decodeArray(data, offset, baseHead, (ArrayParameterDefinition) definition);
+            case STRUCT ->
+                    decodeStruct(data, offset, baseHead, (StructParameterDefinition) definition);
         };
     }
 
     private DecodeResult decodeAddress(byte[] data, int offset, ParameterDefinition definition) {
-        byte[] slice = Arrays.copyOfRange(data, offset + 12, offset + 32);
+        byte[] slice = Arrays.copyOfRange(data, offset + 12, offset + WORD);
         String address = hexlify(slice);
         return new DecodeResult(
                 new AddressParameter(definition.isIndexed(), definition.getPosition(), address),
-                offset + 32);
+                offset + WORD);
     }
 
     private DecodeResult decodeUint(byte[] data, int offset, ParameterDefinition definition) {
-        byte[] slice = Arrays.copyOfRange(data, offset, offset + 32);
+        byte[] slice = Arrays.copyOfRange(data, offset, offset + WORD);
         int value = new BigInteger(slice).intValue();
         return new DecodeResult(
                 new UintParameter(definition.isIndexed(), definition.getPosition(), value),
-                offset + 32);
+                offset + WORD);
     }
 
     private DecodeResult decodeInt(byte[] data, int offset, ParameterDefinition definition) {
-        byte[] slice = Arrays.copyOfRange(data, offset, offset + 32);
+        byte[] slice = Arrays.copyOfRange(data, offset, offset + WORD);
         int value = new BigInteger(slice).intValue(); // signed
         return new DecodeResult(
                 new IntParameter(definition.isIndexed(), definition.getPosition(), value),
-                offset + 32);
+                offset + WORD);
     }
 
     private DecodeResult decodeBool(byte[] data, int offset, ParameterDefinition definition) {
         byte value = data[offset + 31];
         return new DecodeResult(
                 new BoolParameter(definition.isIndexed(), definition.getPosition(), value == 1),
-                offset + 32);
+                offset + WORD);
     }
 
-    private DecodeResult decodeString(byte[] data, int offset, ParameterDefinition definition) {
-        int dynOffset = asInt(data, offset);
-        int length = asInt(data, dynOffset);
-        byte[] strBytes = Arrays.copyOfRange(data, dynOffset + 32, dynOffset + 32 + length);
+    private DecodeResult decodeString(
+            byte[] data, int offset, int baseHead, ParameterDefinition def) {
+        byte[] rawBytes = this.getRawBytesFromDynamicParam(data, offset, baseHead);
         return new DecodeResult(
                 new StringParameter(
-                        definition.isIndexed(),
-                        definition.getPosition(),
-                        new String(strBytes, StandardCharsets.UTF_8)),
-                offset + 32);
+                        def.isIndexed(),
+                        def.getPosition(),
+                        new String(rawBytes, StandardCharsets.UTF_8)),
+                offset + WORD);
     }
 
-    private DecodeResult decodeBytes(byte[] data, int offset, ParameterDefinition definition) {
-        int dynOffset = asInt(data, offset);
-        int length = asInt(data, dynOffset);
-        byte[] rawBytes = Arrays.copyOfRange(data, dynOffset + 32, dynOffset + 32 + length);
+    private DecodeResult decodeBytes(
+            byte[] data, int offset, int baseHead, ParameterDefinition definition) {
+        byte[] rawBytes = this.getRawBytesFromDynamicParam(data, offset, baseHead);
         return new DecodeResult(
                 new BytesParameter(definition.isIndexed(), definition.getPosition(), rawBytes),
-                offset + 32);
+                offset + WORD);
     }
 
     private DecodeResult decodeFixedBytes(
@@ -145,57 +156,132 @@ public final class DefaultContractEventParameterDecoder implements ContractEvent
                         definition.getPosition(),
                         fixed,
                         definition.getByteLength()),
-                offset + 32);
+                offset + WORD);
     }
 
-    private DecodeResult decodeArray(byte[] data, int offset, ArrayParameterDefinition definition) {
-        int headWord = asInt(data, offset);
+    private DecodeResult decodeArray(
+            byte[] data, int offset, int baseHead, ArrayParameterDefinition definition) {
+        if (definition.isDynamic()) {
+            // Array data is in a different data block, so head for that data block changes
+            // New head (arrBase) is obtained by adding the relative position of the array plus the
+            // current head
+            int arrRel =
+                    asInt(data, offset); // The relative position is stored in the current offset
+            int arrBase = arrRel + baseHead;
+            return this.decodeDynamicArray(data, offset, arrBase, definition);
+        } else {
+            // Array data is directly in current offset
+            // Base head does not change
+            return this.decodeStaticArray(data, offset, baseHead, definition);
+        }
+    }
 
+    private DecodeResult decodeDynamicArray(
+            byte[] data, int offset, int arrBase, ArrayParameterDefinition definition) {
+        List<ContractEventParameter<?>> items = new ArrayList<>();
         ParameterDefinition elementDef = definition.getElementType();
 
-        List<ContractEventParameter<?>> items = new ArrayList<>();
+        int length = asInt(data, arrBase);
 
-        if (definition.getFixedLength() == null) {
-
-            int length = asInt(data, headWord);
-
-            int current = headWord + 32;
-            for (int i = 0; i < length; i++) {
-                DecodeResult elt = decodeParameter(elementDef, data, current);
-                items.add(elt.parameter());
-                current = elt.newOffset();
-            }
-
-            return new DecodeResult(
-                    new ArrayParameter<>(definition.isIndexed(), definition.getPosition(), items),
-                    offset + 32);
-
-        } else {
-            int length = definition.getFixedLength();
-            int current = offset;
-            for (int i = 0; i < length; i++) {
-                DecodeResult elt = decodeParameter(elementDef, data, current);
-                items.add(elt.parameter());
-                current = elt.newOffset();
-            }
-
-            return new DecodeResult(
-                    new ArrayParameter<>(definition.isIndexed(), definition.getPosition(), items),
-                    current);
+        int current = (arrBase + WORD);
+        for (int i = 0; i < length; i++) {
+            DecodeResult elt = decodeParameter(elementDef, data, current, arrBase);
+            items.add(elt.parameter());
+            current = elt.newOffset();
         }
+
+        return new DecodeResult(
+                new ArrayParameter<>(definition.isIndexed(), definition.getPosition(), items),
+                offset + WORD);
+    }
+
+    private DecodeResult decodeStaticArray(
+            byte[] data, int offset, int arrBase, ArrayParameterDefinition definition) {
+        List<ContractEventParameter<?>> items = new ArrayList<>();
+        ParameterDefinition elementDef = definition.getElementType();
+
+        int length = definition.getFixedLength();
+        int current = offset;
+        for (int i = 0; i < length; i++) {
+            DecodeResult elt = decodeParameter(elementDef, data, current, arrBase);
+            items.add(elt.parameter());
+            current = elt.newOffset();
+        }
+
+        return new DecodeResult(
+                new ArrayParameter<>(definition.isIndexed(), definition.getPosition(), items),
+                current);
     }
 
     private DecodeResult decodeStruct(
-            byte[] data, int offset, StructParameterDefinition definition) {
+            byte[] data, int offset, int baseHead, StructParameterDefinition definition) {
+
+        Set<ParameterDefinition> ordered =
+                definition.getParameterDefinitions().stream()
+                        .sorted(Comparator.comparingInt(ParameterDefinition::getPosition))
+                        .collect(Collectors.toCollection(LinkedHashSet::new));
+
+        if (definition.isDynamic()) {
+            return this.decodeDynamicStruct(data, offset, baseHead, ordered, definition);
+        } else {
+            return this.decodeStaticStruct(data, offset, baseHead, ordered, definition);
+        }
+    }
+
+    private DecodeResult decodeStaticStruct(
+            byte[] data,
+            int offset,
+            int baseHead,
+            Set<ParameterDefinition> ordered,
+            StructParameterDefinition definition) {
         List<ContractEventParameter<?>> values = new ArrayList<>();
         int current = offset;
-        for (ParameterDefinition type : definition.getParameterDefinitions()) {
-            DecodeResult res = decodeParameter(type, data, current);
+        for (ParameterDefinition type : ordered) {
+            DecodeResult res = decodeParameter(type, data, current, baseHead);
             values.add(res.parameter());
             current = res.newOffset();
         }
+
         return new DecodeResult(
                 new StructParameter(definition.isIndexed(), definition.getPosition(), values),
                 current);
+    }
+
+    private DecodeResult decodeDynamicStruct(
+            byte[] data,
+            int offset,
+            int baseHead,
+            Set<ParameterDefinition> ordered,
+            StructParameterDefinition definition) {
+        List<ContractEventParameter<?>> values = new ArrayList<>();
+
+        // Struct data is in a different data block, so head for that block changes
+        // New head (structBase) is obtained by adding the relative position of the struct plus the
+        // current head
+        int relStruct =
+                asInt(data, offset); // The relative position is stored in the current offset
+        int structBase = relStruct + baseHead;
+
+        int current = structBase;
+        for (ParameterDefinition type : ordered) {
+            DecodeResult res = decodeParameter(type, data, current, structBase);
+            values.add(res.parameter());
+            current = res.newOffset();
+        }
+
+        return new DecodeResult(
+                new StructParameter(definition.isIndexed(), definition.getPosition(), values),
+                offset + WORD);
+    }
+
+    private byte[] getRawBytesFromDynamicParam(byte[] data, int offset, int baseHead) {
+        int rel = asInt(data, offset);
+        int dynOffset = baseHead + rel;
+
+        int length = asInt(data, dynOffset);
+        int start = dynOffset + WORD;
+        int end = start + length;
+
+        return Arrays.copyOfRange(data, start, end);
     }
 }

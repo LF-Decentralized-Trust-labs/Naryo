@@ -9,13 +9,13 @@ public final class UintParameterDefinition extends ParameterDefinition {
     private final int bitSize;
 
     public UintParameterDefinition(int bitSize) {
-        super(ParameterType.UINT);
+        super(ParameterType.UINT, false);
         validateBitSize(bitSize);
         this.bitSize = bitSize;
     }
 
     public UintParameterDefinition(int bitSize, int position, boolean indexed) {
-        super(ParameterType.UINT, position, indexed);
+        super(ParameterType.UINT, position, indexed, false);
         validateBitSize(bitSize);
         this.bitSize = bitSize;
     }
