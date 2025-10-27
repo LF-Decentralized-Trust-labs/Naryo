@@ -13,14 +13,9 @@ public final class ArrayParameterDefinition extends ParameterDefinition {
 
     public ArrayParameterDefinition(
             int position, ParameterDefinition elementType, Integer fixedLength) {
-        super(ParameterType.ARRAY, position, false);
+        super(ParameterType.ARRAY, position, false, fixedLength == null);
         Objects.requireNonNull(elementType, "elementType must not be null");
         this.elementType = elementType;
         this.fixedLength = fixedLength;
-    }
-
-    @Override
-    public boolean isDynamic() {
-        return this.fixedLength == null;
     }
 }

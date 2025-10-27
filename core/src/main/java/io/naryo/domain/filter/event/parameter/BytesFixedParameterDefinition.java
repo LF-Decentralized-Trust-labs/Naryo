@@ -9,13 +9,13 @@ public final class BytesFixedParameterDefinition extends ParameterDefinition {
     private final int byteLength;
 
     public BytesFixedParameterDefinition(int byteLength) {
-        super(ParameterType.BYTES_FIXED);
+        super(ParameterType.BYTES_FIXED, false);
         validateLength(byteLength);
         this.byteLength = byteLength;
     }
 
     public BytesFixedParameterDefinition(int byteLength, int position, boolean indexed) {
-        super(ParameterType.BYTES_FIXED, position, indexed);
+        super(ParameterType.BYTES_FIXED, position, indexed, false);
         validateLength(byteLength);
         this.byteLength = byteLength;
     }
@@ -23,10 +23,5 @@ public final class BytesFixedParameterDefinition extends ParameterDefinition {
     private void validateLength(int byteLength) {
         if (byteLength < 1 || byteLength > 32)
             throw new IllegalArgumentException("Invalid bytes length: " + byteLength);
-    }
-
-    @Override
-    public boolean isDynamic() {
-        return false;
     }
 }

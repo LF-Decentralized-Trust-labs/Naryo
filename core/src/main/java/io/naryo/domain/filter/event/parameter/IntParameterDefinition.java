@@ -9,13 +9,13 @@ public final class IntParameterDefinition extends ParameterDefinition {
     private final int bitSize;
 
     public IntParameterDefinition(int bitSize) {
-        super(ParameterType.INT);
+        super(ParameterType.INT, false);
         validateBitSize(bitSize);
         this.bitSize = bitSize;
     }
 
     public IntParameterDefinition(int bitSize, int position, boolean indexed) {
-        super(ParameterType.INT, position, indexed);
+        super(ParameterType.INT, position, indexed, false);
         validateBitSize(bitSize);
         this.bitSize = bitSize;
     }
@@ -23,10 +23,5 @@ public final class IntParameterDefinition extends ParameterDefinition {
     private void validateBitSize(int bitSize) {
         if (bitSize < 8 || bitSize > 256 || bitSize % 8 != 0)
             throw new IllegalArgumentException("Invalid int bit size: " + bitSize);
-    }
-
-    @Override
-    public boolean isDynamic() {
-        return false;
     }
 }

@@ -10,20 +10,13 @@ import lombok.Getter;
 @Getter
 public final class StructParameterDefinition extends ParameterDefinition {
     private final Set<ParameterDefinition> parameterDefinitions;
-    private final boolean dynamic;
 
     public StructParameterDefinition(int position, Set<ParameterDefinition> parameterDefinitions) {
-        super(ParameterType.STRUCT, position, false);
+        super(ParameterType.STRUCT, position, false, parameterDefinitions.stream().anyMatch(ParameterDefinition::isDynamic));
         Objects.requireNonNull(parameterDefinitions, "parameterDefinitions cannot be null");
         if (parameterDefinitions.isEmpty()) {
             throw new IllegalArgumentException("parameterDefinitions cannot be empty");
         }
         this.parameterDefinitions = parameterDefinitions;
-        this.dynamic = parameterDefinitions.stream().anyMatch(ParameterDefinition::isDynamic);
-    }
-
-    @Override
-    public boolean isDynamic() {
-        return this.dynamic;
     }
 }
