@@ -1,7 +1,7 @@
 package io.naryo.api.broadcasterconfiguration.create;
 
 import io.naryo.api.broadcasterconfiguration.common.BroadcasterConfigurationController;
-import io.naryo.api.broadcasterconfiguration.create.model.CreateBroadcasterConfigurationRequest;
+import io.naryo.api.broadcasterconfiguration.common.request.BroadcasterConfigurationRequest;
 import io.naryo.application.broadcaster.configuration.mapper.BroadcasterConfigurationMapperRegistry;
 import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.operation.AddOperation;
@@ -33,7 +33,7 @@ public class CreateBroadcasterConfigurationController extends BroadcasterConfigu
 
     @PostMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public OperationId create(@Valid @RequestBody CreateBroadcasterConfigurationRequest request) {
+    public OperationId create(@Valid @RequestBody BroadcasterConfigurationRequest request) {
         String broadcasterType = request.getType().getName();
         ConfigurationSchema schema =
                 schemaRegistry.getSchema(ConfigurationSchemaType.BROADCASTER, broadcasterType);
