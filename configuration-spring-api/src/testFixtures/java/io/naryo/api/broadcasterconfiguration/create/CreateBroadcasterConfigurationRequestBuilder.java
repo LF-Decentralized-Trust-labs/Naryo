@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import io.naryo.api.RequestBuilder;
-import io.naryo.api.broadcasterconfiguration.common.request.BroadcasterCacheConfigurationRequest;
+import io.naryo.api.broadcasterconfiguration.common.request.BroadcasterCacheRequest;
 import io.naryo.api.broadcasterconfiguration.create.model.CreateBroadcasterConfigurationRequest;
 
 public class CreateBroadcasterConfigurationRequestBuilder
@@ -15,7 +15,7 @@ public class CreateBroadcasterConfigurationRequestBuilder
 
     private UUID id;
     private String type;
-    private BroadcasterCacheConfigurationRequest cache;
+    private BroadcasterCacheRequest cache;
     private Map<String, Object> additionalProperties;
 
     @Override
@@ -52,14 +52,14 @@ public class CreateBroadcasterConfigurationRequestBuilder
     }
 
     public CreateBroadcasterConfigurationRequestBuilder withCache(
-            BroadcasterCacheConfigurationRequest cache) {
+            BroadcasterCacheRequest cache) {
         this.cache = cache;
         return self();
     }
 
-    public BroadcasterCacheConfigurationRequest getCache() {
+    public BroadcasterCacheRequest getCache() {
         return this.cache == null
-                ? new BroadcasterCacheConfigurationRequest(Duration.ofMinutes(5))
+                ? new BroadcasterCacheRequest(Duration.ofMinutes(5))
                 : this.cache;
     }
 

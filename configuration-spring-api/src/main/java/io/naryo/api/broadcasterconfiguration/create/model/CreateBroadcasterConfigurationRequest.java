@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.naryo.api.broadcasterconfiguration.common.request.BroadcasterCacheConfigurationRequest;
+import io.naryo.api.broadcasterconfiguration.common.request.BroadcasterCacheRequest;
 import io.naryo.application.configuration.source.model.broadcaster.configuration.BroadcasterCacheConfigurationDescriptor;
 import io.naryo.application.configuration.source.model.broadcaster.configuration.BroadcasterConfigurationDescriptor;
 import io.naryo.domain.broadcaster.BroadcasterType;
@@ -27,13 +27,13 @@ public class CreateBroadcasterConfigurationRequest implements BroadcasterConfigu
 
     private @NotBlank String type;
 
-    private BroadcasterCacheConfigurationRequest cache;
+    private BroadcasterCacheRequest cache;
 
     private @NotNull Map<String, Object> additionalProperties;
 
     public CreateBroadcasterConfigurationRequest(
             String type,
-            BroadcasterCacheConfigurationRequest cache,
+            BroadcasterCacheRequest cache,
             Map<String, Object> additionalProperties) {
         this.id = UUID.randomUUID();
         this.type = type;
@@ -69,7 +69,7 @@ public class CreateBroadcasterConfigurationRequest implements BroadcasterConfigu
 
     @Override
     public void setCache(BroadcasterCacheConfigurationDescriptor cache) {
-        this.cache = (BroadcasterCacheConfigurationRequest) cache;
+        this.cache = (BroadcasterCacheRequest) cache;
     }
 
     @Override
