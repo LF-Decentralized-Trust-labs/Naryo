@@ -12,7 +12,11 @@ public final class StructParameterDefinition extends ParameterDefinition {
     private final Set<ParameterDefinition> parameterDefinitions;
 
     public StructParameterDefinition(int position, Set<ParameterDefinition> parameterDefinitions) {
-        super(ParameterType.STRUCT, position, false, parameterDefinitions.stream().anyMatch(ParameterDefinition::isDynamic));
+        super(
+                ParameterType.STRUCT,
+                position,
+                false,
+                parameterDefinitions.stream().anyMatch(ParameterDefinition::isDynamic));
         Objects.requireNonNull(parameterDefinitions, "parameterDefinitions cannot be null");
         if (parameterDefinitions.isEmpty()) {
             throw new IllegalArgumentException("parameterDefinitions cannot be empty");

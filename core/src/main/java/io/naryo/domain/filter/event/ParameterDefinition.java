@@ -21,7 +21,8 @@ public abstract class ParameterDefinition {
         this.dynamic = dynamic;
     }
 
-    protected ParameterDefinition(ParameterType type, int position, boolean indexed, boolean dynamic) {
+    protected ParameterDefinition(
+            ParameterType type, int position, boolean indexed, boolean dynamic) {
         this.type = type;
         this.position = position;
         this.indexed = indexed;
