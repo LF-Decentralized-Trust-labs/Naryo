@@ -221,15 +221,19 @@ public final class DefaultContractEventParameterDecoder implements ContractEvent
                         .sorted(Comparator.comparingInt(ParameterDefinition::getPosition))
                         .collect(Collectors.toCollection(LinkedHashSet::new));
 
-        if(definition.isDynamic()) {
+        if (definition.isDynamic()) {
             return this.decodeDynamicStruct(data, offset, baseHead, ordered, definition);
         } else {
-           return this.decodeStaticStruct(data, offset, baseHead, ordered, definition);
+            return this.decodeStaticStruct(data, offset, baseHead, ordered, definition);
         }
-
     }
 
-    private DecodeResult decodeStaticStruct(byte[] data, int offset, int baseHead, Set<ParameterDefinition> ordered, StructParameterDefinition definition) {
+    private DecodeResult decodeStaticStruct(
+            byte[] data,
+            int offset,
+            int baseHead,
+            Set<ParameterDefinition> ordered,
+            StructParameterDefinition definition) {
         List<ContractEventParameter<?>> values = new ArrayList<>();
         int current = offset;
         for (ParameterDefinition type : ordered) {
@@ -239,17 +243,23 @@ public final class DefaultContractEventParameterDecoder implements ContractEvent
         }
 
         return new DecodeResult(
-            new StructParameter(definition.isIndexed(), definition.getPosition(), values),
-            current);
+                new StructParameter(definition.isIndexed(), definition.getPosition(), values),
+                current);
     }
 
-    private DecodeResult decodeDynamicStruct(byte[] data, int offset, int baseHead, Set<ParameterDefinition> ordered, StructParameterDefinition definition){
+    private DecodeResult decodeDynamicStruct(
+            byte[] data,
+            int offset,
+            int baseHead,
+            Set<ParameterDefinition> ordered,
+            StructParameterDefinition definition) {
         List<ContractEventParameter<?>> values = new ArrayList<>();
 
         // Struct data is in a different data block, so head for that block changes
         // New head (structBase) is obtained by adding the relative position of the struct plus the
         // current head
-        int relStruct = asInt(data, offset); // The relative position is stored in the current offset
+        int relStruct =
+                asInt(data, offset); // The relative position is stored in the current offset
         int structBase = relStruct + baseHead;
 
         int current = structBase;
@@ -260,8 +270,8 @@ public final class DefaultContractEventParameterDecoder implements ContractEvent
         }
 
         return new DecodeResult(
-            new StructParameter(definition.isIndexed(), definition.getPosition(), values),
-            offset + WORD);
+                new StructParameter(definition.isIndexed(), definition.getPosition(), values),
+                offset + WORD);
     }
 
     private byte[] getRawBytesFromDynamicParam(byte[] data, int offset, int baseHead) {
