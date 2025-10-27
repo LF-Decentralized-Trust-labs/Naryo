@@ -16,7 +16,8 @@ public final class StructParameterDefinition extends ParameterDefinition {
                 ParameterType.STRUCT,
                 position,
                 false,
-                parameterDefinitions.stream().anyMatch(ParameterDefinition::isDynamic));
+                parameterDefinitions != null
+                        && parameterDefinitions.stream().anyMatch(ParameterDefinition::isDynamic));
         Objects.requireNonNull(parameterDefinitions, "parameterDefinitions cannot be null");
         if (parameterDefinitions.isEmpty()) {
             throw new IllegalArgumentException("parameterDefinitions cannot be empty");
