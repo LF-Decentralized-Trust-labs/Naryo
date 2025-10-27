@@ -7,7 +7,7 @@ import io.naryo.domain.node.interaction.block.hedera.RetriesPerRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
-@Schema(description = "Hedera interaction configuration")
+@Schema(description = "Hedera interaction configuration request")
 @Getter
 public final class HederaMirrorNodeBlockInteractionConfigurationRequest
         extends BlockInteractionConfigurationRequest {

@@ -5,7 +5,7 @@ import io.naryo.domain.node.subscription.block.method.pubsub.PubSubBlockSubscrip
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
-@Schema(description = "Pub sub block subscription")
+@Schema(description = "Pub sub block subscription request")
 @Getter
 public final class PubSubBlockSubscriptionConfigurationMethodRequest
         extends BlockSubscriptionMethodConfigurationRequest {

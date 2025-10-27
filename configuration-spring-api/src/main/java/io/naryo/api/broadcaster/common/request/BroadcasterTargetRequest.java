@@ -21,7 +21,7 @@ import lombok.Getter;
     @JsonSubTypes.Type(value = ContractEventBroadcasterTargetRequest.class, name = "CONTRACT_EVENT")
 })
 @Schema(
-        description = "Base class for broadcaster",
+        description = "Base class for broadcaster request",
         discriminatorProperty = "type",
         discriminatorMapping = {
             @DiscriminatorMapping(value = "ALL", schema = AllBroadcasterTargetRequest.class),

@@ -5,7 +5,7 @@ import io.naryo.domain.node.interaction.block.ethereum.EthereumRpcBlockInteracti
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
-@Schema(description = "Ethereum interaction configuration")
+@Schema(description = "Ethereum interaction configuration request")
 @Getter
 public final class EthereumRpcBlockInteractionConfigurationRequest
         extends BlockInteractionConfigurationRequest {
