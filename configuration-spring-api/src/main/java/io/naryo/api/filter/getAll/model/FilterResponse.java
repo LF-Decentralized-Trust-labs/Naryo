@@ -20,7 +20,7 @@ import lombok.Getter;
     @JsonSubTypes.Type(value = GlobalEventFilterResponse.class, name = "EVENT_GLOBAL")
 })
 @Schema(
-        description = "Base class for filter",
+        description = "Base filter",
         discriminatorProperty = "type",
         discriminatorMapping = {
             @DiscriminatorMapping(value = "TRANSACTION", schema = TransactionFilterResponse.class),

@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
     @JsonSubTypes.Type(value = BlockEventStoreConfigurationRequest.class, name = "EVENT_BLOCK"),
 })
 @Schema(
-        description = "Base class for store feature configuration request",
+        description = "Base store feature configuration request",
         discriminatorProperty = "type",
         discriminatorMapping = {
             @DiscriminatorMapping(

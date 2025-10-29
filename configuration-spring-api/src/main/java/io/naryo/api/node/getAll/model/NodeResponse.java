@@ -21,7 +21,7 @@ import lombok.Getter;
     @JsonSubTypes.Type(value = HederaNodeResponse.class, name = "HEDERA"),
 })
 @Schema(
-        description = "Base class for node",
+        description = "Base node",
         discriminatorProperty = "type",
         discriminatorMapping = {
             @DiscriminatorMapping(

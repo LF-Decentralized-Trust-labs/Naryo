@@ -22,7 +22,7 @@ import lombok.Getter;
             name = "CONTRACT_EVENT")
 })
 @Schema(
-        description = "Base class for broadcaster",
+        description = "Base broadcaster",
         discriminatorProperty = "type",
         discriminatorMapping = {
             @DiscriminatorMapping(value = "ALL", schema = AllBroadcasterTargetResponse.class),

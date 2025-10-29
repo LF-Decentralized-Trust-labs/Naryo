@@ -18,7 +18,7 @@ import lombok.Getter;
             name = "BLOCK_ETHEREUM_RPC")
 })
 @Schema(
-        description = "Base class for interaction configuration",
+        description = "Base interaction configuration",
         discriminatorProperty = "mode",
         discriminatorMapping = {
             @DiscriminatorMapping(

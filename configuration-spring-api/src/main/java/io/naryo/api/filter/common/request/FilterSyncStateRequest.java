@@ -14,7 +14,7 @@ import lombok.Getter;
     @JsonSubTypes.Type(value = BlockActiveFilterSyncStateRequest.class, name = "BLOCK_BASED")
 })
 @Schema(
-        description = "Base class for filter sync state request",
+        description = "Base filter sync state request",
         discriminatorProperty = "strategy",
         discriminatorMapping = {
             @DiscriminatorMapping(

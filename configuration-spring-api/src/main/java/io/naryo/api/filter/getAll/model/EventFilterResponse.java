@@ -8,7 +8,7 @@ import io.naryo.domain.filter.event.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
-@Schema(description = "Base class for event filter")
+@Schema(description = "Base event filter")
 @Getter
 public abstract class EventFilterResponse extends FilterResponse {
 

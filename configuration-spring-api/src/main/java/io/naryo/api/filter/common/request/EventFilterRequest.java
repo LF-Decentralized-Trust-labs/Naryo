@@ -9,7 +9,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
-@Schema(description = "Base class for event filter request")
+@Schema(description = "Base event filter request")
 @Valid
 @Getter
 public abstract class EventFilterRequest extends FilterRequest {

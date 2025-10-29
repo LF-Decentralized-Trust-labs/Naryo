@@ -15,7 +15,7 @@ import lombok.Getter;
     @JsonSubTypes.Type(value = BlockEventStoreConfigurationResponse.class, name = "EVENT_BLOCK"),
 })
 @Schema(
-        description = "Base class for store feature configuration",
+        description = "Base store feature configuration",
         discriminatorProperty = "type",
         discriminatorMapping = {
             @DiscriminatorMapping(

@@ -19,7 +19,7 @@ import lombok.Getter;
             name = "PUBSUB")
 })
 @Schema(
-        description = "Base class for block subscription method",
+        description = "Base block subscription method",
         discriminatorProperty = "method",
         discriminatorMapping = {
             @DiscriminatorMapping(

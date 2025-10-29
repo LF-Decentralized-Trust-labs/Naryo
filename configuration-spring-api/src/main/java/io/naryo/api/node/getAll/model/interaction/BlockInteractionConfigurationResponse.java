@@ -6,7 +6,7 @@ import io.naryo.domain.node.interaction.block.hedera.HederaMirrorNodeBlockIntera
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
-@Schema(description = "Base class for block interaction configuration")
+@Schema(description = "Base block interaction configuration")
 @Getter
 public abstract class BlockInteractionConfigurationResponse
         extends InteractionConfigurationResponse {

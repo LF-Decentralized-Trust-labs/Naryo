@@ -14,7 +14,7 @@ import lombok.Getter;
     @JsonSubTypes.Type(value = BlockSubscriptionConfigurationResponse.class, name = "BLOCK_BASED")
 })
 @Schema(
-        description = "Base class for subscription",
+        description = "Base subscription",
         discriminatorProperty = "strategy",
         discriminatorMapping = {
             @DiscriminatorMapping(

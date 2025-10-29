@@ -15,7 +15,7 @@ import lombok.Getter;
     @JsonSubTypes.Type(value = InactiveStoreConfigurationResponse.class, name = "INACTIVE"),
 })
 @Schema(
-        description = "Base class for store configuration request",
+        description = "Base store configuration",
         discriminatorProperty = "state",
         discriminatorMapping = {
             @DiscriminatorMapping(
