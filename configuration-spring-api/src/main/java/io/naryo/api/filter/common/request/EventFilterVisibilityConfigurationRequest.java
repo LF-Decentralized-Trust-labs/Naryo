@@ -1,9 +1,11 @@
 package io.naryo.api.filter.common.request;
 
 import io.naryo.domain.filter.event.EventFilterVisibilityConfiguration;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
+@Schema(description = "Event filter visibility configuration request")
 @Getter
 public class EventFilterVisibilityConfigurationRequest {
 

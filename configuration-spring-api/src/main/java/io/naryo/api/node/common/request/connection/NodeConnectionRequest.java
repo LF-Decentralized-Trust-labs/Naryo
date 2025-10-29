@@ -13,7 +13,7 @@ import lombok.Getter;
     @JsonSubTypes.Type(value = WsNodeConnectionRequest.class, name = "WS")
 })
 @Schema(
-        description = "Base class for node connection",
+        description = "Base node connection request",
         discriminatorProperty = "type",
         discriminatorMapping = {
             @DiscriminatorMapping(value = "HTTP", schema = HttpNodeConnectionRequest.class),

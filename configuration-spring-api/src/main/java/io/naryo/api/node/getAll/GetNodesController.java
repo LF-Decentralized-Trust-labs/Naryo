@@ -4,7 +4,7 @@ import java.util.List;
 
 import io.naryo.api.error.ConfigurationApiErrors;
 import io.naryo.api.node.common.NodeController;
-import io.naryo.api.node.common.response.NodeResponse;
+import io.naryo.api.node.getAll.model.NodeResponse;
 import io.naryo.application.node.revision.NodeConfigurationRevisionManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,7 +27,11 @@ public class GetNodesController extends NodeController {
         var liveView = revisionManager.liveView();
         var fingerprints = liveView.itemFingerprintById();
         return liveView.revision().domainItems().stream()
-                .map(n -> NodeResponse.map(n, fingerprints))
+                .map(
+                        n -> {
+                            String currentItemHash = fingerprints.get(n.getId());
+                            return NodeResponse.fromDomain(n, currentItemHash);
+                        })
                 .toList();
     }
 }

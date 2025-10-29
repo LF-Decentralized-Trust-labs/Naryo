@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Random;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.naryo.api.node.common.response.NodeResponse;
+import io.naryo.api.node.getAll.model.NodeResponse;
 import io.naryo.application.configuration.revision.LiveView;
 import io.naryo.application.configuration.revision.Revision;
 import io.naryo.application.node.revision.NodeConfigurationRevisionManager;
@@ -44,7 +44,9 @@ class GetNodesControllerTest {
 
         String expectedResponse =
                 objectMapper.writeValueAsString(
-                        List.of(NodeResponse.map(node, liveView.itemFingerprintById())));
+                        List.of(
+                                NodeResponse.fromDomain(
+                                        node, liveView.itemFingerprintById().get(node.getId()))));
 
         mvc.perform(get(PATH))
                 .andExpect(status().isOk())

@@ -2,7 +2,7 @@ package io.naryo.api.storeconfiguration.delete;
 
 import java.util.UUID;
 
-import io.naryo.api.storeconfiguration.StoreConfigurationController;
+import io.naryo.api.storeconfiguration.common.StoreConfigurationController;
 import io.naryo.api.storeconfiguration.delete.model.DeleteStoreConfigurationRequest;
 import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.operation.RemoveOperation;

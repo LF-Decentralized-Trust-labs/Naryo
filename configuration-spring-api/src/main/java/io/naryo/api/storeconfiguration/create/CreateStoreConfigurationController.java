@@ -1,6 +1,6 @@
 package io.naryo.api.storeconfiguration.create;
 
-import io.naryo.api.storeconfiguration.StoreConfigurationController;
+import io.naryo.api.storeconfiguration.common.StoreConfigurationController;
 import io.naryo.api.storeconfiguration.common.request.ActiveStoreConfigurationRequest;
 import io.naryo.api.storeconfiguration.common.request.StoreConfigurationRequest;
 import io.naryo.application.configuration.revision.OperationId;

@@ -4,7 +4,7 @@ import io.naryo.domain.configuration.store.active.feature.event.block.TargetType
 
 public interface EventStoreTargetDescriptor {
 
-    TargetType type();
+    TargetType getType();
 
-    String destination();
+    String getDestination();
 }

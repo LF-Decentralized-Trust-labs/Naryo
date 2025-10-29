@@ -7,7 +7,7 @@ import io.naryo.domain.node.connection.http.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
-@Schema(description = "HTTP node connection")
+@Schema(description = "HTTP node connection request")
 @Getter
 public final class HttpNodeConnectionRequest extends NodeConnectionRequest {
 

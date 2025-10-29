@@ -34,7 +34,7 @@ public final class BroadcasterConfigurationResponseMapper {
                 additionalPropertiesMapperRegistry.map(
                         broadcasterConfiguration.getType().getName(), broadcasterConfiguration);
 
-        return BroadcasterConfigurationResponse.map(
+        return BroadcasterConfigurationResponse.fromDomain(
                 broadcasterConfiguration, additionalProperties, currentItemHash);
     }
 }

@@ -12,7 +12,7 @@ public class BroadcasterConfigurationRequestBuilder
 
     private UUID id;
     private String type;
-    private BroadcasterCacheConfigurationRequest cache;
+    private BroadcasterCacheRequest cache;
     private Map<String, Object> additionalProperties;
 
     @Override
@@ -48,16 +48,13 @@ public class BroadcasterConfigurationRequestBuilder
         return this.type == null ? "http" : this.type;
     }
 
-    public BroadcasterConfigurationRequestBuilder withCache(
-            BroadcasterCacheConfigurationRequest cache) {
+    public BroadcasterConfigurationRequestBuilder withCache(BroadcasterCacheRequest cache) {
         this.cache = cache;
         return self();
     }
 
-    public BroadcasterCacheConfigurationRequest getCache() {
-        return this.cache == null
-                ? new BroadcasterCacheConfigurationRequest(Duration.ofMinutes(5))
-                : this.cache;
+    public BroadcasterCacheRequest getCache() {
+        return this.cache == null ? new BroadcasterCacheRequest(Duration.ofMinutes(5)) : this.cache;
     }
 
     public BroadcasterConfigurationRequestBuilder withAdditionalProperties(

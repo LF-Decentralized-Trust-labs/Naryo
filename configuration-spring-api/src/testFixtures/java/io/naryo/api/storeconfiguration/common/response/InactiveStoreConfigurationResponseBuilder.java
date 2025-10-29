@@ -1,5 +1,7 @@
 package io.naryo.api.storeconfiguration.common.response;
 
+import io.naryo.api.storeconfiguration.getAll.model.InactiveStoreConfigurationResponse;
+
 public class InactiveStoreConfigurationResponseBuilder
         extends StoreConfigurationResponseBuilder<
                 InactiveStoreConfigurationResponseBuilder, InactiveStoreConfigurationResponse> {

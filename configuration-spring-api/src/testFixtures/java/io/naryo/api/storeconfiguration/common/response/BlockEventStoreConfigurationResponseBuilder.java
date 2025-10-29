@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import io.naryo.api.RequestBuilder;
+import io.naryo.api.storeconfiguration.getAll.model.BlockEventStoreConfigurationResponse;
+import io.naryo.api.storeconfiguration.getAll.model.EventStoreTargetResponse;
 import io.naryo.domain.configuration.store.active.feature.event.EventStoreStrategy;
 import io.naryo.domain.configuration.store.active.feature.event.block.TargetType;
 

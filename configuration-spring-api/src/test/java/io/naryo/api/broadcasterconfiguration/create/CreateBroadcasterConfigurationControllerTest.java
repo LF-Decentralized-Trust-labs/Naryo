@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.naryo.api.broadcasterconfiguration.create.model.CreateBroadcasterConfigurationRequest;
+import io.naryo.api.broadcasterconfiguration.common.request.BroadcasterConfigurationRequest;
+import io.naryo.api.broadcasterconfiguration.common.request.BroadcasterConfigurationRequestBuilder;
 import io.naryo.application.broadcaster.configuration.mapper.BroadcasterConfigurationMapperRegistry;
 import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.operation.AddOperation;
@@ -51,8 +52,8 @@ class CreateBroadcasterConfigurationControllerTest {
         String additionalPropertyKey = Instancio.create(String.class);
         String additionalPropertyValue = Instancio.create(String.class);
 
-        CreateBroadcasterConfigurationRequest request =
-                new CreateBroadcasterConfigurationRequestBuilder()
+        BroadcasterConfigurationRequest request =
+                new BroadcasterConfigurationRequestBuilder()
                         .withHttpType()
                         .withAdditionalProperties(
                                 Map.of(additionalPropertyKey, additionalPropertyValue))
@@ -68,8 +69,7 @@ class CreateBroadcasterConfigurationControllerTest {
 
         BroadcasterConfiguration dummyBroadcasterConfiguration =
                 new HttpBroadcasterConfigurationBuilder().build();
-        when(mapperRegistry.map(
-                        eq(broadcasterType), any(CreateBroadcasterConfigurationRequest.class)))
+        when(mapperRegistry.map(eq(broadcasterType), any(BroadcasterConfigurationRequest.class)))
                 .thenReturn(dummyBroadcasterConfiguration);
 
         OperationId operationId = OperationId.random();
@@ -90,8 +90,8 @@ class CreateBroadcasterConfigurationControllerTest {
     @Test
     public void createBroadcasterConfiguration_withoutAdditionalProperties_accepted()
             throws Exception {
-        CreateBroadcasterConfigurationRequest request =
-                new CreateBroadcasterConfigurationRequestBuilder()
+        BroadcasterConfigurationRequest request =
+                new BroadcasterConfigurationRequestBuilder()
                         .withHttpType()
                         .withAdditionalProperties(Map.of())
                         .build();
@@ -104,8 +104,7 @@ class CreateBroadcasterConfigurationControllerTest {
 
         BroadcasterConfiguration dummyBroadcasterConfiguration =
                 new HttpBroadcasterConfigurationBuilder().build();
-        when(mapperRegistry.map(
-                        eq(broadcasterType), any(CreateBroadcasterConfigurationRequest.class)))
+        when(mapperRegistry.map(eq(broadcasterType), any(BroadcasterConfigurationRequest.class)))
                 .thenReturn(dummyBroadcasterConfiguration);
 
         OperationId operationId = OperationId.random();

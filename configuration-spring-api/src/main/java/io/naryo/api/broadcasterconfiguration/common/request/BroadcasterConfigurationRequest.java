@@ -8,11 +8,13 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import io.naryo.application.configuration.source.model.broadcaster.configuration.BroadcasterCacheConfigurationDescriptor;
 import io.naryo.application.configuration.source.model.broadcaster.configuration.BroadcasterConfigurationDescriptor;
 import io.naryo.domain.broadcaster.BroadcasterType;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+@Schema(description = "Broadcaster configuration request")
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter
@@ -22,7 +24,7 @@ public class BroadcasterConfigurationRequest implements BroadcasterConfiguration
 
     private @NotNull String type;
 
-    private BroadcasterCacheConfigurationRequest cache;
+    private BroadcasterCacheRequest cache;
 
     private Map<String, Object> additionalProperties;
 
@@ -43,8 +45,8 @@ public class BroadcasterConfigurationRequest implements BroadcasterConfiguration
     }
 
     @Override
-    public <T extends BroadcasterCacheConfigurationDescriptor> Optional<T> getCache() {
-        return Optional.ofNullable((T) cache);
+    public Optional<BroadcasterCacheRequest> getCache() {
+        return Optional.ofNullable(cache);
     }
 
     @Override
@@ -54,7 +56,7 @@ public class BroadcasterConfigurationRequest implements BroadcasterConfiguration
 
     @Override
     public void setCache(BroadcasterCacheConfigurationDescriptor cache) {
-        this.cache = (BroadcasterCacheConfigurationRequest) cache;
+        this.cache = (BroadcasterCacheRequest) cache;
     }
 
     @Override

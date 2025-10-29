@@ -5,8 +5,7 @@ import org.instancio.Instancio;
 
 public class FilterStoreFeatureConfigurationRequestBuilder
         implements RequestBuilder<
-                FilterStoreFeatureConfigurationRequestBuilder,
-                FilterStoreFeatureConfigurationRequest> {
+                FilterStoreFeatureConfigurationRequestBuilder, FilterStoreConfigurationRequest> {
 
     private String destination;
 
@@ -16,8 +15,8 @@ public class FilterStoreFeatureConfigurationRequestBuilder
     }
 
     @Override
-    public FilterStoreFeatureConfigurationRequest build() {
-        return new FilterStoreFeatureConfigurationRequest(getDestination());
+    public FilterStoreConfigurationRequest build() {
+        return new FilterStoreConfigurationRequest(getDestination());
     }
 
     public FilterStoreFeatureConfigurationRequestBuilder withDestination(String destination) {

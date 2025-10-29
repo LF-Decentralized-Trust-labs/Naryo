@@ -8,7 +8,7 @@ import io.naryo.domain.node.subscription.block.method.poll.PollBlockSubscription
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
-@Schema(description = "Poll block subscription")
+@Schema(description = "Poll block subscription request")
 @Getter
 public final class PollBlockSubscriptionConfigurationMethodRequest
         extends BlockSubscriptionMethodConfigurationRequest {

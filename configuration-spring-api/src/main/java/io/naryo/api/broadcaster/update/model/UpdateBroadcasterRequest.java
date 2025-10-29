@@ -1,18 +1,10 @@
 package io.naryo.api.broadcaster.update.model;
 
-import java.util.UUID;
-
-import io.naryo.api.broadcaster.common.request.BroadcasterTargetDTO;
-import io.naryo.domain.broadcaster.Broadcaster;
+import io.naryo.api.broadcaster.common.request.BroadcasterRequest;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+@Schema(description = "Update broadcaster request")
 public record UpdateBroadcasterRequest(
-        @NotNull BroadcasterTargetDTO target,
-        @NotNull UUID configurationId,
-        @NotBlank String prevItemHash) {
-
-    public Broadcaster toDomain(@NotNull UUID id) {
-        return new Broadcaster(id, target.toDomain(), configurationId);
-    }
-}
+        @NotNull BroadcasterRequest broadcaster, @NotBlank String prevItemHash) {}

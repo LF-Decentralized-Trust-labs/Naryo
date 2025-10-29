@@ -6,7 +6,6 @@ import io.naryo.api.error.ConfigurationApiErrors;
 import io.naryo.api.filter.common.FilterController;
 import io.naryo.api.filter.update.model.UpdateFilterRequest;
 import io.naryo.application.configuration.revision.OperationId;
-import io.naryo.application.configuration.revision.operation.RevisionOperation;
 import io.naryo.application.configuration.revision.operation.UpdateOperation;
 import io.naryo.application.configuration.revision.queue.RevisionOperationQueue;
 import io.naryo.domain.filter.Filter;
@@ -28,10 +27,8 @@ public class UpdateFilterController extends FilterController {
     @ConfigurationApiErrors
     @ResponseStatus(HttpStatus.ACCEPTED)
     public OperationId update(
-            @PathVariable("id") UUID id, @Valid @RequestBody UpdateFilterRequest filterToUpdate) {
-        Filter proposed = filterToUpdate.toDomain(id);
-        String prevItemHash = filterToUpdate.getPrevItemHash();
-        RevisionOperation<Filter> op = new UpdateOperation<>(id, prevItemHash, proposed);
-        return operationQueue.enqueue(op);
+            @PathVariable("id") UUID id, @Valid @RequestBody UpdateFilterRequest request) {
+        return operationQueue.enqueue(
+                new UpdateOperation<>(id, request.prevItemHash(), request.filter().toDomain(id)));
     }
 }

@@ -6,9 +6,11 @@ import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.filter.event.FilterSyncState;
 import io.naryo.domain.filter.event.sync.SyncStrategy;
 import io.naryo.domain.filter.event.sync.block.BlockActiveFilterSyncState;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
+@Schema(description = "Block based filter sync state request")
 @Getter
 public class BlockActiveFilterSyncStateRequest extends FilterSyncStateRequest {
 

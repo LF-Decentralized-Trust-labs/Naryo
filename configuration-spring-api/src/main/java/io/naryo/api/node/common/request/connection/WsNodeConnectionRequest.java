@@ -5,7 +5,7 @@ import io.naryo.domain.node.connection.ws.WsNodeConnection;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
-@Schema(description = "WebSocket node connection")
+@Schema(description = "WebSocket node connection request")
 @Getter
 public final class WsNodeConnectionRequest extends NodeConnectionRequest {
 

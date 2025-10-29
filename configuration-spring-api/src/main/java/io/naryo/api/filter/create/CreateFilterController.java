@@ -2,7 +2,7 @@ package io.naryo.api.filter.create;
 
 import io.naryo.api.error.ConfigurationApiErrors;
 import io.naryo.api.filter.common.FilterController;
-import io.naryo.api.filter.create.model.CreateFilterRequest;
+import io.naryo.api.filter.common.request.FilterRequest;
 import io.naryo.application.configuration.revision.OperationId;
 import io.naryo.application.configuration.revision.operation.AddOperation;
 import io.naryo.application.configuration.revision.operation.RevisionOperation;
@@ -25,7 +25,7 @@ public class CreateFilterController extends FilterController {
     @PostMapping
     @ConfigurationApiErrors
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public OperationId create(@Valid @RequestBody CreateFilterRequest filterRequest) {
+    public OperationId create(@Valid @RequestBody FilterRequest filterRequest) {
         RevisionOperation<Filter> op = new AddOperation<>(filterRequest.toDomain());
         return operationQueue.enqueue(op);
     }
