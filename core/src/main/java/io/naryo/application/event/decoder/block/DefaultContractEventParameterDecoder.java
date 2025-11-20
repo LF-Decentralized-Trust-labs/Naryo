@@ -43,32 +43,8 @@ public final class DefaultContractEventParameterDecoder implements ContractEvent
         int topicCount = 0;
         for (ParameterDefinition def : ordered) {
             if (def.isIndexed()) {
-                int topicPosition = topicCount++;
-                ContractEventParameter<?> value =
-                        switch (def.getType()) {
-                            case ADDRESS ->
-                                    new AddressParameter(
-                                            true,
-                                            def.getPosition(),
-                                            log.topics().get(topicPosition));
-                            case STRING, BYTES, BYTES_FIXED ->
-                                    new StringParameter(
-                                            true,
-                                            def.getPosition(),
-                                            log.topics().get(topicPosition));
-                            case UINT, INT, BOOL ->
-                                    decodeParameter(
-                                                    def,
-                                                    log.topics()
-                                                            .get(topicPosition)
-                                                            .getBytes(StandardCharsets.UTF_8),
-                                                    0,
-                                                    0)
-                                            .parameter();
-                            default ->
-                                    throw new IllegalStateException(
-                                            "Unexpected value: " + def.getType());
-                        };
+                byte[] topic = arrayify(log.topics().get(++topicCount));
+                ContractEventParameter<?> value = decodeParameter(def, topic, 0, 0).parameter();
                 result.add(value);
                 continue;
             }
