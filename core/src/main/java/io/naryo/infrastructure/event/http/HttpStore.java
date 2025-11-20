@@ -91,7 +91,7 @@ public abstract class HttpStore<K, D> implements Store<HttpStoreConfiguration, K
 
     @Override
     public boolean supports(StoreType type, Class<?> clazz) {
-        return type.getName().equalsIgnoreCase(HTTP_TYPE) && clazz.isAssignableFrom(this.clazz);
+        return type.getName().equalsIgnoreCase(HTTP_TYPE) && clazz == this.clazz;
     }
 
     protected abstract Destination getDestination(HttpStoreConfiguration configuration);

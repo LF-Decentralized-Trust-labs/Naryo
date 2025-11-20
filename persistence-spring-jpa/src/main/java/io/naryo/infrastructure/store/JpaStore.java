@@ -12,6 +12,6 @@ public abstract class JpaStore<K, D> implements Store<JpaActiveStoreConfiguratio
 
     @Override
     public boolean supports(StoreType type, Class<?> clazz) {
-        return type.getName().equals(JPA_TYPE) && clazz.isAssignableFrom(getTargetDataClass());
+        return type.getName().equals(JPA_TYPE) && clazz == this.getTargetDataClass();
     }
 }

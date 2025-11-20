@@ -52,7 +52,7 @@ public record EventFilterSpecification(
         Set<ParameterDefinition> result = Set.of();
 
         for (int i = 0; i < tokens.size(); i++) {
-            String type = tokens.get(i).trim();
+            String type = tokens.get(i).trim().toLowerCase();
             ParameterDefinition param = parseParameterType(type, i);
             result = addToSet(result, param);
         }

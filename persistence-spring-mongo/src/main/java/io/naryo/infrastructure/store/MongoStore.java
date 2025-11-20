@@ -12,7 +12,6 @@ public abstract class MongoStore<K, D> implements Store<MongoStoreConfiguration,
 
     @Override
     public boolean supports(StoreType type, Class<?> clazz) {
-        return type.getName().equalsIgnoreCase(MONGO_TYPE)
-                && clazz.isAssignableFrom(this.getTargetDataClass());
+        return type.getName().equalsIgnoreCase(MONGO_TYPE) && clazz == this.getTargetDataClass();
     }
 }
