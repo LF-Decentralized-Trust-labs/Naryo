@@ -50,11 +50,10 @@ class EventStoreBroadcasterPermanentTriggerTest {
 
     @ParameterizedTest
     @MethodSource("supportedEventsParameters")
-    void trigger_savesOnlyToStoresThatSupportTheEvent(
-            EventType targetEventType, Class<? extends Event<?>> eventClass) {
+    void trigger_savesOnlyToStoresThatSupportTheEvent(Class<? extends Event<?>> eventClass) {
         trigger =
                 new EventStoreBroadcasterPermanentTrigger(
-                        targetEventType, node, List.of(store1, store2), storeConfigurations);
+                        node, List.of(store1, store2), storeConfigurations);
 
         when(storeConfigurations.active())
                 .thenReturn(new Revision<>(1, "test-hash", Set.of(configuration)));
@@ -72,11 +71,11 @@ class EventStoreBroadcasterPermanentTriggerTest {
 
     @ParameterizedTest
     @MethodSource("supportedEventsParameters")
-    void trigger_afterOnExecute_invokesConsumer(
-            EventType targetEventType, Class<? extends Event<?>> eventClass) throws Exception {
+    void trigger_afterOnExecute_invokesConsumer(Class<? extends Event<?>> eventClass)
+            throws Exception {
         trigger =
                 new EventStoreBroadcasterPermanentTrigger(
-                        targetEventType, node, List.of(store1, store2), storeConfigurations);
+                        node, List.of(store1, store2), storeConfigurations);
 
         when(storeConfigurations.active())
                 .thenReturn(new Revision<>(1, "test-hash", Set.of(configuration)));
@@ -94,11 +93,10 @@ class EventStoreBroadcasterPermanentTriggerTest {
 
     @ParameterizedTest
     @MethodSource("supportedEventsParameters")
-    void trigger_catchesExceptionsFromSaveAndContinues(
-            EventType targetEventType, Class<? extends Event<?>> eventClass) {
+    void trigger_catchesExceptionsFromSaveAndContinues(Class<? extends Event<?>> eventClass) {
         trigger =
                 new EventStoreBroadcasterPermanentTrigger(
-                        targetEventType, node, List.of(store1, store2), storeConfigurations);
+                        node, List.of(store1, store2), storeConfigurations);
 
         when(storeConfigurations.active())
                 .thenReturn(new Revision<>(1, "test-hash", Set.of(configuration)));
@@ -114,11 +112,11 @@ class EventStoreBroadcasterPermanentTriggerTest {
 
     @ParameterizedTest
     @MethodSource("supportedEventsParameters")
-    void trigger_catchesExceptionsFromConsumerAndContinues(
-            EventType targetEventType, Class<? extends Event<?>> eventClass) throws Exception {
+    void trigger_catchesExceptionsFromConsumerAndContinues(Class<? extends Event<?>> eventClass)
+            throws Exception {
         trigger =
                 new EventStoreBroadcasterPermanentTrigger(
-                        targetEventType, node, List.of(store1, store2), storeConfigurations);
+                        node, List.of(store1, store2), storeConfigurations);
 
         when(storeConfigurations.active())
                 .thenReturn(new Revision<>(1, "test-hash", Set.of(configuration)));
@@ -140,7 +138,7 @@ class EventStoreBroadcasterPermanentTriggerTest {
     void supports_returnsTrueIfEventNodeIsSupported() {
         trigger =
                 new EventStoreBroadcasterPermanentTrigger(
-                        EventType.BLOCK, node, List.of(store1, store2), storeConfigurations);
+                        node, List.of(store1, store2), storeConfigurations);
 
         Event<?> evt = mock(Event.class);
         when(evt.getNodeId()).thenReturn(node.getId());
@@ -151,7 +149,7 @@ class EventStoreBroadcasterPermanentTriggerTest {
     void supports_returnsFalseIfEventNodeIsNotSupported() {
         trigger =
                 new EventStoreBroadcasterPermanentTrigger(
-                        EventType.BLOCK, node, List.of(store1, store2), storeConfigurations);
+                        node, List.of(store1, store2), storeConfigurations);
 
         Event<?> evt = mock(Event.class);
         when(evt.getNodeId()).thenReturn(UUID.randomUUID());

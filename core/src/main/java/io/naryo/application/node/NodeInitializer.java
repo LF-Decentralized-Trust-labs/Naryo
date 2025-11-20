@@ -29,7 +29,6 @@ import io.naryo.application.store.filter.model.FilterState;
 import io.naryo.domain.configuration.store.StoreConfiguration;
 import io.naryo.domain.configuration.store.StoreState;
 import io.naryo.domain.configuration.store.active.ActiveStoreConfiguration;
-import io.naryo.domain.event.EventType;
 import io.naryo.domain.event.block.BlockEvent;
 import io.naryo.domain.node.Node;
 import lombok.extern.slf4j.Slf4j;
@@ -131,8 +130,7 @@ public final class NodeInitializer {
                 configurationRevisionManagers.storeConfigurations().liveRegistry();
 
         var eventStoreTrigger =
-                new EventStoreBroadcasterPermanentTrigger(
-                        EventType.BLOCK, node, stores, storeConfigurations);
+                new EventStoreBroadcasterPermanentTrigger(node, stores, storeConfigurations);
         dispatcher.addTrigger(eventStoreTrigger);
 
         var blockTrigger =
@@ -177,11 +175,12 @@ public final class NodeInitializer {
                 storeConfiguration);
     }
 
+    @SuppressWarnings("unchecked")
     private <S extends Store<?, ?, ?>> Optional<S> storeForNode(
             Class<S> storeClass, Class<?> dataClass, StoreConfiguration configuration) {
         List<S> eventStores =
                 stores.stream()
-                        .filter(store -> storeClass.isAssignableFrom(store.getClass()))
+                        .filter(store -> store.getClass().isAssignableFrom(storeClass))
                         .map(store -> (S) store)
                         .toList();
         if (configuration.getState().equals(StoreState.ACTIVE) && !eventStores.isEmpty()) {
