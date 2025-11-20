@@ -83,7 +83,7 @@ public final class DefaultContractEventParameterDecoder implements ContractEvent
 
     private DecodeResult decodeUint(byte[] data, int offset, ParameterDefinition definition) {
         byte[] slice = Arrays.copyOfRange(data, offset, offset + WORD);
-        int value = new BigInteger(slice).intValue();
+        BigInteger value = new BigInteger(slice);
         return new DecodeResult(
                 new UintParameter(definition.isIndexed(), definition.getPosition(), value),
                 offset + WORD);
@@ -91,7 +91,7 @@ public final class DefaultContractEventParameterDecoder implements ContractEvent
 
     private DecodeResult decodeInt(byte[] data, int offset, ParameterDefinition definition) {
         byte[] slice = Arrays.copyOfRange(data, offset, offset + WORD);
-        int value = new BigInteger(slice).intValue(); // signed
+        BigInteger value = new BigInteger(slice); // signed
         return new DecodeResult(
                 new IntParameter(definition.isIndexed(), definition.getPosition(), value),
                 offset + WORD);
