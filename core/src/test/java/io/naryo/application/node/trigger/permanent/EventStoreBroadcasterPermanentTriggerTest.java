@@ -50,7 +50,8 @@ class EventStoreBroadcasterPermanentTriggerTest {
 
     @ParameterizedTest
     @MethodSource("supportedEventsParameters")
-    void trigger_savesOnlyToStoresThatSupportTheEvent(Class<? extends Event<?>> eventClass) {
+    void trigger_savesOnlyToStoresThatSupportTheEvent(
+            EventType targetEventType, Class<? extends Event<?>> eventClass) {
         trigger =
                 new EventStoreBroadcasterPermanentTrigger(
                         node, List.of(store1, store2), storeConfigurations);
@@ -58,6 +59,7 @@ class EventStoreBroadcasterPermanentTriggerTest {
         when(storeConfigurations.active())
                 .thenReturn(new Revision<>(1, "test-hash", Set.of(configuration)));
         Event<?> evt = mock(eventClass);
+        when(evt.getEventType()).thenReturn(targetEventType);
         when(store1.supports(configuration.getType(), evt.getClass())).thenReturn(true);
         when(evt.getNodeId()).thenReturn(node.getId());
         when(configuration.getNodeId()).thenReturn(node.getId());
@@ -71,8 +73,8 @@ class EventStoreBroadcasterPermanentTriggerTest {
 
     @ParameterizedTest
     @MethodSource("supportedEventsParameters")
-    void trigger_afterOnExecute_invokesConsumer(Class<? extends Event<?>> eventClass)
-            throws Exception {
+    void trigger_afterOnExecute_invokesConsumer(
+            EventType targetEventType, Class<? extends Event<?>> eventClass) throws Exception {
         trigger =
                 new EventStoreBroadcasterPermanentTrigger(
                         node, List.of(store1, store2), storeConfigurations);
@@ -80,6 +82,7 @@ class EventStoreBroadcasterPermanentTriggerTest {
         when(storeConfigurations.active())
                 .thenReturn(new Revision<>(1, "test-hash", Set.of(configuration)));
         Event<?> evt = mock(eventClass);
+        when(evt.getEventType()).thenReturn(targetEventType);
         when(store1.supports(configuration.getType(), evt.getClass())).thenReturn(true);
         when(configuration.getNodeId()).thenReturn(node.getId());
         when(configuration.getState()).thenReturn(StoreState.ACTIVE);
@@ -93,7 +96,8 @@ class EventStoreBroadcasterPermanentTriggerTest {
 
     @ParameterizedTest
     @MethodSource("supportedEventsParameters")
-    void trigger_catchesExceptionsFromSaveAndContinues(Class<? extends Event<?>> eventClass) {
+    void trigger_catchesExceptionsFromSaveAndContinues(
+            EventType targetEventType, Class<? extends Event<?>> eventClass) {
         trigger =
                 new EventStoreBroadcasterPermanentTrigger(
                         node, List.of(store1, store2), storeConfigurations);
@@ -101,6 +105,7 @@ class EventStoreBroadcasterPermanentTriggerTest {
         when(storeConfigurations.active())
                 .thenReturn(new Revision<>(1, "test-hash", Set.of(configuration)));
         Event<?> evt = mock(eventClass);
+        when(evt.getEventType()).thenReturn(targetEventType);
         when(store1.supports(configuration.getType(), evt.getClass())).thenReturn(true);
         when(configuration.getState()).thenReturn(StoreState.ACTIVE);
         when(configuration.getNodeId()).thenReturn(node.getId());
@@ -112,8 +117,8 @@ class EventStoreBroadcasterPermanentTriggerTest {
 
     @ParameterizedTest
     @MethodSource("supportedEventsParameters")
-    void trigger_catchesExceptionsFromConsumerAndContinues(Class<? extends Event<?>> eventClass)
-            throws Exception {
+    void trigger_catchesExceptionsFromConsumerAndContinues(
+            EventType targetEventType, Class<? extends Event<?>> eventClass) throws Exception {
         trigger =
                 new EventStoreBroadcasterPermanentTrigger(
                         node, List.of(store1, store2), storeConfigurations);
@@ -121,6 +126,7 @@ class EventStoreBroadcasterPermanentTriggerTest {
         when(storeConfigurations.active())
                 .thenReturn(new Revision<>(1, "test-hash", Set.of(configuration)));
         Event<?> evt = mock(eventClass);
+        when(evt.getEventType()).thenReturn(targetEventType);
         when(store1.supports(configuration.getType(), evt.getClass())).thenReturn(false);
         when(store2.supports(configuration.getType(), evt.getClass())).thenReturn(false);
         when(configuration.getNodeId()).thenReturn(node.getId());
