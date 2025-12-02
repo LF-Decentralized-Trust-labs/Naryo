@@ -90,9 +90,9 @@ class DefaultContractEventParameterDecoderTest {
         assert list.get(1) instanceof BoolParameter;
         assert list.get(2) instanceof UintParameter;
         assert list.get(3) instanceof IntParameter;
-        assert list.get(4) instanceof StringParameter;
+        assert list.get(4) instanceof BytesFixedParameter;
         assert list.get(5) instanceof StringParameter;
-        assert list.get(6) instanceof StringParameter;
+        assert list.get(6) instanceof BytesParameter;
     }
 
     @Test
@@ -528,7 +528,7 @@ class DefaultContractEventParameterDecoderTest {
 
         // a: uint256 = 42
         assertTrue(fields.get(0) instanceof UintParameter);
-        assertEquals(42, ((UintParameter) fields.get(0)).getValue());
+        assertEquals(BigInteger.valueOf(42), ((UintParameter) fields.get(0)).getValue());
 
         // b: bool = true
         assertTrue(fields.get(1) instanceof io.naryo.domain.event.contract.parameter.BoolParameter);

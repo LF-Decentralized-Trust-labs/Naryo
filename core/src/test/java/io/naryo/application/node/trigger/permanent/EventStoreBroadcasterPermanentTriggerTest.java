@@ -54,11 +54,12 @@ class EventStoreBroadcasterPermanentTriggerTest {
             EventType targetEventType, Class<? extends Event<?>> eventClass) {
         trigger =
                 new EventStoreBroadcasterPermanentTrigger(
-                        targetEventType, node, List.of(store1, store2), storeConfigurations);
+                        node, List.of(store1, store2), storeConfigurations);
 
         when(storeConfigurations.active())
                 .thenReturn(new Revision<>(1, "test-hash", Set.of(configuration)));
         Event<?> evt = mock(eventClass);
+        when(evt.getEventType()).thenReturn(targetEventType);
         when(store1.supports(configuration.getType(), evt.getClass())).thenReturn(true);
         when(evt.getNodeId()).thenReturn(node.getId());
         when(configuration.getNodeId()).thenReturn(node.getId());
@@ -76,11 +77,12 @@ class EventStoreBroadcasterPermanentTriggerTest {
             EventType targetEventType, Class<? extends Event<?>> eventClass) throws Exception {
         trigger =
                 new EventStoreBroadcasterPermanentTrigger(
-                        targetEventType, node, List.of(store1, store2), storeConfigurations);
+                        node, List.of(store1, store2), storeConfigurations);
 
         when(storeConfigurations.active())
                 .thenReturn(new Revision<>(1, "test-hash", Set.of(configuration)));
         Event<?> evt = mock(eventClass);
+        when(evt.getEventType()).thenReturn(targetEventType);
         when(store1.supports(configuration.getType(), evt.getClass())).thenReturn(true);
         when(configuration.getNodeId()).thenReturn(node.getId());
         when(configuration.getState()).thenReturn(StoreState.ACTIVE);
@@ -98,11 +100,12 @@ class EventStoreBroadcasterPermanentTriggerTest {
             EventType targetEventType, Class<? extends Event<?>> eventClass) {
         trigger =
                 new EventStoreBroadcasterPermanentTrigger(
-                        targetEventType, node, List.of(store1, store2), storeConfigurations);
+                        node, List.of(store1, store2), storeConfigurations);
 
         when(storeConfigurations.active())
                 .thenReturn(new Revision<>(1, "test-hash", Set.of(configuration)));
         Event<?> evt = mock(eventClass);
+        when(evt.getEventType()).thenReturn(targetEventType);
         when(store1.supports(configuration.getType(), evt.getClass())).thenReturn(true);
         when(configuration.getState()).thenReturn(StoreState.ACTIVE);
         when(configuration.getNodeId()).thenReturn(node.getId());
@@ -118,11 +121,12 @@ class EventStoreBroadcasterPermanentTriggerTest {
             EventType targetEventType, Class<? extends Event<?>> eventClass) throws Exception {
         trigger =
                 new EventStoreBroadcasterPermanentTrigger(
-                        targetEventType, node, List.of(store1, store2), storeConfigurations);
+                        node, List.of(store1, store2), storeConfigurations);
 
         when(storeConfigurations.active())
                 .thenReturn(new Revision<>(1, "test-hash", Set.of(configuration)));
         Event<?> evt = mock(eventClass);
+        when(evt.getEventType()).thenReturn(targetEventType);
         when(store1.supports(configuration.getType(), evt.getClass())).thenReturn(false);
         when(store2.supports(configuration.getType(), evt.getClass())).thenReturn(false);
         when(configuration.getNodeId()).thenReturn(node.getId());
@@ -140,7 +144,7 @@ class EventStoreBroadcasterPermanentTriggerTest {
     void supports_returnsTrueIfEventNodeIsSupported() {
         trigger =
                 new EventStoreBroadcasterPermanentTrigger(
-                        EventType.BLOCK, node, List.of(store1, store2), storeConfigurations);
+                        node, List.of(store1, store2), storeConfigurations);
 
         Event<?> evt = mock(Event.class);
         when(evt.getNodeId()).thenReturn(node.getId());
@@ -151,7 +155,7 @@ class EventStoreBroadcasterPermanentTriggerTest {
     void supports_returnsFalseIfEventNodeIsNotSupported() {
         trigger =
                 new EventStoreBroadcasterPermanentTrigger(
-                        EventType.BLOCK, node, List.of(store1, store2), storeConfigurations);
+                        node, List.of(store1, store2), storeConfigurations);
 
         Event<?> evt = mock(Event.class);
         when(evt.getNodeId()).thenReturn(UUID.randomUUID());

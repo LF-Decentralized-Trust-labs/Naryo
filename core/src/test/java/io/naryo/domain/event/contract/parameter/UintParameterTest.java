@@ -1,5 +1,7 @@
 package io.naryo.domain.event.contract.parameter;
 
+import java.math.BigInteger;
+
 import io.naryo.domain.common.ParameterType;
 import io.naryo.domain.event.contract.AbstractContractEventParameterTest;
 import org.junit.jupiter.api.Test;
@@ -10,14 +12,14 @@ class UintParameterTest extends AbstractContractEventParameterTest {
 
     @Override
     protected void createParameter(boolean indexed, int position, Object value) {
-        new UintParameter(indexed, position, (Integer) value);
+        new UintParameter(indexed, position, (BigInteger) value);
     }
 
     @Test
     void testConstructor() {
-        UintParameter parameter = new UintParameter(true, 1, 123);
+        UintParameter parameter = new UintParameter(true, 1, BigInteger.valueOf(123));
 
-        assertEquals(123, parameter.getValue());
+        assertEquals(BigInteger.valueOf(123), parameter.getValue());
         assertTrue(parameter.isIndexed());
         assertEquals(1, parameter.getPosition());
         assertEquals(ParameterType.UINT, parameter.getType());
@@ -25,6 +27,8 @@ class UintParameterTest extends AbstractContractEventParameterTest {
 
     @Test
     void testConstructorWithNegativeValue() {
-        assertThrows(IllegalArgumentException.class, () -> new UintParameter(true, 1, -123));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new UintParameter(true, 1, BigInteger.valueOf(-123)));
     }
 }

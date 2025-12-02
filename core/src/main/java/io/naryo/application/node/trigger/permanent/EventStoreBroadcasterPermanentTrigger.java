@@ -10,7 +10,6 @@ import io.naryo.domain.configuration.store.StoreConfiguration;
 import io.naryo.domain.configuration.store.StoreState;
 import io.naryo.domain.configuration.store.active.ActiveStoreConfiguration;
 import io.naryo.domain.event.Event;
-import io.naryo.domain.event.EventType;
 import io.naryo.domain.event.block.BlockEvent;
 import io.naryo.domain.event.contract.ContractEvent;
 import io.naryo.domain.event.transaction.TransactionEvent;
@@ -21,18 +20,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public final class EventStoreBroadcasterPermanentTrigger implements PermanentTrigger<Event<?>> {
 
-    private final EventType targetEventType;
     private final Node node;
     private final Collection<Store<?, ?, ?>> stores;
     private final LiveRegistry<StoreConfiguration> storeConfigurations;
     private Consumer<Event<?>> consumer;
 
     public EventStoreBroadcasterPermanentTrigger(
-            EventType targetEventType,
             Node node,
             Collection<Store<?, ?, ?>> stores,
             LiveRegistry<StoreConfiguration> storeConfigurations) {
-        this.targetEventType = targetEventType;
         this.node = node;
         this.stores = stores;
         this.storeConfigurations = storeConfigurations;
@@ -77,7 +73,7 @@ public final class EventStoreBroadcasterPermanentTrigger implements PermanentTri
 
     private void saveEventInStore(Event<?> event, ActiveStoreConfiguration storeConfiguration) {
         try {
-            var eventStore = getEventStore(storeConfiguration);
+            var eventStore = getEventStore(storeConfiguration, event);
             eventStore.save(storeConfiguration, event.getKey(), event);
         } catch (Exception e) {
             log.error(
@@ -88,21 +84,18 @@ public final class EventStoreBroadcasterPermanentTrigger implements PermanentTri
         }
     }
 
+    @SuppressWarnings("unchecked")
     private EventStore<ActiveStoreConfiguration, Object, Event<?>> getEventStore(
-            ActiveStoreConfiguration storeConfiguration) {
+            ActiveStoreConfiguration storeConfiguration, Event<?> event) {
         Class<? extends Event<?>> targetEventClass =
-                switch (targetEventType) {
+                switch (event.getEventType()) {
                     case BLOCK -> BlockEvent.class;
                     case CONTRACT -> ContractEvent.class;
                     case TRANSACTION -> TransactionEvent.class;
                 };
 
         return this.stores.stream()
-                .filter(
-                        store ->
-                                EventStore.class.isAssignableFrom(store.getClass())
-                                        && store.supports(
-                                                storeConfiguration.getType(), targetEventClass))
+                .filter(store -> store.supports(storeConfiguration.getType(), targetEventClass))
                 .findFirst()
                 .map(store -> (EventStore<ActiveStoreConfiguration, Object, Event<?>>) store)
                 .orElseThrow(() -> new IllegalArgumentException("No event store found"));

@@ -1,13 +1,16 @@
 package io.naryo.infrastructure.store.event.persistence.entity.contract.parameter;
 
+import java.math.BigInteger;
+
 import io.naryo.domain.common.ParameterType;
 import io.naryo.domain.event.contract.parameter.UintParameter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public final class UintParameterEntity
-        extends ContractEventParameterEntity<Integer, UintParameter> {
-    private UintParameterEntity(ParameterType type, boolean indexed, int position, Integer value) {
+        extends ContractEventParameterEntity<BigInteger, UintParameter> {
+    private UintParameterEntity(
+            ParameterType type, boolean indexed, int position, BigInteger value) {
         super(type, indexed, position, value);
     }
 

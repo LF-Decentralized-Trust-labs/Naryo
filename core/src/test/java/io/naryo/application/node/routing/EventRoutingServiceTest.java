@@ -1,5 +1,6 @@
 package io.naryo.application.node.routing;
 
+import java.math.BigInteger;
 import java.util.*;
 
 import io.naryo.application.configuration.revision.Revision;
@@ -117,7 +118,7 @@ class EventRoutingServiceTest {
         when(ce.getEventType()).thenReturn(EventType.CONTRACT);
         when(ce.getName()).thenReturn(new EventName("Foo"));
         when(ce.getStatus()).thenReturn(ContractEventStatus.CONFIRMED);
-        IntParameter param = new IntParameter(false, 0, 42);
+        IntParameter param = new IntParameter(false, 0, BigInteger.valueOf(42));
         when(ce.getParameters()).thenReturn(Set.of(param));
 
         Revision<Broadcaster> broadcasterRevision =

@@ -1,5 +1,7 @@
 package io.naryo.infrastructure.store.event.persistence.document.contract.parameter;
 
+import java.math.BigInteger;
+
 import io.naryo.domain.common.ParameterType;
 import io.naryo.domain.event.contract.parameter.UintParameter;
 import lombok.NoArgsConstructor;
@@ -8,9 +10,9 @@ import org.springframework.data.annotation.TypeAlias;
 @NoArgsConstructor
 @TypeAlias("uint")
 public final class UintParameterDocument
-        extends ContractEventParameterDocument<Integer, UintParameter> {
+        extends ContractEventParameterDocument<BigInteger, UintParameter> {
     private UintParameterDocument(
-            ParameterType type, boolean indexed, int position, Integer value) {
+            ParameterType type, boolean indexed, int position, BigInteger value) {
         super(type, indexed, position, value);
     }
 

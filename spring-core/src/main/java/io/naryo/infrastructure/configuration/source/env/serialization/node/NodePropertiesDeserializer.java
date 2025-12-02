@@ -46,11 +46,11 @@ public final class NodePropertiesDeserializer extends EnvironmentDeserializer<No
                         ? NodeType.valueOf(typeStr.toUpperCase())
                         : NodeType.ETHEREUM;
 
-        SubscriptionDescriptor subscription = deserializeSubscription(root, codec);
-        InteractionDescriptor interaction = deserializeInteraction(root, codec);
+        SubscriptionDescriptor subscription =
+                deserializeSubscription(root.get("subscription"), codec);
+        InteractionDescriptor interaction = deserializeInteraction(root.get("interaction"), codec);
         NodeConnectionDescriptor connection =
-                (NodeConnectionDescriptor)
-                        safeTreeToValue(root, "connection", codec, ConnectionProperties.class);
+                safeTreeToValue(root, "connection", codec, ConnectionProperties.class);
 
         return switch (type) {
             case ETHEREUM -> {
