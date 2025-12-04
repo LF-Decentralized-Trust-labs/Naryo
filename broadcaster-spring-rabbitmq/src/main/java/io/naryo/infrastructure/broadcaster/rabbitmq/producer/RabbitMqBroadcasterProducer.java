@@ -3,7 +3,9 @@ package io.naryo.infrastructure.broadcaster.rabbitmq.producer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.naryo.application.broadcaster.BroadcasterProducer;
 import io.naryo.domain.broadcaster.Broadcaster;
+import io.naryo.domain.broadcaster.BroadcasterTargetType;
 import io.naryo.domain.broadcaster.BroadcasterType;
+import io.naryo.domain.common.Destination;
 import io.naryo.domain.configuration.broadcaster.BroadcasterConfiguration;
 import io.naryo.domain.configuration.broadcaster.rabbitmq.Exchange;
 import io.naryo.domain.configuration.broadcaster.rabbitmq.RabbitMqBroadcasterConfiguration;
@@ -31,28 +33,23 @@ public final class RabbitMqBroadcasterProducer implements BroadcasterProducer {
 
     @Override
     public void produce(
-            Broadcaster broadcaster, BroadcasterConfiguration configuration, Event event) {
+            Broadcaster broadcaster, BroadcasterConfiguration configuration, Event<?> event) {
         final Exchange exchange = ((RabbitMqBroadcasterConfiguration) configuration).getExchange();
         broadcaster
                 .getTarget()
                 .getDestinations()
                 .forEach(
                         destination -> {
-                            RoutingKey routingKey = new RoutingKey(destination.value());
+                            RoutingKey routingKey =
+                                    calculateRoutingKey(event, destination, broadcaster);
                             this.produce(exchange, routingKey, event);
                         });
     }
 
     private void produce(Exchange exchange, RoutingKey routingKey, Event<?> event) {
         try {
-            String routingKeyValue =
-                    event.getEventType() == EventType.CONTRACT
-                            ? String.format(
-                                    "%s.%s",
-                                    routingKey.value(), getContractEventId((ContractEvent) event))
-                            : String.format("%s.%s", routingKey.value(), event.getKey());
             rabbitTemplate.convertAndSend(
-                    exchange.value(), routingKeyValue, objectMapper.writeValueAsString(event));
+                    exchange.value(), routingKey.value(), objectMapper.writeValueAsString(event));
         } catch (Exception e) {
             log.error("Error while sending event to RabbitMQ broadcaster: {}", e.getMessage());
         }
@@ -61,6 +58,21 @@ public final class RabbitMqBroadcasterProducer implements BroadcasterProducer {
     @Override
     public boolean supports(BroadcasterType type) {
         return type.getName().equals(RABBITMQ_TYPE);
+    }
+
+    private RoutingKey calculateRoutingKey(
+            Event<?> event, Destination destination, Broadcaster broadcaster) {
+        String key;
+        if (event.getEventType() == EventType.CONTRACT) {
+            key =
+                    broadcaster.getTarget().getType() == BroadcasterTargetType.FILTER
+                            ? ((ContractEvent) event).getContractAddress()
+                            : getContractEventId((ContractEvent) event);
+        } else {
+            key = event.getKey().toString();
+        }
+
+        return new RoutingKey(String.format("%s.%s", destination.value(), key));
     }
 
     private String getContractEventId(ContractEvent event) {
