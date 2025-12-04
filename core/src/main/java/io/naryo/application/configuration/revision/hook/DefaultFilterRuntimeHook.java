@@ -128,7 +128,7 @@ public record DefaultFilterRuntimeHook(
                                     store ->
                                             store.supports(
                                                     storeConfiguration.getType(),
-                                                    FilterStore.class))
+                                                    FilterState.class))
                             .findFirst()
                             .orElseThrow(
                                     () -> new IllegalArgumentException("No event store founded")));
