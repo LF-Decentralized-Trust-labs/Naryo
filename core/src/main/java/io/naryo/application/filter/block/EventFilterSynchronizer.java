@@ -236,8 +236,8 @@ public final class EventFilterSynchronizer implements Synchronizer {
         try {
             return decorated.get();
         } catch (Exception e) {
-            log.error("Subscription for block {} failed after retries", node.getId(), e);
-            throw new RuntimeException("Could not subscribe to block stream", e);
+            log.error("Filter synchronization {} failed after retries", filter.getName(), e);
+            throw new RuntimeException("Could not synchronize filter", e);
         }
     }
 }
