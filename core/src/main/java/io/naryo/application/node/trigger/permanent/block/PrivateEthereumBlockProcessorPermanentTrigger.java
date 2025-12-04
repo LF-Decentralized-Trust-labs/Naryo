@@ -73,8 +73,16 @@ public final class PrivateEthereumBlockProcessorPermanentTrigger
                     .filter(predicate)
                     .forEach(
                             value -> {
-                                processLog(event, filter, value);
-                                processedLogs.set(+1);
+                                try {
+                                    processLog(event, filter, value);
+                                    processedLogs.set(+1);
+                                } catch (RuntimeException e) {
+                                    log.error(
+                                            "Error processing event {} log {}",
+                                            filter.getSpecification().eventName(),
+                                            log,
+                                            e);
+                                }
                             });
         }
 
