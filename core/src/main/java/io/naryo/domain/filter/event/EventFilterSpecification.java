@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import io.naryo.domain.common.event.EventName;
 import io.naryo.domain.filter.event.parameter.*;
+import jakarta.annotation.Nullable;
 import lombok.Builder;
 
 @Builder(toBuilder = true)
@@ -12,7 +13,9 @@ public record EventFilterSpecification(
         EventName eventName, CorrelationId correlationId, Set<ParameterDefinition> parameters) {
 
     public EventFilterSpecification(
-            EventName eventName, CorrelationId correlationId, Set<ParameterDefinition> parameters) {
+            EventName eventName,
+            @Nullable CorrelationId correlationId,
+            Set<ParameterDefinition> parameters) {
         Objects.requireNonNull(eventName, "Event name cannot be null");
         Objects.requireNonNull(parameters, "Parameters cannot be null");
         if (parameters.isEmpty()) {

@@ -33,6 +33,7 @@ public class EventSpecificationDocument implements EventSpecificationDescriptor 
 
     public static EventSpecificationDocument fromDomain(EventFilterSpecification source) {
         return new EventSpecificationDocument(
-                source.getEventSignature(), source.correlationId().position());
+                source.getEventSignature(),
+                source.correlationId() != null ? source.correlationId().position() : null);
     }
 }

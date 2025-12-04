@@ -37,6 +37,7 @@ public class EventSpecification implements EventSpecificationDescriptor {
 
     public static EventSpecification fromDomain(EventFilterSpecification source) {
         return new EventSpecification(
-                source.getEventSignature(), source.correlationId().position());
+                source.getEventSignature(),
+                source.correlationId() != null ? source.correlationId().position() : null);
     }
 }
