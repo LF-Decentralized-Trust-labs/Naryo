@@ -119,9 +119,17 @@ public class BlockProcessorPermanentTrigger<N extends Node, I extends BlockInter
             logs.stream()
                     .filter(predicate)
                     .forEach(
-                            log -> {
-                                processLog(event, filter, log);
-                                processedLogs.set(+1);
+                            value -> {
+                                try {
+                                    processLog(event, filter, value);
+                                    processedLogs.set(+1);
+                                } catch (RuntimeException e) {
+                                    log.error(
+                                            "Error processing event {} log {}",
+                                            filter.getSpecification().eventName(),
+                                            value,
+                                            e);
+                                }
                             });
         }
 
