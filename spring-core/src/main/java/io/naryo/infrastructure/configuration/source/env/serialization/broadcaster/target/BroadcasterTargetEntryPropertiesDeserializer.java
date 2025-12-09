@@ -44,9 +44,11 @@ public final class BroadcasterTargetEntryPropertiesDeserializer
                             new TransactionBroadcasterTargetConfigurationProperties(destinations);
                     case CONTRACT_EVENT ->
                             new ContractEventBroadcasterTargetProperties(destinations);
-                    case FILTER ->
-                            new FilterBroadcasterTargetProperties(
-                                    destinations, getUuidOrNull("filterId"));
+                    case FILTER -> {
+                        String filterId = getTextOrNull(targetNode.get("filterId"));
+                        yield new FilterBroadcasterTargetProperties(
+                                destinations, getUuidOrNull(filterId));
+                    }
                     case BLOCK -> new BlockBroadcasterTargetProperties(destinations);
                 };
 

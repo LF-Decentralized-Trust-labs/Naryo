@@ -110,8 +110,14 @@ public final class EventRoutingService {
             return false;
         }
 
-        Iterator<ParameterDefinition> defIt = defs.iterator();
-        Iterator<ContractEventParameter<?>> parIt = params.iterator();
+        Iterator<ParameterDefinition> defIt =
+                defs.stream()
+                        .sorted(Comparator.comparing(ParameterDefinition::getPosition))
+                        .iterator();
+        Iterator<ContractEventParameter<?>> parIt =
+                params.stream()
+                        .sorted(Comparator.comparing(ContractEventParameter::getPosition))
+                        .iterator();
 
         while (defIt.hasNext()) {
             ParameterType defType = defIt.next().getType();
