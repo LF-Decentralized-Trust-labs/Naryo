@@ -1,0 +1,25 @@
+package com.example.testnaryo;
+
+import io.naryo.application.bootstrap.Bootstrapper;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication(scanBasePackages = {"com.example.testnaryo", "io.naryo"})
+public class Application implements InitializingBean {
+
+    private final Bootstrapper bootstrapper;
+
+    public Application(Bootstrapper bootstrapper) {
+        this.bootstrapper = bootstrapper;
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+
+    @Override
+    public void afterPropertiesSet() {
+        bootstrapper.start();
+    }
+}

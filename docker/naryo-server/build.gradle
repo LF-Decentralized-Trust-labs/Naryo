@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+    alias(libs.plugins.springBoot)
+    alias(libs.plugins.springDependencyManagement)
+}
+
+group = 'com.example.naryo-server'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'io.naryo:spring-core:0.1.0-SNAPSHOT'
+    implementation 'io.naryo:core:0.1.0-SNAPSHOT'
+    implementation(libs.springBootStarter)
+    testImplementation(libs.springBootStarterTest)
+    testRuntimeOnly(libs.junitPlatformLauncher)
+}
+
+tasks.named('test', Test) {
+    useJUnitPlatform()
+}

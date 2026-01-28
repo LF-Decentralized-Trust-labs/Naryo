@@ -1,0 +1,25 @@
+apply plugin: 'jacoco'
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    classDirectories.from files(subprojects.sourceSets.main.output).asFileTree.matching {
+        exclude 'org/gradle/**'
+    }
+    dependsOn test
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+        csv.required.set(false)
+        xml.destination file("${buildDir}/reports/jacoco.xml")
+        html.destination file("${buildDir}/reports/jacoco-html")
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.10"
+}
+

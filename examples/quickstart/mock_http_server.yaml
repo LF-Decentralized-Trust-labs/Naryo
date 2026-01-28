@@ -1,0 +1,15 @@
+openapi: 3.0.0
+info:
+  title: HTTP destination mock API
+  version: 0.0.1
+tags:
+servers:
+  - url: https://localhost:7070
+paths:
+  /events:
+    post:
+      operationId: "receiveEvents"
+      responses:
+        "200":
+          description: ok
+  
