@@ -1,0 +1,67 @@
+services:
+  anvil:
+    image: ghcr.io/foundry-rs/foundry:latest
+    container_name: anvil
+    restart: on-failure
+    ports:
+      - "8545:8545"
+    networks:
+      - naryo
+    command:
+      - "anvil --host 0.0.0.0"
+
+  sc-deployer:
+    image: ghcr.io/foundry-rs/foundry:latest
+    user: "foundry"
+    working_dir: /home/foundry/
+    container_name: sc-deployer
+    depends_on:
+      - anvil
+    networks:
+      - naryo
+    command: #see .env file for env vars
+      - "forge create /HelloNaryo.sol:HelloNaryo --rpc-url http://anvil:8545 --private-key ${PRIVATE_KEY} --out /home/foundry/ --broadcast"
+    volumes:
+      - $PWD/HelloNaryo.sol:/HelloNaryo.sol
+
+  mock-http:
+    image: mockoon/cli:latest
+    container_name: mock-http
+    restart: on-failure
+    ports:
+      - "7070:7070"
+    networks:
+      - naryo
+    command: ["--data", "data","--port", "7070", "--log-transaction"]
+    volumes:
+      - $PWD/mock_http_server.yaml:/data
+
+  naryo-server:
+    image: naryo-server:latest
+    container_name: naryo-server
+    restart: on-failure
+    depends_on:
+      sc-deployer:
+          condition: service_completed_successfully
+    environment:
+      - CONTRACT_ADDRESS=${CONTRACT_ADDRESS}
+    ports:
+      - "6060:6060"
+    networks:
+      - naryo
+    volumes:
+      - $PWD/application.yml:/app/application.yml
+
+  sc-invoke:
+    image: ghcr.io/foundry-rs/foundry:latest
+    container_name: sc-invoke
+    depends_on:
+      - anvil
+    networks:
+      - naryo
+    command: #see .env file for env vars
+      - "cast send ${CONTRACT_ADDRESS} 'greetings()' --private-key ${PRIVATE_KEY} --rpc-url http://anvil:8545"
+
+networks:
+  naryo:
+    driver: bridge

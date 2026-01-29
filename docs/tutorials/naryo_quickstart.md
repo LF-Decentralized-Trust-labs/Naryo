@@ -1,100 +1,56 @@
 # 🚀 Naryo Quickstart
 
-This guide explains how to quickly deploy a local environment, allowing you to test **Naryo**. The local environment is composed by:
-
-* A server running Naryo (Docker container built locally)
-* An Etherem dev node using
-* An ERC20 Smart Contract deployed to the dev node.
-
-   > Tip: You can use the configuration......
+This guide explains how to configure, deploy and use Naryo in 2 steps .
 
 ## 🧰 Requirements
 
-Ensure you have the following installed:
-
-* Foundry
 * Docker & Docker Compose
 * Git
 
-## 🎉 Step 0: Prepare your environment
+## 📦Step 1: Deployment of local environment
 
-Clone the repo and go to the quickstart folder:
+Download the repo and setup an example environment:
 
 ```bash
   git clone https://github.com/LF-Decentralized-Trust-labs/Naryo naryo
   cd naryo/examples/quickstart
+  docker compose up -d anvil sc-deployer mock-http naryo-server
 ```
 
-## ⚙️ Step 1: Create Naryo Config file
+You just deployed the following environment:
 
-> Tip: You may use this same configuration for your actual application.
+* An Anvil node
+* A _HelloNaryo.sol_ Smart Contract deployed at the node. The contract has one _greetings()_ function, that emits a _HelloCounter(uint256)_ event.
+* A Mockoon server, which simulates a backend application that wants to receive the events emitted by the contract.
+* A Naryo Server that catches the events from Anvil and sends them to the Mockoon server.
 
-```yaml
-naryo:
-  nodes:
-    - id: eadc75b2-4217-4018-95af-f67c13058976
-      name: evm-node
-      type: ETHEREUM
-      connection:
-        type: HTTP
-        endpoint:
-          url: http://localhost:8545
-  broadcasting:
-    configuration:
-      - id: cd1bec0d-2998-46bc-828f-94459d42c17a
-        type: HTTP
-        endpoint:
-          url: http://localhost:7070
-    broadcasters:
-      - id: cd1bec0d-2998-46bc-828f-94459d43c17b
-        configurationId: cd1bec0d-2998-46bc-828f-94459d42c17a
-        target:
-          type: ALL
-          destinations:
-            - /events
-  filters:
-    - id: a5605668-7a88-4e5c-b4ee-4a8417b7184d
-      name: my-transfer-filter
-      type: EVENT
-      nodeId: eadc75b2-4217-4018-95af-f67c13058976
-      scope: GLOBAL
-      specification:
-        signature: HelloCounter(uint256 i_)
+>The Naryo Server is just a backend that imports and configures the Naryo core module.
+>When using the reference Docker image of the Naryo server, we must configure Naryo through an _application.yml_ file, because the container is running a SpringBoot application
+>The current [_application.yml_](../../examples/quickstart/application.yml) file configures the following:
+> 1. The connection to the Anvil node
+>2. The connection to the mock http server
+>3. The events filters for the deployed contract
+
+> Naryo also supports runtime configuration through a Rest API. Learn more in the [API Configuration documentation](../configuration/configuration-api.md).
+ 
+
+## 🎉 Step 2: Invoke the contract and see the logs
+
+Open a terminal to see the Mockoon server logs:
+```bash
+ docker logs -ft mock-http
 ```
 
-You can learn more about the configuration parameters here.
-
-
-## 📦 Step 2: Deploy everything
-
-1. Open a terminal and deploy an Anvil node
+In another terminal, invoke the contract using Foundry's docker:
+> Make sure you are in the naryo/examples/quickstart folder.
 
 ```bash
-  anvil
+ docker compose up sc-invoke
 ```
 
-2. Open another terminal. From the folder naryo/examples/quickstart, run the following commands:
+Every time you invoke the _HelloNaryo_ contract, Naryo will catch the _HelloCounter_ event, and send it to the Mockoon server. The Mockoon server will display a verbose log with the details of the received request.
 
-Deploy the HelloNaryo contract:
+## 👉 Conclusion and Next steps
+In this quickstart, you have tried Naryo in a local environment. As next steps, you may go through the [Documentation](../). Once you have a better understanding of how Naryo works, feel free to copy the example configurations in the [_examples_ folder ](../../examples/) and tailor it to your needs.
 
-forge create $(PWD)/HelloNaryo.sol:HelloNaryo --rpc-url localhost:8545 \
-    --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 \
---broadcast                       
-
-store the SC address
-
-Deploy the mock http server:
-
-docker run --rm --name your_backend --mount type=bind,source=${PWD}/mock_http_server.yaml,target=/data,readonly -p 7070:7070 mockoon/cli:latest --data data --port 7070 --log-transaction
-
-In a third (and last) terminal:
-
-Deploy Naryo using Docker:
-
-docker run --rm --name naryo-server --mount type=bind,source=${PWD}/application.yaml,target=/data,readonly -p 6060:6060 naryo-server:latest
-
-## 🥪 Step 3: Invoke the contract and see the logs
-
-cast send 0x5FbDB2315678afecb367f032d93F642f64180aa3 "greetings()" --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --rpc-url localhost:8545
-
-In the 2nd terminal, in the logs from the Mockoon server, you will see a new entry everytime you invoke the contract. Thats because Naryo is catching the event from the Anvil node, and sending it to the Mockoon Rest API.
+You may also learn how to [get started with Naryo without Docker](../getting_started.md), or follow our tutorials of using Naryo [with Besu](./start_naryo_with_besu.md) or [with Hedera](./start_naryo_with_hedera.md).
