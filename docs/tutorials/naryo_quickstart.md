@@ -1,6 +1,6 @@
 # 🚀 Naryo Quickstart
 
-Naryo is essentially a multichain event listner, that catches events from one or more DLT nodes, and broadcast them to one or more destinations (backend endopoints, queues, or databases)
+Naryo is essentially a multichain event listner, that catches events from one or more DLT nodes, and broadcast them to one or more destinations (backend endopoints, queues, or databases).
 
 This guide explains how to configure, deploy and use Naryo in 2 simple steps.
 
@@ -46,8 +46,6 @@ Take a look at the [_application.yml_](../../examples/quickstart/application.yml
 
 ## 🎉 Step 2: Invoke the contract and see the logs
 
-![Quickstart flow](../images/mermaid-quickstart.png)
-
 Open a terminal to see the Mockoon server logs:
 ```bash
  docker logs -ft mock-http
@@ -59,6 +57,8 @@ In another terminal, invoke the contract using a helper _sc-invoke_ container:
 ```bash
  docker compose up sc-invoke
 ```
+
+![Quickstart flow](../images/mermaid-quickstart.png)
 
 Every time you invoke the _HelloNaryo_ contract, Naryo will catch the _HelloCounter_ event, and send it to the Mockoon server, alongside some context information, like some transaction data. The Mockoon server will display a verbose log with the details of the received request. Below is an example of the data Naryo sends to the mocked backend (the request body might be stringified in the actual logs):
 
