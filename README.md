@@ -57,6 +57,7 @@ currently available:
 The following tutorials will guide you through the process of setting up Naryo and using it to capture and process
 events from a DLT network:
 
+- [Quickstart](./docs/tutorials//naryo_quickstart.md)
 - [Start Naryo with Besu](./docs/tutorials/start_naryo_with_besu.md)
 - [Start Naryo with Hedera](./docs/tutorials/start_naryo_with_hedera.md)
 
