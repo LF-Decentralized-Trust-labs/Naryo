@@ -1,5 +1,7 @@
----
-naryo:
+server:
+  port:6060
+  
+naryo: #For a full configuration guide visit https://github.com/LF-Decentralized-Trust-labs/Naryo/blob/main/docs/configuration/configuration-core.md  
   nodes:
     - id: eadc75b2-4217-4018-95af-f67c13058976
       name: anvil
@@ -14,25 +16,26 @@ naryo:
         strategy: BLOCK_BASED
   
   broadcasting:
-    configuration:
+    configuration: #the server that will receive the events
       - id: cd1bec0d-2998-46bc-828f-94459d42c17a
-        type: HTTP
+        type: HTTP #the destination is an HTTP server. Other supported types are KAFKA and RABBITMQ.
         endpoint:
           url: http://mock-http:7070
     broadcasters:
       - id: cd1bec0d-2998-46bc-828f-94459d43c17b
-        configurationId: cd1bec0d-2998-46bc-828f-94459d42c17a
-        target:
-          type: ALL
+        configurationId: cd1bec0d-2998-46bc-828f-94459d42c17a #the id of the destination configuration
+        target: #parameters to define what should be sent and to which specific route within the destination
+          type: FILTER #only send events that are captured by a specific filter
+          filterId: a5605668-7a88-4e5c-b4ee-4a8417b7184d #the specific filter id
           destinations:
-            - /events
-            
+            - /events #the specific endpoint whitin the HTTP server      
   filters:
     - id: a5605668-7a88-4e5c-b4ee-4a8417b7184d
-      name: "my-transfer-filter"
-      nodeId: eadc75b2-4217-4018-95af-f67c13058976
+      name: "my-filter"
+      nodeId: eadc75b2-4217-4018-95af-f67c13058976 #the id of the configured node (see line 6)
       type: "EVENT"
-      scope: "CONTRACT"
+      scope: "CONTRACT" 
       specification:
         signature: "HelloCounter(uint256)"
       address: ${CONTRACT_ADDRESS}
+
