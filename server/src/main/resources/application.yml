@@ -1,0 +1,78 @@
+server:
+  port: ${SERVER_PORT:8060}
+
+naryo:
+  nodes:
+    - id: eadc75b2-4217-4018-95af-f67c13058976
+      name: ${DEFAULT_NODE_NAME:anvil}
+      type: ${DEFAULT_NODE_TYPE:ETHEREUM}
+      connection:
+        type: ${DEFAULT_NODE_CONNECTION_TYPE:HTTP}
+        endpoint:
+          url: ${DEFAULT_NODE_CONNECTION_PROTOCOL:http}://${DEFAULT_NODE_CONNECTION_HOSTNAME:localhost}:${DEFAULT_NODE_CONNECTION_PORT:8545}
+        maxIdleConnections: ${DEFAULT_NODE_CONNECTION_MAX_IDLE_CONNECTIONS:5}
+        keepAliveDuration: ${DEFAULT_NODE_CONNECTION_KEEP_ALIVE_DURATION:5m}
+        connectionTimeout: ${DEFAULT_NODE_CONNECTION_CONNECTION_TIMEOUT:10s}
+        readTimeout: ${DEFAULT_NODE_CONNECTION_READ_TIMEOUT:30s}
+      subscription:
+        strategy: BLOCK_BASED
+        method:
+          type: ${DEFAULT_SUBSCRIPTION_METHOD:POLL}
+          interval: ${DEFAULT_SUBSCRIPTION_METHOD_INTERVAL:5s}
+        initialBlock: ${DEFAULT_SUBSCRIPTION_INITIAL_BLOCK:-1}
+        confirmationBlocks: ${DEFAULT_SUBSCRIPTION_CONFIRMATION_BLOCKS:12}
+        missingTxBlocks: ${DEFAULT_SUBSCRIPTION_MISSING_TX_BLOCKS:200}
+        eventInvalidationBlockThreshold: ${DEFAULT_SUBSCRIPTION_EVENT_INVALIDATION_THRESHOLD:2}
+        replayBlockOffset: ${DEFAULT_SUBSCRIPTION_REPLAY_BLOCK_OFFSET:12}
+        syncBlockLimit: ${DEFAULT_SUBSCRIPTION_SYNC_BLOCK_LIMIT:20000}
+      interaction:
+        strategy: BLOCK_BASED
+        mode: ${DEFAULT_INTERACTION_MODE:ETHEREUM_RPC}
+        limitPerRequest: ${DEFAULT_INTERACTION_LIMIT_PER_REQUEST:100} # Only necessary for HEDERA_MIRROR_NODE
+        retriesPerRequest: ${DEFAULT_INTERACTION_RETRIES_PER_REQUEST:3} # Only necessary for HEDERA_MIRROR_NODE
+
+  broadcasting:
+    configuration:
+      - id: cd1bec0d-2998-46bc-828f-94459d42c17a
+        type: ${DEFAULT_BROADCASTER_TYPE:HTTP}
+        endpoint:
+          url: ${DEFAULT_BROADCASTER_PROTOCOL:http}://${DEFAULT_BROADCASTER_HOST:localhost}:${DEFAULT_BROADCASTER_PORT:7070}
+    broadcasters:
+      - id: cd1bec0d-2998-46bc-828f-94459d43c17b
+        configurationId: cd1bec0d-2998-46bc-828f-94459d42c17a
+        target:
+          type: ${DEFAULT_BROADCASTER_TARGET_TYPE:ALL}
+          destinations:
+            - ${DEFAULT_BROADCASTER_TARGET_DESTINATION:/events}
+
+  filters:
+    - id: a5605668-7a88-4e5c-b4ee-4a8417b7184d
+      name: ${DEFAULT_FILTER_NAME:my-transfer-filter}
+      nodeId: eadc75b2-4217-4018-95af-f67c13058976
+      type: ${DEFAULT_FILTER_TYPE:EVENT}
+      scope: ${DEFAULT_FILTER_SCOPE:CONTRACT}
+      specification:
+        signature: ${DEFAULT_FILTER_EVENT_SIGNATURE:HelloCounter(uint256)}
+      address: ${DEFAULT_FILTER_CONTRACT_ADDRESS:0x5FbDB2315678afecb367f032d93F642f64180aa3}
+
+  stores:
+    - nodeId: 2971f247-1e41-4a81-bd70-91713b52ff59
+      type: ${STORE_TYPE:mongo}
+      features:
+        - type: EVENT
+          strategy: BLOCK_BASED
+          targets:
+            - type: BLOCK
+              destination: ${MONGO_STORE_BLOCK_COLLECTION:blocks}
+            - type: TRANSACTION
+              destination: ${MONGO_STORE_TX_COLLECTION:transactions}
+            - type: CONTRACT_EVENT
+              destination: ${MONGO_STORE_CONTRACT_EVENTS_COLLECTION:contract-events}
+        - type: FILTER_SYNC
+          destination: ${MONGO_STORE_FILTER_COLLECTION:filters}
+
+spring:
+  data:
+    mongodb:
+      uri: ${MONGO_PROTOCOL:mongodb}://${MONGO_HOST:localhost}:${MONGO_PORT:27017}/${MONGO_COLLECTION:naryo}
+      auto-index-creation: true
