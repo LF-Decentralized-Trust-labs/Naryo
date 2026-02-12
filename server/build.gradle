@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+    alias(libs.plugins.spotless)
+    alias(libs.plugins.freefairLombok)
+    alias(libs.plugins.springBoot)
+    alias(libs.plugins.springDependencyManagement)
+}
+
+group = 'io.naryo'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation(project(':core'))
+    implementation(project(':spring-core'))
+    implementation(project(':persistence-spring-mongo'))
+    implementation(project(':broadcaster-spring-kafka'))
+    implementation(project(':broadcaster-spring-rabbitmq'))
+
+    implementation(libs.springBootStarter)
+    testImplementation(libs.springBootStarterTest)
+    testRuntimeOnly(libs.junitPlatformLauncher)
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.named("spotlessJava").configure {
+    dependsOn("spotlessGroovyGradle", "compileJava", "compileTestJava", "javadoc")
+}

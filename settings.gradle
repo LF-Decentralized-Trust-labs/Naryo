@@ -16,6 +16,7 @@ include 'persistence-spring-jpa'
 include 'broadcaster-spring-rabbitmq'
 include 'broadcaster-spring-kafka'
 include 'configuration-spring-api'
+include 'server'
 
 develocity {
     buildScan {
