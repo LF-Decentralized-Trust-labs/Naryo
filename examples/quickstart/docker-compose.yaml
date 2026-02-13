@@ -57,7 +57,6 @@ services:
           condition: service_started
     environment:
       - CONTRACT_ADDRESS=${CONTRACT_ADDRESS}
-      - MONGO_URI=${MONGO_URI}
     ports:
       - "6060:6060"
     networks:
