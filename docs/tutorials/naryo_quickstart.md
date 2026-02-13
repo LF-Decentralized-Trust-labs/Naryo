@@ -109,7 +109,7 @@ flowchart LR
     Naryo[Naryo Server: Spring Boot]
     Mockoon[Mockoon: Server Mock Backend]
     Invoke[sc-invoke Container: Transaction Sender]
-    MongoDB[MongoDB: Event and Config Store]
+    MongoDB[MongoDB: Event Store]
 
     %% Deployment relationships
     Anvil -->|runs| Contract
@@ -125,7 +125,7 @@ flowchart LR
     Naryo -->|HTTP POST - Event + Tx context| Mockoon
     
     %% Storing data
-    Naryo -->|Config and events| MongoDB
+    Naryo -->|Event + Tx context| MongoDB
 ```
 
 Every time you invoke the _HelloNaryo_ contract, Naryo will catch the _HelloCounter_ event, and send it to the Mockoon server, alongside some context information, like some transaction data. The Mockoon server will display a verbose log with the details of the received request. Below is an example of the data Naryo sends to the mocked backend (the request body might be stringified in the actual logs):
