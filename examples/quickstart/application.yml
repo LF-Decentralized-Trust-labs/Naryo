@@ -1,6 +1,3 @@
-server:
-  port:6060
-  
 naryo: #For a full configuration guide visit https://github.com/LF-Decentralized-Trust-labs/Naryo/blob/main/docs/configuration/configuration-core.md  
   nodes:
     - id: eadc75b2-4217-4018-95af-f67c13058976
@@ -10,23 +7,9 @@ naryo: #For a full configuration guide visit https://github.com/LF-Decentralized
         type: HTTP
         endpoint:
           url: http://anvil:8545
-        maxIdleConnections: 5
-        keepAliveDuration: 5m
-        connectionTimeout: 10s
-        readTimeout: 30s
       subscription:
-        strategy: BLOCK_BASED
         method: POLL
-        interval: 5s
-        initialBlock: -1
-        confirmationBlocks: 12
-        missingTxBlocks: 200
-        eventInvalidationBlockThreshold: 2
-        replayBlockOffset: 12
-        syncBlockLimit: 20000
-      interaction:
-        strategy: BLOCK_BASED
-        mode: ETHEREUM_RPC
+        interval: 1s
 
   broadcasting:
     configuration: #the server that will receive the events
@@ -39,7 +22,7 @@ naryo: #For a full configuration guide visit https://github.com/LF-Decentralized
         configurationId: cd1bec0d-2998-46bc-828f-94459d42c17a #the id of the destination configuration
         target: #parameters to define what should be sent and to which specific route within the destination
           type: FILTER #only send events that are captured by a specific filter
-          filterId: a5605668-7a88-4e5c-b4ee-4a8417b7184d #the specific filter id
+          filterId: a5605668-7a88-4e5c-b4ee-4a8417b7184d #the specific filter id (see line 32)
           destinations:
             - /events #the specific endpoint whitin the HTTP server      
   filters:
@@ -66,10 +49,13 @@ naryo: #For a full configuration guide visit https://github.com/LF-Decentralized
             - type: CONTRACT_EVENT
               destination: contract-events
         - type: FILTER_SYNC
-          destination: ${MONGO_STORE_FILTER_COLLECTION:filters}
+          destination: filters
 
 spring:
   data:
     mongodb:
-      uri: ${MONGO_URI}
+      uri: mongodb://mongodb:27017/naryo
       auto-index-creation: true
+
+server:
+  port:6060

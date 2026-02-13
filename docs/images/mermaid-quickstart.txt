@@ -1,0 +1,24 @@
+flowchart LR
+    %% Nodes / Infrastructure
+    Anvil[Anvil node]
+    Contract[HelloNaryo: Smart Contract]
+    Naryo[Naryo Server: Spring Boot]
+    Mockoon[Mockoon: Server Mock Backend]
+    Invoke[sc-invoke Container: Transaction Sender]
+    MongoDB[MongoDB: Event and Config Store]
+
+    %% Deployment relationships
+    Anvil -->|runs| Contract
+
+    %% Runtime interactions
+    Invoke -->|Invoke _greetings_| Anvil
+    Contract -->|Emit HelloCounter event| Anvil
+
+    %% Event listening
+    Anvil -->|RPC / Event subscription| Naryo
+
+    %% Broadcasting
+    Naryo -->|HTTP POST - Event + Tx context| Mockoon
+    
+    %% Storing data
+    Naryo -->|Config and events| MongoDB
