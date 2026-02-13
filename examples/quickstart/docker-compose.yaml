@@ -36,15 +36,28 @@ services:
     volumes:
       - $PWD/mock_http_server.yaml:/data
 
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - $HOME/mongodb/data/db:/data/db
+    networks:
+      - naryo
+
   naryo-server:
-    image: naryo-server:latest
+    image: ghcr.io/lf-decentralized-trust-labs/naryo:sha-f1e10d2
     container_name: naryo-server
     restart: on-failure
     depends_on:
       sc-deployer:
           condition: service_completed_successfully
+      mongodb:
+          condition: service_started
     environment:
       - CONTRACT_ADDRESS=${CONTRACT_ADDRESS}
+      - MONGO_URI=${MONGO_URI}
     ports:
       - "6060:6060"
     networks:
