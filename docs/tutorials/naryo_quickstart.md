@@ -1,6 +1,6 @@
 # 🚀 Naryo Quickstart
 
-Naryo is essentially a multichain event listener, that catches events from one or more DLT nodes, and broadcast them to one or more destinations (backend endopoints, queues, or databases).
+Naryo is essentially a multichain event listener, that catches events from one or more DLT nodes, and broadcast them to one or more destinations (backend endpoints, queues, or databases).
 
 This guide explains how to configure, deploy and use Naryo in 2 simple steps.
 
