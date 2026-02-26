@@ -16,9 +16,8 @@ naryo:
         readTimeout: ${DEFAULT_NODE_CONNECTION_READ_TIMEOUT:30s}
       subscription:
         strategy: BLOCK_BASED
-        method:
-          type: ${DEFAULT_SUBSCRIPTION_METHOD:POLL}
-          interval: ${DEFAULT_SUBSCRIPTION_METHOD_INTERVAL:5s}
+        method: ${DEFAULT_SUBSCRIPTION_METHOD:POLL}
+        interval: ${DEFAULT_SUBSCRIPTION_METHOD_INTERVAL:5s}
         initialBlock: ${DEFAULT_SUBSCRIPTION_INITIAL_BLOCK:-1}
         confirmationBlocks: ${DEFAULT_SUBSCRIPTION_CONFIRMATION_BLOCKS:12}
         missingTxBlocks: ${DEFAULT_SUBSCRIPTION_MISSING_TX_BLOCKS:200}
