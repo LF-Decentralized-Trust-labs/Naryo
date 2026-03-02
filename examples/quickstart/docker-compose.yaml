@@ -47,7 +47,7 @@ services:
       - naryo
 
   naryo-server:
-    image: ghcr.io/lf-decentralized-trust-labs/naryo:sha-f1e10d2
+    image: ghcr.io/lf-decentralized-trust-labs/naryo:latest
     container_name: naryo-server
     restart: on-failure
     depends_on:
