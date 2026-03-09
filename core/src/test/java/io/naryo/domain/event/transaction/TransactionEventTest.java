@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.common.TransactionStatus;
+import io.naryo.domain.event.transaction.eth.EthTransactionEvent;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -24,18 +25,18 @@ public class TransactionEventTest {
             String value,
             String input,
             String revertReason) {
-        return new TransactionEvent(
+        return new EthTransactionEvent(
                 UUID.randomUUID(),
                 hash,
                 status,
-                nonce,
-                blockHash,
                 blockNumber,
                 blockTimestamp,
-                transactionIndex,
                 sender,
                 receiver,
                 value,
+                blockHash,
+                nonce,
+                transactionIndex,
                 input,
                 revertReason);
     }
@@ -181,66 +182,6 @@ public class TransactionEventTest {
     }
 
     @Test
-    void testConstructorWithNullSender() {
-        assertThrows(
-                NullPointerException.class,
-                () ->
-                        createTransactionEvent(
-                                "hash",
-                                TransactionStatus.CONFIRMED,
-                                new NonNegativeBlockNumber(BigInteger.ONE),
-                                "blockHash",
-                                new NonNegativeBlockNumber(BigInteger.ONE),
-                                BigInteger.ONE,
-                                BigInteger.ONE,
-                                null,
-                                "receiver",
-                                "value",
-                                "input",
-                                ""));
-    }
-
-    @Test
-    void testConstructorWithNullReceiver() {
-        assertThrows(
-                NullPointerException.class,
-                () ->
-                        createTransactionEvent(
-                                "hash",
-                                TransactionStatus.CONFIRMED,
-                                new NonNegativeBlockNumber(BigInteger.ONE),
-                                "blockHash",
-                                new NonNegativeBlockNumber(BigInteger.ONE),
-                                BigInteger.ONE,
-                                BigInteger.ONE,
-                                "sender",
-                                null,
-                                "value",
-                                "input",
-                                ""));
-    }
-
-    @Test
-    void testConstructorWithNullValue() {
-        assertThrows(
-                NullPointerException.class,
-                () ->
-                        createTransactionEvent(
-                                "hash",
-                                TransactionStatus.CONFIRMED,
-                                new NonNegativeBlockNumber(BigInteger.ONE),
-                                "blockHash",
-                                new NonNegativeBlockNumber(BigInteger.ONE),
-                                BigInteger.ONE,
-                                BigInteger.ONE,
-                                "sender",
-                                "receiver",
-                                null,
-                                "input",
-                                ""));
-    }
-
-    @Test
     void testConstructorWithNullInput() {
         assertThrows(
                 NullPointerException.class,
@@ -296,66 +237,6 @@ public class TransactionEventTest {
                                 "sender",
                                 "receiver",
                                 "value",
-                                "input",
-                                ""));
-    }
-
-    @Test
-    void testConstructorWithEmptySender() {
-        assertThrows(
-                IllegalArgumentException.class,
-                () ->
-                        createTransactionEvent(
-                                "hash",
-                                TransactionStatus.CONFIRMED,
-                                new NonNegativeBlockNumber(BigInteger.ONE),
-                                "blockHash",
-                                new NonNegativeBlockNumber(BigInteger.ONE),
-                                BigInteger.ONE,
-                                BigInteger.ONE,
-                                "",
-                                "receiver",
-                                "value",
-                                "input",
-                                ""));
-    }
-
-    @Test
-    void testConstructorWithEmptyReceiver() {
-        assertThrows(
-                IllegalArgumentException.class,
-                () ->
-                        createTransactionEvent(
-                                "hash",
-                                TransactionStatus.CONFIRMED,
-                                new NonNegativeBlockNumber(BigInteger.ONE),
-                                "blockHash",
-                                new NonNegativeBlockNumber(BigInteger.ONE),
-                                BigInteger.ONE,
-                                BigInteger.ONE,
-                                "sender",
-                                "",
-                                "value",
-                                "input",
-                                ""));
-    }
-
-    @Test
-    void testConstructorWithEmptyValue() {
-        assertThrows(
-                IllegalArgumentException.class,
-                () ->
-                        createTransactionEvent(
-                                "hash",
-                                TransactionStatus.CONFIRMED,
-                                new NonNegativeBlockNumber(BigInteger.ONE),
-                                "blockHash",
-                                new NonNegativeBlockNumber(BigInteger.ONE),
-                                BigInteger.ONE,
-                                BigInteger.ONE,
-                                "sender",
-                                "receiver",
-                                "",
                                 "input",
                                 ""));
     }

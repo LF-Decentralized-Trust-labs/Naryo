@@ -83,9 +83,8 @@ nodes:
     type: HEDERA # Also supports ETHEREUM
     subscription:
       strategy: BLOCK_BASED # Only supports BLOCK_BASED
-      method:
-        type: POLL # Also supports PUBSUB
-        interval: 1s
+      method: POLL # Also supports PUBSUB
+      interval: 1s # Only necessary for POLL method
       initialBlock: 1
       confirmationBlocks: 12
       missingTxBlocks: 200
@@ -189,26 +188,26 @@ filters:
       - UNCONFIRMED
 ```
 
-| Parameter                             | Description                       | Value Type | Supported by                | Values                              | Default Value  |
-|---------------------------------------|-----------------------------------|------------|-----------------------------|-------------------------------------|----------------|
-| `filters`                             | List of filters.                  | List       | ALL                         | Any                                 | Not applicable |
-| `filters.id`                          | Unique identifier for the filter. | UUID       | ALL                         | Any                                 | Not applicable |
-| `filters.name`                        | Name of the filter.               | String     | ALL                         | Any                                 | Not applicable |
-| `filters.type`                        | Type of filter.                   | String     | ALL                         | EVENT, TRANSACTION                  | Not applicable |
-| `filters.nodeId`                      | Node ID.                          | UUID       | ALL                         | Any                                 | Not applicable |
-| `filters.scope`                       | Scope of the filter.              | String     | EVENT type                  | CONTRACT, GLOBAL                    | Not applicable |
-| `filters.specification`               | Specification of the filter.      | Object     | EVENT type                  | Any                                 | Not applicable |
-| `filters.specification.signature`     | Signature of the filter.          | String     | EVENT type                  | Any                                 | Not applicable |
-| `filters.specification.correlationId` | Correlation ID of the filter.     | Integer    | EVENT type                  | Any                                 | Not applicable |
-| `filters.statuses` (event)            | Statuses of the filter.           | List       | EVENT type                  | CONFIRMED, UNCONFIRMED, UNVALIDATED | All statuses   |
-| `filters.sync.type`                   | Type of sync.                     | String     | EVENT type                  | BLOCK_BASED                         | BLOCK_BASED    |
-| `filters.sync.initialBlock`           | Initial block.                    | Integer    | EVENT type                  | Any                                 | Not applicable |
-| `filters.visibility.visible`          | Visibility of the filter.         | Boolean    | EVENT type                  | Any                                 | true           |
-| `filters.visibility.privacyGroupId`   | Privacy group ID of the filter.   | UUID       | EVENT type                  | Any                                 | Not applicable |
-| `filters.address`                     | Address of the filter.            | String     | EVENT type & CONTRACT scope | Any                                 | Not applicable |
-| `filters.statuses` (transaction)      | Statuses of the filter.           | List       | TRANSACTION type            | FAILED, CONFIRMED, UNCONFIRMED      | All statuses   |
-| `filters.identifierType`              | Identifier type of the filter.    | String     | TRANSACTION type            | Any                                 | Not applicable |
-| `filters.value`                       | Value of the filter.              | String     | TRANSACTION type            | Any                                 | Not applicable |
+| Parameter                             | Description                       | Value Type | Supported by                | Values                                                   | Default Value  |
+|---------------------------------------|-----------------------------------|------------|-----------------------------|----------------------------------------------------------|----------------|
+| `filters`                             | List of filters.                  | List       | ALL                         | Any                                                      | Not applicable |
+| `filters.id`                          | Unique identifier for the filter. | UUID       | ALL                         | Any                                                      | Not applicable |
+| `filters.name`                        | Name of the filter.               | String     | ALL                         | Any                                                      | Not applicable |
+| `filters.type`                        | Type of filter.                   | String     | ALL                         | EVENT, TRANSACTION                                       | Not applicable |
+| `filters.nodeId`                      | Node ID.                          | UUID       | ALL                         | Any                                                      | Not applicable |
+| `filters.scope`                       | Scope of the filter.              | String     | EVENT type                  | CONTRACT, GLOBAL                                         | Not applicable |
+| `filters.specification`               | Specification of the filter.      | Object     | EVENT type                  | Any                                                      | Not applicable |
+| `filters.specification.signature`     | Signature of the filter.          | String     | EVENT type                  | Any                                                      | Not applicable |
+| `filters.specification.correlationId` | Correlation ID of the filter.     | Integer    | EVENT type                  | Any                                                      | Not applicable |
+| `filters.statuses` (event)            | Statuses of the filter.           | List       | EVENT type                  | CONFIRMED, UNCONFIRMED, UNVALIDATED                      | All statuses   |
+| `filters.sync.type`                   | Type of sync.                     | String     | EVENT type                  | BLOCK_BASED                                              | BLOCK_BASED    |
+| `filters.sync.initialBlock`           | Initial block.                    | Integer    | EVENT type                  | Any                                                      | Not applicable |
+| `filters.visibility.visible`          | Visibility of the filter.         | Boolean    | EVENT type                  | Any                                                      | true           |
+| `filters.visibility.privacyGroupId`   | Privacy group ID of the filter.   | UUID       | EVENT type                  | Any                                                      | Not applicable |
+| `filters.address`                     | Address of the filter.            | String     | EVENT type & CONTRACT scope | Any                                                      | Not applicable |
+| `filters.statuses` (transaction)      | Statuses of the filter.           | List       | TRANSACTION type            | FAILED, CONFIRMED, UNCONFIRMED                           | All statuses   |
+| `filters.identifierType`              | Identifier type of the filter.    | String     | TRANSACTION type            | HASH, TO_ADDRESS, FROM_ADDRESS, IDENTITY_ID (**HEDERA**) | Not applicable |
+| `filters.value`                       | Value of the filter.              | String     | TRANSACTION type            | Any                                                      | Not applicable |
 
 > **Note**: Keep in mind that there are multiple filter types, such as EVENT and TRANSACTION. Also, there are
 > multiple node types, such as ETHEREUM and HEDERA.

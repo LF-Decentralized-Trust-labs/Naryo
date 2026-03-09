@@ -1,66 +1,39 @@
 package io.naryo.infrastructure.store.event.persistence.document.transaction;
 
 import java.math.BigInteger;
-import java.util.UUID;
 
-import io.naryo.domain.common.NonNegativeBlockNumber;
-import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.event.transaction.TransactionEvent;
+import io.naryo.domain.event.transaction.eth.EthTransactionEvent;
+import io.naryo.domain.event.transaction.hedera.HederaTransactionEvent;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import org.springframework.data.annotation.TypeAlias;
+import lombok.Getter;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @Document(collection = "transaction_event")
-@TypeAlias("transaction_event")
-@AllArgsConstructor
-public final class TransactionEventDocument {
+public abstract class TransactionEventDocument {
 
     private final String nodeId;
     private final @MongoId String hash;
-    private final BigInteger nonce;
-    private final String blockHash;
     private final BigInteger blockNumber;
     private final BigInteger blockTimestamp;
-    private final BigInteger transactionIndex;
     private final String sender;
     private final String receiver;
     private final String value;
-    private final String input;
-    private String revertReason;
-    private TransactionStatus status;
+    private final String status;
 
     public static TransactionEventDocument fromTransactionEvent(TransactionEvent event) {
-        return new TransactionEventDocument(
-                event.getNodeId().toString(),
-                event.getHash(),
-                event.getNonce().value(),
-                event.getBlockHash(),
-                event.getBlockNumber().value(),
-                event.getBlockTimestamp(),
-                event.getTransactionIndex(),
-                event.getSender(),
-                event.getReceiver(),
-                event.getValue(),
-                event.getInput(),
-                event.getRevertReason(),
-                event.getStatus());
+        if (event instanceof EthTransactionEvent) {
+            return EthTransactionEventDocument.fromEthTransactionEvent((EthTransactionEvent) event);
+        } else if (event instanceof HederaTransactionEvent) {
+            return HederaTransactionEventDocument.fromHederaTransactionEvent(
+                    (HederaTransactionEvent) event);
+        }
+        throw new IllegalArgumentException("unsupported transaction event type");
     }
 
-    public TransactionEvent toTransactionEvent() {
-        return new TransactionEvent(
-                UUID.fromString(nodeId),
-                hash,
-                status,
-                new NonNegativeBlockNumber(nonce),
-                blockHash,
-                new NonNegativeBlockNumber(blockNumber),
-                blockTimestamp,
-                transactionIndex,
-                sender,
-                receiver,
-                value,
-                input,
-                revertReason);
-    }
+    public abstract TransactionEvent toTransactionEvent();
 }

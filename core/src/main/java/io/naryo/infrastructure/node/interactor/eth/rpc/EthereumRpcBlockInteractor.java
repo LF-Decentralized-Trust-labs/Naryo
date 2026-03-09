@@ -8,8 +8,8 @@ import java.util.Objects;
 import io.naryo.application.node.interactor.block.BlockInteractor;
 import io.naryo.application.node.interactor.block.dto.Block;
 import io.naryo.application.node.interactor.block.dto.Log;
-import io.naryo.application.node.interactor.block.dto.Transaction;
 import io.naryo.application.node.interactor.block.dto.TransactionReceipt;
+import io.naryo.application.node.interactor.block.dto.eth.EthTransaction;
 import io.reactivex.Flowable;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
@@ -144,16 +144,18 @@ public class EthereumRpcBlockInteractor implements BlockInteractor {
                         .map(
                                 transactionResult -> {
                                     var tx = (EthBlock.TransactionObject) transactionResult;
-                                    return new Transaction(
+                                    return new EthTransaction(
                                             tx.getHash(),
-                                            tx.getTransactionIndex(),
-                                            tx.getNonce(),
                                             tx.getBlockNumber(),
-                                            tx.getBlockHash(),
-                                            null,
                                             tx.getFrom(),
                                             tx.getTo(),
                                             tx.getValueRaw(),
+                                            null,
+                                            null,
+                                            null,
+                                            tx.getTransactionIndex(),
+                                            tx.getNonce(),
+                                            tx.getBlockHash(),
                                             tx.getInput(),
                                             null,
                                             null);

@@ -3,21 +3,22 @@ package io.naryo.infrastructure.node.interactor.hedera;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.naryo.application.node.interactor.block.BlockInteractor;
 import io.naryo.application.node.interactor.block.dto.Block;
 import io.naryo.application.node.interactor.block.dto.Log;
+import io.naryo.application.node.interactor.block.dto.Transaction;
 import io.naryo.application.node.interactor.block.dto.TransactionReceipt;
+import io.naryo.application.node.interactor.block.dto.hedera.TopicMessage;
 import io.naryo.infrastructure.node.interactor.hedera.exception.EmptyResponseException;
 import io.naryo.infrastructure.node.interactor.hedera.exception.UnexpectedResponseException;
 import io.naryo.infrastructure.node.interactor.hedera.http.MirrorNodeHttpClient;
@@ -40,10 +41,14 @@ public final class HederaMirrorNodeBlockInteractor implements BlockInteractor {
     private static final String CONTRACT_RESULTS = "/contracts/results";
     private static final String LOGS = "/contracts/results/logs";
     private static final String LOGS_FOR_CONTRACT = "/contracts/{contract}/results/logs";
+    private static final String TRANSACTIONS_PATH = "/transactions";
+    private static final String TOPIC_MESSAGES = "/topics/messages";
     private static final String QUERY_LIMIT = "limit";
     private static final String QUERY_ORDER = "order";
     private static final String QUERY_TIMESTAMP = "timestamp";
     private static final String QUERY_BLOCK_NUMBER = "block.number";
+    private static final String QUERY_TIMESTAMP_GTE = "gte:";
+    private static final String QUERY_TIMESTAMP_LTE = "lte:";
     private static final String TOPIC0 = "topic0";
     private static final String LINK_NEXT = "next";
 
@@ -170,6 +175,11 @@ public final class HederaMirrorNodeBlockInteractor implements BlockInteractor {
         return "";
     }
 
+    public TopicMessage getMessage(String timestamp) throws IOException {
+        HttpUrl url = client.url(BASE_PATH + TOPIC_MESSAGES + "/" + timestamp);
+        return retryableGet(url, new TypeReference<>() {});
+    }
+
     private Flowable<Block> createPublisher(Supplier<BigInteger> startSupplier) {
         AtomicReference<BigInteger> current = new AtomicReference<>(startSupplier.get());
         return Flowable.create(
@@ -184,7 +194,7 @@ public final class HederaMirrorNodeBlockInteractor implements BlockInteractor {
                                             current.set(n.add(BigInteger.ONE));
                                         } catch (EmptyResponseException e) {
                                             log.debug("Waiting for block {}...", current.get());
-                                        } catch (IOException e) {
+                                        } catch (Exception e) {
                                             emitter.onError(e);
                                         }
                                     },
@@ -200,11 +210,32 @@ public final class HederaMirrorNodeBlockInteractor implements BlockInteractor {
         return doFetchBlock(id, false);
     }
 
-    private <T> Block doFetchBlock(T id, boolean txs) throws IOException {
-        BlockResponseModel api = doFetchNativeBlock(id);
-        List<ContractResultResponseModel> results =
-                txs ? fetchContractResults(api.number()) : List.of();
-        return BlockConverter.map(api, results.stream().map(TransactionConverter::map).toList());
+    private <T> Block doFetchBlock(T id, boolean includeTxs) throws IOException {
+        BlockResponseModel block = doFetchNativeBlock(id);
+
+        if (!includeTxs) {
+            return BlockConverter.map(block, List.of());
+        }
+
+        List<ContractResultResponseModel> results = fetchContractResults(block.number());
+        List<TransactionResponseModel> txModels = fetchTransactions(block.timestamp());
+
+        Map<String, Transaction> transactions =
+                results.stream()
+                        .map(TransactionConverter::map)
+                        .collect(
+                                Collectors.toMap(
+                                        Transaction::getHash,
+                                        Function.identity(),
+                                        (existing, replacement) -> existing));
+
+        for (TransactionResponseModel model : txModels) {
+            transactions.computeIfAbsent(
+                    model.transactionHash(),
+                    hash -> TransactionConverter.map(model, block.number()));
+        }
+
+        return BlockConverter.map(block, List.copyOf(transactions.values()));
     }
 
     private <T> BlockResponseModel doFetchNativeBlock(T id) throws IOException {
@@ -225,8 +256,8 @@ public final class HederaMirrorNodeBlockInteractor implements BlockInteractor {
                         .newBuilder()
                         .addQueryParameter(QUERY_ORDER, "asc")
                         .addQueryParameter(QUERY_LIMIT, String.valueOf(limitPerPage))
-                        .addQueryParameter(QUERY_TIMESTAMP, "gte:" + startTs)
-                        .addQueryParameter(QUERY_TIMESTAMP, "lte:" + endTs);
+                        .addQueryParameter(QUERY_TIMESTAMP, QUERY_TIMESTAMP_GTE + startTs)
+                        .addQueryParameter(QUERY_TIMESTAMP, QUERY_TIMESTAMP_LTE + endTs);
         for (String topic : topics) {
             builder.addQueryParameter(TOPIC0, topic);
         }
@@ -249,6 +280,25 @@ public final class HederaMirrorNodeBlockInteractor implements BlockInteractor {
                 .addQueryParameter(QUERY_LIMIT, String.valueOf(limitPerPage));
         while (true) {
             ContractResultListResponseModel page =
+                    retryableGet(builder.build(), new TypeReference<>() {});
+            all.addAll(page.getResults());
+            String next = page.getLinks().get(LINK_NEXT);
+            if (next == null) break;
+            builder = client.url(next).newBuilder();
+        }
+        return all;
+    }
+
+    private List<TransactionResponseModel> fetchTransactions(TimestampResponseModel timestamp)
+            throws IOException {
+        var all = new ArrayList<TransactionResponseModel>();
+        HttpUrl.Builder builder = client.url(BASE_PATH + TRANSACTIONS_PATH).newBuilder();
+        builder.addQueryParameter(QUERY_TIMESTAMP, QUERY_TIMESTAMP_GTE + timestamp.from())
+                .addQueryParameter(QUERY_TIMESTAMP, QUERY_TIMESTAMP_LTE + timestamp.to())
+                .addQueryParameter(QUERY_LIMIT, String.valueOf(limitPerPage));
+
+        while (true) {
+            TransactionListResponseModel page =
                     retryableGet(builder.build(), new TypeReference<>() {});
             all.addAll(page.getResults());
             String next = page.getLinks().get(LINK_NEXT);

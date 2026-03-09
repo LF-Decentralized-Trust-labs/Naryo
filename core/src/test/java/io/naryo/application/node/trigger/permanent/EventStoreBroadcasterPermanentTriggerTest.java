@@ -60,7 +60,7 @@ class EventStoreBroadcasterPermanentTriggerTest {
                 .thenReturn(new Revision<>(1, "test-hash", Set.of(configuration)));
         Event<?> evt = mock(eventClass);
         when(evt.getEventType()).thenReturn(targetEventType);
-        when(store1.supports(configuration.getType(), evt.getClass())).thenReturn(true);
+        when(store1.supports(configuration.getType(), eventClass)).thenReturn(true);
         when(evt.getNodeId()).thenReturn(node.getId());
         when(configuration.getNodeId()).thenReturn(node.getId());
         when(configuration.getState()).thenReturn(StoreState.ACTIVE);
@@ -83,7 +83,7 @@ class EventStoreBroadcasterPermanentTriggerTest {
                 .thenReturn(new Revision<>(1, "test-hash", Set.of(configuration)));
         Event<?> evt = mock(eventClass);
         when(evt.getEventType()).thenReturn(targetEventType);
-        when(store1.supports(configuration.getType(), evt.getClass())).thenReturn(true);
+        when(store1.supports(configuration.getType(), eventClass)).thenReturn(true);
         when(configuration.getNodeId()).thenReturn(node.getId());
         when(configuration.getState()).thenReturn(StoreState.ACTIVE);
 
@@ -106,7 +106,7 @@ class EventStoreBroadcasterPermanentTriggerTest {
                 .thenReturn(new Revision<>(1, "test-hash", Set.of(configuration)));
         Event<?> evt = mock(eventClass);
         when(evt.getEventType()).thenReturn(targetEventType);
-        when(store1.supports(configuration.getType(), evt.getClass())).thenReturn(true);
+        when(store1.supports(configuration.getType(), eventClass)).thenReturn(true);
         when(configuration.getState()).thenReturn(StoreState.ACTIVE);
         when(configuration.getNodeId()).thenReturn(node.getId());
 

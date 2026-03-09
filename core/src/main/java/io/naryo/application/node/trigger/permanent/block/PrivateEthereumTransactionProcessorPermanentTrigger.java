@@ -7,11 +7,13 @@ import io.naryo.application.configuration.revision.registry.LiveRegistry;
 import io.naryo.application.node.helper.TransactionEventDispatcherHelper;
 import io.naryo.application.node.interactor.block.dto.Transaction;
 import io.naryo.application.node.interactor.block.dto.TransactionReceipt;
+import io.naryo.application.node.interactor.block.dto.eth.EthTransaction;
 import io.naryo.application.node.interactor.block.priv.PrivateBlockInteractor;
 import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.event.block.BlockEvent;
 import io.naryo.domain.event.transaction.TransactionEvent;
+import io.naryo.domain.event.transaction.eth.EthTransactionEvent;
 import io.naryo.domain.filter.Filter;
 import io.naryo.domain.node.ethereum.priv.PrivateEthereumNode;
 import lombok.extern.slf4j.Slf4j;
@@ -35,34 +37,35 @@ public final class PrivateEthereumTransactionProcessorPermanentTrigger
     @Override
     protected TransactionEvent extractEventFromTransaction(
             Transaction transaction, BlockEvent block) {
-        if (isPrivateTransaction(transaction)) {
-            String revertReason = transaction.revertReason();
-            String to = transaction.to();
+        if (isPrivateTransaction(transaction)
+                && transaction instanceof EthTransaction ethTransaction) {
+            String revertReason = ethTransaction.getRevertReason();
+            String to = ethTransaction.getTo();
 
             try {
                 TransactionReceipt receipt =
-                        interactor.getPrivateTransactionReceipt(transaction.hash());
+                        interactor.getPrivateTransactionReceipt(transaction.getHash());
                 revertReason = receipt.revertReason();
                 to = receipt.to();
             } catch (IOException e) {
                 log.error("Failed to get private transaction receipt", e);
             }
 
-            return new TransactionEvent(
+            return new EthTransactionEvent(
                     node.getId(),
-                    transaction.hash(),
-                    transaction.status() == null || transaction.status().equals("0x1")
+                    ethTransaction.getHash(),
+                    ethTransaction.getStatus() == null || ethTransaction.getStatus().equals("0x1")
                             ? TransactionStatus.CONFIRMED
                             : TransactionStatus.FAILED,
-                    new NonNegativeBlockNumber(transaction.nonce()),
-                    transaction.blockHash(),
-                    new NonNegativeBlockNumber(transaction.blockNumber()),
+                    new NonNegativeBlockNumber(ethTransaction.getBlockNumber()),
                     block.getTimestamp(),
-                    transaction.index(),
-                    transaction.from(),
+                    ethTransaction.getFrom(),
                     to,
-                    transaction.value(),
-                    transaction.input(),
+                    ethTransaction.getValue(),
+                    ethTransaction.getBlockHash(),
+                    new NonNegativeBlockNumber(ethTransaction.getNonce()),
+                    ethTransaction.getIndex(),
+                    ethTransaction.getInput(),
                     revertReason);
         }
 
@@ -70,7 +73,7 @@ public final class PrivateEthereumTransactionProcessorPermanentTrigger
     }
 
     private boolean isPrivateTransaction(Transaction transaction) {
-        return transaction.to() != null
-                && transaction.to().equals(node.getPrecompiledAddress().value());
+        return transaction.getTo() != null
+                && transaction.getTo().equals(node.getPrecompiledAddress().value());
     }
 }

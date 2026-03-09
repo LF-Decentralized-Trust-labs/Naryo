@@ -1,0 +1,10 @@
+{
+  "name": "hedera-quickstart-worker",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@hashgraph/sdk": "^2.49.0",
+    "ethers": "^6.13.2",
+    "solc": "0.8.26"
+  }
+}

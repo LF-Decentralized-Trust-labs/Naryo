@@ -5,12 +5,16 @@ import java.util.stream.Stream;
 import io.naryo.application.configuration.revision.registry.LiveRegistry;
 import io.naryo.application.node.helper.TransactionEventDispatcherHelper;
 import io.naryo.application.node.interactor.block.dto.Transaction;
+import io.naryo.application.node.interactor.block.dto.eth.EthTransaction;
+import io.naryo.application.node.interactor.block.dto.hedera.HederaTransaction;
 import io.naryo.application.node.trigger.permanent.PermanentTrigger;
 import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.event.Event;
 import io.naryo.domain.event.block.BlockEvent;
 import io.naryo.domain.event.transaction.TransactionEvent;
+import io.naryo.domain.event.transaction.eth.EthTransactionEvent;
+import io.naryo.domain.event.transaction.hedera.HederaTransactionEvent;
 import io.naryo.domain.filter.Filter;
 import io.naryo.domain.filter.FilterType;
 import io.naryo.domain.filter.transaction.TransactionFilter;
@@ -63,22 +67,13 @@ public class TransactionProcessorPermanentTrigger<N extends Node>
 
     protected TransactionEvent extractEventFromTransaction(
             Transaction transaction, BlockEvent block) {
-        return new TransactionEvent(
-                node.getId(),
-                transaction.hash(),
-                transaction.status() == null || transaction.status().equals("0x1")
-                        ? TransactionStatus.CONFIRMED
-                        : TransactionStatus.FAILED,
-                new NonNegativeBlockNumber(transaction.nonce()),
-                transaction.blockHash(),
-                new NonNegativeBlockNumber(transaction.blockNumber()),
-                block.getTimestamp(),
-                transaction.index(),
-                transaction.from(),
-                transaction.to(),
-                transaction.value(),
-                transaction.input(),
-                transaction.revertReason());
+        // TODO: Decouple this to be protocol-agnostic
+        if (transaction instanceof EthTransaction ethTransaction) {
+            return getEthTransactionEvent(block, ethTransaction);
+        } else if (transaction instanceof HederaTransaction hederaTransaction) {
+            return getHederaTransactionEvent(block, hederaTransaction);
+        }
+        throw new UnsupportedOperationException("Unsupported transaction type: " + transaction);
     }
 
     protected void callback(BlockEvent event) {
@@ -95,7 +90,65 @@ public class TransactionProcessorPermanentTrigger<N extends Node>
 
     protected Stream<TransactionFilter> findTransactionFilters() {
         return filters.active().domainItems().stream()
-                .filter(f -> f.getType() == FilterType.TRANSACTION && f.getNodeId() == node.getId())
+                .filter(
+                        f ->
+                                f.getType() == FilterType.TRANSACTION
+                                        && f.getNodeId().equals(node.getId()))
                 .map(TransactionFilter.class::cast);
+    }
+
+    private EthTransactionEvent getEthTransactionEvent(
+            BlockEvent block, EthTransaction ethTransaction) {
+        return new EthTransactionEvent(
+                node.getId(),
+                ethTransaction.getHash(),
+                ethTransaction.getStatus() == null || ethTransaction.getStatus().equals("0x1")
+                        ? TransactionStatus.CONFIRMED
+                        : TransactionStatus.FAILED,
+                new NonNegativeBlockNumber(ethTransaction.getBlockNumber()),
+                block.getTimestamp(),
+                ethTransaction.getFrom(),
+                ethTransaction.getTo(),
+                ethTransaction.getValue(),
+                ethTransaction.getBlockHash(),
+                new NonNegativeBlockNumber(ethTransaction.getNonce()),
+                ethTransaction.getIndex(),
+                ethTransaction.getInput(),
+                ethTransaction.getRevertReason());
+    }
+
+    private HederaTransactionEvent getHederaTransactionEvent(
+            BlockEvent block, HederaTransaction hederaTransaction) {
+        return new HederaTransactionEvent(
+                node.getId(),
+                hederaTransaction.getHash(),
+                hederaTransaction.getStatus() == null || hederaTransaction.getStatus().equals("0x1")
+                        ? TransactionStatus.CONFIRMED
+                        : TransactionStatus.FAILED,
+                new NonNegativeBlockNumber(hederaTransaction.getBlockNumber()),
+                block.getTimestamp(),
+                hederaTransaction.getFrom(),
+                hederaTransaction.getTo(),
+                hederaTransaction.getValue(),
+                hederaTransaction.getBatchKey(),
+                hederaTransaction.getBytes(),
+                hederaTransaction.getChargedTxFee(),
+                hederaTransaction.getEntityId(),
+                hederaTransaction.getMaxCustomFees(),
+                hederaTransaction.getMemoBase64(),
+                hederaTransaction.getName(),
+                hederaTransaction.getNftTransfers(),
+                hederaTransaction.getNode(),
+                hederaTransaction.getNonce(),
+                hederaTransaction.getParentConsensusTimestamp(),
+                hederaTransaction.getScheduled(),
+                hederaTransaction.getStakingRewardTransfers(),
+                hederaTransaction.getTokenTransfers(),
+                hederaTransaction.getTransactionId(),
+                hederaTransaction.getTransfers(),
+                hederaTransaction.getValidDurationSeconds(),
+                hederaTransaction.getValidStartTimestamp(),
+                hederaTransaction.getConsensusTimestamp(),
+                null);
     }
 }

@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import io.naryo.application.node.interactor.block.dto.Transaction;
+import io.naryo.application.node.interactor.block.dto.hedera.HederaTransaction;
 import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.filter.Filter;
 import io.naryo.domain.filter.FilterName;
@@ -55,9 +56,16 @@ public final class TransactionFilter extends Filter {
 
     public boolean matches(Transaction transaction) {
         return switch (identifierType) {
-            case HASH -> transaction.hash().equals(value);
-            case TO_ADDRESS -> transaction.to().equals(value);
-            case FROM_ADDRESS -> transaction.from().equals(value);
+            case HASH -> transaction.getHash().equals(value);
+            case TO_ADDRESS -> transaction.getTo().equals(value);
+            case FROM_ADDRESS -> transaction.getFrom().equals(value);
+            case IDENTITY_ID ->
+                    transaction instanceof HederaTransaction hederaTransaction
+                            && (Objects.equals(hederaTransaction.getEntityId(), value)
+                                    || hederaTransaction.getTokenTransfers().stream()
+                                            .anyMatch(tt -> Objects.equals(tt.tokenId(), value))
+                                    || hederaTransaction.getNftTransfers().stream()
+                                            .anyMatch(nt -> Objects.equals(nt.tokenId(), value)));
         };
     }
 }
