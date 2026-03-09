@@ -10,6 +10,9 @@ spotless {
             exclude '**/build/install/**'
             exclude '**/build/scripts/**'
             exclude '**/build/distributions/**'
+            exclude '**/build/reports/**'
+            exclude '**/build/test-results/**'
+            exclude '**/build/classes/**'
         }
         removeUnusedImports()
         googleJavaFormat("1.25.2").aosp()

@@ -166,7 +166,7 @@ public class BlockProcessorPermanentTrigger<N extends Node, I extends BlockInter
     protected ContractEvent extractEventFromLog(BlockEvent event, EventFilter filter, Log value) {
         Transaction transaction =
                 event.getTransactions().stream()
-                        .filter(tx -> tx.hash().equals(value.transactionHash()))
+                        .filter(tx -> tx.getHash().equals(value.transactionHash()))
                         .findFirst()
                         .orElse(null);
         return new ContractEvent(
@@ -178,7 +178,7 @@ public class BlockProcessorPermanentTrigger<N extends Node, I extends BlockInter
                 event.getNumber().value(),
                 event.getHash(),
                 value.address(),
-                transaction != null ? transaction.from() : null,
+                transaction != null ? transaction.getFrom() : null,
                 ContractEventStatus.CONFIRMED,
                 event.getTimestamp());
     }

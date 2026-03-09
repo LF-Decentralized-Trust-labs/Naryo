@@ -1,0 +1,72 @@
+services:
+  # Hedera Worker: Setup (Topic, Token, Contract) + Periodic Transactions
+  hedera-worker:
+    build:
+      context: .
+      dockerfile: worker/Dockerfile
+    container_name: hedera-worker
+    networks:
+      - naryo-hedera
+    env_file: .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - shared-data:/app/shared
+    healthcheck:
+      test: ["CMD", "test", "-f", "/app/shared/generated.properties"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - naryo-hedera
+
+  mock-http:
+    image: mockoon/cli:latest
+    container_name: mock-http
+    restart: on-failure
+    ports:
+      - "7070:7070"
+    networks:
+      - naryo-hedera
+    command: ["--data", "data","--port", "7070", "--log-transaction"]
+    volumes:
+      - $PWD/mock_http_server.yaml:/data
+
+  naryo-server:
+    build:
+      context: ../../server
+      dockerfile: Dockerfile
+    container_name: naryo-server
+    restart: on-failure
+    depends_on:
+      mongodb:
+        condition: service_started
+      hedera-worker:
+        condition: service_healthy
+    ports:
+      - "6060:6060"
+    networks:
+      - naryo-hedera
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - SPRING_CONFIG_ADDITIONAL_LOCATION=file:/app/shared/generated.properties
+    volumes:
+      - ./application.yml:/app/application.yml
+      - shared-data:/app/shared
+
+networks:
+  naryo-hedera:
+    driver: bridge
+
+volumes:
+  mongodb-data:
+  shared-data:

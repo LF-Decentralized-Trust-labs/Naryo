@@ -36,7 +36,9 @@ public final class BlockEventDocument {
                 blockEvent.getSize(),
                 blockEvent.getGasUsed(),
                 blockEvent.getTimestamp(),
-                blockEvent.getTransactions());
+                blockEvent.getTransactions().stream()
+                        .map(transaction -> (Transaction) transaction)
+                        .toList());
     }
 
     public BlockEvent toBlockEvent() {

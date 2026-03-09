@@ -158,14 +158,14 @@ public final class PrivateEthereumBlockProcessorPermanentTrigger
         return event.getTransactions().stream()
                 .filter(
                         transaction ->
-                                transaction.to() != null
+                                transaction.getTo() != null
                                         && transaction
-                                                .to()
+                                                .getTo()
                                                 .equals(node.getPrecompiledAddress().value()))
                 .map(
                         tx -> {
                             try {
-                                return interactor.getPrivateTransactionReceipt(tx.hash());
+                                return interactor.getPrivateTransactionReceipt(tx.getHash());
                             } catch (IOException e) {
                                 log.error("Failed to get private transaction receipt", e);
                                 return null;
