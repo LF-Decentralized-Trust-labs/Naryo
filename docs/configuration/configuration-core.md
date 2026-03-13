@@ -83,9 +83,8 @@ nodes:
     type: HEDERA # Also supports ETHEREUM
     subscription:
       strategy: BLOCK_BASED # Only supports BLOCK_BASED
-      method:
-        type: POLL # Also supports PUBSUB
-        interval: 1s
+      method: POLL # Also supports PUBSUB
+      interval: 1s # Only necessary for POLL method
       initialBlock: 1
       confirmationBlocks: 12
       missingTxBlocks: 200

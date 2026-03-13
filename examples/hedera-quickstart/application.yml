@@ -1,0 +1,110 @@
+naryo: #For a full configuration guide visit https://github.com/LF-Decentralized-Trust-labs/Naryo/blob/main/docs/configuration/configuration-core.md
+  nodes:
+    - id: 7f3b8e1a-4d2c-4b9a-8e5f-1a2b3c4d5e6f
+      name: hedera-local
+      type: HEDERA
+      connection:
+        type: HTTP
+        endpoint:
+          url: http://host.docker.internal:5551
+      interaction:
+        strategy: BLOCK_BASED
+        mode: HEDERA_MIRROR_NODE
+        limitPerRequest: 100
+        retriesPerRequest: 3
+      subscription:
+        strategy: BLOCK_BASED
+        method: POLL
+        interval: 1s
+        confirmationBlocks: 0
+
+  broadcasting:
+    configuration: #the server that will receive the events
+      - id: cd1bec0d-2998-46bc-828f-94459d42c17a
+        type: HTTP #the destination is an HTTP server. Other supported types are KAFKA and RABBITMQ.
+        endpoint:
+          url: http://mock-http:7070
+    broadcasters:
+      - id: a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d
+        configurationId: cd1bec0d-2998-46bc-828f-94459d42c17a #the id of the destination configuration
+        target: #parameters to define what should be sent and to which specific route within the destination
+          type: FILTER #only send events that are captured by a specific filter
+          filterId: a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d #the specific filter id (see line 32)
+          destinations:
+            - /hcs-events #the specific endpoint within the HTTP server
+      - id: b2c3d4e5-f6a7-4b5c-8d9e-0f1a2b3c4d5e
+        configurationId: cd1bec0d-2998-46bc-828f-94459d42c17a #the id of the destination configuration
+        target: #parameters to define what should be sent and to which specific route within the destination
+          type: FILTER #only send events that are captured by a specific filter
+          filterId: b2c3d4e5-f6a7-4b5c-8d9e-0f1a2b3c4d5e #the specific filter id (see line 32)
+          destinations:
+            - /hts-events #the specific endpoint within the HTTP server
+      - id: c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f
+        configurationId: cd1bec0d-2998-46bc-828f-94459d42c17a #the id of the destination configuration
+        target: #parameters to define what should be sent and to which specific route within the destination
+          type: FILTER #only send events that are captured by a specific filter
+          filterId: c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f #the specific filter id (see line 32)
+          destinations:
+            - /hcs-events #the specific endpoint within the HTTP server
+      - id: d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a
+        configurationId: cd1bec0d-2998-46bc-828f-94459d42c17a #the id of the destination configuration
+        target: #parameters to define what should be sent and to which specific route within the destination
+          type: FILTER #only send events that are captured by a specific filter
+          filterId: d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a #the specific filter id (see line 32)
+          destinations:
+            - /hts-events #the specific endpoint within the HTTP server
+
+  filters:
+    - id: a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d
+      name: "hcs-topic-filter"
+      nodeId: 7f3b8e1a-4d2c-4b9a-8e5f-1a2b3c4d5e6f
+      type: "TRANSACTION"
+      identifierType: IDENTITY_ID
+      value: ${TOPIC_ID}
+    - id: b2c3d4e5-f6a7-4b5c-8d9e-0f1a2b3c4d5e
+      name: "hts-token-filter"
+      nodeId: 7f3b8e1a-4d2c-4b9a-8e5f-1a2b3c4d5e6f
+      type: "TRANSACTION"
+      identifierType: IDENTITY_ID
+      value: ${TOKEN_ID}
+    - id: c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f
+      name: "hcs-message-event-filter"
+      nodeId: 7f3b8e1a-4d2c-4b9a-8e5f-1a2b3c4d5e6f
+      type: "EVENT"
+      scope: "CONTRACT"
+      specification:
+        signature: "HCSMessage(address,string)"
+      address: ${CONTRACT_ADDRESS}
+    - id: d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a
+      name: "hts-transfer-event-filter"
+      nodeId: 7f3b8e1a-4d2c-4b9a-8e5f-1a2b3c4d5e6f
+      type: "EVENT"
+      scope: "CONTRACT"
+      specification:
+        signature: "HTSTransfer(address,address,address,uint256)"
+      address: ${CONTRACT_ADDRESS}
+
+  stores:
+    - nodeId: 7f3b8e1a-4d2c-4b9a-8e5f-1a2b3c4d5e6f
+      type: mongo
+      features:
+        - type: EVENT
+          strategy: BLOCK_BASED
+          targets:
+            - type: BLOCK
+              destination: blocks
+            - type: TRANSACTION
+              destination: transactions
+            - type: CONTRACT_EVENT
+              destination: contract-events
+        - type: FILTER_SYNC
+          destination: filters
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://mongodb:27017/naryo
+      auto-index-creation: true
+
+server:
+  port: 6060

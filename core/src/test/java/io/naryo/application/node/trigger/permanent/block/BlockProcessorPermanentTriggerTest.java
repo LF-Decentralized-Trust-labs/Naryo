@@ -17,8 +17,8 @@ import io.naryo.application.node.helper.ContractEventDispatcherHelper;
 import io.naryo.application.node.interactor.block.BlockInteractor;
 import io.naryo.application.node.interactor.block.dto.Block;
 import io.naryo.application.node.interactor.block.dto.Log;
-import io.naryo.application.node.interactor.block.dto.Transaction;
 import io.naryo.application.node.interactor.block.dto.TransactionReceipt;
+import io.naryo.application.node.interactor.block.dto.eth.EthTransaction;
 import io.naryo.application.node.trigger.Trigger;
 import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.common.connection.endpoint.ConnectionEndpoint;
@@ -56,12 +56,11 @@ class BlockProcessorPermanentTriggerTest {
 
     private final DefaultContractEventParameterDecoder decoder =
             new DefaultContractEventParameterDecoder();
+    @Mock private LiveRegistry<Filter> filters;
 
     private static BlockEvent createBlockEvent(UUID nodeId) {
         return createBlockEvent(nodeId, "0x0");
     }
-
-    @Mock private LiveRegistry<Filter> filters;
 
     private static BlockEvent createBlockEvent(UUID nodeId, String logBloom) {
         return new BlockEvent(
@@ -73,19 +72,21 @@ class BlockProcessorPermanentTriggerTest {
                 BigInteger.ZERO,
                 BigInteger.ZERO,
                 List.of(
-                        new Transaction(
+                        new EthTransaction(
                                 "0x0",
                                 BigInteger.ONE,
+                                "0x0",
+                                "0x0",
+                                "0x0",
+                                "0x0",
+                                "0x0",
+                                "0x0",
                                 BigInteger.ZERO,
                                 BigInteger.TEN,
                                 "0x0",
                                 "0x0",
                                 "0x0",
-                                "0x0",
-                                "0x0",
-                                "0x0",
-                                "0x0",
-                                "0x0")));
+                                null)));
     }
 
     @Test
@@ -455,6 +456,12 @@ class BlockProcessorPermanentTriggerTest {
         assertDoesNotThrow(() -> trigger.trigger(createBlockEvent(UUID.randomUUID())));
     }
 
+    private String generateBloom(GlobalEventFilter filter) {
+        return EncryptionUtil.hexlify(
+                BloomFilterUtil.buildBloom(
+                        EncryptionUtil.sha3String(filter.getSpecification().getEventSignature())));
+    }
+
     private static class MockInteractionConfiguration extends InteractionConfiguration {
 
         private MockInteractionConfiguration() {
@@ -607,11 +614,5 @@ class BlockProcessorPermanentTriggerTest {
         public boolean isDispatched() {
             return dispatched.get();
         }
-    }
-
-    private String generateBloom(GlobalEventFilter filter) {
-        return EncryptionUtil.hexlify(
-                BloomFilterUtil.buildBloom(
-                        EncryptionUtil.sha3String(filter.getSpecification().getEventSignature())));
     }
 }

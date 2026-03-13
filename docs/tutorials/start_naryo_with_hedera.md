@@ -211,9 +211,8 @@ naryo:
         mode: HEDERA_MIRROR_NODE
       subscription:
         type: BLOCK_BASED
-        method:
-          type: POLL
-          interval: 2s
+        method: POLL
+        interval: 1s
   broadcasting:
     configuration:
       - id: cd1bec0d-2998-46bc-828f-94459d42c17a

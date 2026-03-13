@@ -3,105 +3,48 @@ package io.naryo.infrastructure.store.event.persistence.entity.transaction;
 import java.math.BigInteger;
 import java.util.UUID;
 
-import io.naryo.domain.common.NonNegativeBlockNumber;
-import io.naryo.domain.common.TransactionStatus;
 import io.naryo.domain.event.transaction.TransactionEvent;
-import jakarta.persistence.*;
+import io.naryo.domain.event.transaction.eth.EthTransactionEvent;
+import io.naryo.domain.event.transaction.hedera.HederaTransactionEvent;
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "transaction_event")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "event_type")
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@NoArgsConstructor
-public final class TransactionEventEntity {
-
-    private @Id @Column(name = "transaction_hash", nullable = false) String hash;
-
+public abstract class TransactionEventEntity {
     private @Column(name = "node_id", nullable = false) UUID nodeId;
-
-    private @Column(name = "nonce", nullable = false) BigInteger nonce;
-
-    private @Column(name = "block_hash", nullable = false) String blockHash;
-
+    private @Id @Column(name = "transaction_hash", nullable = false) String hash;
     private @Column(name = "block_number", nullable = false) BigInteger blockNumber;
-
     private @Column(name = "block_timestamp", nullable = false) BigInteger blockTimestamp;
-
-    private @Column(name = "transaction_index", nullable = false) BigInteger transactionIndex;
-
     private @Column(name = "sender", nullable = false) String sender;
-
     private @Column(name = "receiver", nullable = false) String receiver;
-
     private @Column(name = "value", nullable = false) String value;
 
-    private @Column(name = "input", nullable = false) String input;
-
-    private @Column(name = "revertReason", nullable = false) String revertReason;
-
-    private @Column(name = "status", nullable = false) TransactionStatus status;
-
-    private TransactionEventEntity(
-            UUID nodeId,
-            String hash,
-            BigInteger nonce,
-            String blockHash,
-            BigInteger blockNumber,
-            BigInteger blockTimestamp,
-            BigInteger transactionIndex,
-            String sender,
-            String receiver,
-            String value,
-            String input,
-            String revertReason,
-            TransactionStatus status) {
-        this.nodeId = nodeId;
-        this.hash = hash;
-        this.nonce = nonce;
-        this.blockHash = blockHash;
-        this.blockNumber = blockNumber;
-        this.blockTimestamp = blockTimestamp;
-        this.transactionIndex = transactionIndex;
-        this.sender = sender;
-        this.receiver = receiver;
-        this.value = value;
-        this.input = input;
-        this.revertReason = revertReason;
-        this.status = status;
-    }
+    @Column(name = "status", nullable = false)
+    private String status;
 
     public static TransactionEventEntity fromTransactionEvent(TransactionEvent event) {
-        return new TransactionEventEntity(
-                event.getNodeId(),
-                event.getHash(),
-                event.getNonce().value(),
-                event.getBlockHash(),
-                event.getBlockNumber().value(),
-                event.getBlockTimestamp(),
-                event.getTransactionIndex(),
-                event.getSender(),
-                event.getReceiver(),
-                event.getValue(),
-                event.getInput(),
-                event.getRevertReason(),
-                event.getStatus());
+        if (event instanceof EthTransactionEvent ethTransactionEvent) {
+            return EthTransactionEventEntity.fromEthTransactionEvent(ethTransactionEvent);
+        } else if (event instanceof HederaTransactionEvent hederaTransactionEvent) {
+            return HederaTransactionEventEntity.fromHederaTransactionEvent(hederaTransactionEvent);
+        }
+        throw new IllegalArgumentException("unsupported transaction event type");
     }
 
-    public TransactionEvent toTransactionEvent() {
-        return new TransactionEvent(
-                nodeId,
-                hash,
-                status,
-                new NonNegativeBlockNumber(nonce),
-                blockHash,
-                new NonNegativeBlockNumber(blockNumber),
-                blockTimestamp,
-                transactionIndex,
-                sender,
-                receiver,
-                value,
-                input,
-                revertReason);
-    }
+    public abstract TransactionEvent toTransactionEvent();
 }

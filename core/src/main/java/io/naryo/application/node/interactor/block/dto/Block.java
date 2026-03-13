@@ -10,4 +10,4 @@ public record Block(
         BigInteger size,
         BigInteger gasUsed,
         BigInteger timestamp,
-        List<Transaction> transactions) {}
+        List<? extends Transaction> transactions) {}
