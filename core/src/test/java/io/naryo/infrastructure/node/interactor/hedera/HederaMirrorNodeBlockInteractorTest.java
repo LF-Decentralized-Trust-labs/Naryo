@@ -158,12 +158,6 @@ class HederaMirrorNodeBlockInteractorTest {
                                             ContractResultListResponseModel>() {}.getType()) {
                                 lenient().doReturn(List.of(model)).when(list).getResults();
                                 lenient().doReturn(Map.of()).when(list).getLinks();
-                                when(model.hash()).thenReturn("0xabc");
-                                when(model.nonce()).thenReturn(BigInteger.ZERO);
-                                when(model.blockNumber()).thenReturn("1");
-                                when(model.blockHash()).thenReturn("0xdef");
-                                when(model.from()).thenReturn("0xghi");
-                                when(model.to()).thenReturn("0xjkl");
                                 return list;
                             }
 

@@ -77,7 +77,7 @@ class DefaultLiveRegistryConcurrencyTest {
         boolean completed = done.await(3, TimeUnit.SECONDS);
         assertTrue(completed);
         for (Future<Boolean> f : tasks) {
-            assertTrue(f.get(0, TimeUnit.SECONDS));
+            assertTrue(f.get());
         }
     }
 

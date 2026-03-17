@@ -3,6 +3,8 @@ package io.naryo.infrastructure.store.event.persistence.entity.block;
 import java.math.BigInteger;
 
 import io.naryo.application.node.interactor.block.dto.Transaction;
+import io.naryo.application.node.interactor.block.dto.eth.EthTransaction;
+import io.naryo.application.node.interactor.block.dto.hedera.HederaTransaction;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,88 +13,64 @@ import lombok.NoArgsConstructor;
 @Table(name = "block_event_transaction")
 @Getter
 @NoArgsConstructor
-public final class BlockEventTransactionEntity {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "transaction_type", discriminatorType = DiscriminatorType.STRING)
+public abstract class BlockEventTransactionEntity {
 
-    private @Id @Column(name = "hash", nullable = false) String hash;
+    @Id
+    @Column(name = "hash", nullable = false)
+    private String hash;
 
-    private @Column(name = "index", nullable = false) BigInteger index;
+    @Column(name = "block_number", nullable = false)
+    private BigInteger blockNumber;
 
-    private @Column(name = "nonce", nullable = false) BigInteger nonce;
+    @Column(name = "from_address", nullable = false)
+    private String from;
 
-    private @Column(name = "block_number", nullable = false) BigInteger blockNumber;
+    @Column(name = "to_address")
+    private String to;
 
-    private @Column(name = "block_hash", nullable = false) String blockHash;
+    @Column(name = "value")
+    private String value;
 
-    private @Column(name = "status", nullable = false) String status;
+    @Column(name = "fee")
+    private String fee;
 
-    private @Column(name = "`from`", nullable = false) String from;
+    @Column(name = "timestamp")
+    private String timestamp;
 
-    private @Column(name = "`to`", nullable = false) String to;
+    @Column(name = "status")
+    private String status;
 
-    private @Column(name = "value") String value;
-
-    private @Column(name = "input", nullable = false) String input;
-
-    private @Column(name = "log_bloom", nullable = false) String logBloom;
-
-    private @Column(name = "revert_reason", nullable = false) String revertReason;
-
-    private BlockEventTransactionEntity(
+    protected BlockEventTransactionEntity(
             String hash,
-            BigInteger index,
-            BigInteger nonce,
             BigInteger blockNumber,
-            String blockHash,
-            String status,
             String from,
             String to,
             String value,
-            String input,
-            String logBloom,
-            String revertReason) {
+            String fee,
+            String timestamp,
+            String status) {
         this.hash = hash;
-        this.index = index;
-        this.nonce = nonce;
         this.blockNumber = blockNumber;
-        this.blockHash = blockHash;
-        this.status = status;
         this.from = from;
         this.to = to;
         this.value = value;
-        this.input = input;
-        this.logBloom = logBloom;
-        this.revertReason = revertReason;
+        this.fee = fee;
+        this.timestamp = timestamp;
+        this.status = status;
     }
+
+    public abstract Transaction toTransaction();
 
     public static BlockEventTransactionEntity fromTransaction(Transaction transaction) {
-        return new BlockEventTransactionEntity(
-                transaction.hash(),
-                transaction.index(),
-                transaction.nonce(),
-                transaction.blockNumber(),
-                transaction.blockHash(),
-                transaction.status(),
-                transaction.from(),
-                transaction.to(),
-                transaction.value(),
-                transaction.input(),
-                transaction.logBloom(),
-                transaction.revertReason());
-    }
-
-    public Transaction toTransaction() {
-        return new Transaction(
-                hash,
-                index,
-                nonce,
-                blockNumber,
-                blockHash,
-                status,
-                from,
-                to,
-                value,
-                input,
-                logBloom,
-                revertReason);
+        if (transaction instanceof EthTransaction) {
+            return new EthBlockEventTransactionEntity((EthTransaction) transaction);
+        } else if (transaction instanceof HederaTransaction) {
+            return new HederaBlockEventTransactionEntity((HederaTransaction) transaction);
+        } else {
+            throw new IllegalArgumentException(
+                    "Unknown transaction type: " + transaction.getClass().getName());
+        }
     }
 }

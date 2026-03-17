@@ -24,7 +24,7 @@ public final class BlockEvent extends Event<BigInteger> {
     private final BigInteger size;
     private final BigInteger gasUsed;
     private final BigInteger timestamp;
-    private final List<Transaction> transactions;
+    private final List<? extends Transaction> transactions;
 
     public BlockEvent(
             UUID nodeId,
@@ -34,7 +34,7 @@ public final class BlockEvent extends Event<BigInteger> {
             BigInteger size,
             BigInteger gasUsed,
             BigInteger timestamp,
-            List<Transaction> transactions) {
+            List<? extends Transaction> transactions) {
         super(EventType.BLOCK, nodeId);
         this.number = number;
         this.hash = hash;

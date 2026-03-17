@@ -4,7 +4,6 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.UUID;
 
-import io.naryo.application.node.interactor.block.dto.Transaction;
 import io.naryo.domain.common.NonNegativeBlockNumber;
 import io.naryo.domain.event.block.BlockEvent;
 import lombok.AllArgsConstructor;
@@ -25,7 +24,7 @@ public final class BlockEventDocument {
     private final BigInteger size;
     private final BigInteger gasUsed;
     private final BigInteger timestamp;
-    private final List<Transaction> transactions;
+    private final List<TransactionDocument> transactions;
 
     public static BlockEventDocument fromBlockEvent(BlockEvent blockEvent) {
         return new BlockEventDocument(
@@ -36,7 +35,9 @@ public final class BlockEventDocument {
                 blockEvent.getSize(),
                 blockEvent.getGasUsed(),
                 blockEvent.getTimestamp(),
-                blockEvent.getTransactions());
+                blockEvent.getTransactions().stream()
+                        .map(TransactionDocument::fromTransaction)
+                        .toList());
     }
 
     public BlockEvent toBlockEvent() {
@@ -48,6 +49,6 @@ public final class BlockEventDocument {
                 size,
                 gasUsed,
                 timestamp,
-                transactions);
+                transactions.stream().map(TransactionDocument::toTransaction).toList());
     }
 }
