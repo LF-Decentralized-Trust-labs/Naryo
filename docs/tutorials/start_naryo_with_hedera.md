@@ -1,358 +1,332 @@
-# 🚀 Start Naryo with Hedera
+# Start Naryo with Hedera
 
-This guide explains how to deploy a local [Hedera](https://hedera.com/) node and a smart contract
-that emits events, allowing you to test event consumption in **Naryo**.
+This guide will walk you through setting up Naryo to monitor events from a local Hedera blockchain network using Hiero Local Node. You'll deploy a sample smart contract, configure Naryo to listen for its events, and see Naryo broadcasting those events to a local HTTP endpoint.
 
-## 🧰 Requirements
+## Requirements
 
-Ensure you have the following installed:
+Before you begin, ensure you have the following installed:
 
-* Java 21
-* Docker & Docker Compose
-* [Node.js 20.19.4 LTS & npm 10.8.2](https://nodejs.org/en/download)
-* [Hardhat](https://hardhat.org/)
-* Git
+*   **Java 17 or higher**
+*   **Docker & Docker Compose**
+*   **Git**
+*   **Node.js & npm**: Recommended for Hardhat and the event receiver.
+*   **Hardhat**: For deploying smart contracts. Install globally: `npm install -g hardhat`
 
-## 🎉 Step 0: Prepare your environment
+## Step 0: Project Setup
 
-Create a directory for the tutorial, for example: `naryo-hedera-tutorial` and run the following command:
+Create a new directory for this tutorial and navigate into it:
 
 ```bash
-  mkdir naryo-hedera-tutorial # or whatever name you like
-  cd naryo-hedera-tutorial
+mkdir naryo-hedera-tutorial
+cd naryo-hedera-tutorial
 ```
 
-## ⚙️ Step 1: Start Hedera Dev Network
+Clone the Naryo repository into this directory. We'll need it later to publish Naryo modules locally.
 
-The easiest way to start a local Hedera node is using
-the [Hiero Local Node](https://github.com/hiero-ledger/hiero-local-node#official-npm-release), which supports Hedera
-networks with minimal setup.
+```bash
+git clone https://github.com/LF-Decentralized-Trust-labs/Naryo naryo-project
+```
 
-1. Run the following command to download the setup:
+## Step 1: Start a Hedera Development Network (Hiero)
+
+We'll use the [Hiero Local Node](https://github.com/hiero-ledger/hiero-local-node) to easily spin up a local Hedera network.
+
+1.  Install the Hedera Local Node CLI globally:
 
     ```bash
     npm install @hashgraph/hedera-local -g
     ```
 
-2. Once the hedera-local package is installed, run the following command:
+2.  Start the Hedera network:
 
     ```bash
     hedera start
     ```
 
-   This command launches the network using Docker Compose and exposes the following JSON-RPC endpoint:
-   `http://localhost:8545`
+    This command launches a full local Hedera environment with Consensus Node, Mirror Node, and JSON-RPC relay in Docker. Keep this terminal open.
 
-   > ⚠️ Remember to have docker running on your machine.
+    > **Pre-funded Account**: For deploying contracts, you can use the following pre-funded test account (only for local development!):
+    > *   **Private Key**: `0x105d050185ccb907fba04dd92d8de9e32c18305e097ab41dadda21489a211524`
+    > *   **Address**: `0x67D8d32E9Bf1a9968a5ff53B87d777Aa8EBBEe69`
 
-3. Use the following pre-funded test account in your deployment scripts:
+3.  **Open a new terminal** and navigate back to your `naryo-hedera-tutorial` directory for the next steps.
 
-    ```txt
-    Private Key: 0x105d050185ccb907fba04dd92d8de9e32c18305e097ab41dadda21489a211524
-    Address:    0x67D8d32E9Bf1a9968a5ff53B87d777Aa8EBBEe69
+    ```bash
+    cd ../
     ```
 
-   > ⚠️ Only use this key for local testing. Never use it in production environments.
+## Step 2: Deploy an ERC-20 Contract
 
-## 📦 Step 2: Deploy an ERC-20 Contract that Emits Events
+We will deploy a simple ERC-20 token contract that emits `Transfer` events, which Naryo will monitor.
 
-> Make sure you are in the tutorial directory before following the steps below.
+1.  Create a Hardhat project for your contract:
 
-### 1. Create a Hardhat project:
+    ```bash
+    mkdir erc20-contract && cd erc20-contract
+    npx hardhat init
+    ```
+    *   Choose "Create a JavaScript project".
+    *   When prompted for the project root, enter `.` and press Enter.
+    *   Select "Add a .gitignore".
+    *   Confirm installation of `hardhat-toolbox`.
 
-```bash
-mkdir erc20-contract && cd erc20-contract
-npm init -y
-npm install --save-dev hardhat
-npx hardhat init
-```
+2.  Install OpenZeppelin contracts:
 
-Choose: “Create a JavaScript project” and accept the defaults.
+    ```bash
+    npm install @openzeppelin/contracts
+    ```
 
-### 2. Define your contract:
+3.  Create the contract file `contracts/MyToken.sol`:
 
-Install OpenZeppelin contracts:
+    ```solidity
+    // SPDX-License-Identifier: MIT
+    pragma solidity ^0.8.20; // Use a recent Solidity version supported by Hardhat
 
-```bash
-npm install @openzeppelin/contracts
-```
+    import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-Create `contracts/MyToken.sol`:
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.28;
-
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-
-contract MyToken is ERC20 {
-    constructor(uint256 initialSupply) ERC20("MyToken", "MTK") {
-        _mint(msg.sender, initialSupply);
+    contract MyToken is ERC20 {
+        constructor(uint256 initialSupply) ERC20("MyToken", "MTK") {
+            _mint(msg.sender, initialSupply);
+        }
     }
-}
-```
+    ```
 
-### 3. Configure Hardhat to connect to Hedera:
+4.  Configure Hardhat to connect to your local Hedera network. Replace `hardhat.config.js` with:
 
-You can use the following `hardhat.config.js` file:
+    ```javascript
+    require("@nomicfoundation/hardhat-toolbox");
 
-```js
-require("@nomicfoundation/hardhat-toolbox");
+    module.exports = {
+      solidity: "0.8.20", // Match your contract's Solidity version
+      defaultNetwork: 'local',
+      networks: {
+        local: {
+          url: "http://localhost:7546", // Hedera JSON-RPC Relay
+          accounts: [
+            "0x105d050185ccb907fba04dd92d8de9e32c18305e097ab41dadda21489a211524" // Private key from Hiero
+          ],
+          chainId: 298 // Default chain ID for Hiero local node
+        }
+      }
+    };
+    ```
 
-/** @type import('hardhat/config').HardhatUserConfig */
-module.exports = {
-  solidity: "0.8.28",
-  defaultNetwork: 'local',
-    networks: {
-      local: {
-        url: 'http://localhost:7546',
-        accounts: [
-          "0x105d050185ccb907fba04dd92d8de9e32c18305e097ab41dadda21489a211524",
-          "0x2e1d968b041d84dd120a5860cee60cd83f9374ef527ca86996317ada3d0d03e7"
-        ],
-        chainId: 298,
-      },
-      testnet: {
-        url: 'https://testnet.hashio.io/api',
-        accounts: [],
-        chainId: 296,
-      },
-    }
-};
-```
+5.  Deploy the contract:
 
-### 4. Deploy the contract:
+    ```bash
+    npx hardhat run scripts/deploy.js --network local
+    ```
+    *   If `scripts/deploy.js` doesn't exist, create it with similar content to the Besu tutorial's `deploy.js` script, adapted for `MyToken`. For example:
+        ```javascript
+        const hre = require("hardhat");
 
-Add a new ignition module `ignition/modules/MyToken.js`:
+        async function main() {
+          const initialSupply = 1000000;
+          const MyToken = await hre.ethers.getContractFactory("MyToken");
+          const myToken = await MyToken.deploy(initialSupply);
 
-```js
-const { buildModule } = require("@nomicfoundation/hardhat-ignition/modules");
+          await myToken.waitForDeployment();
 
-const INITIAL_SUPPLY = 1000000;
+          console.log(`MyToken deployed to: ${myToken.target}`);
+        }
 
-module.exports = buildModule("MyToken", (m) => {
-  const initialSupply = m.getParameter("initialSupply", INITIAL_SUPPLY);
+        main().catch((error) => {
+          console.error(error);
+          process.exitCode = 1;
+        });
+        ```
 
-  const myToken = m.contract("MyToken", [initialSupply]);
+    **Important**: Save the deployed contract address (e.g., `0x...`), you will need it in Step 5.
 
-  return { myToken };
-});
-```
+6.  **Open a new terminal** and navigate back to your `naryo-hedera-tutorial` directory.
 
-Then run:
+    ```bash
+    cd ../
+    ```
 
-```bash
-npx hardhat ignition deploy ignition/modules/MyToken.js
-```
+## Step 3: Publish Naryo Modules Locally
 
-The output should look like this:
+Before generating your Naryo project, you need to publish Naryo's artifacts to your local Maven repository (`~/.m2/repository`). This allows your new project to resolve Naryo dependencies.
 
-```bash
-[ MyToken ] successfully deployed 🚀
-
-Deployed Addresses
-
-MyToken#MyToken - <YOUR_CONTRACT_ADDRESS>
-```
-
-Save the contract address, you will need it later.
-
-## 🏗️ Step 3: Publish Naryo Modules Locally
-
-> Make sure you are in the tutorial directory before following the steps below.
-
-Before generating your testing project, make sure to publish the Naryo modules to your local Maven repository:
+Navigate to the cloned `naryo-project` directory and run the Gradle publish task:
 
 ```bash
-git clone https://github.com/LF-Decentralized-Trust-labs/Naryo naryo # skip if already cloned
-cd naryo
+cd naryo-project
 ./gradlew publishToMavenLocal
 ```
 
-> This is required so that your new project can resolve the Naryo dependencies.
-
-## 🧬 Step 4: Generate a Naryo Project
-
-Use the Naryo CLI initializer to scaffold your project:
+Once complete, navigate back to your `naryo-hedera-tutorial` directory.
 
 ```bash
-./gradlew :initializer:run --args="--name test-naryo --output <YOUR_TUTORIAL_DIRECTORY>"
+cd ../
 ```
 
-> Replace `<YOUR_TUTORIAL_DIRECTORY>` with the path to your tutorial directory.
+## Step 4: Generate a Naryo Spring Boot Project
 
-This will generate a folder `test-naryo/` in your tutorial directory with:
+Use the Naryo CLI Initializer to scaffold a new Spring Boot project. This will create a basic project structure with Naryo dependencies and a sample `application.yml`.
 
-* Project structure
-* `build.gradle` with correct dependencies
-* `Application.java` class
-* `application.yml` with prefilled node and broadcaster config
+```bash
+./naryo-project/gradlew :initializer:run --args="--name naryo-app --output ."
+```
+This command generates a folder `naryo-app/` in your current directory with a Spring Boot application ready to be configured.
 
-> ℹ️ You can modify the YAML to use your deployed contract address and filters.
+## Step 5: Configure `application.yml`
 
-## 🔧 Step 5: Configure `application.yml`
+Navigate into your newly generated `naryo-app` project:
 
-> Make sure you are in the `test-naryo/` directory before following the steps below.
+```bash
+cd naryo-app
+```
 
-Replace the generated file `src/main/resources/application.yml` to include your Hedera node and contract:
+Now, update the `src/main/resources/application.yml` file. You will need to add your Hedera node connection details and a filter for your deployed `MyToken` contract.
+
+Replace the contents of `application.yml` with the following, making sure to update `${YOUR_CONTRACT_ADDRESS}` with the address you saved in Step 2:
 
 ```yaml
 naryo:
   nodes:
-    - id: eadc75b2-4217-4018-95af-f67c13058976
-      name: hedera-node
+    - id: hedera-node-id
+      name: hedera-local
       type: HEDERA
       connection:
         type: HTTP
         endpoint:
-          url: http://localhost:5551
+          url: http://localhost:7546 # Hedera JSON-RPC Relay
       interaction:
-        type: BLOCK_BASED
-        mode: HEDERA_MIRROR_NODE
+        mode: HEDERA_MIRROR_NODE # Use Mirror Node for interaction
       subscription:
-        type: BLOCK_BASED
         method: POLL
         interval: 1s
+
   broadcasting:
     configuration:
-      - id: cd1bec0d-2998-46bc-828f-94459d42c17a
+      - id: event-receiver-http
         type: HTTP
         endpoint:
-          url: http://localhost:8080
+          url: http://localhost:8080 # This will be our Node.js event receiver
     broadcasters:
-      - id: cd1bec0d-2998-46bc-828f-94459d43c17b
-        configurationId: cd1bec0d-2998-46bc-828f-94459d42c17a
+      - id: my-hedera-broadcaster
+        configurationId: event-receiver-http
         target:
-          type: ALL
-          destination: /events
+          type: FILTER
+          filterId: my-transfer-filter-id
+          destinations:
+            - /events # Endpoint path on our Node.js receiver
+
   filters:
-    - id: a5605668-7a88-4e5c-b4ee-4a8417b7184d
+    - id: my-transfer-filter-id
       name: my-transfer-filter
       type: EVENT
-      nodeId: eadc75b2-4217-4018-95af-f67c13058976
-      scope: GLOBAL
+      nodeId: hedera-node-id
+      scope: CONTRACT
       specification:
         signature: Transfer(address indexed, address indexed, uint256)
+      address: ${YOUR_CONTRACT_ADDRESS} # <--- UPDATE THIS
 ```
 
-You can also use the RPC-Relay with the Hedera node. Simply replace the node in the following lines:
+## Step 6: Set up an HTTP Event Receiver
 
-```yaml
-naryo:
-  nodes:
-    - id: eadc75b2-4217-4018-95af-f67c13058976
-      name: hedera-node
-      type: HEDERA
-      connection:
-        type: HTTP
-        endpoint:
-          url: http://localhost:7546
-```
+We'll set up a simple Node.js HTTP server to act as a receiver for the events Naryo broadcasts.
 
-## 📁 Step 6: Expose Event Notifications via HTTP
-
-> Make sure you are in the tutorial directory before following the steps below.
-
-Create a new folder for your event receiver script:
-
-```bash
-mkdir naryo-listener
-cd naryo-listener
-```
-
-This script will allow Naryo to forward received events to your local HTTP server.
-
-To observe how Naryo processes and reacts to events, you can expose a simple HTTP endpoint using Node.js and Express.
-
-Create a new file called `server.js` with the following content:
-
-```js
-const express = require('express');
-const bodyParser = require('body-parser');
-
-const app = express();
-const port = 8080;
-
-app.use(bodyParser.json());
-
-app.post('/events', (req, res) => {
-  console.log('✅ Event received:', JSON.stringify(req.body, null, 2));
-  res.status(200).send('OK');
-});
-
-app.listen(port, () => {
-  console.log(`🚀 Event receiver listening at http://localhost:${port}/events`);
-});
-```
-
-Install dependencies and start the server:
-
-```bash
-npm install express body-parser
-nohup node server.js > event-receiver.log 2>&1 &
-```
-
-Now every received event will be forwarded and printed in your local Node.js server.
-
-## 🥪 Step 7: Run the Naryo Application
-
-1. Go to your generated project folder:
+1.  **Open a new terminal** and navigate to your `naryo-hedera-tutorial` directory.
 
     ```bash
-    cd test-naryo
+    cd naryo-hedera-tutorial
     ```
 
-2. Run the application:
+2.  Create a new directory for the receiver and navigate into it:
+
+    ```bash
+    mkdir event-receiver && cd event-receiver
+    ```
+
+3.  Create `server.js` with the following content:
+
+    ```javascript
+    const express = require('express');
+    const bodyParser = require('body-parser');
+
+    const app = express();
+    const port = 8080; // Must match the endpoint.url in application.yml
+
+    app.use(bodyParser.json());
+
+    app.post('/events', (req, res) => {
+      console.log('✅ Event received:', JSON.stringify(req.body, null, 2));
+      res.status(200).send('OK');
+    });
+
+    app.listen(port, () => {
+      console.log(`🚀 Event receiver listening at http://localhost:${port}/events`);
+    });
+    ```
+
+4.  Install dependencies and start the server in the background:
+
+    ```bash
+    npm install express body-parser
+    nohup node server.js > event-receiver.log 2>&1 &
+    ```
+
+    Now, every event Naryo receives and broadcasts will be logged by this server.
+
+5.  **Open a new terminal** and navigate back to your `naryo-app` project directory for the next step.
+
+    ```bash
+    cd ../naryo-app
+    ```
+
+## Step 7: Run the Naryo Application
+
+1.  Ensure you are in the `naryo-app/` directory.
+2.  Run the Naryo Spring Boot application:
 
     ```bash
     ./gradlew bootRun
     ```
 
-> Naryo will start and listen to the configured event (`Transfer`) using polling from your Hedera node.
+    Naryo will start, connect to your Hedera node, and begin polling for `Transfer` events.
 
-## 🪵 Step 8: Check the Naryo listener logs
+## Step 8: Verify Event Consumption
 
-1. Open a new terminal window.
-2. Navigate to the `naryo-listener/` directory.
-3. Run the following command to monitor incoming events:
-   ```bash
-    tail -f event-receiver.log
-     ```
+You can verify that Naryo is correctly forwarding events to your HTTP receiver by triggering a `Transfer` event from your `MyToken` contract.
 
-> You should see the event payload printed whenever a `Transfer` event is emitted from your contract and every mined
-> block.
-
-## ✅ Verify
-
-You can now verify that Naryo is correctly forwarding events to your local HTTP server.
-
-> Make sure you are in the `erc20-contract/` directory before following the steps below.
-
-Let's trigger the event from the Hardhat console:
-
-1. Open a new terminal.
-2. Start the Hardhat console:
+1.  **Monitor Event Receiver Logs**: Open a new terminal and navigate to your `event-receiver` directory.
 
     ```bash
-    npx hardhat console --network besu
+    cd naryo-hedera-tutorial/event-receiver
+    tail -f event-receiver.log
     ```
 
-3. Execute the following commands to interact with your contract (replace `DEPLOYED_CONTRACT_ADDRESS` if needed):
+    Keep this terminal open to see incoming events.
 
-```js
-var token = await ethers.getContractAt("MyToken", DEPLOYED_CONTRACT_ADDRESS);
+2.  **Trigger a Transfer Event**: Go to your `erc20-contract` directory (from a new terminal) and open the Hardhat console:
 
-await token.transfer("0x9ba8c0dF156194706942a86f49081542F13EbF42", 1);
-```
+    ```bash
+    cd naryo-hedera-tutorial/erc20-contract
+    npx hardhat console --network local
+    ```
 
-> You can run the above commands multiple times to trigger the event.
+    In the Hardhat console, execute the following commands (replace `DEPLOYED_CONTRACT_ADDRESS` and the recipient address as needed):
 
-You should see the output in the Node.js event listener server.
+    ```javascript
+    const MyToken = await ethers.getContractFactory("MyToken");
+    const myToken = await MyToken.attach("DEPLOYED_CONTRACT_ADDRESS"); // Attach to your deployed contract
 
-## 📚 Resources
+    await myToken.transfer("0x9ba8c0dF156194706942a86f49081542F13EbF42", 1); // Transfer 1 token
+    ```
 
-* [Hiero Local Node](https://github.com/hiero-ledger/hiero-local-node#official-npm-release)
-* [Hardhat Docs](https://hardhat.org/)
-* [OpenZeppelin Contracts](https://docs.openzeppelin.com/contracts)
-* [Naryo Getting Started](../getting_started.md)
-* [Naryo Configuration](../configuration.md)
+    You should immediately see the `Transfer` event payload printed in your `event-receiver.log` terminal.
+
+## Troubleshooting
+
+*   **`Connection refused` errors**: Ensure your Hedera network (started with `hedera start`) and Node.js event receiver (`event-receiver`) are running and accessible on their respective ports. The Hedera JSON-RPC relay typically runs on `localhost:7546`.
+*   **No events in logs**: Double-check your `application.yml` in `naryo-app` for correct contract address, filter signature, and node ID. Also ensure Naryo application is running.
+
+## Resources
+
+*   [Hiero Local Node](https://github.com/hiero-ledger/hiero-local-node)
+*   [Hardhat Documentation](https://hardhat.org/)
+*   [OpenZeppelin Contracts](https://docs.openzeppelin.com/contracts)
+*   [Naryo Getting Started Guide](../getting_started.md)
+*   [Naryo Configuration Guide](../configuration/index.md)

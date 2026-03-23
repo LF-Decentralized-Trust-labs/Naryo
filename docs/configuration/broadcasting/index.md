@@ -1,4 +1,4 @@
-# 🎉 Naryo Broadcasting
+# Naryo Broadcasting
 
 Naryo supports multiple broadcasting mechanisms to distribute events and messages across your system. This document provides an overview of the available broadcasting options and how to configure them.
 
@@ -20,20 +20,17 @@ Each broadcasting option has its own strengths and use cases. Naryo currently su
 
 ## Kafka Broadcasting
 
-Detailed Kafka configuration can be found at [Kafka Configuration](./configuration-kafka.md) guide.
+Detailed Kafka configuration can be found in [the Kafka Configuration](./configuration-kafka.md) guide.
 
 ## RabbitMQ Broadcasting
 
-Detailed RabbitMQ configuration can be found at [RabbitMQ Configuration](./configuration-rabbit.md) guide.
+Detailed RabbitMQ configuration can be found in [the RabbitMQ Configuration](./configuration-rabbit.md) guide.
 
 ## HTTP Broadcasting
 
-HTTP broadcasting configuration is not yet documented. Please refer to the project's source code or contact the development team for more information.
+Detailed HTTP broadcasting configuration can be found in [the HTTP Configuration](./http.md) guide.
 
-## 👈 Previous steps
+## Conclusion & Next Steps
 
-1. [Configuration](../configuration/index.md)
-
-## 👉 Next steps
-
-1. [Tutorials](../tutorials/index.md)
+This guide provided an overview of the available broadcasting options and how to configure them.
+You can now proceed to the [Tutorials](../../tutorials/index.md) section to learn how to use Naryo's broadcasting capabilities.
