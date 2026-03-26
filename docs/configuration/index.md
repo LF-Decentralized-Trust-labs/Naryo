@@ -1,52 +1,36 @@
-# 🎉 Naryo Configuration
+# Naryo Configuration Guide
 
-- [Configuration Sources](#configuration-sources)
-  - [How is priority handled?](#how-is-priority-handled)
-- [Core Configuration Overview](#-core-configuration-overview)
-- [MongoDB Configuration Overview](#-mongo-configuration-overview)
-- [JPA Configuration Overview](#-jpa-configuration-overview)
+This guide provides a comprehensive overview of how to configure Naryo. Whether you want to connect to a new blockchain node, define a new event filter, or set up a new broadcasting destination, you'll find all the information you need here.
 
-Naryo supports flexible configuration mechanisms. The core module requires manual configuration through custom
-implementation due to its framework-agnostic design and wide configuration domain. Configuration can be loaded from
-different sources thanks to the implementation of the `SourceProvider` interface.
+Naryo's configuration is designed to be flexible and modular. You can configure it using a simple YAML file, or you can leverage more advanced features like dynamic configuration from a database.
 
-## Configuration Sources
+## Core Configuration
 
-Naryo allows you to use multiple configuration sources, which are resolved based on the priority of each source.
+This is the main configuration for Naryo. It's where you define the core components of your event listener, such as nodes, filters, and broadcasters.
 
-Currently, two configuration sources are supported:
+-   **[Core Configuration Overview](./configuration-core.md)**: A detailed reference for all the core configuration options.
 
-- **Core**
-  - The **`spring-core`** module allows traditional Spring Boot configuration using YAML or `.properties` files, based on the `EnvironmentProperties` model.
+## Data Persistence
 
-- **MongoDB**
-  - The **`persistence-spring-mongo`** module enables dynamic configuration loading from MongoDB, based on each domain's model.
+Naryo can be configured to store its state and configuration in a database. This is useful for running Naryo in a distributed environment or for managing dynamic configurations.
 
-- **JPA**
-    - The **`persistence-spring-jpa`** module enables dynamic configuration loading from the SQL Database of your choice, based on each domain's model.
+-   **[Persistence Overview](./persistence/index.md)**: Learn how to configure Naryo to use MongoDB or a SQL database.
 
-### How is priority handled?
-In order to manage configurations flexibly, Naryo implements a priority system among configuration sources. Priority is defined as follows:
+## Broadcasting
 
-- **`persistence-spring-mongo` (Priority 0)**: Configuration stored in MongoDB has the **highest priority**. If a property is defined in both MongoDB and `application.yml`, Naryo will take the value from MongoDB.
-- **`spring-core` (Priority 1)**: The configuration in the `application.yml` file has secondary priority. If a property is not defined in MongoDB, the value will be taken from `application.yml`.
+Broadcasting is how Naryo sends event data to your systems. Naryo supports several broadcasting mechanisms out of the box.
 
-## 📚 Core Configuration Overview
+-   **[Broadcasting Overview](./broadcasting/index.md)**: Learn how to configure broadcasters for Kafka, RabbitMQ, and HTTP.
 
-[Core Configuration Overview](./configuration-core.md)
+## Configuration API
 
-## 📚 Mongo Configuration Overview
+For advanced use cases, Naryo provides a powerful API for managing your configuration dynamically at runtime.
 
-[Mongo Configuration Overview](./configuration-mongo.md)
+-   **[Configuration API Overview](api/configuration-api.md)**: Learn how to use the API to add, remove, and update your configuration on the fly.
 
-## 📚 JPA Configuration Overview
+## Next Steps
 
-[JPA Configuration Overview](./configuration-jpa.md)
+Now that you have an overview of Naryo's configuration, here are some suggestions for what to read next:
 
-## 👈 Previous steps
-
-1. [Getting Started](../getting_started.md)
-
-## 👉 Next steps
-
-1. [Tutorials](../tutorials/index.md)
+-   **[Core Configuration Overview](./configuration-core.md)**: Start here if you want to learn the basics of configuring Naryo.
+-   **[Tutorials](../tutorials/index.md)**: See Naryo in action with our hands-on tutorials.

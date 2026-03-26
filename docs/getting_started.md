@@ -1,23 +1,42 @@
-## 🚀 Getting Started
+# Getting Started with Naryo
 
-To start using **Naryo**, you need to embed and instantiate it manually inside your project. There are **two
-main ways** to use this library:
+Welcome to Naryo! This guide will walk you through the first steps to get Naryo up and running.
 
-* ✅ **Spring Boot integration (recommended)** — Simplifies setup using Spring context and YAML configuration.
-* ⚙️ **Core module (framework-agnostic)** — Gives you full control but requires manual instantiation and wiring.
+There are three main ways to use Naryo:
 
----
+1.  **Docker (Easiest)**: Run the Naryo reference server in a Docker container. This is the fastest way to see Naryo in action.
+2.  **Spring Boot (Recommended)**: Embed Naryo into your Spring Boot application. This gives you a balance of power and ease of use.
+3.  **Core Library (Advanced)**: Use the core Naryo library in any Java application. This gives you maximum control but requires manual setup.
 
-### 1. Setting up GitHub Packages Authentication
+## Prerequisites
 
-Since our artifacts are hosted on GitHub Package Registry, you'll need to configure authentication in your Gradle or
-Maven settings. Please refer to
-the [GitHub documentation](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
-to configure the access token.
+-   Java 21 or higher
+-   Docker (if you want to use the Docker-based options)
+-   Gradle or Maven
+
+## 1. Running Naryo with Docker
+
+The easiest way to start is by using our Docker-based quickstarts. These guides will show you how to run Naryo with a local blockchain node in minutes.
+
+-   [Naryo with Besu Quickstart](./tutorials/naryo_quickstart.md)
+-   [Naryo with Hedera Quickstart](./tutorials/naryo_quickstart_hedera.md)
+
+## 2. Using Naryo with Spring Boot (Recommended)
+
+This is the recommended way to use Naryo in your own application.
+
+### Step 1: Add Naryo as a Dependency
+
+To add Naryo to your project, you need to configure your build tool to download artifacts from GitHub Packages.
+
+<details>
+<summary><b>GitHub Packages Authentication</b></summary>
+
+You'll need a GitHub Personal Access Token with the `read:packages` scope. You can create one [here](https://github.com/settings/tokens).
 
 #### For Gradle:
 
-Add the following to your `settings.gradle` or `build.gradle` file:
+Add the following to your `settings.gradle` or `build.gradle`:
 
 ```groovy
 repositories {
@@ -33,22 +52,18 @@ repositories {
 }
 ```
 
-You can provide your GitHub credentials either through environment variables or Gradle properties in your
-`gradle.properties` file:
+Then, provide your GitHub credentials in your `gradle.properties` file:
 
 ```properties
 gpr.user=YOUR_GITHUB_USERNAME
 gpr.key=YOUR_GITHUB_PERSONAL_ACCESS_TOKEN
 ```
 
-> Make sure your GitHub token has the `read:packages` scope.
-
 #### For Maven:
 
-Add the following to your `settings.xml` file:
+Add the following to your `~/.m2/settings.xml`:
 
 ```xml
-
 <settings>
     <servers>
         <server>
@@ -63,7 +78,6 @@ Add the following to your `settings.xml` file:
 And add this repository to your `pom.xml`:
 
 ```xml
-
 <repositories>
     <repository>
         <id>github</id>
@@ -71,119 +85,60 @@ And add this repository to your `pom.xml`:
     </repository>
 </repositories>
 ```
+</details>
 
----
-
-### 2. Add the Dependency to Your Project
+Now, add the `spring-core` dependency to your project.
 
 <details>
-<summary>Gradle</summary>
-
-Add Spring Boot plugin and dependency management (recommended setup, see more in [here](https://docs.spring.io/spring-boot/gradle-plugin/managing-dependencies.html)):
+<summary><b>Gradle Dependency</b></summary>
 
 ```groovy
-plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.5.4'
-    id 'io.spring.dependency-management' version '1.1.7'
-}
-
-ext {
-    naryoVersion = "0.0.1" // Replace with the actual version
-}
-
 dependencies {
-    // Core module
-    implementation("io.naryo:core:${naryoVersion}")
-
-    // Spring Boot integration
-    implementation("io.naryo:spring-core:${naryoVersion}")
-
-    // Typical Spring Boot starters you may need
-    implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-
-    // ...
+    implementation("io.naryo:spring-core:<version>")
+    // ... other dependencies
 }
 ```
-
 </details>
 
 <details>
-<summary>Maven</summary>
-
-Add Spring Boot parent for dependency management and starters:
+<summary><b>Maven Dependency</b></summary>
 
 ```xml
-<parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.5.4</version>
-</parent>
-
-<variables>
-    <naryoVersion>0.0.1</naryoVersion> // Replace with the actual version
-</variables>
-
 <dependencies>
-    <!-- Core module -->
-    <dependency>
-        <groupId>io.naryo</groupId>
-        <artifactId>core</artifactId>
-        <version>${naryoVersion}</version>
-    </dependency>
-
-    <!-- Spring Boot integration -->
     <dependency>
         <groupId>io.naryo</groupId>
         <artifactId>spring-core</artifactId>
-        <version>${naryoVersion}</version>
+        <version>${naryo.version}</version>
     </dependency>
-
-    <!-- Spring Boot starters -->
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-test</artifactId>
-        <scope>test</scope>
-    </dependency>
+    <!-- ... other dependencies -->
 </dependencies>
 ```
-
 </details>
 
----
+### Step 2: Configure Naryo
 
-### 3. Usage Options
+Create an `application.yml` file in your `src/main/resources` directory and configure Naryo. Here is a minimal example:
 
-#### ✅ Using Spring Boot (recommended)
+```yaml
+naryo:
+  nodes:
+    - id: demo
+      name: anvil
+      type: ETHEREUM
+      connection:
+        type: HTTP
+        endpoint:
+          url: http://localhost:8545
+  # ... add your filters and broadcasters
+```
 
-1. Add the Spring Boot plugin and dependency management
-   (for Gradle: `org.springframework.boot` and `io.spring.dependency-management`;
-   for Maven: use `spring-boot-starter-parent`)
-   and include the needed Spring Boot starters (for example, `spring-boot-starter`, `spring-boot-starter-web`) along with Naryo’s spring-core dependency.
-2. Define your configuration in `application.yml`:
+For a complete list of configuration options, please refer to the [Configuration Documentation](./configuration/index.md).
 
-    ```yaml
-    naryo:
-      nodes:
-        - name: default
-    #...
-    ```
+### Step 3: Start Naryo
 
-   Please refer to the [Configuration Documentation](./configuration/index.md) for more details.
-
-3. Start naryo when your application starts:
+In your main Spring Boot application class, implement `InitializingBean` and start Naryo.
 
 ```java
-
 @SpringBootApplication
 public class Application implements InitializingBean {
 
@@ -205,27 +160,26 @@ public class Application implements InitializingBean {
 }
 ```
 
-> Spring will automatically parse the YAML and inject dependencies.
+## 3. Using the Core Library (Advanced)
 
-#### ⚙️ Using the Core Library (manual setup)
+If you are not using Spring, you can use the `core` library directly. This requires you to manually instantiate and wire all the necessary components.
 
-1. Instantiate all required components manually and start them:
+```java
+// 1. Add the core dependency
+// (see step 1 above, but use io.naryo:core:<version>)
 
-    ```java
-    NodeRunner nodeRunner = new NodeRunner(...);
-    NodeContainer container = new NodeContainer(List.of(nodeRunner));
+// 2. Instantiate and wire the components
+NodeRunner nodeRunner = new NodeRunner(/* your wiring here */);
+NodeContainer container = new NodeContainer(List.of(nodeRunner));
 
-    container.start();
-    ```
+// 3. Start the container
+container.start();
+```
 
-2. You are responsible for building and wiring all components. No YAML parsing is provided out-of-the-box.
+## Next Steps
 
----
+Now that you have Naryo running, here are some resources to help you continue your journey:
 
-Need help setting it up in your use case? Let us know or check out the [tutorials](./tutorials/index.md).
-
-## 👉 Next Steps
-
-1. [Configuration Documentation](./configuration/index.md)
-2. [Broadcasting Documentation](./broadcasting/index.md)
-3. [Tutorials](./tutorials/index.md)
+-   **[Configuration Guide](./configuration/index.md)**: Learn how to configure nodes, filters, and broadcasters.
+-   **[Tutorials](./tutorials/index.md)**: Explore more advanced use cases and examples.
+-   **[Architecture](./architecture.md)**: Understand the inner workings of Naryo.

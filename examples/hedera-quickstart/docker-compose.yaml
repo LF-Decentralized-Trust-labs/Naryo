@@ -41,9 +41,7 @@ services:
       - $PWD/mock_http_server.yaml:/data
 
   naryo-server:
-    build:
-      context: ../../server
-      dockerfile: Dockerfile
+    image: ghcr.io/lf-decentralized-trust-labs/naryo:latest
     container_name: naryo-server
     restart: on-failure
     depends_on:
