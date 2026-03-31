@@ -154,6 +154,13 @@ Controls how new blocks are discovered and processed. Strategy is `BLOCK_BASED`.
 | `replayBlockOffset`               | `BigInteger` | Number of blocks to step back on (re)start.                   | No       | `12`    |
 | `syncBlockLimit`                  | `BigInteger` | Maximum number of blocks to process in a single sync batch.   | No       | `20000` |
 
+#### Method semantics
+
+The `method` determines how Naryo learns about new blocks:
+
+- `POLL` — Naryo periodically queries the node for the latest block using the configured `interval`.
+- `PUBSUB` — Naryo subscribes to node push notifications for new heads/blocks. Requires a WebSocket connection.
+
 #### POLL – Specific properties
 
 | Property   | Type       | Description                               | Required | Default |
@@ -165,6 +172,8 @@ Controls how new blocks are discovered and processed. Strategy is `BLOCK_BASED`.
 | Property | Type | Description                                                        | Required | Default |
 |----------|------|--------------------------------------------------------------------|----------|---------|
 | —        | —    | Uses node push notifications; no additional method-specific fields | —        | —       |
+
+> Important: `PUBSUB` requires `connection.type=WS` and a valid WebSocket endpoint (e.g., `wss://...`).
 
 Examples (YAML):
 ```yaml
@@ -220,6 +229,14 @@ Specifies the implementation used to fetch and interpret blockchain data after s
 | `ETHEREUM_RPC`       | `ETHEREUM`  | —     |
 | `HEDERA_MIRROR_NODE` | `HEDERA`    | —     |
 
+#### Mode semantics
+
+Interaction mode defines where Naryo reads detailed block, transaction, and event data from.
+Think of it as choosing the “source of truth” for deep data lookups.
+
+- ETHEREUM_RPC: Read directly from an Ethereum node’s standard API.
+- HEDERA_MIRROR_NODE: Read from an official Hedera mirror/indexing service.
+
 #### Properties
 
 | Property | Type   | Description                                 | Required | Default        |
@@ -273,20 +290,20 @@ This section configures the filters that Naryo uses to capture specific blockcha
 
 ### Properties
 
-| Property         | Type           | Description                                                     | Required                         | Default |
-|------------------|----------------|-----------------------------------------------------------------|----------------------------------|---------|
-| `id`             | `UUID`         | A unique identifier for the filter.                             | Yes                              | —       |
-| `name`           | `String`       | A human-readable name for the filter.                           | No                               | —       |
-| `type`           | `String`       | The type of filter (`EVENT` or `TRANSACTION`).                  | Yes                              | `EVENT` |
-| `nodeId`         | `UUID`         | The ID of the node this filter is attached to.                  | Yes                              | —       |
-| `scope`          | `String`       | The scope of an `EVENT` filter (`GLOBAL` or `CONTRACT`).        | Yes, if `type` is `EVENT`.       | `GLOBAL` |
-| `address`        | `String`       | The contract address for a `CONTRACT` scoped `EVENT` filter.    | Yes, if `scope` is `CONTRACT`.   | —       |
-| `specification`  | `Object`       | The event specification for an `EVENT` filter.                  | Yes, if `type` is `EVENT`.       | —       |
-| `identifierType` | `String`       | The identifier type for a `TRANSACTION` filter.                 | Yes, if `type` is `TRANSACTION`. | —       |
-| `value`          | `String`       | The value to filter on for a `TRANSACTION` filter.              | Yes, if `type` is `TRANSACTION`. | —       |
-| `statuses`       | `List<String>` | The statuses to filter on.                                      | No                               | —       |
+| Property         | Type           | Description                                                     | Required                         | Default             |
+|------------------|----------------|-----------------------------------------------------------------|----------------------------------|---------------------|
+| `id`             | `UUID`         | A unique identifier for the filter.                             | Yes                              | —                   |
+| `name`           | `String`       | A human-readable name for the filter.                           | No                               | —                   |
+| `type`           | `String`       | The type of filter (`EVENT` or `TRANSACTION`).                  | Yes                              | `EVENT`             |
+| `nodeId`         | `UUID`         | The ID of the node this filter is attached to.                  | Yes                              | —                   |
+| `scope`          | `String`       | The scope of an `EVENT` filter (`GLOBAL` or `CONTRACT`).        | Yes, if `type` is `EVENT`.       | `GLOBAL`            |
+| `address`        | `String`       | The contract address for a `CONTRACT` scoped `EVENT` filter.    | Yes, if `scope` is `CONTRACT`.   | —                   |
+| `specification`  | `Object`       | The event specification for an `EVENT` filter.                  | Yes, if `type` is `EVENT`.       | —                   |
+| `identifierType` | `String`       | The identifier type for a `TRANSACTION` filter.                 | Yes, if `type` is `TRANSACTION`. | —                   |
+| `value`          | `String`       | The value to filter on for a `TRANSACTION` filter.              | Yes, if `type` is `TRANSACTION`. | —                   |
+| `statuses`       | `List<String>` | The statuses to filter on.                                      | No                               | —                   |
 | `sync`           | `Object`       | Historical synchronization settings for an `EVENT` filter.      | No                               | Type: `BLOCK_BASED` |
-| `visibility`     | `Object`       | Visibility settings for an `EVENT` filter on a private network. | No                               | —       |
+| `visibility`     | `Object`       | Visibility settings for an `EVENT` filter on a private network. | No                               | —                   |
 
 ### Filter Types
 
@@ -301,6 +318,18 @@ This section configures the filters that Naryo uses to capture specific blockcha
 |-------------|-----------------------------------------------|
 | `GLOBAL`    | Match events emitted by any address.          |
 | `CONTRACT`  | Restrict to a specific `address`.             |
+
+#### Scope semantics — what `GLOBAL` vs `CONTRACT` mean
+
+The `scope` tells Naryo how broadly to apply your event specification:
+
+- `GLOBAL` — Apply the event signature/topics across the entire chain.
+  - Matches any contract that emits an event with the given `specification.signature`.
+  - Best when you care about a class of events regardless of which contract produced them (e.g., any `Transfer`), or when you are exploring/discovering emitters.
+
+- `CONTRACT` — Constrain matching to a single contract `address`.
+  - Events must come from the specified `address` and satisfy the `specification` to be included.
+  - Use when you only want events from a known contract (e.g., a specific ERC‑20 token) and wish to avoid noise from other emitters.
 
 **Statuses**:
 
@@ -387,6 +416,19 @@ Properties
 | `identifierType`  | `Enum`   | One of the values listed above.               | Yes      | —       |
 | `value`           | `String` | The concrete hash/address/id value to match.  | Yes      | —       |
 
+#### Identifier type semantics
+
+The `identifierType` tells Naryo which transaction field to compare against your provided `value`. In plain terms, it defines the kind of key used to decide if a transaction belongs to this filter:
+
+- `HASH` — Match a single, specific transaction by its unique hash.
+- `TO_ADDRESS` — Match transactions whose recipient equals the given address.
+- `FROM_ADDRESS` — Match transactions whose sender equals the given address.
+- `IDENTITY_ID` — Hedera-specific: match transactions associated with the given identity/entity id.
+
+Usage notes
+- Always provide a `value` that corresponds to the chosen `identifierType` (e.g., a tx hash for `HASH`, a checksummed EVM address for `TO_ADDRESS`/`FROM_ADDRESS`, or a valid Hedera id for `IDENTITY_ID`).
+- The filter matches when the selected field equals the `value` exactly; formatting must follow the chain’s conventions (prefixes, case sensitivity where applicable).
+
 Examples — Transaction filter (YAML):
 ```yaml
 naryo:
@@ -454,6 +496,21 @@ Each item in this list defines an active broadcaster, linking a target to a conf
 |----------------|----------------|---------------------------------------------------------------------------------------------|---------|
 | `type`         | `String`       | The type of event to broadcast (`BLOCK`, `TRANSACTION`, `CONTRACT_EVENT`, `FILTER`, `ALL`). | —       |
 | `destinations` | `List<String>` | A list of destinations (e.g., Kafka topics, RabbitMQ routing keys).                         | —       |
+
+#### Target type semantics
+
+The `type` value defines the scope of events the broadcaster will forward. The naming intentionally mirrors the event domain, so it is easy to reason about routing:
+
+- `ALL` — Forward every supported event produced by the node: blocks, transactions, contract events, and any filter-scoped events. Use this for catch‑all events that you want to forward to all consumers.
+- `BLOCK` — Forward block‑level events. Choose this when consumers only care about chain progression.
+- `TRANSACTION` — Forward transaction‑level events detected by Naryo (e.g., included transactions and related status).
+- `CONTRACT_EVENT` — Forward smart‑contract events/logs captured by Naryo. Typically, these are emitted only for contracts/topics you configured via filters; the broadcaster will forward all matched contract events.
+- `FILTER` — Forward only events that match a specific filter definition. This is the most granular option: the broadcaster emits events associated with the referenced filter(s) and ignores everything else. Use this when a destination should receive strictly the subset defined by a filter.
+
+> **Notes**:
+>
+> - Contract events and filter‑scoped events depend on filters you have configured in Naryo; if no matching filters exist, no messages will be emitted for those types.
+> - You can define multiple broadcasters with different `type` values pointing to different `destinations` to build tailored routing topologies (for example, separate topics for blocks and contract events).
 
 ### Examples
 
