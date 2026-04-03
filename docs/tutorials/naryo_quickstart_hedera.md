@@ -4,7 +4,7 @@ This guide shows how to configure and run Naryo against a local Hedera dev netwo
 
 -   **Hedera Consensus Service (HCS)** messages
 -   **Hedera Token Service (HTS)** transactions
--   **EVM Smart Contract** events (via the JSON-RPC relay)
+-   **EVM Smart Contract** events (via the Hedera Mirror Node)
 
 ## Requirements
 
@@ -48,7 +48,7 @@ This command deploys the following components:
 
 For a detailed look at the configuration, inspect the [`application.yml`](../../examples/hedera-quickstart/application.yml) file used in this quickstart. Key sections include:
 
-*   **Node Connection**: Defines how Naryo connects to the Hedera JSON‑RPC relay.
+*   **Node Connection**: Defines how Naryo connects to the Hedera Mirror Node and the JSON-RPC relay.
 *   **Broadcasting Setup**: Configures the Mockoon HTTP server as an event destination.
 *   **Event Filters**: Specifies how Naryo captures both EVM contract events and native HCS/HTS transactions. Note the use of `identifierType: IDENTITY_ID` for native Hedera transaction filters.
 
@@ -61,7 +61,10 @@ naryo:
       connection:
         type: HTTP
         endpoint:
-          url: http://hedera-json-rpc-relay:7546
+          url: https://testnet.mirrornode.hedera.com
+      interaction:
+        strategy: BLOCK_BASED
+        mode: HEDERA_MIRROR_NODE
       subscription:
         method: POLL
         interval: 1s
