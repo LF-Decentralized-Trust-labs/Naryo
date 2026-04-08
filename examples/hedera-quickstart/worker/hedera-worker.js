@@ -20,7 +20,7 @@ async function main() {
     const myAccountId = process.env.RELAY_OPERATOR_ID_MAIN || process.env.OPERATOR_ID_MAIN || "0.0.2";
     const myPrivateKeyRaw = process.env.RELAY_OPERATOR_KEY_MAIN || process.env.OPERATOR_KEY_MAIN;
     if (!myPrivateKeyRaw) throw new Error("Missing operator key in .env");
-    
+
     // Clean key for ethers (must be 32 bytes / 64 hex chars)
     let cleanKey = myPrivateKeyRaw.replace(/^0x/, "");
     if (cleanKey.length === 96) {
@@ -31,13 +31,13 @@ async function main() {
 
     const myPrivateKey = PrivateKey.fromString(myPrivateKeyRaw);
 
-    const client = Client.forNetwork({ "host.docker.internal:50211": new AccountId(3) });
+    const client = Client.forNetwork({ "host.docker.internal:35211": new AccountId(3) });
     client.setOperator(myAccountId, myPrivateKey);
 
     // 1.1 Activate Ethers Wallet on Hedera
-    const provider = new ethers.JsonRpcProvider("http://host.docker.internal:7546");
+    const provider = new ethers.JsonRpcProvider("http://host.docker.internal:37546");
     const wallet = new ethers.Wallet(ethersPrivateKey, provider);
-    
+
     console.log(`Funding EVM account ${wallet.address}...`);
     const fundingTx = await new TransferTransaction()
         .addHbarTransfer(myAccountId, new Hbar(-100))
@@ -90,7 +90,7 @@ async function main() {
     };
     const output = JSON.parse(solc.compile(JSON.stringify(input)));
     const contractData = output.contracts["HederaQuickstart.sol"]["HederaQuickstart"];
-    
+
     const factory = new ethers.ContractFactory(contractData.abi, contractData.evm.bytecode.object, wallet);
     const contract = await factory.deploy();
     await contract.waitForDeployment();

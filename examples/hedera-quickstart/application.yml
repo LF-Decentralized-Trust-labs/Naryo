@@ -6,7 +6,7 @@ naryo: #For a full configuration guide visit https://github.com/LF-Decentralized
       connection:
         type: HTTP
         endpoint:
-          url: http://host.docker.internal:5551
+          url: http://host.docker.internal:38081
       interaction:
         strategy: BLOCK_BASED
         mode: HEDERA_MIRROR_NODE
