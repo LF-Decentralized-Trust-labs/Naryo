@@ -58,7 +58,7 @@ services:
     environment:
       - CONTRACT_ADDRESS=${CONTRACT_ADDRESS}
     ports:
-      - "6060:6060"
+      - "8060:8060"
     networks:
       - naryo
     volumes:
