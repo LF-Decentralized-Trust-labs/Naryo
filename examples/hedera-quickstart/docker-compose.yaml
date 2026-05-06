@@ -50,7 +50,7 @@ services:
       hedera-worker:
         condition: service_healthy
     ports:
-      - "6060:6060"
+      - "8060:8060"
     networks:
       - naryo-hedera
     extra_hosts:
