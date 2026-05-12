@@ -14,10 +14,12 @@ import lombok.Getter;
 public final class HederaMirrorNodeBlockInteractionConfigurationRequest
         extends BlockInteractionConfigurationRequest {
 
-    @Positive @Schema(defaultValue = "10")
+    @Positive
+    @Schema(defaultValue = "10")
     private final Integer limitPerRequest;
 
-    @Positive @Schema(defaultValue = "3")
+    @Positive
+    @Schema(defaultValue = "3")
     private final Integer retriesPerRequest;
 
     public HederaMirrorNodeBlockInteractionConfigurationRequest(
@@ -28,10 +30,15 @@ public final class HederaMirrorNodeBlockInteractionConfigurationRequest
 
     @Override
     public InteractionConfiguration toDomain() {
-        int resolvedLimit = limitPerRequest != null ? limitPerRequest : DefaultInteractionFactory.DEFAULT_HEDERA_LIMIT_PER_REQUEST;
-        int resolvedRetries = retriesPerRequest != null ? retriesPerRequest : DefaultInteractionFactory.DEFAULT_HEDERA_RETRIES_PER_REQUEST;
+        int resolvedLimit =
+                limitPerRequest != null
+                        ? limitPerRequest
+                        : DefaultInteractionFactory.DEFAULT_HEDERA_LIMIT_PER_REQUEST;
+        int resolvedRetries =
+                retriesPerRequest != null
+                        ? retriesPerRequest
+                        : DefaultInteractionFactory.DEFAULT_HEDERA_RETRIES_PER_REQUEST;
         return new HederaMirrorNodeBlockInteractionConfiguration(
-                new LimitPerRequest(resolvedLimit),
-                new RetriesPerRequest(resolvedRetries));
+                new LimitPerRequest(resolvedLimit), new RetriesPerRequest(resolvedRetries));
     }
 }

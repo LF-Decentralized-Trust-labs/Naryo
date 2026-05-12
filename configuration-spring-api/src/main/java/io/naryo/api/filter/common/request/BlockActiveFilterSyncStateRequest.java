@@ -15,7 +15,8 @@ import lombok.Getter;
 @Getter
 public class BlockActiveFilterSyncStateRequest extends FilterSyncStateRequest {
 
-    @NotNull @Min(0)
+    @NotNull
+    @Min(0)
     private final Long initialBlock;
 
     public BlockActiveFilterSyncStateRequest(Long initialBlock) {

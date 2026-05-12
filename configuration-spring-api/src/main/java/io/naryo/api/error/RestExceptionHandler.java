@@ -21,7 +21,9 @@ public class RestExceptionHandler {
         MethodArgumentNotValidException.class,
         BindException.class,
         ConstraintViolationException.class,
-        HttpMessageNotReadableException.class
+        HttpMessageNotReadableException.class,
+        IllegalArgumentException.class,
+        ValidationException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidation(Exception ex, HttpServletRequest req) {
@@ -44,6 +46,8 @@ public class RestExceptionHandler {
                                     .orElse("Validation failed");
                     case HttpMessageNotReadableException nre ->
                             "Malformed JSON: " + nre.getMostSpecificCause().getMessage();
+                    case IllegalArgumentException e -> e.getMessage();
+                    case ValidationException e -> e.getMessage();
                     default -> "Validation failed";
                 };
         return ErrorResponse.of(
@@ -78,7 +82,7 @@ public class RestExceptionHandler {
                 req.getRequestURI());
     }
 
-    @ExceptionHandler({Exception.class, ValidationException.class})
+    @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleUnknown(Exception ex, HttpServletRequest req) {
         return ErrorResponse.of(

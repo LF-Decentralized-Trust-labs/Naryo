@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @ApiResponses({
     @ApiResponse(
             responseCode = "400",
-            description = "Validation error / malformed JSON",
+            description = "Validation error / malformed JSON / illegal argument",
             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     @ApiResponse(
             responseCode = "404",

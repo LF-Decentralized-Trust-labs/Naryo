@@ -42,15 +42,28 @@ public final class HttpNodeConnectionRequest extends NodeConnectionRequest {
 
     @Override
     public NodeConnection toDomain() {
-        RetryConfigurationRequest retry = this.retryConfiguration != null
-                ? this.retryConfiguration
-                : new RetryConfigurationRequest(null, null);
+        RetryConfigurationRequest retry =
+                this.retryConfiguration != null
+                        ? this.retryConfiguration
+                        : new RetryConfigurationRequest(null, null);
         return new HttpNodeConnection(
                 this.connectionEndpoint.toDomain(),
                 retry.toDomain(),
-                new MaxIdleConnections(maxIdleConnections != null ? maxIdleConnections : DefaultNodeConnectionFactory.DEFAULT_HTTP_MAX_IDLE_CONNECTIONS),
-                new KeepAliveDuration(keepAliveDuration != null ? keepAliveDuration : DefaultNodeConnectionFactory.DEFAULT_HTTP_KEEP_ALIVE_DURATION),
-                new ConnectionTimeout(connectionTimeout != null ? connectionTimeout : DefaultNodeConnectionFactory.DEFAULT_HTTP_CONNECTION_TIMEOUT),
-                new ReadTimeout(readTimeout != null ? readTimeout : DefaultNodeConnectionFactory.DEFAULT_HTTP_READ_TIMEOUT));
+                new MaxIdleConnections(
+                        maxIdleConnections != null
+                                ? maxIdleConnections
+                                : DefaultNodeConnectionFactory.DEFAULT_HTTP_MAX_IDLE_CONNECTIONS),
+                new KeepAliveDuration(
+                        keepAliveDuration != null
+                                ? keepAliveDuration
+                                : DefaultNodeConnectionFactory.DEFAULT_HTTP_KEEP_ALIVE_DURATION),
+                new ConnectionTimeout(
+                        connectionTimeout != null
+                                ? connectionTimeout
+                                : DefaultNodeConnectionFactory.DEFAULT_HTTP_CONNECTION_TIMEOUT),
+                new ReadTimeout(
+                        readTimeout != null
+                                ? readTimeout
+                                : DefaultNodeConnectionFactory.DEFAULT_HTTP_READ_TIMEOUT));
     }
 }

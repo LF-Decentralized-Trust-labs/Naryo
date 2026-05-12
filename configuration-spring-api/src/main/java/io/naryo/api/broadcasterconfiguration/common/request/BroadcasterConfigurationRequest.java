@@ -26,8 +26,7 @@ public class BroadcasterConfigurationRequest implements BroadcasterConfiguration
 
     private @NotBlank String type;
 
-    @Valid
-    private BroadcasterCacheRequest cache;
+    @Valid private BroadcasterCacheRequest cache;
 
     private Map<String, Object> additionalProperties;
 

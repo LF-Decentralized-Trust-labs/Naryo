@@ -17,25 +17,29 @@ import lombok.Getter;
 @Getter
 public final class BlockSubscriptionConfigurationRequest extends SubscriptionConfigurationRequest {
 
-    @NotNull @Valid
-    private final BlockSubscriptionMethodConfigurationRequest method;
+    @NotNull @Valid private final BlockSubscriptionMethodConfigurationRequest method;
 
     @Schema(defaultValue = "-1", description = "Initial block to sync from; -1 means latest")
     private final BigInteger initialBlock;
 
-    @PositiveOrZero @Schema(defaultValue = "12")
+    @PositiveOrZero
+    @Schema(defaultValue = "12")
     private final BigInteger confirmationBlocks;
 
-    @PositiveOrZero @Schema(defaultValue = "200")
+    @PositiveOrZero
+    @Schema(defaultValue = "200")
     private final BigInteger missingTxRetryBlocks;
 
-    @PositiveOrZero @Schema(defaultValue = "2")
+    @PositiveOrZero
+    @Schema(defaultValue = "2")
     private final BigInteger eventInvalidationBlockThreshold;
 
-    @PositiveOrZero @Schema(defaultValue = "12")
+    @PositiveOrZero
+    @Schema(defaultValue = "12")
     private final BigInteger replayBlockOffset;
 
-    @PositiveOrZero @Schema(defaultValue = "20000")
+    @PositiveOrZero
+    @Schema(defaultValue = "20000")
     private final BigInteger syncBlockLimit;
 
     public BlockSubscriptionConfigurationRequest(
@@ -59,11 +63,29 @@ public final class BlockSubscriptionConfigurationRequest extends SubscriptionCon
     public SubscriptionConfiguration toDomain() {
         return new BlockSubscriptionConfiguration(
                 this.method.toDomain(),
-                initialBlock != null ? initialBlock : DefaultBlockSubscriptionFactory.DEFAULT_INITIAL_BLOCK,
-                new NonNegativeBlockNumber(confirmationBlocks != null ? confirmationBlocks : DefaultBlockSubscriptionFactory.DEFAULT_CONFIRMATION_BLOCKS),
-                new NonNegativeBlockNumber(missingTxRetryBlocks != null ? missingTxRetryBlocks : DefaultBlockSubscriptionFactory.DEFAULT_MISSING_TX_RETRY_BLOCKS),
-                new NonNegativeBlockNumber(eventInvalidationBlockThreshold != null ? eventInvalidationBlockThreshold : DefaultBlockSubscriptionFactory.DEFAULT_EVENT_INVALIDATION_BLOCK_THRESHOLD),
-                new NonNegativeBlockNumber(replayBlockOffset != null ? replayBlockOffset : DefaultBlockSubscriptionFactory.DEFAULT_REPLAY_BLOCK_OFFSET),
-                new NonNegativeBlockNumber(syncBlockLimit != null ? syncBlockLimit : DefaultBlockSubscriptionFactory.DEFAULT_SYNC_BLOCK_LIMIT));
+                initialBlock != null
+                        ? initialBlock
+                        : DefaultBlockSubscriptionFactory.DEFAULT_INITIAL_BLOCK,
+                new NonNegativeBlockNumber(
+                        confirmationBlocks != null
+                                ? confirmationBlocks
+                                : DefaultBlockSubscriptionFactory.DEFAULT_CONFIRMATION_BLOCKS),
+                new NonNegativeBlockNumber(
+                        missingTxRetryBlocks != null
+                                ? missingTxRetryBlocks
+                                : DefaultBlockSubscriptionFactory.DEFAULT_MISSING_TX_RETRY_BLOCKS),
+                new NonNegativeBlockNumber(
+                        eventInvalidationBlockThreshold != null
+                                ? eventInvalidationBlockThreshold
+                                : DefaultBlockSubscriptionFactory
+                                        .DEFAULT_EVENT_INVALIDATION_BLOCK_THRESHOLD),
+                new NonNegativeBlockNumber(
+                        replayBlockOffset != null
+                                ? replayBlockOffset
+                                : DefaultBlockSubscriptionFactory.DEFAULT_REPLAY_BLOCK_OFFSET),
+                new NonNegativeBlockNumber(
+                        syncBlockLimit != null
+                                ? syncBlockLimit
+                                : DefaultBlockSubscriptionFactory.DEFAULT_SYNC_BLOCK_LIMIT));
     }
 }

@@ -16,8 +16,7 @@ import lombok.Getter;
 @Getter
 public final class ContractEventFilterRequest extends EventFilterRequest {
 
-    @NotBlank
-    private final String contractAddress;
+    @NotBlank private final String contractAddress;
 
     public ContractEventFilterRequest(
             String name,
