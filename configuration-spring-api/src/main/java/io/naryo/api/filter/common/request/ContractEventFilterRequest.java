@@ -8,6 +8,7 @@ import io.naryo.domain.filter.FilterName;
 import io.naryo.domain.filter.event.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Schema(description = "Contract event filter request")
@@ -15,6 +16,7 @@ import lombok.Getter;
 @Getter
 public final class ContractEventFilterRequest extends EventFilterRequest {
 
+    @NotBlank
     private final String contractAddress;
 
     public ContractEventFilterRequest(

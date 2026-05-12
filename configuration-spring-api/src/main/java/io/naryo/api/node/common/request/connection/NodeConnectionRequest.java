@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.naryo.domain.node.connection.NodeConnection;
 import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
@@ -22,8 +24,8 @@ import lombok.Getter;
 @Getter
 public abstract class NodeConnectionRequest {
 
-    protected final RetryConfigurationRequest retryConfiguration;
-    protected final ConnectionEndpointRequest connectionEndpoint;
+    protected final @Valid RetryConfigurationRequest retryConfiguration;
+    protected final @NotNull @Valid ConnectionEndpointRequest connectionEndpoint;
 
     protected NodeConnectionRequest(
             ConnectionEndpointRequest connectionEndpoint,

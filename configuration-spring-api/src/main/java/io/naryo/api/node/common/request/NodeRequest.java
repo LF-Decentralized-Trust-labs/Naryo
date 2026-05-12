@@ -10,6 +10,7 @@ import io.naryo.api.node.common.request.subscription.SubscriptionConfigurationRe
 import io.naryo.domain.node.Node;
 import io.swagger.v3.oas.annotations.media.DiscriminatorMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -36,9 +37,9 @@ import lombok.Getter;
 public abstract class NodeRequest {
 
     protected final @NotBlank String name;
-    protected final @NotNull SubscriptionConfigurationRequest subscription;
-    protected final @NotNull InteractionConfigurationRequest interaction;
-    protected final @NotNull NodeConnectionRequest connection;
+    protected final @NotNull @Valid SubscriptionConfigurationRequest subscription;
+    protected final @NotNull @Valid InteractionConfigurationRequest interaction;
+    protected final @NotNull @Valid NodeConnectionRequest connection;
 
     protected NodeRequest(
             String name,

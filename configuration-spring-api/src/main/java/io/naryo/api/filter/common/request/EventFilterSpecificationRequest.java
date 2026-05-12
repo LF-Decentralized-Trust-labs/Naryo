@@ -3,6 +3,7 @@ package io.naryo.api.filter.common.request;
 import io.naryo.domain.filter.event.CorrelationId;
 import io.naryo.domain.filter.event.EventFilterSpecification;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
@@ -11,6 +12,8 @@ import lombok.Getter;
 public class EventFilterSpecificationRequest {
 
     private final @NotBlank String eventSignature;
+
+    @Min(0)
     private final Integer correlationIdPosition;
 
     public EventFilterSpecificationRequest(String eventSignature, Integer correlationIdPosition) {

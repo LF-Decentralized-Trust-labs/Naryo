@@ -582,3 +582,5 @@ build/
 !spring-core/**/broadcaster/target
 !persistence-spring-jpa/**/broadcaster/target
 !persistence-spring-mongo/**/broadcaster/target
+
+.claude/settings.local.json
