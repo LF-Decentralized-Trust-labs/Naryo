@@ -17,7 +17,10 @@ public final class WsNodeConnectionRequest extends NodeConnectionRequest {
 
     @Override
     public NodeConnection toDomain() {
-        return new WsNodeConnection(
-                this.connectionEndpoint.toDomain(), this.retryConfiguration.toDomain());
+        RetryConfigurationRequest retry =
+                this.retryConfiguration != null
+                        ? this.retryConfiguration
+                        : new RetryConfigurationRequest(null, null);
+        return new WsNodeConnection(this.connectionEndpoint.toDomain(), retry.toDomain());
     }
 }

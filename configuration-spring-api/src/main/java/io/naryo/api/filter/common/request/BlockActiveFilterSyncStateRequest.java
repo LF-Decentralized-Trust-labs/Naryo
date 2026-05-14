@@ -7,6 +7,7 @@ import io.naryo.domain.filter.event.FilterSyncState;
 import io.naryo.domain.filter.event.sync.SyncStrategy;
 import io.naryo.domain.filter.event.sync.block.BlockActiveFilterSyncState;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
@@ -14,7 +15,9 @@ import lombok.Getter;
 @Getter
 public class BlockActiveFilterSyncStateRequest extends FilterSyncStateRequest {
 
-    private final @NotNull Long initialBlock;
+    @NotNull
+    @Min(0)
+    private final Long initialBlock;
 
     public BlockActiveFilterSyncStateRequest(Long initialBlock) {
         super(SyncStrategy.BLOCK_BASED);

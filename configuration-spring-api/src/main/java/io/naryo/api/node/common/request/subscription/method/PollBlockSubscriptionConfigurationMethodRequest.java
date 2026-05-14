@@ -13,6 +13,9 @@ import lombok.Getter;
 public final class PollBlockSubscriptionConfigurationMethodRequest
         extends BlockSubscriptionMethodConfigurationRequest {
 
+    public static final Duration DEFAULT_INTERVAL = Duration.ofSeconds(5);
+
+    @Schema(defaultValue = "PT5S", description = "ISO 8601 duration, must be positive")
     private final Duration interval;
 
     public PollBlockSubscriptionConfigurationMethodRequest(Duration interval) {
@@ -21,6 +24,7 @@ public final class PollBlockSubscriptionConfigurationMethodRequest
 
     @Override
     public BlockSubscriptionMethodConfiguration toDomain() {
-        return new PollBlockSubscriptionMethodConfiguration(new Interval(this.interval));
+        Duration resolvedInterval = interval != null ? interval : DEFAULT_INTERVAL;
+        return new PollBlockSubscriptionMethodConfiguration(new Interval(resolvedInterval));
     }
 }
