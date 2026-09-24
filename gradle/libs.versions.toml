@@ -53,6 +53,10 @@ mockitoJunitJupiter = { group = "org.mockito", name = "mockito-junit-jupiter", v
 instancioJunit = { group = "org.instancio", name = "instancio-junit", version.ref = "instancio-junit" }
 testContainers = { group = "org.testcontainers", name = "testcontainers", version.ref = "testcontainers" }
 testContainersKafka = { group = "org.testcontainers", name = "kafka", version.ref = "testcontainers" }
+testContainersJunitJupiter = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers" }
+testContainersPostgresql = { group = "org.testcontainers", name = "postgresql", version.ref = "testcontainers" }
+springBootTestcontainers = { group = "org.springframework.boot", name = "spring-boot-testcontainers" }
+postgresql = { group = "org.postgresql", name = "postgresql" }
 hibernateValidator = { group = "org.hibernate.validator", name = "hibernate-validator"}
 picocli = { group = "info.picocli", name = "picocli", version.ref = "picocli" }
 picocliCodegen = { group = "info.picocli", name = "picocli-codegen", version.ref = "picocli" }

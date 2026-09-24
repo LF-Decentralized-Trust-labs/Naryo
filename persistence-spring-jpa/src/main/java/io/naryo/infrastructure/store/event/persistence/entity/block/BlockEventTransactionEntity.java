@@ -24,7 +24,7 @@ public abstract class BlockEventTransactionEntity {
     @Column(name = "block_number", nullable = false)
     private BigInteger blockNumber;
 
-    @Column(name = "from_address", nullable = false)
+    @Column(name = "from_address")
     private String from;
 
     @Column(name = "to_address")
