@@ -387,7 +387,7 @@ class HederaMirrorNodeBlockInteractorTest {
         doReturn(1).when(model).transactionIndex();
         doReturn("0xabc").when(model).transactionHash();
         doReturn("0xdef").when(model).blockHash();
-        doReturn(1).when(model).blockNumber();
+        doReturn(1L).when(model).blockNumber();
         doReturn("0xghi").when(model).address();
         doReturn("0xjkl").when(model).data();
         doReturn(List.of()).when(model).topics();

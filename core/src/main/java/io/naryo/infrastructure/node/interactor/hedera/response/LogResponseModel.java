@@ -10,7 +10,7 @@ public record LogResponseModel(
         Integer index,
         List<String> topics,
         String blockHash,
-        Integer blockNumber,
+        Long blockNumber,
         String rootContractId,
         String timestamp,
         String transactionHash,
