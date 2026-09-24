@@ -12,6 +12,7 @@ import jakarta.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.Length;
 
 @Entity
 @DiscriminatorValue("eth_transaction_event")
@@ -25,9 +26,9 @@ public class EthTransactionEventEntity extends TransactionEventEntity {
 
     private @Column(name = "transaction_index") BigInteger transactionIndex;
 
-    private @Column(name = "input", length = 4096) String input;
+    private @Column(name = "input", length = Length.LONG32) String input;
 
-    private @Column(name = "revert_reason") String revertReason;
+    private @Column(name = "revert_reason", length = Length.LONG32) String revertReason;
 
     public EthTransactionEventEntity(
             UUID nodeId,

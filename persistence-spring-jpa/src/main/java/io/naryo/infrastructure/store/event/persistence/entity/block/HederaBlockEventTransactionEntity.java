@@ -24,6 +24,7 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.Length;
 
 @Entity
 @Getter
@@ -31,7 +32,7 @@ import lombok.NoArgsConstructor;
 @DiscriminatorValue("HEDERA")
 public class HederaBlockEventTransactionEntity extends BlockEventTransactionEntity {
 
-    @Column(name = "hedera_bytes")
+    @Column(name = "hedera_bytes", length = Length.LONG32)
     private String bytes;
 
     @Column(name = "hedera_charged_tx_fee")
@@ -40,7 +41,7 @@ public class HederaBlockEventTransactionEntity extends BlockEventTransactionEnti
     @Column(name = "hedera_entity_id")
     private String entityId;
 
-    @Column(name = "hedera_memo_base64")
+    @Column(name = "hedera_memo_base64", length = Length.LONG32)
     private String memoBase64;
 
     @Column(name = "hedera_node")
@@ -64,11 +65,11 @@ public class HederaBlockEventTransactionEntity extends BlockEventTransactionEnti
     @Column(name = "hedera_valid_start_timestamp")
     private String validStartTimestamp;
 
-    @Column(name = "hedera_batch_key", length = 4096)
+    @Column(name = "hedera_batch_key", length = Length.LONG32)
     @Convert(converter = BatchKeyConverter.class)
     private BatchKey batchKey;
 
-    @Column(name = "hedera_max_custom_fees", length = 4096)
+    @Column(name = "hedera_max_custom_fees", length = Length.LONG32)
     @Convert(converter = MaxCustomFeeListConverter.class)
     private List<MaxCustomFee> maxCustomFees;
 
@@ -76,19 +77,19 @@ public class HederaBlockEventTransactionEntity extends BlockEventTransactionEnti
     @Convert(converter = TransactionNameConverter.class)
     private TransactionName name;
 
-    @Column(name = "hedera_nft_transfers", length = 4096)
+    @Column(name = "hedera_nft_transfers", length = Length.LONG32)
     @Convert(converter = NftTransferListConverter.class)
     private List<NftTransfer> nftTransfers;
 
-    @Column(name = "hedera_staking_reward_transfers", length = 4096)
+    @Column(name = "hedera_staking_reward_transfers", length = Length.LONG32)
     @Convert(converter = StakingRewardTransferListConverter.class)
     private List<StakingRewardTransfer> stakingRewardTransfers;
 
-    @Column(name = "hedera_token_transfers", length = 4096)
+    @Column(name = "hedera_token_transfers", length = Length.LONG32)
     @Convert(converter = TokenTransferListConverter.class)
     private List<TokenTransfer> tokenTransfers;
 
-    @Column(name = "hedera_transfers", length = 4096)
+    @Column(name = "hedera_transfers", length = Length.LONG32)
     @Convert(converter = TransferListConverter.class)
     private List<Transfer> transfers;
 

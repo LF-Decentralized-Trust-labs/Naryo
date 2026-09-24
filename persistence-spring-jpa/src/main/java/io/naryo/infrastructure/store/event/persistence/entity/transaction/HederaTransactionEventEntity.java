@@ -16,17 +16,18 @@ import jakarta.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.Length;
 
 @Entity
 @DiscriminatorValue("hedera_transaction_event")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class HederaTransactionEventEntity extends TransactionEventEntity {
-    @Column(name = "batch_key")
+    @Column(name = "batch_key", length = Length.LONG32)
     @Convert(converter = BatchKeyConverter.class)
     private BatchKey batchKey;
 
-    @Column(name = "bytes")
+    @Column(name = "bytes", length = Length.LONG32)
     private String bytes;
 
     @Column(name = "charged_tx_fee")
@@ -35,18 +36,18 @@ public class HederaTransactionEventEntity extends TransactionEventEntity {
     @Column(name = "entity_id")
     private String entityId;
 
-    @Column(name = "max_custom_fees", length = 4096)
+    @Column(name = "max_custom_fees", length = Length.LONG32)
     @Convert(converter = MaxCustomFeeListConverter.class)
     private List<MaxCustomFee> maxCustomFees;
 
-    @Column(name = "memo_base64")
+    @Column(name = "memo_base64", length = Length.LONG32)
     private String memoBase64;
 
     @Column(name = "name")
     @Convert(converter = TransactionNameConverter.class)
     private TransactionName name;
 
-    @Column(name = "nft_transfers", length = 4096)
+    @Column(name = "nft_transfers", length = Length.LONG32)
     @Convert(converter = NftTransferListConverter.class)
     private List<NftTransfer> nftTransfers;
 
@@ -62,18 +63,18 @@ public class HederaTransactionEventEntity extends TransactionEventEntity {
     @Column(name = "scheduled")
     private Boolean scheduled;
 
-    @Column(name = "staking_reward_transfers", length = 4096)
+    @Column(name = "staking_reward_transfers", length = Length.LONG32)
     @Convert(converter = StakingRewardTransferListConverter.class)
     private List<StakingRewardTransfer> stakingRewardTransfers;
 
-    @Column(name = "token_transfers", length = 4096)
+    @Column(name = "token_transfers", length = Length.LONG32)
     @Convert(converter = TokenTransferListConverter.class)
     private List<TokenTransfer> tokenTransfers;
 
     @Column(name = "transaction_id")
     private String transactionId;
 
-    @Column(name = "transfers", length = 4096)
+    @Column(name = "transfers", length = Length.LONG32)
     @Convert(converter = TransferListConverter.class)
     private List<Transfer> transfers;
 
@@ -86,7 +87,7 @@ public class HederaTransactionEventEntity extends TransactionEventEntity {
     @Column(name = "consensus_timestamp")
     private String consensusTimestamp;
 
-    @Column(name = "message")
+    @Column(name = "message", length = Length.LONG32)
     private String message;
 
     public HederaTransactionEventEntity(
