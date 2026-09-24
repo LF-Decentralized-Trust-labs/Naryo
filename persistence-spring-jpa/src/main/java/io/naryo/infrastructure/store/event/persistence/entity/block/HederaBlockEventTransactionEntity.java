@@ -35,7 +35,7 @@ public class HederaBlockEventTransactionEntity extends BlockEventTransactionEnti
     private String bytes;
 
     @Column(name = "hedera_charged_tx_fee")
-    private Integer chargedTxFee;
+    private Long chargedTxFee;
 
     @Column(name = "hedera_entity_id")
     private String entityId;

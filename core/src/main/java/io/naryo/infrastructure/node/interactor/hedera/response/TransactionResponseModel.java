@@ -7,7 +7,7 @@ import io.naryo.application.node.interactor.block.dto.hedera.TransactionName;
 public record TransactionResponseModel(
         BatchKeyResponseModel batchKey,
         String bytes,
-        Integer chargedTxFee,
+        Long chargedTxFee,
         String consensusTimestamp,
         String entityId,
         List<MaxCustomFeeResponseModel> maxCustomFees,

@@ -22,7 +22,7 @@ import org.springframework.data.annotation.TypeAlias;
 public class HederaTransactionEventDocument extends TransactionEventDocument {
     private final BatchKey batchKey;
     private final String bytes;
-    private final Integer chargedTxFee;
+    private final Long chargedTxFee;
     private final String entityId;
     private final List<MaxCustomFee> maxCustomFees;
     private final String memoBase64;
@@ -52,7 +52,7 @@ public class HederaTransactionEventDocument extends TransactionEventDocument {
             String status,
             BatchKey batchKey,
             String bytes,
-            Integer chargedTxFee,
+            Long chargedTxFee,
             String entityId,
             List<MaxCustomFee> maxCustomFees,
             String memoBase64,
