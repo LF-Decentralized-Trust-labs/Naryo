@@ -3,6 +3,8 @@ package io.naryo.infrastructure.node.interactor.hedera.response;
 import java.math.BigInteger;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 public record ContractResultResponseModel(
         String address,
         BigInteger amount,
@@ -21,7 +23,7 @@ public record ContractResultResponseModel(
         String status,
         String timestamp,
         String to,
-        String accessList,
+        JsonNode accessList,
         BigInteger blockGasUsed,
         String blockHash,
         String blockNumber,
