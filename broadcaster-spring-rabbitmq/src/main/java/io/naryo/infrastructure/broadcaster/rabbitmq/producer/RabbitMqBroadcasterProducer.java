@@ -38,20 +38,20 @@ public final class RabbitMqBroadcasterProducer implements BroadcasterProducer {
         broadcaster
                 .getTarget()
                 .getDestinations()
-                .forEach(
-                        destination -> {
-                            RoutingKey routingKey =
-                                    calculateRoutingKey(event, destination, broadcaster);
-                            this.produce(exchange, routingKey, event);
-                        });
+                .forEach(destination -> this.produce(exchange, destination, broadcaster, event));
     }
 
-    private void produce(Exchange exchange, RoutingKey routingKey, Event<?> event) {
+    private void produce(
+            Exchange exchange, Destination destination, Broadcaster broadcaster, Event<?> event) {
         try {
+            RoutingKey routingKey = calculateRoutingKey(event, destination, broadcaster);
             rabbitTemplate.convertAndSend(
                     exchange.value(), routingKey.value(), objectMapper.writeValueAsString(event));
         } catch (Exception e) {
-            log.error("Error while sending event to RabbitMQ broadcaster: {}", e.getMessage());
+            log.error(
+                    "Error while sending event {} to RabbitMQ broadcaster: {}",
+                    event.getKey(),
+                    e.getMessage());
         }
     }
 
@@ -72,7 +72,11 @@ public final class RabbitMqBroadcasterProducer implements BroadcasterProducer {
             key = event.getKey().toString();
         }
 
-        return new RoutingKey(String.format("%s.%s", destination.value(), key));
+        return new RoutingKey(String.format("%s.%s", destination.value(), toRoutingKeyWord(key)));
+    }
+
+    private String toRoutingKeyWord(String key) {
+        return key.replace('+', '-').replace('/', '_').replace("=", "");
     }
 
     private String getContractEventId(ContractEvent event) {
