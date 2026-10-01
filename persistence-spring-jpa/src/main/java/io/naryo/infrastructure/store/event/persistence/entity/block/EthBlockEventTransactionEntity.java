@@ -9,6 +9,7 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.Length;
 
 @Entity
 @Getter
@@ -25,13 +26,13 @@ public class EthBlockEventTransactionEntity extends BlockEventTransactionEntity 
     @Column(name = "eth_block_hash")
     private String blockHash;
 
-    @Column(name = "eth_input")
+    @Column(name = "eth_input", length = Length.LONG32)
     private String input;
 
-    @Column(name = "eth_log_bloom")
+    @Column(name = "eth_log_bloom", length = Length.LONG32)
     private String logBloom;
 
-    @Column(name = "eth_revert_reason")
+    @Column(name = "eth_revert_reason", length = Length.LONG32)
     private String revertReason;
 
     public EthBlockEventTransactionEntity(EthTransaction transaction) {
