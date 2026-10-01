@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -136,6 +137,53 @@ class HederaMirrorNodeBlockInteractorTest {
                                             throw new RuntimeException(error);
                                         })
                                 .subscribe(Assertions::assertNotNull));
+    }
+
+    @Test
+    void replayPastAndFutureBlocks_waitsForABlockTheMirrorNodeHasNotPublishedYet()
+            throws IOException {
+        AtomicInteger blockRequests = new AtomicInteger(0);
+        doAnswer(
+                        invocation -> {
+                            TypeReference<?> typeRef = invocation.getArgument(1);
+                            if (typeRef.getType()
+                                    == new TypeReference<BlockResponseModel>() {}.getType()) {
+                                int request = blockRequests.getAndIncrement();
+                                if (request == 0) {
+                                    return createFakeBlock(0);
+                                }
+                                if (request <= 3) {
+                                    throw new EmptyResponseException("Not found");
+                                }
+                                return createFakeBlock(1);
+                            }
+                            if (typeRef.getType()
+                                    == new TypeReference<
+                                            ContractResultListResponseModel>() {}.getType()) {
+                                return new ContractResultListResponseModel(
+                                        new ArrayList<>(), Map.of());
+                            }
+                            if (typeRef.getType()
+                                    == new TypeReference<
+                                            TransactionListResponseModel>() {}.getType()) {
+                                return new TransactionListResponseModel(
+                                        new ArrayList<>(), Map.of());
+                            }
+                            return null;
+                        })
+                .when(client)
+                .get(any(), any());
+
+        List<BigInteger> numbers =
+                interactor
+                        .replayPastAndFutureBlocks(BigInteger.ZERO)
+                        .take(2)
+                        .map(Block::number)
+                        .timeout(10, TimeUnit.SECONDS)
+                        .toList()
+                        .blockingGet();
+
+        assertEquals(List.of(BigInteger.ZERO, BigInteger.ONE), numbers);
     }
 
     @Test
