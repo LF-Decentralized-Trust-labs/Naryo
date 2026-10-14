@@ -39,9 +39,13 @@ public final class TransactionEventDispatcherHelper {
         BlockSubscriptionConfiguration configuration =
                 (BlockSubscriptionConfiguration) node.getSubscriptionConfiguration();
 
-        // TODO: Decouple this to be protocol-agnostic
-        if (transactionEvent instanceof EthTransactionEvent ethTransactionEvent) {
-            executeEthTransactionEvent(filter, ethTransactionEvent);
+        if (transactionEvent.getStatus() == TransactionStatus.FAILED) {
+            if (filter.getStatuses().contains(TransactionStatus.FAILED)) {
+                if (transactionEvent instanceof EthTransactionEvent ethTransactionEvent) {
+                    setRevertReason(ethTransactionEvent);
+                }
+                dispatcher.dispatch(transactionEvent);
+            }
             return;
         }
 
@@ -90,20 +94,15 @@ public final class TransactionEventDispatcherHelper {
         }
     }
 
-    public void executeEthTransactionEvent(
-            TransactionFilter filter, EthTransactionEvent transactionEvent) {
-        if (filter.getStatuses().contains(TransactionStatus.FAILED)
-                && transactionEvent.getStatus().equals(TransactionStatus.FAILED)) {
-            try {
-                transactionEvent.setRevertReason(
-                        blockInteractor.getRevertReason(transactionEvent.getHash()));
-            } catch (IOException e) {
-                log.error(
-                        "Failed to get revert reason for transaction {}",
-                        transactionEvent.getHash(),
-                        e);
-            }
-            dispatcher.dispatch(transactionEvent);
+    private void setRevertReason(EthTransactionEvent transactionEvent) {
+        try {
+            transactionEvent.setRevertReason(
+                    blockInteractor.getRevertReason(transactionEvent.getHash()));
+        } catch (IOException e) {
+            log.error(
+                    "Failed to get revert reason for transaction {}",
+                    transactionEvent.getHash(),
+                    e);
         }
     }
 }
