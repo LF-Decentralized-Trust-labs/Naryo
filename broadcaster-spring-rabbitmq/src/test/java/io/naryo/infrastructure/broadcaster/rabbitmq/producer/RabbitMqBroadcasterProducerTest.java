@@ -107,7 +107,7 @@ class RabbitMqBroadcasterProducerTest {
                 "0",
                 null,
                 null,
-                0,
+                0L,
                 "0.0.7791425",
                 List.of(),
                 "",

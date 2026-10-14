@@ -204,7 +204,7 @@ class BlockEventEntityColumnLengthTest {
                 "SUCCESS",
                 new BatchKey(BatchKeyType.ED25519, hex(64).substring(2)),
                 null,
-                8367,
+                8367L,
                 "0.0.6271554",
                 List.of(),
                 "A".repeat(136),

@@ -21,7 +21,7 @@ public final class HederaTransactionDocument extends TransactionDocument {
 
     private final BatchKey batchKey;
     private final String bytes;
-    private final Integer chargedTxFee;
+    private final Long chargedTxFee;
     private final String entityId;
     private final List<MaxCustomFee> maxCustomFees;
     private final String memoBase64;
@@ -50,7 +50,7 @@ public final class HederaTransactionDocument extends TransactionDocument {
             String result,
             BatchKey batchKey,
             String bytes,
-            Integer chargedTxFee,
+            Long chargedTxFee,
             String entityId,
             List<MaxCustomFee> maxCustomFees,
             String memoBase64,

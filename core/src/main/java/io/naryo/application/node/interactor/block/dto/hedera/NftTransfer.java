@@ -4,5 +4,5 @@ public record NftTransfer(
         Boolean isApproval,
         String receiverAccountId,
         String senderAccountId,
-        Integer serialNumber,
+        Long serialNumber,
         String tokenId) {}

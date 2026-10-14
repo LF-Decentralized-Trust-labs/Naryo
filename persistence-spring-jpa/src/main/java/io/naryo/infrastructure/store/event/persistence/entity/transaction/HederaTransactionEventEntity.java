@@ -31,7 +31,7 @@ public class HederaTransactionEventEntity extends TransactionEventEntity {
     private String bytes;
 
     @Column(name = "charged_tx_fee")
-    private Integer chargedTxFee;
+    private Long chargedTxFee;
 
     @Column(name = "entity_id")
     private String entityId;
@@ -101,7 +101,7 @@ public class HederaTransactionEventEntity extends TransactionEventEntity {
             String status,
             BatchKey batchKey,
             String bytes,
-            Integer chargedTxFee,
+            Long chargedTxFee,
             String entityId,
             List<MaxCustomFee> maxCustomFees,
             String memoBase64,
