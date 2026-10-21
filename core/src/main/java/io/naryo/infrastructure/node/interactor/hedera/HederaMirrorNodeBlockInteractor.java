@@ -194,6 +194,15 @@ public final class HederaMirrorNodeBlockInteractor implements BlockInteractor {
                                             current.set(n.add(BigInteger.ONE));
                                         } catch (EmptyResponseException e) {
                                             log.debug("Waiting for block {}...", current.get());
+                                        } catch (UnexpectedResponseException e) {
+                                            if (e.getCause() instanceof IOException) {
+                                                log.warn(
+                                                        "Could not fetch block {} from the mirror node, retrying on the next poll: {}",
+                                                        current.get(),
+                                                        e.getCause().getMessage());
+                                            } else {
+                                                emitter.onError(e);
+                                            }
                                         } catch (Exception e) {
                                             emitter.onError(e);
                                         }

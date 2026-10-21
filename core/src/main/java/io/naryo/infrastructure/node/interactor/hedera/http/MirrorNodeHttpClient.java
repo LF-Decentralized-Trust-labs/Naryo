@@ -8,12 +8,15 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import io.naryo.infrastructure.node.interactor.hedera.exception.EmptyResponseException;
+import io.naryo.infrastructure.node.interactor.hedera.exception.MirrorNodeUnavailableException;
 import io.naryo.infrastructure.node.interactor.hedera.exception.UnexpectedResponseException;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 
 @Slf4j
 public class MirrorNodeHttpClient {
+    private static final int TOO_MANY_REQUESTS = 429;
+
     private final OkHttpClient http;
     private final ObjectMapper mapper;
     private final String host;
@@ -47,17 +50,20 @@ public class MirrorNodeHttpClient {
         Request req = new Request.Builder().url(url).headers(headers).get().build();
         try (Response resp = http.newCall(req).execute()) {
             int code = resp.code();
-            return switch (HttpStatus.valueOf(code)) {
+            if (code == TOO_MANY_REQUESTS || code >= 500) {
+                if (code == TOO_MANY_REQUESTS) log.warn("Rate limited on {}", url);
+                throw new MirrorNodeUnavailableException(
+                        "Mirror node unavailable, status " + code + " for " + url);
+            }
+            return switch (HttpStatus.find(code).orElse(null)) {
                 case OK, CREATED, ACCEPTED, PARTIAL_CONTENT ->
                         mapper.readerFor(ref).withoutRootName().readValue(resp.body().string());
                 case NOT_FOUND -> throw new EmptyResponseException("Not found: " + url);
                 case BAD_REQUEST, CONFLICT ->
                         throw new UnexpectedResponseException("Bad request: " + url);
-                default -> {
-                    if (code == 429) log.warn("Rate limited on {}", url);
-                    throw new UnexpectedResponseException(
-                            "Unexpected status " + code + " for " + url);
-                }
+                case null, default ->
+                        throw new UnexpectedResponseException(
+                                "Unexpected status " + code + " for " + url);
             };
         }
     }

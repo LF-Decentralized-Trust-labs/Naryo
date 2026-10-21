@@ -1,5 +1,8 @@
 package io.naryo.infrastructure.node.interactor.hedera.http;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 import lombok.Getter;
 
 @Getter
@@ -29,5 +32,9 @@ public enum HttpStatus {
             }
         }
         throw new IllegalArgumentException("Unknown HTTP status code: " + code);
+    }
+
+    public static Optional<HttpStatus> find(int code) {
+        return Arrays.stream(values()).filter(status -> status.getCode() == code).findFirst();
     }
 }
